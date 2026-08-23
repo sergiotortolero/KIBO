@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
+    a { color: #0F6E6B; } a:hover { color: #178F8B; }
+    .row { display: grid; grid-template-columns: 62px 78px 1fr; gap: 16px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid #F0F2F6; }
+    .tok { font-size: 11px; font-weight: 600; color: #1A1A2E; }
+    .px  { font-size: 11px; color: #6B7280; }
+    .new { display: inline-flex; align-items: center; padding: 1px 7px; border-radius: 999px; background: #E4F4F3; color: #0F6E6B; font-size: 10px; font-weight: 700; margin-left: 8px; vertical-align: middle; }
+  </style>
+</helmet>
+<div style="padding: 36px 40px; display: flex; flex-direction: column; gap: 24px; background: #F7F8FA; min-height: 100%; box-sizing: border-box">
+
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: #6B7280">02 · fundamentos</div>
+    <div style="font-family: 'Plus Jakarta Sans'; font-size: 26px; font-weight: 800; letter-spacing: -.015em; color: #1A1A2E">Tipografía</div>
+    <div style="font-size: 13px; line-height: 1.55; color: #6B7280; max-width: 620px">Dos familias. La escala existe y hoy no la usa nadie: cero consumos de <code style="font-size:12px">--kb-fs-*</code> en toda la capa publicada. El trabajo no es diseñarla, es adoptarla.</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+    <div style="padding: 18px 20px; background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; display: flex; flex-direction: column; gap: 8px">
+      <div style="font-family: 'Plus Jakarta Sans'; font-size: 34px; font-weight: 800; letter-spacing: -.02em; color: #1A1A2E; line-height: 1.15">Plus Jakarta Sans</div>
+      <div style="font-size: 12px; color: #6B7280; line-height: 1.5">Display, encabezados, cifras y etiquetas. Geométrica y amable: carga la personalidad. Cifras tabulares para que los contadores no bailen.</div>
+      <div style="font-family: 'Plus Jakarta Sans'; font-weight: 700; font-variant-numeric: tabular-nums; font-size: 22px; color: #1A1A2E; padding-top: 4px">1 240 · 87 % · Nv 16</div>
+    </div>
+    <div style="padding: 18px 20px; background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 34px; font-weight: 700; letter-spacing: -.015em; color: #1A1A2E; line-height: 1.15">Inter</div>
+      <div style="font-size: 12px; color: #6B7280; line-height: 1.5">Todo el texto de interfaz y cuerpo. Neutra y legible, se lleva bien con Jakarta sin pelearle el protagonismo.</div>
+      <div style="font-size: 13px; line-height: 1.55; color: #1A1A2E; padding-top: 4px">Toda gran aventura comienza con un nombre.</div>
+    </div>
+  </div>
+
+  <div style="padding: 18px 22px; background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; display: flex; flex-direction: column; gap: 2px">
+    <div style="display: grid; grid-template-columns: 62px 78px 1fr; gap: 16px; padding-bottom: 8px">
+      <div style="font-family: 'Plus Jakarta Sans'; font-size: 10px; font-weight: 700; color: #6B7280">TOKEN</div>
+      <div style="font-family: 'Plus Jakarta Sans'; font-size: 10px; font-weight: 700; color: #6B7280">TAMAÑO</div>
+      <div style="font-family: 'Plus Jakarta Sans'; font-size: 10px; font-weight: 700; color: #6B7280">USO</div>
+    </div>
+    <sc-for list="{{steps}}" as="s" hint-placeholder-count="11">
+      <div class="row">
+        <div class="tok">{{s.tok}}</div>
+        <div class="px">{{s.px}}</div>
+        <div style="font-size: {{s.px}}; line-height: 1.3; color: #1A1A2E; font-weight: {{s.w}}; font-family: {{s.f}}">{{s.use}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px">
+    <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #E4F4F3; border: 1px solid #E8ECF0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1CA4A0" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E"><strong>Faltan dos peldaños.</strong> 14&nbsp;px (71 usos) y 16&nbsp;px (22) se escriben a mano porque la escala no los tiene. Añadirlos y redondear 117 medios pasos lleva la adopción de 76&nbsp;% a 93&nbsp;%.</div>
+    </div>
+    <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E8ECF0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B26A00" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+      <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E"><strong>El piso son 10&nbsp;px y no se negocia.</strong> Ningún texto baja de ahí, ni las etiquetas de espécimen. Dos tamaños sueltos —9.5 y 12.5&nbsp;px— suben al peldaño más cercano.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":900,"height":880}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const J = "'Plus Jakarta Sans', sans-serif", I = "'Inter', sans-serif";
+    return {
+      steps: [
+        { tok: '--kb-fs-2xs', px: '10px', use: 'Cejilla · piso duro de legibilidad', w: '700', f: J },
+        { tok: '--kb-fs-xs',  px: '11px', use: 'Etiqueta, metadato, índice',          w: '600', f: J },
+        { tok: '--kb-fs-sm',  px: '12px', use: 'Metadato secundario',                 w: '400', f: I },
+        { tok: '--kb-fs-md',  px: '13px', use: 'Texto base de interfaz',              w: '400', f: I },
+        { tok: 'PROPUESTO',   px: '14px', use: 'El peldaño que falta — 71 usos hoy',  w: '500', f: I },
+        { tok: '--kb-fs-lg',  px: '15px', use: 'Nombre de hábito, fila destacada',    w: '600', f: I },
+        { tok: 'PROPUESTO',   px: '16px', use: 'El otro que falta — 22 usos',         w: '600', f: I },
+        { tok: '--kb-fs-xl',  px: '18px', use: 'Encabezado de tarjeta',               w: '600', f: J },
+        { tok: '--kb-fs-2xl', px: '22px', use: 'Título de sección',                   w: '700', f: J },
+        { tok: '--kb-fs-3xl', px: '26px', use: 'Título de pantalla',                  w: '700', f: J },
+        { tok: '--kb-fs-4xl', px: '34px', use: 'Display',                             w: '800', f: J },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

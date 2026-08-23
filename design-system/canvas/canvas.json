@@ -1,0 +1,35 @@
+{
+  "pages": [
+    { "id": "fundamentos", "name": "Fundamentos" },
+    { "id": "familias", "name": "Familias" }
+  ],
+  "artboards": [
+    { "file": "Plataformas.dc.html", "page": "fundamentos", "x": 0,    "y": 0, "w": 940, "h": 760, "title": "00 · Un sistema, dos plataformas" },
+    { "file": "Main.dc.html",        "page": "fundamentos", "x": 1000, "y": 0, "w": 900, "h": 760, "title": "01 · Color" },
+    { "file": "Tipografia.dc.html",  "page": "fundamentos", "x": 1960, "y": 0, "w": 900, "h": 880, "title": "02 · Tipografía" },
+    { "file": "Medidas.dc.html",     "page": "fundamentos", "x": 2920, "y": 0, "w": 940, "h": 820, "title": "03 · Medidas" },
+
+    { "file": "Barras.dc.html",      "page": "familias", "x": 0,    "y": 0, "w": 940, "h": 900, "title": "04 · Barra de progreso" },
+    { "file": "Chips.dc.html",       "page": "familias", "x": 1000, "y": 0, "w": 940, "h": 700, "title": "05 · Chip, etiqueta y contador" },
+    { "file": "Tarjeta.dc.html",     "page": "familias", "x": 2000, "y": 0, "w": 940, "h": 880, "title": "06 · Tarjeta y regla de acento" }
+  ],
+  "annotations": [
+    {
+      "id": "nota-fundamentos",
+      "page": "fundamentos",
+      "x": 0,
+      "y": -150,
+      "w": 620,
+      "text": "Fundamentos: la capa que web y Android comparten.\n\nCada valor sale de colors_and_type.css, salvo lo que va marcado como PROPUESTO — esos aún no se pueden citar de una línea del código, y se declaran aquí para decidirlos.\n\nEmpieza por 00: es la decisión que ordena todo lo demás."
+    },
+    {
+      "id": "nota-familias",
+      "page": "familias",
+      "x": 0,
+      "y": -150,
+      "w": 620,
+      "text": "Familias: la forma canónica de cada pieza, y lo que absorbe.\n\nEl orden no es estético, es de riesgo. Barras primero (la más grande y la más mecánica), tarjeta junto con la regla de acento (tocan las mismas 53 clases), chips al final (es la única que no se puede automatizar).\n\nLo que no aparezca aquí ni en una pantalla de la v1, se retira."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "fundamentos" }
+}

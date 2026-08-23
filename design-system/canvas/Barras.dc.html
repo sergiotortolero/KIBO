@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
+    a { color: #0F6E6B; } a:hover { color: #178F8B; }
+    .eyebrow { font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: #6B7280; }
+    .card { background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; padding: 18px 20px; }
+    .dead { font-size: 11px; color: #6B7280; line-height: 1.7; }
+    .dead s { color: #9CA3AF; }
+  </style>
+</helmet>
+<div style="padding: 36px 40px; display: flex; flex-direction: column; gap: 24px; background: #F7F8FA; min-height: 100%; box-sizing: border-box">
+
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div class="eyebrow">04 · familias · la primera consolidación</div>
+    <div style="font-family: 'Plus Jakarta Sans'; font-size: 26px; font-weight: 800; letter-spacing: -.015em; color: #1A1A2E">Barra de progreso</div>
+    <div style="font-size: 13px; line-height: 1.55; color: #6B7280; max-width: 640px">Hoy existen <strong style="color:#1A1A2E">47 implementaciones distintas</strong> en diez alturas. Esta es la única que sobrevive: un carril, cuatro alturas, cinco papeles de color. Todo lo demás se retira.</div>
+  </div>
+
+  <div class="card" style="display: flex; flex-direction: column; gap: 18px">
+    <div class="eyebrow">ALTURAS · el tamaño lo decide el sitio, no la pantalla</div>
+    <sc-for list="{{sizes}}" as="s" hint-placeholder-count="4">
+      <div style="display: grid; grid-template-columns: 118px 1fr 44px; gap: 16px; align-items: center">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">{{s.mod}}</div>
+          <div style="font-size: 10px; color: #6B7280">{{s.use}}</div>
+        </div>
+        <div style="height: {{s.h}}; border-radius: 999px; background: #EEF1F5; overflow: hidden">
+          <div style="width: 62%; height: 100%; border-radius: 999px; background: #1CA4A0"></div>
+        </div>
+        <div style="font-size: 11px; color: #6B7280; text-align: right">{{s.h}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div class="card" style="display: flex; flex-direction: column; gap: 18px">
+    <div class="eyebrow">PAPELES · el color dice qué se está midiendo</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 26px">
+      <sc-for list="{{roles}}" as="r" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">{{r.name}}</div>
+            <div style="font-family: 'Plus Jakarta Sans'; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; color: {{r.ink}}">{{r.label}}</div>
+          </div>
+          <div style="height: 8px; border-radius: 999px; background: {{r.track}}; overflow: hidden">
+            <div style="width: {{r.pct}}; height: 100%; border-radius: 999px; background: {{r.fill}}"></div>
+          </div>
+          <div style="font-size: 10px; color: #6B7280">{{r.mod}}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px">
+    <div class="card" style="display: flex; flex-direction: column; gap: 10px">
+      <div class="eyebrow">LO QUE ABSORBE · 89 usos activos, 20 clases huérfanas</div>
+      <div class="dead"><s>hp-bar-track</s> · <s>hp-bar-fill</s> · <s>hb-track</s> · <s>hb-fill</s> · <s>xp-track</s> · <s>xp-fill</s> · <s>kbv-bar</s> · <s>ch-level-bar</s> · <s>og-bar</s> · <s>sg-bar</s> · <s>fw-bar</s> · <s>wi-bar</s> · <s>weight-bar</s> · <s>sbd-track</s> · <s>sh-bar</s> · <s>smx-bar</s> · <s>wr-bar</s> · <s>wc-bar</s> · <s>ht-track</s> · <s>ht-fill</s> · <s>ea-track</s> · <s>ev-bar</s> · <s>rk-bar</s> · <s>sem-bar</s> · <s>arp-track</s> · <s>all-track</s> · <s>cmp-track</s> · <s>ab-bar</s> · <s>rt-bar-track</s> · <s>rt-bar-fill</s> · <s>evr-track</s> · <s>evr-fill</s> · <s>rm-track</s> · <s>ach-bar</s> · <s>ah-bar</s> · <s>pp-track</s> · <s>ptl-track</s> · y 17 variantes más, una por pantalla</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #E4F4F3; border: 1px solid #E8ECF0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1CA4A0" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M20 6 9 17l-5-5"/></svg>
+        <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E">Nada cambia en pantalla salvo la barra de HP, que pasa de 12 a 10&nbsp;px. El resto se mueve un píxel o ninguno.</div>
+      </div>
+      <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E8ECF0">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B26A00" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+        <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E">Las 27 llamadas que pasan alto y color <strong>en línea</strong> pasan a modificador. Es lo que hace que la familia no vuelva a crecer.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      sizes: [
+        { mod: 'xs',            h: '4px',  use: 'Dentro de una fila densa' },
+        { mod: 'sm',            h: '6px',  use: 'Tarjeta compacta' },
+        { mod: 'md · por defecto', h: '8px', use: 'El caso normal' },
+        { mod: 'lg',            h: '10px', use: 'Protagonista de la vista' },
+      ],
+      roles: [
+        { name: 'HP',      mod: 'tone-hp',       label: '46 / 80',  pct: '58%', fill: '#E64545', track: '#FDECEC', ink: '#B02B2B' },
+        { name: 'XP',      mod: 'tone-xp',       label: 'Nv 16',    pct: '72%', fill: '#1CA4A0', track: '#E4F4F3', ink: '#0F6E6B' },
+        { name: 'Meta',    mod: 'tone-goal',     label: '62 %',     pct: '62%', fill: '#10B981', track: '#EEF1F5', ink: '#0B7355' },
+        { name: 'Racha',   mod: 'tone-streak',   label: '23 días',  pct: '38%', fill: '#FF7A45', track: '#EEF1F5', ink: '#9A3B10' },
+        { name: 'Avance',  mod: 'tone-progress', label: '9 / 12',   pct: '75%', fill: '#6B7280', track: '#EEF1F5', ink: '#1A1A2E' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

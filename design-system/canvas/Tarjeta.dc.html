@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
+    a { color: #0F6E6B; } a:hover { color: #178F8B; }
+    .eyebrow { font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: #6B7280; }
+    .card { background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; box-shadow: 0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02); }
+    .pane { background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; padding: 18px 20px; }
+    .lbl { font-size: 10px; color: #6B7280; }
+    .ttl { font-family: 'Plus Jakarta Sans'; font-size: 15px; font-weight: 700; color: #1A1A2E; }
+  </style>
+</helmet>
+<div style="padding: 36px 40px; display: flex; flex-direction: column; gap: 24px; background: #F7F8FA; min-height: 100%; box-sizing: border-box">
+
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div class="eyebrow">06 · familias · una base y una regla, en un solo movimiento</div>
+    <div style="font-family: 'Plus Jakarta Sans'; font-size: 26px; font-weight: 800; letter-spacing: -.015em; color: #1A1A2E">Tarjeta</div>
+    <div style="font-size: 13px; line-height: 1.55; color: #6B7280; max-width: 660px">Hay <strong style="color:#1A1A2E">53 clases de tarjeta</strong> y cuatro «bases» que son la misma: dos de ellas se diferencian en 2&nbsp;px de separación interna. Queda una base con tres densidades. Y como 53 de esas clases llevan franja de color en la orilla, el acento se corrige en la misma pasada — separarlos es hacer el trabajo dos veces.</div>
+  </div>
+
+  <div class="pane" style="display: flex; flex-direction: column; gap: 16px">
+    <div class="eyebrow">DENSIDADES · lo único que cambia es el aire de adentro</div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: start">
+      <sc-for list="{{dens}}" as="d" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; gap: 7px">
+          <div class="card" style="padding: {{d.pad}}; display: flex; flex-direction: column; gap: {{d.gap}}">
+            <div class="ttl">Correr 5 km</div>
+            <div style="font-size: 12px; color: #6B7280">Vigor · vence hoy</div>
+          </div>
+          <div style="display: flex; justify-content: space-between">
+            <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">{{d.mod}}</div>
+            <div class="lbl">{{d.pad}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div class="pane" style="display: flex; flex-direction: column; gap: 16px">
+    <div class="eyebrow">ACENTO · cuatro patrones, y ninguno es una franja en la orilla</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 22px">
+
+      <div style="display: flex; flex-direction: column; gap: 7px">
+        <div class="card" style="overflow: hidden">
+          <div style="padding: 11px 16px; background: rgba(168,85,247,.11); border-bottom: 2px solid rgba(168,85,247,.18); display: flex; align-items: center; gap: 8px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#7A2FB8" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M17 11h4"/><path d="M19 9v4"/></svg>
+            <div style="font-size: 12px; font-weight: 700; color: #7A2FB8">Comunidad</div>
+          </div>
+          <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+            <div class="ttl">Cena con los papás</div>
+            <div style="font-size: 12px; color: #6B7280">Nivel 7 · 340 XP para el 8</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">Banda de encabezado al 11 %</div>
+        <div class="lbl">Tarjeta grande, de 120 px de alto para arriba</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px">
+        <div class="card" style="padding: 14px 16px; display: flex; align-items: center; gap: 11px">
+          <div style="width: 18px; height: 18px; border-radius: 5px; border: 1.6px solid #D6DCE3; flex-shrink: 0"></div>
+          <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 3px">
+            <div style="font-size: 13px; font-weight: 600; color: #1A1A2E">Revisar el presupuesto</div>
+            <div style="display: inline-flex; align-items: center; gap: 5px; height: 20px; padding: 0 8px; border-radius: 7px; background: rgba(234,179,8,.14); font-size: 10px; font-weight: 700; color: #8A6410; align-self: flex-start">Riqueza</div>
+          </div>
+          <div style="display: flex; gap: 2px; align-items: flex-end; flex-shrink: 0">
+            <div style="width: 3px; height: 7px; border-radius: 2px; background: #F4811F"></div>
+            <div style="width: 3px; height: 10px; border-radius: 2px; background: #F4811F"></div>
+            <div style="width: 3px; height: 13px; border-radius: 2px; background: #EEF1F5"></div>
+          </div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">Pastilla de área</div>
+        <div class="lbl">Pieza compacta · el área pinta, la prioridad marca con el medidor</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px">
+        <div class="card" style="padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">Martes</div>
+            <div style="font-size: 11px; color: #6B7280">09:00 — 11:30</div>
+          </div>
+          <div style="height: 26px; border-radius: 8px; background: #06B6D4; display: flex; align-items: center; padding: 0 10px">
+            <div style="font-size: 11px; font-weight: 700; color: #06333B">Bloque de foco</div>
+          </div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">Barra sólida</div>
+        <div class="lbl">Cronograma y agenda · la tinta va dentro, legible sobre el color</div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 7px">
+        <div class="card" style="padding: 14px 16px; background: rgba(28,164,160,.06); display: flex; gap: 10px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0F6E6B" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4"/></svg>
+          <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E">Perdiste la racha ayer, pero recuperarla hoy cuenta doble. El fracaso reencauza.</div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">Fondo tintado al 6 %</div>
+        <div class="lbl">Nota, cita, aviso · siempre con glifo</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #E4F4F3; border: 1px solid #E8ECF0">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1CA4A0" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M20 6 9 17l-5-5"/></svg>
+    <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E"><strong>Lo que se ve distinto:</strong> el relleno se mueve 4&nbsp;px hacia adentro en 74 tarjetas. Se nota comparando lado a lado; no se nota usando la aplicación.</div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":880}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      dens: [
+        { mod: 'flush',            pad: '0px',        gap: '0px' },
+        { mod: 'md · por defecto', pad: '18px 22px',  gap: '5px' },
+        { mod: 'tight',            pad: '14px 16px',  gap: '4px' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

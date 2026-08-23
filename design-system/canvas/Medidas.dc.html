@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
+    a { color: #0F6E6B; } a:hover { color: #178F8B; }
+    .eyebrow { font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: #6B7280; }
+    .pane { background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; padding: 18px 20px; }
+    .lbl { font-size: 10px; color: #6B7280; }
+    .new { display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 999px; background: #E4F4F3; color: #0F6E6B; font-size: 9px; font-weight: 700; }
+    .old { display: inline-flex; align-items: center; height: 16px; padding: 0 6px; border-radius: 999px; background: #FDECEC; color: #B02B2B; font-size: 9px; font-weight: 700; }
+  </style>
+</helmet>
+<div style="padding: 36px 40px; display: flex; flex-direction: column; gap: 24px; background: #F7F8FA; min-height: 100%; box-sizing: border-box">
+
+  <div style="display: flex; flex-direction: column; gap: 4px">
+    <div class="eyebrow">03 · fundamentos</div>
+    <div style="font-family: 'Plus Jakarta Sans'; font-size: 26px; font-weight: 800; letter-spacing: -.015em; color: #1A1A2E">Medidas</div>
+    <div style="font-size: 13px; line-height: 1.55; color: #6B7280; max-width: 640px">El 68&nbsp;% de los espaciados y el 76&nbsp;% de los tamaños ya caen exactamente en un peldaño de la escala — escritos a mano. No falta diseño: falta adopción, más tres peldaños que nunca se declararon.</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px">
+
+    <div class="pane" style="display: flex; flex-direction: column; gap: 14px">
+      <div class="eyebrow">ESPACIADO · rejilla de 2 px</div>
+      <div style="display: flex; flex-direction: column; gap: 9px">
+        <sc-for list="{{sp}}" as="s" hint-placeholder-count="10">
+          <div style="display: grid; grid-template-columns: 84px 1fr 62px; gap: 12px; align-items: center">
+            <div style="font-size: 11px; font-weight: 600; color: #1A1A2E">{{s.tok}}</div>
+            <div style="height: 12px; width: {{s.px}}; border-radius: 3px; background: {{s.color}}"></div>
+            <div style="font-size: 11px; color: #6B7280; text-align: right">{{s.note}}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font-size: 11px; line-height: 1.45; color: #6B7280; padding-top: 4px; border-top: 1px solid #F0F2F6">Falta el peldaño de 14&nbsp;px: 250 usos lo escriben a mano. Añadirlo y redondear 583 valores impares lleva la adopción de 68&nbsp;% a 94&nbsp;%.</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 18px">
+
+      <div class="pane" style="display: flex; flex-direction: column; gap: 14px">
+        <div class="eyebrow">RADIOS · suaves, nunca crudos</div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap">
+          <sc-for list="{{rad}}" as="r" hint-placeholder-count="6">
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center">
+              <div style="width: 56px; height: 44px; background: #EEF1F5; border: 1px solid #E8ECF0; border-radius: {{r.px}}"></div>
+              <div style="font-size: 10px; font-weight: 600; color: #1A1A2E">{{r.name}}</div>
+              <div class="lbl">{{r.px}}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; padding-top: 4px; border-top: 1px solid #F0F2F6">
+          <span class="old">se retiran</span>
+          <div style="font-size: 11px; color: #6B7280">12 y 16&nbsp;px, de la escala vieja — 152 usos por migrar</div>
+        </div>
+      </div>
+
+      <div class="pane" style="display: flex; flex-direction: column; gap: 14px">
+        <div class="eyebrow">SOMBRAS · azul marino, siempre suaves</div>
+        <div style="display: flex; gap: 12px">
+          <sc-for list="{{sh}}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; flex-direction: column; gap: 6px; align-items: center; flex-grow: 1">
+              <div style="width: 100%; height: 40px; background: #FFFFFF; border-radius: 14px; box-shadow: {{s.css}}"></div>
+              <div style="font-size: 10px; font-weight: 600; color: #1A1A2E">{{s.name}}</div>
+              <div class="lbl">{{s.use}}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="pane" style="display: flex; flex-direction: column; gap: 14px">
+    <div class="eyebrow">ALTO DE CONTROL · una sola cifra, y es la que ya obliga el móvil</div>
+    <div style="display: flex; align-items: flex-end; gap: 24px; flex-wrap: wrap">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="height: 42px; width: 150px; border-radius: 10px; border: 1px solid #E8ECF0; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: #6B7280; opacity: .5">42 px</div>
+        <div class="lbl">Lo que dice el traspaso</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="height: 44px; width: 150px; border-radius: 10px; border: 1.5px solid #1CA4A0; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 13px; font-weight: 600; color: #1A1A2E; box-shadow: 0 0 0 3px rgba(28,164,160,.10)">44 px</div>
+        <div style="font-size: 11px; font-weight: 700; color: #0F6E6B">La propuesta</div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="height: 46px; width: 150px; border-radius: 10px; border: 1px solid #E8ECF0; background: #FFFFFF; display: flex; align-items: center; padding: 0 12px; font-size: 13px; color: #6B7280; opacity: .5">46 px</div>
+        <div class="lbl">Lo que dice el token</div>
+      </div>
+      <div style="flex-grow: 1; min-width: 260px; font-size: 12px; line-height: 1.5; color: #1A1A2E">Las dos cifras nunca se pisaron: son clases distintas que viven en pantallas distintas. <strong>44&nbsp;px</strong> es el piso táctil que la hoja del armazón ya obliga para todo lo demás, así que adoptarlo elimina la excepción en vez de crear otra — y son dos ediciones, sin tocar los 209 usos.</div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = '#1CA4A0', G = '#C9D3DC';
+    return {
+      sp: [
+        { tok: '--kb-sp-1', px: '2px',  color: G, note: '2' },
+        { tok: '--kb-sp-2', px: '4px',  color: G, note: '4' },
+        { tok: '--kb-sp-3', px: '6px',  color: G, note: '6' },
+        { tok: '--kb-sp-4', px: '8px',  color: T, note: '8 · el más usado' },
+        { tok: '--kb-sp-5', px: '10px', color: G, note: '10' },
+        { tok: '--kb-sp-6', px: '12px', color: T, note: '12 · por defecto' },
+        { tok: 'PROPUESTO', px: '14px', color: '#F4B740', note: '14 · falta' },
+        { tok: '--kb-sp-7', px: '16px', color: G, note: '16' },
+        { tok: '--kb-sp-8', px: '20px', color: G, note: '20' },
+        { tok: '--kb-sp-9', px: '24px', color: G, note: '24' },
+      ],
+      rad: [
+        { name: 'xs',   px: '8px' },
+        { name: 'sm',   px: '10px' },
+        { name: 'md',   px: '14px' },
+        { name: 'lg',   px: '18px' },
+        { name: 'xl',   px: '24px' },
+        { name: 'pill', px: '999px' },
+      ],
+      sh: [
+        { name: 'sh-1',   use: 'reposo',   css: '0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02)' },
+        { name: 'sh-2',   use: 'elevada',  css: '0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04)' },
+        { name: 'sh-3',   use: 'levantada',css: '0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06)' },
+        { name: 'sh-pop', use: 'diálogo',  css: '0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10)' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>
