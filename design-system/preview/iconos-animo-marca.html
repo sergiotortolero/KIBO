@@ -1,0 +1,68 @@
+<!-- @dsCard group="04 · Íconos" viewport="700x451" name="Íconos · ánimo, KIBO y marca" subtitle="Escala de ánimo del Diario, glifos que consume la mascota, y logos de terceros" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:16px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.dom{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:11px 13px;margin-bottom:9px}
+.dh{margin-bottom:11px}
+.dn{font-family:var(--kb-f-label);font-size:11.5px;font-weight:800;color:var(--kb-primary-ink);display:block;letter-spacing:.09em;text-transform:uppercase}
+.dd{font-size:11px;color:var(--kb-text-2);line-height:1.45;display:block;margin-top:2px}
+/* rejilla fija: los glifos ya no se aprietan */
+.set{display:grid;grid-template-columns:repeat(7,1fr);gap:11px 8px;align-items:start}
+.i{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.i>span{color:var(--kb-text-2);height:24px;display:grid;place-items:center}
+.i em{font-style:normal;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.25;overflow-wrap:anywhere;letter-spacing:.09em;text-transform:uppercase}
+.i.miss>span{background:var(--kb-hp-soft);border-radius:5px;width:26px}
+.i.miss em{color:#B3261E}
+/* nuevo: dibujado por el DS, no por icons.jsx */
+.i.ds>span{position:relative}
+.i.ds>span::after{content:"";position:absolute;top:-1px;right:-3px;width:6px;height:6px;border-radius:50%;background:#A855F7}
+.i.ds em{color:#7C3AED}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>set real</b> · monta <b>icons.jsx</b> + los 6 glifos nuevos de <b>kicon-faltantes.jsx</b> · el punto morado marca los que el DS agrega</div>
+  <div id="app"></div>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/kicon-faltantes.jsx"></script>
+<script type="text/babel">
+const K = window.__KIconApp;
+const DOM = [
+  ["ánimo", "Registro de ánimo en el Diario. No se mezcla con los 8 ánimos de KIBO.", ["mood-great","mood-good","mood-meh","mood-low","mood-sad","mood-neutral","mood-bad"]],
+  ["kibo", "Glifos que consume la mascota: formas de travesura y objetos que sostiene. No son íconos de UI.", ["droplet","heart"]],
+  ["marca", "Logos de terceros para inicio de sesión social. Nunca se recolorean.", ["google","microsoft"]]
+];
+function Glyph({ name, size = 22 }) {
+  const el = K ? K({ name, size, stroke: size <= 16 ? 2.4 : 2 }) : null;
+  return <span>{el}</span>;
+}
+function has(name) { return K ? K({ name, size: 18 }) !== null : false; }
+// ¿lo dibuja el DS o el set? Lo resuelve kiconIsFromDS(), que le pregunta al
+// set real — así la marca morada se apaga sola cuando icons.jsx los implemente.
+const fromDS = (n) => typeof window.kiconIsFromDS === "function" && window.kiconIsFromDS(n);
+function App() {
+  return (
+    <React.Fragment>
+      {DOM.map(([dn, dd, names]) => (
+        <div className="dom" key={dn}>
+          <div className="dh"><span className="dn">{dn}</span><span className="dd">{dd}</span></div>
+          <div className="set">
+            {names.map(n => (
+              <span className={"i" + (has(n) ? (fromDS(n) ? " ds" : "") : " miss")} key={n}
+                    title={fromDS(n) ? n + " — dibujado por el DS (kicon-faltantes.jsx)" : (has(n) ? n : n + " — sin dibujo")}>
+                <Glyph name={n} /><em>{n}</em>
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body></html>

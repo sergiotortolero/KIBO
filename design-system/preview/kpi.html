@@ -1,0 +1,86 @@
+<!-- @dsCard group="08 · Datos" viewport="700x436" name="KPI e indicadores" subtitle="Una sola anatomía: etiqueta con glifo, valor dominante, pie con comparativa y estado" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 8px;display:block;text-transform:uppercase}
+.hd:not(:first-of-type){margin-top:14px}
+.hd em{font-style:normal;color:var(--kb-text-2);letter-spacing:.02em;text-transform:none;font-weight:700}
+.row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.k{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 12px 9px;display:flex;flex-direction:column;gap:7px}
+.lbl{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--c);display:inline-flex;align-items:center;gap:5px;white-space:nowrap;text-transform:uppercase}
+.lbl i[data-lucide]{width:11px;height:11px;stroke-width:2.4;flex:none}
+.val{font-family:var(--kb-f-display);font-weight:800;font-size:30px;line-height:1;color:var(--kb-text);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:6px;padding-top:8px;border-top:1px solid var(--kb-border-soft)}
+.d{font-family:var(--kb-f-display);font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.d i[data-lucide]{width:11px;height:11px;stroke-width:2.6}
+.d.up{color:var(--kb-good-ink)}.d.down{color:var(--kb-hp-ink)}.d.flat{color:var(--kb-text-3)}
+.st{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;padding:2.5px 7px;border-radius:var(--kb-r-pill);white-space:nowrap;text-transform:uppercase}
+.st.ok{background:color-mix(in oklab,var(--kb-good) 13%,#fff);color:var(--kb-good-ink)}
+.st.late{background:var(--kb-hp-soft);color:var(--kb-hp-ink)}
+.st.warn{background:var(--kb-coin-soft);color:var(--kb-coin-ink)}
+/* estados */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.sk .val{background:var(--kb-surface-2);border-radius:var(--kb-r-xs);color:transparent;animation:pulse 1.2s var(--kb-ease-standard) infinite}
+.sk .lbl{background:var(--kb-surface-2);border-radius:4px;color:transparent;width:64%}
+.sk .st,.sk .d{background:var(--kb-surface-2);color:transparent;border-radius:var(--kb-r-pill)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.err{border-color:color-mix(in oklab,var(--kb-hp) 32%,var(--kb-border))}
+.err .val{color:var(--kb-text-3);font-size:20px}
+.empty .val{color:var(--kb-border-strong)}
+.lock{position:relative;overflow:hidden}
+.lock .val{filter:blur(5px);color:var(--kb-text-3)}
+.lock .pl{position:absolute;inset:0;background:color-mix(in oklab,var(--kb-canvas) 72%,transparent);display:grid;place-items:center;gap:4px;align-content:center}
+.lock .pl i[data-lucide]{width:15px;height:15px;color:var(--kb-primary-ink);stroke-width:2.2}
+.lock .pl b{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-primary-ink);text-transform:uppercase}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E;font-weight:800}
+</style></head>
+<body class="kb-root">
+  <span class="hd">La anatomía <em>— siempre estas cuatro partes, en este orden</em></span>
+  <div class="row">
+    <div class="k" style="--c:var(--kb-primary-ink)">
+      <span class="lbl"><i data-lucide="trending-up"></i> XP semanal</span>
+      <span class="val">1 240</span>
+      <div class="foot"><span class="d up"><i data-lucide="arrow-up-right"></i>18%</span><span class="st ok">Al día</span></div>
+    </div>
+    <div class="k" style="--c:var(--kb-streak-ink)">
+      <span class="lbl"><i data-lucide="flame"></i> Racha</span>
+      <span class="val">21</span>
+      <div class="foot"><span class="d up"><i data-lucide="arrow-up-right"></i>3 d</span><span class="st ok">Activa</span></div>
+    </div>
+    <div class="k" style="--c:var(--kb-coin-ink)">
+      <span class="lbl"><i data-lucide="circle-dollar-sign"></i> Monedas</span>
+      <span class="val">860</span>
+      <div class="foot"><span class="d down"><i data-lucide="arrow-down-right"></i>4%</span><span class="st warn">Bajó</span></div>
+    </div>
+    <div class="k" style="--c:var(--kb-primary-ink)">
+      <span class="lbl"><i data-lucide="target"></i> Hábitos</span>
+      <span class="val">7/9</span>
+      <div class="foot"><span class="d flat"><i data-lucide="minus"></i>igual</span><span class="st late">Atrasado</span></div>
+    </div>
+  </div>
+  <span class="hd">Los estados obligatorios <em>— un KPI sin estos cuatro está incompleto</em></span>
+  <div class="sg">
+    <div class="k sk"><span class="lbl">cargando</span><span class="val">0000</span><div class="foot"><span class="d">···</span><span class="st">·····</span></div></div>
+    <div class="k err" style="--c:var(--kb-hp-ink)">
+      <span class="lbl"><i data-lucide="alert-triangle"></i> XP semanal</span>
+      <span class="val">Sin datos</span>
+      <div class="foot"><span class="d flat">no se pudo leer</span><span class="st late">Error</span></div>
+    </div>
+    <div class="k empty" style="--c:var(--kb-text-3)">
+      <span class="lbl"><i data-lucide="inbox"></i> Racha</span>
+      <span class="val">0</span>
+      <div class="foot"><span class="d flat">empieza hoy</span><span class="st warn">Vacío</span></div>
+    </div>
+    <div class="k lock" style="--c:var(--kb-primary-ink)">
+      <span class="lbl"><i data-lucide="bar-chart-3"></i> Comparativa</span>
+      <span class="val">1 240</span>
+      <div class="foot"><span class="d up">18%</span><span class="st ok">Al día</span></div>
+      <span class="pl"><i data-lucide="shield"></i><b>Función premium</b></span>
+    </div>
+  </div>
+  <p class="no"><b>Sin sparkline y sin barra de meta en el KPI base</b> — si el dato necesita una tendencia dibujada, es una gráfica, no un KPI. La comparativa siempre dice <b>contra qué periodo</b>. Verde solo cuando subir es bueno: en «gastos» o «fallos», subir es malo. <u>Cero KPI decorativos</u>: si el número no cambia una decisión, no va.</p>
+  <script>lucide.createIcons()</script>
+</body></html>

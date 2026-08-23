@@ -1,0 +1,48 @@
+<!-- @dsCard group="08 · Datos" viewport="700x377" name="Datos · combinado" subtitle="Dos métricas de distinta unidad en un mismo eje X" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;line-height:1.5;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.lead u{text-decoration:none;color:#7C3AED;font-weight:800}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.pt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.pn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text)}
+.px{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.pd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.pd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.sold{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:color-mix(in oklab,var(--kb-gem) 16%,#fff);color:#3A4F9C;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.leg{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px}
+.leg span{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.leg i{width:9px;height:9px;border-radius:3px;display:block}
+.g{display:grid;grid-template-columns:1fr;gap:11px}
+.cap{max-width:250px;margin:0 auto}
+.duo{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.duo>div:first-child{flex:0 0 210px}
+.duo>div:last-child{flex:1;min-width:240px}
+</style></head>
+<body class="kb-root">
+  <p class="lead"><b>¿estas dos cosas se mueven juntas?</b> · barras y línea comparten el eje X pero cada una tiene su escala</p>
+  <div class="g">
+    <div class="p">
+      <div class="pt"><span class="pn">Combinado</span><span class="px">2 métricas máx.</span></div>
+      <p class="pd">XP en barras teal con su eje a la izquierda; racha en línea naranja con el suyo a la derecha, en el color de la línea para que se sepa cuál es cuál. <b>Solo dos</b> — con tres escalas nadie lo lee, y sin el eje del color derecho la línea es decorativa.</p>
+      <div id="f3"></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/charts-nuevas.jsx"></script>
+<script type="text/babel" src="../reference/app/charts-catalogo.jsx"></script>
+<script type="text/babel">ReactDOM.createRoot(document.getElementById("f3")).render(
+  <Combo points={[
+    { label:"Lun", xp:180, racha:14 }, { label:"Mar", xp:240, racha:15 },
+    { label:"Mié", xp:120, racha:16 }, { label:"Jue", xp:310, racha:17 },
+    { label:"Vie", xp:280, racha:18 }, { label:"Sáb", xp:190, racha:19 },
+    { label:"Dom", xp:340, racha:21 },
+  ]} />);
+</script>
+</body></html>

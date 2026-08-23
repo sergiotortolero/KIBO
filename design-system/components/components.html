@@ -1,0 +1,46 @@
+<!-- @dsCard group="06 · Moléculas" viewport="700x230" name="Componentes del bundle" subtitle="KbButton · KbCard · KbChip · KbStatPill · KbEmblem — importables desde el namespace" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="../_ds_bundle.js"></script>
+<style>html,body{margin:0}body{background:var(--kb-canvas);font-family:var(--kb-f-body);padding:22px 26px}</style>
+</head><body class="kb-root"><div id="root"></div>
+<script>
+const e = React.createElement;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+let tries = 0;
+(function mount(){
+  const NS = window.KiboDesignSystem_07af9d;
+  if (NS && NS.KbButton) {
+    const { KbButton, KbCard, KbChip, KbStatPill, KbEmblem } = NS;
+    root.render(
+      e('div', { style: { display: 'flex', flexDirection: 'column', gap: 14 } },
+        e('div', { style: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' } },
+          e(KbButton, null, 'Crear misión'),
+          e(KbButton, { variant: 'secondary' }, 'Volver'),
+          e(KbButton, { variant: 'danger' }, 'Eliminar'),
+          e(KbChip, { on: true }, 'Todas'),
+          e(KbChip, { color: 'var(--area-wisdom)' }, 'Sabiduría')
+        ),
+        e('div', { style: { display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' } },
+          e(KbStatPill, { kind: 'coin', value: '1 250' }),
+          e(KbStatPill, { kind: 'gem', value: '38' }),
+          e(KbStatPill, { kind: 'streak', value: '42' }),
+          e(KbEmblem, { material: 'oro', level: 35 }),
+          e(KbEmblem, { material: 'diamante', level: 75, size: 42 }),
+          e(KbEmblem, { locked: true, size: 42 })
+        )
+      )
+    );
+    return;
+  }
+  if (++tries > 100) {
+    root.render(e('div', { style: { fontSize: 12, color: 'var(--kb-text-2)' } }, 'El bundle del design system aún no expone KbButton — recompila (se regenera al final del turno) y recarga.'));
+    return;
+  }
+  if (tries === 1) root.render(e('div', { style: { fontSize: 12, color: 'var(--kb-text-3)' } }, 'Cargando bundle…'));
+  setTimeout(mount, 100);
+})();
+</script>
+</body></html>

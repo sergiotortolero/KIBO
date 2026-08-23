@@ -1,0 +1,77 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x461" name="KIBO · ánimos" subtitle="El ánimo cambia el GESTO y su frecuencia — no el color. El color lo decide la piel comprada" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 11px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}.lead u{text-decoration:none;color:#B3261E;font-weight:800}
+.g{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.it{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 5px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.pad{height:92px;display:grid;place-items:center;width:100%;overflow:hidden}
+.nm{font-family:var(--kb-f-display);font-weight:800;font-size:10.5px;color:var(--kb-text);line-height:1.15;text-align:center}
+.tk{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.25;letter-spacing:.09em;text-transform:uppercase}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:15px 0 8px;display:block;text-transform:uppercase}
+.hd em{font-style:normal;color:var(--kb-text-2);letter-spacing:.02em;text-transform:none;font-weight:700}
+/* frecuencia por personalidad */
+.fr{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.f{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:9px 10px;display:flex;flex-direction:column;gap:6px}
+.fn{font-family:var(--kb-f-display);font-weight:800;font-size:11.5px;color:var(--kb-text);line-height:1.15}
+.fm{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-primary-ink);font-variant-numeric:tabular-nums}
+.fd{font-size:10px;color:var(--kb-text-2);line-height:1.35}
+.tick{height:5px;border-radius:999px;background:var(--kb-surface-2);overflow:hidden;position:relative}
+.tick i{position:absolute;top:0;bottom:0;width:14%;border-radius:999px;background:var(--kb-primary);animation:sweep var(--d) linear infinite}
+@keyframes sweep{from{left:-14%}to{left:100%}}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:13px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E;font-weight:800}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>el ánimo se lee en la cara, no en el color</b> · <u>el color NO cambia con el ánimo</u> — lo decide la piel que el usuario compró</div>
+  <span class="hd" style="margin-top:0">Los 8 ánimos <em>— cambia la pupila, la boca y el gesto; el cuerpo se queda del color equipado</em></span>
+  <div class="g" id="g"></div>
+  <span class="hd">La frecuencia del gesto <em>— la marca la personalidad equipada, comprable en Personalización</em></span>
+  <div class="fr" id="fr"></div>
+  <p class="no" id="note"></p>
+<script type="text/babel" src="../reference/app/kibo-blob.jsx"></script>
+<script type="text/babel">
+const MOODS=['calma','feliz','celebra','travieso','enfocado','sorpresa','cansado','triste'];
+// La piel equipada manda el color. Aquí se fija el teal de fábrica para las 8
+// caras: así se ve que lo que cambia es la EXPRESIÓN, no el tono.
+const SKIN={skin:'sk-teal'};
+function Faces(){
+  return MOODS.map(m => (
+    <div className="it" key={m}>
+      <span className="pad"><KiboBlob size={72} mood={m} ground={false} styleOverride={SKIN} /></span>
+      <span className="nm">{(KIBO_MOODS[m]||{}).label || m}</span>
+      <span className="tk">{m}</span>
+    </div>
+  ));
+}
+const PERS=[
+  {id:'pe-sereno',name:'Sereno',ms:null,desc:'Respira y parpadea. Nada más.',free:true},
+  {id:'pe-jugueton',name:'Juguetón',ms:[4000,8000],desc:'No se puede quedar quieto.'},
+  {id:'pe-teatral',name:'Teatral',ms:[6000,10000],desc:'Cada travesura, una función.'},
+  {id:'pe-coqueto',name:'Coqueto',ms:[7000,12000],desc:'Besos y caras.'},
+  {id:'pe-curioso',name:'Curioso',ms:[12000,18000],desc:'Voltea, señala, saluda.'},
+  {id:'pe-dormilon',name:'Dormilón',ms:[14000,20000],desc:'Bosteza y se escurre.'},
+];
+function Freq(){
+  return PERS.map(p => (
+    <div className="f" key={p.id}>
+      <span className="fn">{p.name}</span>
+      <span className="fm">{p.ms ? (p.ms[0]/1000)+'–'+(p.ms[1]/1000)+' s' : 'nunca'}</span>
+      <span className="tick" style={{'--d':(p.ms?((p.ms[0]+p.ms[1])/2000):0)+'s'}}>{p.ms && <i/>}</span>
+      <span className="fd">{p.desc}</span>
+    </div>
+  ));
+}
+ReactDOM.createRoot(document.getElementById('g')).render(<React.Fragment><Faces/></React.Fragment>);
+ReactDOM.createRoot(document.getElementById('fr')).render(<React.Fragment><Freq/></React.Fragment>);
+document.getElementById('note').innerHTML =
+  '<b>Dos ejes independientes.</b> El <b>ánimo</b> sale del HP y solo mueve la cara: pupila, boca y qué gesto sale. La <b>frecuencia</b> la marca la personalidad equipada. El <b>color</b> lo marca la piel comprada. <u>Un ánimo nunca repinta el cuerpo</u> — si lo hiciera, borraría la piel que el usuario pagó. <b>Sereno</b> es quieto de fábrica: el movimiento se compra.';
+</script>
+</body></html>

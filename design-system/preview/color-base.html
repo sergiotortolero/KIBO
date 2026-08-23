@@ -1,0 +1,46 @@
+<!-- @dsCard group="02 · Color" viewport="700x476" name="Color base y marca" subtitle="Superficies, bordes, texto y el acento teal" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 8px;display:block;text-transform:uppercase}
+.hd:not(:first-of-type){margin-top:14px}
+.g{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.s{display:flex;flex-direction:column;gap:4px}
+.c{height:44px;border-radius:var(--kb-r-sm);box-shadow:inset 0 0 0 1px rgba(20,30,50,.09);display:grid;place-items:center;font-family:var(--kb-f-label);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.n{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text);letter-spacing:.09em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase}
+.h{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.txt{display:flex;flex-direction:column;gap:6px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:10px 12px}
+.tr{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.tr b{font-weight:700}
+.tr s{text-decoration:none;font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.rule{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.rule b{color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+  <span class="hd">Superficies y bordes</span>
+  <div class="g">
+    <div class="s"><div class="c" style="background:var(--kb-canvas)"></div><span class="n">canvas</span><span class="h">#FFFFFF</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-surface)"></div><span class="n">surface</span><span class="h">#F7F8FA</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-surface-2)"></div><span class="n">surface-2</span><span class="h">#EEF1F5</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-border-soft)"></div><span class="n">border-soft</span><span class="h">#F0F2F6</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-border)"></div><span class="n">border</span><span class="h">#E8ECF0</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-border-strong)"></div><span class="n">border-strong</span><span class="h">#D6DCE3</span></div>
+  </div>
+  <span class="hd">Marca · teal «progreso sereno»</span>
+  <div class="g">
+    <div class="s"><div class="c" style="background:var(--kb-primary);color:#fff">Aa</div><span class="n">primary</span><span class="h">#1CA4A0</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-primary-hover);color:#fff">Aa</div><span class="n">primary-hover</span><span class="h">#178F8B</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-primary-soft);color:var(--kb-primary-ink)">Aa</div><span class="n">primary-soft</span><span class="h">#E4F4F3</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-primary-ink);color:#fff">Aa</div><span class="n">primary-ink</span><span class="h">#0F6E6B</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-primary-border)"></div><span class="n">primary-border</span><span class="h">derivado</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-canvas);box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--kb-primary) 10%,transparent)"></div><span class="n">halo de foco</span><span class="h">28%</span></div>
+  </div>
+  <span class="hd">Texto</span>
+  <div class="txt">
+    <div class="tr"><span style="color:var(--kb-text);font-weight:700;font-size:15px">Texto principal · títulos y datos</span><s>text · #1A1A2E</s></div>
+    <div class="tr"><span style="color:var(--kb-text-2);font-size:13px">Texto secundario · descripciones y metadatos</span><s>text-2 · #6B7280</s></div>
+    <div class="tr"><span style="color:var(--kb-text-3);font-size:11px;font-family:var(--kb-f-label);letter-spacing:.1em;text-transform:uppercase">Terciario · cejillas y etiquetas</span><s>text-3 · #6B7280 · AA 4.83:1</s></div>
+  </div>
+  <p class="rule"><b>Una sola acción teal por vista.</b> El teal marca la acción principal, el foco, el progreso y el «tú/ahora». Sobre teal el texto va <b>siempre oscuro</b> salvo en tamaños grandes; para texto normal sobre blanco usa <b>primary-ink</b>.</p>
+</body></html>

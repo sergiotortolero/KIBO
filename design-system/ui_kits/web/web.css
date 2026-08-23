@@ -1,0 +1,84 @@
+/* ============================================================================
+   Kibo · Web UI kit — marketing + auth + onboarding
+   Recreates apps/web (Next.js) screens, reconciled to canonical tokens:
+   teal primary, Jakarta/Inter, soft radii (NOT the live indigo/turquoise).
+   ========================================================================== */
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { font-family: var(--kb-f-body); color: var(--kb-text); background: var(--kb-canvas); }
+.web { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ---- Nav / footer ------------------------------------------------------- */
+.web-nav { border-bottom: 1px solid var(--kb-border); }
+.web-nav-in { max-width: 1080px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+.web-nav-links { display: flex; gap: 26px; font-size: 13px; font-weight: 600; color: var(--kb-text-2); }
+.web-nav-links a { color: inherit; text-decoration: none; cursor: pointer; }
+.web-nav-links a:hover { color: var(--kb-text); }
+.web-foot { border-top: 1px solid var(--kb-border); background: var(--kb-surface); padding: 28px 24px; text-align: center; color: var(--kb-text-3); font-size: 12px; margin-top: auto; }
+
+/* ---- Buttons (shared with app kit) -------------------------------------- */
+.kbv-btn { font-family: var(--kb-f-body); font-weight: 600; font-size: 13px; border: none; cursor: pointer;
+  padding: 10px 18px; border-radius: var(--kb-r-md); display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; text-decoration: none;
+  transition: transform var(--kb-dur-fast) var(--kb-ease-standard), background var(--kb-dur-fast) var(--kb-ease-standard); }
+.kbv-btn-primary { background: var(--kb-primary); color: #fff; box-shadow: 0 2px 0 var(--kb-primary-ink); }
+.kbv-btn-primary:hover { background: var(--kb-primary-hover); }
+.kbv-btn-primary:active { transform: translateY(2px); box-shadow: 0 0 0 var(--kb-primary-ink); }
+.kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text); border: 1px solid var(--kb-border-strong); }
+.kbv-btn-secondary:hover { background: var(--kb-surface); }
+.kbv-btn-lg { padding: 13px 26px; font-size: 15px; border-radius: var(--kb-r-lg); }
+
+/* ---- Hero --------------------------------------------------------------- */
+.hero { max-width: 880px; margin: 0 auto; padding: 90px 24px 40px; text-align: center; }
+.hero h1 { font-family: var(--kb-f-display); font-weight: 800; font-size: clamp(34px, 6vw, 58px); line-height: 1.05; letter-spacing: -.03em; margin: 0; }
+.hero h1 .accent { color: var(--kb-primary); }
+.hero p { font-size: clamp(16px, 2.4vw, 20px); color: var(--kb-text-2); max-width: 560px; margin: 22px auto 0; line-height: 1.55; }
+.hero-cta { display: flex; gap: 12px; justify-content: center; margin-top: 32px; flex-wrap: wrap; }
+.hero-preview { max-width: 1000px; margin: 50px auto 80px; padding: 0 24px; }
+.hero-frame { border: 1px solid var(--kb-border); border-radius: var(--kb-r-xl); background: var(--kb-surface); box-shadow: var(--kb-sh-3); overflow: hidden; }
+.hero-chips { display: flex; gap: 8px; justify-content: center; margin-top: 26px; flex-wrap: wrap; }
+.hero-chip { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: var(--kb-r-pill);
+  background: var(--kb-surface); border: 1px solid var(--kb-border); font-size: 12px; font-weight: 600; color: var(--kb-text-2); }
+
+/* ---- Auth --------------------------------------------------------------- */
+.auth-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; background: var(--kb-surface); }
+.auth-card { width: 100%; max-width: 420px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-2); padding: 30px 28px; }
+.auth-head { text-align: center; margin-bottom: 22px; }
+.auth-head h2 { font-family: var(--kb-f-display); font-weight: 700; font-size: 24px; margin: 0 0 6px; }
+.auth-head p { color: var(--kb-text-2); font-size: 14px; margin: 0; }
+.oauth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+.oauth-btn { display: flex; align-items: center; justify-content: center; gap: 8px; height: 42px; border: 1px solid var(--kb-border-strong); border-radius: var(--kb-r-md); background: var(--kb-card); font-size: 13px; font-weight: 600; cursor: pointer; }
+.oauth-btn:hover { background: var(--kb-surface); }
+.divider { display: flex; align-items: center; gap: 12px; margin: 4px 0 18px; }
+.divider:before, .divider:after { content: ''; flex: 1; height: 1px; background: var(--kb-border); }
+.divider span { font-family: var(--kb-f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--kb-text-3); }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field label { font-size: 12px; font-weight: 600; }
+.field input, .field select, .field textarea { font-family: var(--kb-f-body); font-size: 14px; padding: 11px 13px; border-radius: var(--kb-r-md);
+  border: 1px solid var(--kb-border-strong); background: var(--kb-card); color: var(--kb-text); outline: none; width: 100%; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--kb-primary); box-shadow: 0 0 0 3px var(--kb-primary-soft); }
+.field .hint { font-size: 11px; color: var(--kb-text-3); }
+.auth-foot { text-align: center; font-size: 13px; color: var(--kb-text-2); margin-top: 18px; }
+.auth-foot a { color: var(--kb-primary-ink); font-weight: 600; cursor: pointer; text-decoration: none; }
+
+/* strength meter */
+.strength { display: flex; flex-direction: column; gap: 6px; margin: -4px 0 14px; }
+.strength-bars { display: flex; gap: 5px; }
+.strength-bars i { flex: 1; height: 5px; border-radius: 3px; background: var(--kb-surface-2); }
+.strength-item { font-size: 11px; color: var(--kb-text-3); display: flex; align-items: center; gap: 6px; }
+.strength-item.ok { color: var(--kb-primary-ink); }
+
+/* ---- Onboarding --------------------------------------------------------- */
+.onb-progress { height: 6px; background: var(--kb-surface-2); }
+.onb-progress > i { display: block; height: 100%; background: var(--kb-primary); transition: width var(--kb-dur-slower) var(--kb-ease-out); }
+.onb-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 36px 20px; }
+.onb-card { width: 100%; max-width: 600px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-2); padding: 34px; }
+.onb-head { text-align: center; margin-bottom: 26px; }
+.onb-badge { width: 72px; height: 72px; border-radius: 50%; background: var(--kb-primary-soft); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--kb-primary); }
+.onb-head h2 { font-family: var(--kb-f-display); font-weight: 800; font-size: 30px; margin: 0 0 8px; }
+.onb-head p { color: var(--kb-text-2); font-size: 15px; margin: 0; }
+.onb-avatar { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-bottom: 22px; }
+.onb-avatar-ring { width: 116px; height: 116px; border-radius: 50%; background: var(--kb-surface-2); border: 4px solid #fff; box-shadow: var(--kb-sh-2); display: flex; align-items: center; justify-content: center; color: var(--kb-text-3); position: relative; }
+.onb-cam { position: absolute; bottom: 2px; right: 2px; width: 34px; height: 34px; border-radius: 50%; background: var(--kb-primary); color: #fff; display: flex; align-items: center; justify-content: center; border: 3px solid #fff; cursor: pointer; }
+.onb-foot { display: flex; gap: 12px; margin-top: 8px; }
+.onb-foot .kbv-btn { flex: 1; justify-content: center; }

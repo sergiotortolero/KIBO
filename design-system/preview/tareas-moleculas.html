@@ -1,0 +1,102 @@
+<!-- @dsCard group="12 · Tareas" viewport="700x471" name="Tareas · moléculas y organismos" subtitle="Las piezas compuestas del dominio, en su forma canónica" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 12px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.grp{margin-bottom:13px}
+.gh{display:flex;align-items:baseline;gap:8px;margin-bottom:7px}
+.gn{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.gd{font-size:10px;color:var(--kb-text-3);line-height:1.4}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:start}
+.cap{display:block;margin-top:6px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+/* ── átomos reusados ── */
+.pri{font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:2px 7px;border-radius:var(--kb-r-pill);white-space:nowrap;background:color-mix(in oklab,var(--p) 13%,#fff);color:color-mix(in oklab,var(--p) 72%,var(--kb-text));letter-spacing:.09em;text-transform:uppercase}
+.ap{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--kb-ink-on-tint);white-space:nowrap}
+.ap i{width:6px;height:6px;border-radius:50%;background:var(--c);display:block;flex:none}
+.chk{width:16px;height:16px;border-radius:5px;flex:none;border:2px solid var(--kb-border-strong);background:var(--kb-card)}
+.dt{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-text);white-space:nowrap}
+.dt small{font-weight:500;color:var(--kb-text-3)}
+.dt.urg{color:color-mix(in oklab,var(--pri-urgent) 72%,var(--kb-text))}
+.bar{display:block;width:100%;min-width:30px;height:4px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+/* ── molécula · tarjeta de kanban: banda de encabezado, sin franja lateral ── */
+.kc{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden}
+.kc .band{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 11px;background:color-mix(in oklab,var(--c) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--c) 18%,var(--kb-border))}
+.kc .bd{padding:9px 11px;display:flex;flex-direction:column;gap:7px}
+.ti{font-family:var(--kb-f-display);font-weight:700;font-size:13px;color:var(--kb-text);line-height:1.3}
+.mt{display:flex;flex-wrap:wrap;gap:7px;align-items:center;font-size:11px;color:var(--kb-text-2)}
+/* ── molécula · fila de deadline: pastilla, la pieza es muy baja para banda ── */
+.dl{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:9px;padding:8px 11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1)}
+.dl.urgent{border-color:color-mix(in oklab,var(--pri-urgent) 34%,var(--kb-border));background:color-mix(in oklab,var(--pri-urgent) 4%,var(--kb-card))}
+.nm{font-weight:600;font-size:12.5px;color:var(--kb-text);line-height:1.25}
+/* ── organismo · bloque de horario: barra sólida con tinta legible ── */
+.sch{display:flex;flex-direction:column;gap:5px}
+.sblk{padding:7px 10px;border-radius:var(--kb-r-sm);background:color-mix(in oklab,var(--bc) 22%,#fff);display:flex;flex-direction:column;gap:2px}
+.sblk .t{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:color-mix(in oklab,var(--bc) 72%,var(--kb-text));letter-spacing:.09em;text-transform:uppercase}
+.sblk .s{font-size:11.5px;font-weight:600;color:var(--kb-text);line-height:1.2}
+/* ── organismo · grupo de backlog: el estado colorea el borde, sin franja ── */
+.bg{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden}
+.bg .band{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 11px;background:color-mix(in oklab,var(--c) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--c) 18%,var(--kb-border))}
+.bg .items{padding:8px;display:flex;flex-direction:column;gap:6px}
+.bg.over{border-color:var(--c);background:color-mix(in oklab,var(--c) 8%,var(--kb-card))}
+.bi{display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--kb-card);border:1px solid var(--kb-border-soft);border-radius:var(--kb-r-xs)}
+.cnt{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-ink-on-tint)}
+.foot{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.foot b{color:var(--kb-text);font-weight:700}
+.foot code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+<p class="lead"><b>molécula</b> · lo que se repite en una lista · <b>organismo</b> · lo que agrupa y recibe interacción</p>
+
+<div class="grp">
+  <div class="gh"><span class="gn">molécula</span><span class="gd">el área se comunica por banda de encabezado en la tarjeta, y por pastilla cuando la pieza es muy baja</span></div>
+  <div class="two">
+    <div>
+      <article class="kc" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)">
+        <div class="band"><span class="ap" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)"><i></i>Sabiduría</span><span class="pri" style="--p:#E64545">urgente</span></div>
+        <div class="bd">
+          <span class="ti">Rediseñar el onboarding</span>
+          <div class="mt"><span class="dt">12 jun <small>· 3 d</small></span><span class="cnt">3/5</span></div>
+          <span class="bar"><i style="width:60%"></i></span>
+        </div>
+      </article>
+      <span class="cap">tarjeta de kanban</span>
+    </div>
+    <div>
+      <div class="dl"><span class="chk"></span><span class="nm">Entregar reporte</span><span class="dt">15 jun <small>· 6 d</small></span></div>
+      <div class="dl urgent" style="margin-top:6px"><span class="chk"></span><span class="nm">Pagar servicios</span><span class="dt urg">hoy <small>· 4 h</small></span></div>
+      <span class="cap">fila de deadline · normal y urgente</span>
+    </div>
+  </div>
+</div>
+
+<div class="grp">
+  <div class="gh"><span class="gn">organismo</span><span class="gd">un solo signo por dato: el bloque usa barra sólida con tinta; el grupo deja que su estado coloree el borde completo</span></div>
+  <div class="two">
+    <div>
+      <div class="sch">
+        <div class="sblk" style="--bc:#3B82F6"><span class="t">07:00 · 08:30</span><span class="s">Bloque de estudio</span></div>
+        <div class="sblk" style="--bc:#EF4444"><span class="t">18:00 · 19:00</span><span class="s">Correr</span></div>
+      </div>
+      <span class="cap">bloque de horario</span>
+    </div>
+    <div>
+      <div class="bg over" style="--c:var(--area-community);--ink:var(--area-community-ink)">
+        <div class="band"><span class="ap" style="--c:var(--area-community);--ink:var(--area-community-ink)"><i></i>Comunidad</span><span class="cnt" style="--c:var(--area-community);--ink:var(--area-community-ink)">2</span></div>
+        <div class="items">
+          <div class="bi"><span class="chk"></span><span class="nm">Llamar a mamá</span></div>
+          <div class="bi"><span class="chk"></span><span class="nm">Confirmar cena</span></div>
+        </div>
+      </div>
+      <span class="cap">grupo de backlog · recibiendo arrastre</span>
+    </div>
+  </div>
+</div>
+
+<p class="foot"><b>Banda o pastilla, según el alto.</b> Una tarjeta de <b>120px o más</b> lleva banda de encabezado tintada al 11 %; una fila baja lleva la pastilla adentro. <b>Nunca las dos, y nunca una franja lateral.</b> El grupo de backlog en estado <code>over</code> ya tinta el fondo y colorea el borde completo: agregarle otro signo sería decir lo mismo tres veces.</p>
+</body></html>

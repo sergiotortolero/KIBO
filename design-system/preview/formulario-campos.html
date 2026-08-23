@@ -1,0 +1,64 @@
+<!-- @dsCard group="07 · Modales y formularios" viewport="700x651" name="Campos de formulario" subtitle="Los 7 controles del contrato, todos a 42px de alto" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 12px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.panel{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:13px 15px;margin-bottom:11px}
+.ph{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-primary-ink);margin:0 0 9px;letter-spacing:.09em;text-transform:uppercase}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row{display:flex;flex-direction:column;gap:6px}
+.row.span{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:var(--kb-text);letter-spacing:.02em}
+.hint{font-size:11px;color:var(--kb-text-3);line-height:1.35}
+/* ══ el contrato: los 5 controles comparten alto 42 ══ */
+.ctl{width:100%;box-sizing:border-box;background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:10px;height:42px;padding:0 12px;font:500 13px/1.3 var(--kb-f-body);color:var(--kb-text);display:flex;align-items:center;gap:8px}
+.ctl.ph2{color:var(--kb-text-3)}
+.ctl.sel::after{content:"";margin-left:auto;width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--kb-text-3);flex:none}
+.ctl.num{justify-content:space-between}
+.ctl.num b{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800}
+.step{display:flex;gap:4px}
+.step i{width:22px;height:22px;border-radius:6px;background:var(--kb-surface-2);color:var(--kb-text-2);display:flex;align-items:center;justify-content:center;font-family:var(--kb-f-display);font-weight:800;font-size:12px;font-style:normal}
+/* textarea queda fuera del contrato: crece */
+.ta{min-height:72px;height:auto;align-items:flex-start;padding:10px 12px;line-height:1.45}
+/* estados */
+.ctl.foc{border-color:var(--kb-primary);box-shadow:0 0 0 3px rgba(28,164,160,.10)}
+.ctl.err{border-color:var(--pri-urgent);box-shadow:0 0 0 3px rgba(230,69,69,.14)}
+.ctl.dis{background:var(--kb-surface);color:var(--kb-text-3);cursor:not-allowed}
+.msg{font-size:11px;font-weight:600;color:color-mix(in oklab,var(--pri-urgent) 74%,var(--kb-text));display:flex;align-items:center;gap:4px}
+.cap{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+/* fila de prioridad, control propio del dominio */
+.prow{display:flex;gap:6px;flex-wrap:wrap}
+.pb{font-family:var(--kb-f-label);font-size:10.5px;font-weight:800;padding:6px 10px;border-radius:var(--kb-r-pill);border:1.5px solid var(--kb-border);background:var(--kb-card);color:var(--kb-text-2);cursor:pointer;letter-spacing:.09em;text-transform:uppercase}
+.pb.on{border-color:color-mix(in oklab,var(--p) 46%,var(--kb-border));background:color-mix(in oklab,var(--p) 13%,#fff);color:color-mix(in oklab,var(--p) 72%,var(--kb-text))}
+.note{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+<p class="lead"><b>alto explícito 42</b> · texto, número, fecha, hora y desplegable comparten alto · el área de texto es la única que crece</p>
+
+<div class="panel">
+  <p class="ph">controles</p>
+  <div class="grid">
+    <div class="row"><label>Título</label><div class="ctl ph2">¿Qué hay que hacer?</div><span class="cap">texto</span></div>
+    <div class="row"><label>Área</label><div class="ctl sel">Sabiduría</div><span class="cap">desplegable</span></div>
+    <div class="row"><label>Vence</label><div class="ctl">12 jun 2026</div><span class="cap">fecha</span></div>
+    <div class="row"><label>Hora</label><div class="ctl">07:30</div><span class="cap">hora</span></div>
+    <div class="row"><label>Meta diaria</label><div class="ctl num"><b>2</b><span class="step"><i>−</i><i>+</i></span></div><span class="cap">número con pasos</span></div>
+    <div class="row"><label>Prioridad</label><div class="prow"><span class="pb on" style="--p:#E64545">urgente</span><span class="pb">alta</span><span class="pb">media</span></div><span class="cap">fila de prioridad</span></div>
+    <div class="row span"><label>Notas <span class="hint" style="font-weight:500">· opcional</span></label><div class="ctl ta ph2">Contexto, enlaces o lo que quieras recordar cuando la retomes.</div><span class="cap">área de texto · mínimo 72, crece</span></div>
+  </div>
+</div>
+
+
+<p class="note"><b>El alto de 42 es explícito, no derivado.</b> Sin declararlo, el alto salía de relleno más interlínea (38.5px) y cualquier fila que mezclara un campo genérico con uno especializado se desalineaba ~3.5px. Borde <code>1.5px</code>, radio <code>10</code>, texto <code>500 13px</code>. La <b>rejilla es de 2 columnas con <code>gap 12</code></b>; lo que necesita ancho completo usa <code>span-2</code>. La <b>etiqueta va arriba</b>, 12px en 700 — nunca dentro del campo, porque al escribir desaparece.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+</script>
+</body></html>

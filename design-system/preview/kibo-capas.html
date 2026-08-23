@@ -1,0 +1,51 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x380" name="KIBO · capas de animación" subtitle="Las que se suman siempre y las que solo salen con el gesto" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--kb-text-3);margin:0 0 12px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.top{display:grid;grid-template-columns:186px 1fr;gap:13px;align-items:start;margin-bottom:11px}
+.st{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px;display:grid;place-items:center;min-height:380px}
+.clocks{display:flex;flex-direction:column;gap:7px}
+.ck{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 11px;display:grid;grid-template-columns:1fr auto;gap:8px 11px;align-items:center}
+.ckn{font-family:var(--kb-f-display);font-weight:800;font-size:12px;color:var(--kb-text);line-height:1.2}
+.ckd{font-size:10.5px;color:var(--kb-text-2);line-height:1.4;grid-column:1/-1;margin:1px 0 0}
+.ckd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.per{font-family:var(--kb-f-display);font-weight:800;font-size:15px;color:var(--kb-primary-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* pista de fase: muestra los cuatro relojes corriendo juntos */
+.track{height:9px;border-radius:999px;background:var(--kb-surface-2);position:relative;overflow:hidden;grid-column:1/-1;margin-top:3px}
+.track i{position:absolute;top:0;bottom:0;width:22%;border-radius:999px;background:var(--c)}
+@keyframes sweep{0%{left:-22%}100%{left:100%}}
+.t1 i{--c:var(--kb-primary);animation:sweep 4.6s linear infinite}
+.t2 i{--c:#8B5CF6;animation:sweep 6.5s linear infinite}
+.t3 i{--c:var(--kb-coin);animation:sweep 9s linear infinite}
+.t4 i{--c:var(--kb-hp);animation:sweep 5.2s linear infinite}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.a{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 9px}
+.an{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text);display:block;line-height:1.3;letter-spacing:.09em;text-transform:uppercase}
+.ad{font-size:10px;color:var(--kb-text-2);line-height:1.4;margin:2px 0 0}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin:11px 0 7px;display:block;letter-spacing:.09em;text-transform:uppercase}
+.no{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);line-height:1.55;margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E}
+</style></head>
+<body class="kb-root">
+  <p class="lead"><b>encima de los 4 relojes</b> · cada capa suma sin pisar a las demás</p>
+  <span class="hd">Capas que se suman encima</span>
+  <div class="grid">
+    <div class="a"><span class="an">Boca · respira</span><p class="ad"><code>mouthIdle</code> 5 s — se aplasta a .93 y vuelve. Al cambiar de ánimo salta <code>mouthPop</code>, 420ms con sobrepaso a 1.22.</p></div>
+    <div class="a"><span class="an">Cejas · vaivén</span><p class="ad"><code>browIdle</code> 5 s, con la segunda ceja <b>retrasada .25s</b>: no suben a la par. Cada ánimo cambia la curva.</p></div>
+    <div class="a"><span class="an">Manopies · orbitan</span><p class="ad"><code>bubOrbit</code> + <code>bubMorph</code> — sobre <code>translate</code>, nunca <u>transform</u>: el radio jamás vuelve a ser simétrico, así que no se leen como círculo.</p></div>
+    <div class="a"><span class="an">Sombra · acompaña</span><p class="ad"><code>kbGround</code> — se encoge a .86 y baja a .6 de opacidad cuando el cuerpo sube. Es lo que lo ancla al piso.</p></div>
+  </div>
+  <span class="hd">Y las que solo salen con el gesto</span>
+  <div class="grid">
+    <div class="a"><span class="an">Pupila dilatada</span><p class="ad"><code>pupilBuzz</code> — la pupila crece hasta casi tocar el contorno del ojo. Zumbido.</p></div>
+    <div class="a"><span class="an">Pupila en espiral</span><p class="ad"><code>pupilSpin</code> 2.4s lineal — gira en círculo. Mareo.</p></div>
+    <div class="a"><span class="an">Un ojo se cierra</span><p class="ad"><code>eyeWink</code> + <code>pupilWink</code> — uno cierra a 8px, el otro dilata. Guiño.</p></div>
+    <div class="a"><span class="an">La cara voltea</span><p class="ad"><code>faceTurn</code> + <code>pupilLook</code> — la cara se va 9px y la pupila la sigue. Mirar.</p></div>
+  </div>
+  <p class="no">La regla: <b>cada parte tiene su propio reloj y ninguno es múltiplo de otro</b> (4.6 · 5 · 5.2 · 6.5 · 9 s). Eso da la sensación de criatura viva en lugar de animación en bucle. <u>Nunca sincronices dos capas</u> — al hacerlo KIBO se ve mecánico. Cuando una travesura necesita mandar sobre el reposo, usa <b>!important</b>: es uno de los casos legítimos del sistema.</p>
+</body></html>

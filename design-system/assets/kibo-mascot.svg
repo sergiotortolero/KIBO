@@ -1,0 +1,16 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KIBO">
+  <defs>
+    <radialGradient id="kbBody" cx="0.4" cy="0.32" r="0.85">
+      <stop offset="0" stop-color="#5FE6D6"></stop>
+      <stop offset="0.55" stop-color="#27B6AE"></stop>
+      <stop offset="1" stop-color="#149C97"></stop>
+    </radialGradient>
+  </defs>
+  <rect x="14" y="16" width="92" height="92" rx="34" fill="url(#kbBody)"></rect>
+  <ellipse cx="47" cy="43" rx="20" ry="12" fill="#FFFFFF" opacity="0.32"></ellipse>
+  <ellipse cx="50" cy="62" rx="6.5" ry="8.5" fill="#0E4F4B"></ellipse>
+  <ellipse cx="74" cy="62" rx="6.5" ry="8.5" fill="#0E4F4B"></ellipse>
+  <circle cx="52" cy="59" r="2.1" fill="#FFFFFF"></circle>
+  <circle cx="76" cy="59" r="2.1" fill="#FFFFFF"></circle>
+  <path d="M51 78 Q62 87 73 78" stroke="#0E4F4B" stroke-width="4" fill="none" stroke-linecap="round"></path>
+</svg>

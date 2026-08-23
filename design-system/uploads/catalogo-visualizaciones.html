@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de visualizaciones de datos</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root{
+  --bg:#fafaf8; --card:#ffffff; --ink:#1c1c1a; --ink2:#5f5e5a; --ink3:#8a8880;
+  --line:#e6e4dd; --blue:#2a78d6; --teal:#1baf7a; --amber:#eda100;
+  --violet:#4a3aa7; --red:#e34948; --orange:#eb6834; --pink:#e87ba4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;line-height:1.55}
+header{max-width:1160px;margin:0 auto;padding:48px 24px 8px}
+header h1{font-size:30px;font-weight:600;letter-spacing:-.02em}
+header p{color:var(--ink2);font-size:15px;margin-top:6px;max-width:720px}
+.search-wrap{max-width:1160px;margin:20px auto 0;padding:0 24px;position:sticky;top:0;background:var(--bg);z-index:10;padding-top:12px;padding-bottom:12px}
+#search{width:100%;max-width:460px;padding:10px 14px;font-size:14px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);outline:none}
+#search:focus{border-color:var(--blue)}
+.nav-pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.pill{padding:7px 16px;font-size:13px;border:1px solid var(--line);border-radius:24px;background:var(--card);color:var(--ink2);cursor:pointer;transition:all .15s;font-family:inherit}
+.pill:hover{border-color:var(--blue);color:var(--blue)}
+.pill.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.pill .count{opacity:.65;font-size:11px;margin-left:4px}
+.top-btn{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--ink2);font-size:18px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.08);opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.top-btn.show{opacity:1;pointer-events:auto}
+main{max-width:1160px;margin:0 auto;padding:8px 24px 80px}
+section{margin-top:44px}
+section>h2{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);border-bottom:1px solid var(--line);padding-bottom:8px}
+section>p.intro{color:var(--ink2);font-size:14px;margin-top:8px;max-width:760px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;margin-top:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:8px}
+.card h3{font-size:15px;font-weight:600}
+.card h3 span{font-weight:400;color:var(--ink3);font-size:13px}
+.card p{font-size:13px;color:var(--ink2)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;padding:2px 8px;border-radius:20px;background:#f0efe9;color:var(--ink2)}
+.viz{height:210px;margin-top:4px;position:relative}
+.viz.tall{height:260px}
+.viz svg{width:100%;height:100%}
+.hidden{display:none}
+.mm-col{display:flex;flex-direction:column;height:100%}
+.mm-seg{display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff}
+footer{max-width:1160px;margin:0 auto;padding:0 24px 48px;color:var(--ink3);font-size:12px;border-top:1px solid var(--line);padding-top:20px;line-height:1.6}
+.cal{display:grid;grid-template-columns:repeat(26,1fr);gap:3px;align-content:center;height:100%}
+.cal div{aspect-ratio:1;border-radius:2px}
+.wc{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:center;height:100%;align-content:center}
+.wc span{line-height:1}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Catálogo de visualizaciones de datos</h1>
+  <p>Referencia rápida de tipos de gráficas: qué son, cuándo usarlas y cómo se ven. Usa el buscador para filtrar por nombre, uso o palabra clave.</p>
+</header>
+
+<div class="search-wrap">
+  <input id="search" type="text" placeholder="Buscar: comparación, tendencia, jerarquía, 3D, distribución…">
+  <div class="nav-pills">
+    <button class="pill active" data-cat="all">Todos <span class="count">38</span></button>
+    <button class="pill" data-cat="fund">Fundamentales <span class="count">18</span></button>
+    <button class="pill" data-cat="tres">3D e isométricos <span class="count">4</span></button>
+    <button class="pill" data-cat="jerar">Jerárquicos y flujo <span class="count">5</span></button>
+    <button class="pill" data-cat="stats">Estadísticos <span class="count">5</span></button>
+    <button class="pill" data-cat="otros">Otros <span class="count">6</span></button>
+  </div>
+</div>
+
+<main>
+
+<!-- ============ BÁSICOS ============ -->
+<section data-sec data-cat="fund">
+<h2>Fundamentales</h2>
+<p class="intro">Los tipos de uso diario. Cubren la mayoría de necesidades: comparación, tendencia, proporción y relación.</p>
+<div class="grid">
+
+<div class="card" data-tags="barras bar comparacion categorias magnitud">
+  <h3>Gráfico de barras <span>· bar chart</span></h3>
+  <div class="tags"><span class="tag">comparación</span><span class="tag">categorías</span></div>
+  <p>Compara magnitudes entre categorías. El caballo de batalla de cualquier reporte.</p>
+  <div class="viz"><canvas id="cj-bar" role="img" aria-label="Gráfico de barras de ventas por trimestre: Q1 42, Q2 58, Q3 51, Q4 69"></canvas></div>
+</div>
+
+<div class="card" data-tags="lineas line tendencia tiempo series temporales">
+  <h3>Gráfico de líneas <span>· line chart</span></h3>
+  <div class="tags"><span class="tag">tendencia</span><span class="tag">tiempo</span></div>
+  <p>Evolución de una o varias variables a lo largo del tiempo.</p>
+  <div class="viz"><canvas id="cj-line" role="img" aria-label="Gráfico de líneas del precio de una acción en seis meses"></canvas></div>
+</div>
+
+<div class="card" data-tags="pastel pie circular proporcion partes todo dona donut">
+  <h3>Gráfico circular <span>· pie / donut</span></h3>
+  <div class="tags"><span class="tag">proporción</span><span class="tag">parte-todo</span></div>
+  <p>Proporciones de un total. Funciona mejor con 5 categorías o menos.</p>
+  <div class="viz"><canvas id="cj-pie" role="img" aria-label="Gráfico circular de presupuesto por área: producto 38%, marketing 27%, operaciones 21%, otros 14%"></canvas></div>
+</div>
+
+<div class="card" data-tags="histograma histogram distribucion frecuencia rangos bins">
+  <h3>Histograma <span>· histogram</span></h3>
+  <div class="tags"><span class="tag">distribución</span><span class="tag">frecuencia</span></div>
+  <p>Frecuencia de valores agrupados en rangos (bins). Muestra la forma de una distribución.</p>
+  <div class="viz"><canvas id="cj-hist" role="img" aria-label="Histograma de edades de usuarios agrupadas en cinco rangos"></canvas></div>
+</div>
+
+<div class="card" data-tags="dispersion scatter correlacion relacion puntos">
+  <h3>Diagrama de dispersión <span>· scatter plot</span></h3>
+  <div class="tags"><span class="tag">correlación</span><span class="tag">relación</span></div>
+  <p>Pares (x, y) para detectar correlaciones, agrupamientos o valores atípicos.</p>
+  <div class="viz"><canvas id="cj-scatter" role="img" aria-label="Dispersión mostrando relación positiva entre horas de estudio y calificación"></canvas></div>
+</div>
+
+<div class="card" data-tags="area acumulado volumen tendencia relleno">
+  <h3>Gráfico de área <span>· area chart</span></h3>
+  <div class="tags"><span class="tag">tendencia</span><span class="tag">volumen</span></div>
+  <p>Como el de líneas pero con relleno; enfatiza el volumen acumulado.</p>
+  <div class="viz"><canvas id="cj-area" role="img" aria-label="Gráfico de área de tráfico web acumulado en seis meses"></canvas></div>
+</div>
+
+<div class="card" data-tags="mapa calor heatmap matriz intensidad color celdas">
+  <h3>Mapa de calor <span>· heatmap</span></h3>
+  <div class="tags"><span class="tag">matriz</span><span class="tag">intensidad</span></div>
+  <p>Color como magnitud sobre una matriz. Ideal para patrones por hora/día o correlaciones.</p>
+  <div class="viz"><div id="v-heat" style="display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(5,1fr);gap:3px;height:100%;"></div></div>
+</div>
+
+<div class="card" data-tags="radar arana spider multivariable comparacion perfiles">
+  <h3>Gráfico de radar <span>· radar / spider</span></h3>
+  <div class="tags"><span class="tag">multivariable</span><span class="tag">perfiles</span></div>
+  <p>Compara varias variables en ejes circulares. Útil para perfiles de habilidades o productos.</p>
+  <div class="viz"><canvas id="cj-radar" role="img" aria-label="Radar comparando cinco habilidades entre dos atletas"></canvas></div>
+</div>
+
+<div class="card" data-tags="burbujas bubble tres variables tamano dispersion">
+  <h3>Gráfico de burbujas <span>· bubble chart</span></h3>
+  <div class="tags"><span class="tag">3 variables</span><span class="tag">relación</span></div>
+  <p>Dispersión más una tercera variable codificada en el tamaño del punto.</p>
+  <div class="viz"><canvas id="cj-bubble" role="img" aria-label="Burbujas comparando países por PIB, esperanza de vida y población"></canvas></div>
+</div>
+
+<div class="card" data-tags="caja boxplot cuartiles mediana atipicos distribucion">
+  <h3>Diagrama de caja <span>· boxplot</span></h3>
+  <div class="tags"><span class="tag">distribución</span><span class="tag">cuartiles</span></div>
+  <p>Mediana, cuartiles y atípicos por grupo. Compara distribuciones de un vistazo.</p>
+  <div class="viz">
+    <svg viewBox="0 0 300 170" role="img"><title>Diagrama de caja de salarios por departamento</title>
+      <line x1="40" y1="20" x2="40" y2="150" stroke="#e6e4dd" stroke-width="0.5"/>
+      <line x1="80" y1="35" x2="80" y2="60" stroke="#2a78d6" stroke-width="1"/>
+      <rect x="65" y="60" width="30" height="45" fill="#2a78d6" opacity="0.25" stroke="#2a78d6" stroke-width="1" rx="2"/>
+      <line x1="65" y1="82" x2="95" y2="82" stroke="#2a78d6" stroke-width="1.5"/>
+      <line x1="80" y1="105" x2="80" y2="130" stroke="#2a78d6" stroke-width="1"/>
+      <circle cx="80" cy="25" r="2.5" fill="#e34948"/>
+      <line x1="160" y1="50" x2="160" y2="75" stroke="#1baf7a" stroke-width="1"/>
+      <rect x="145" y="75" width="30" height="35" fill="#1baf7a" opacity="0.25" stroke="#1baf7a" stroke-width="1" rx="2"/>
+      <line x1="145" y1="92" x2="175" y2="92" stroke="#1baf7a" stroke-width="1.5"/>
+      <line x1="160" y1="110" x2="160" y2="135" stroke="#1baf7a" stroke-width="1"/>
+      <line x1="240" y1="40" x2="240" y2="68" stroke="#eda100" stroke-width="1"/>
+      <rect x="225" y="68" width="30" height="40" fill="#eda100" opacity="0.25" stroke="#eda100" stroke-width="1" rx="2"/>
+      <line x1="225" y1="88" x2="255" y2="88" stroke="#eda100" stroke-width="1.5"/>
+      <line x1="240" y1="108" x2="240" y2="128" stroke="#eda100" stroke-width="1"/>
+      <text x="80" y="163" text-anchor="middle" font-size="11" fill="#8a8880">Ingen.</text>
+      <text x="160" y="163" text-anchor="middle" font-size="11" fill="#8a8880">Ventas</text>
+      <text x="240" y="163" text-anchor="middle" font-size="11" fill="#8a8880">Ops.</text>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="embudo funnel conversion etapas ventas pipeline">
+  <h3>Gráfico de embudo <span>· funnel</span></h3>
+  <div class="tags"><span class="tag">conversión</span><span class="tag">etapas</span></div>
+  <p>Reducción progresiva a través de etapas secuenciales. Clásico en ventas y producto.</p>
+  <div class="viz" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+    <div style="width:100%;height:26px;background:#2a78d6;clip-path:polygon(0 0,100% 0,92% 100%,8% 100%);display:flex;align-items:center;justify-content:center;color:#e6f1fb;font-size:11px;">Visitó · 10,000</div>
+    <div style="width:82%;height:26px;background:#1baf7a;clip-path:polygon(0 0,100% 0,90% 100%,10% 100%);display:flex;align-items:center;justify-content:center;color:#e1f5ee;font-size:11px;">Vio producto · 5,400</div>
+    <div style="width:60%;height:26px;background:#eda100;clip-path:polygon(0 0,100% 0,86% 100%,14% 100%);display:flex;align-items:center;justify-content:center;color:#412402;font-size:11px;">Carrito · 2,100</div>
+    <div style="width:36%;height:26px;background:#e34948;clip-path:polygon(0 0,100% 0,80% 100%,20% 100%);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;">Compró · 780</div>
+  </div>
+</div>
+
+<div class="card" data-tags="cascada waterfall incrementos decrementos finanzas puente">
+  <h3>Gráfico de cascada <span>· waterfall</span></h3>
+  <div class="tags"><span class="tag">finanzas</span><span class="tag">variación</span></div>
+  <p>Cómo un valor inicial sube y baja hasta llegar a un valor final. Muy usado en P&amp;L.</p>
+  <div class="viz"><canvas id="cj-water" role="img" aria-label="Cascada mostrando cómo ingresos menos costos y gastos más otros ingresos llegan a la utilidad neta"></canvas></div>
+</div>
+
+<div class="card" data-tags="treemap jerarquia rectangulos anidados proporcion">
+  <h3>Treemap <span>· treemap</span></h3>
+  <div class="tags"><span class="tag">jerarquía</span><span class="tag">proporción</span></div>
+  <p>Jerarquías como rectángulos anidados; el área codifica magnitud.</p>
+  <div class="viz" style="display:grid;grid-template-columns:1.6fr 1fr;grid-template-rows:1fr 1fr;gap:3px;">
+    <div style="grid-row:1 / 3;background:#2a78d6;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#e6f1fb;font-size:12px;text-align:center;">Fotos<br>42%</div>
+    <div style="background:#1baf7a;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#e1f5ee;font-size:11px;">Videos 27%</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+      <div style="background:#eda100;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#412402;font-size:10px;">Docs 18%</div>
+      <div style="background:#4a3aa7;border-radius:4px;display:flex;align-items:center;justify-content:center;color:#eeedfe;font-size:10px;">Otros 13%</div>
+    </div>
+  </div>
+</div>
+
+<div class="card" data-tags="gantt cronograma proyecto tareas tiempo planeacion">
+  <h3>Diagrama de Gantt <span>· gantt</span></h3>
+  <div class="tags"><span class="tag">proyectos</span><span class="tag">cronograma</span></div>
+  <p>Tareas sobre una línea de tiempo con duración y traslapes. Estándar en gestión de proyectos.</p>
+  <div class="viz" style="display:flex;flex-direction:column;justify-content:center;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;"><span style="width:60px;font-size:10px;color:#5f5e5a;">Diseño</span><div style="flex:1;background:#f0efe9;border-radius:4px;height:14px;position:relative;"><div style="position:absolute;left:0%;width:25%;height:100%;background:#2a78d6;border-radius:4px;"></div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;"><span style="width:60px;font-size:10px;color:#5f5e5a;">Backend</span><div style="flex:1;background:#f0efe9;border-radius:4px;height:14px;position:relative;"><div style="position:absolute;left:20%;width:40%;height:100%;background:#1baf7a;border-radius:4px;"></div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;"><span style="width:60px;font-size:10px;color:#5f5e5a;">Frontend</span><div style="flex:1;background:#f0efe9;border-radius:4px;height:14px;position:relative;"><div style="position:absolute;left:45%;width:35%;height:100%;background:#eda100;border-radius:4px;"></div></div></div>
+    <div style="display:flex;align-items:center;gap:8px;"><span style="width:60px;font-size:10px;color:#5f5e5a;">Pruebas</span><div style="flex:1;background:#f0efe9;border-radius:4px;height:14px;position:relative;"><div style="position:absolute;left:75%;width:25%;height:100%;background:#e34948;border-radius:4px;"></div></div></div>
+  </div>
+</div>
+
+<div class="card" data-tags="velas candlestick finanzas ohlc apertura cierre trading acciones">
+  <h3>Gráfico de velas <span>· candlestick</span></h3>
+  <div class="tags"><span class="tag">finanzas</span><span class="tag">OHLC</span></div>
+  <p>Apertura, cierre, máximo y mínimo por periodo. El estándar en trading.</p>
+  <div class="viz">
+    <svg viewBox="0 0 300 150" role="img"><title>Velas del precio diario de un activo</title>
+      <line x1="0" y1="110" x2="300" y2="110" stroke="#e6e4dd" stroke-width="0.5"/>
+      <g stroke="#1baf7a"><line x1="30" y1="40" x2="30" y2="90" stroke-width="1"/><rect x="24" y="55" width="12" height="25" fill="#1baf7a"/></g>
+      <g stroke="#e34948"><line x1="70" y1="35" x2="70" y2="95" stroke-width="1"/><rect x="64" y="45" width="12" height="30" fill="#e34948"/></g>
+      <g stroke="#1baf7a"><line x1="110" y1="50" x2="110" y2="100" stroke-width="1"/><rect x="104" y="60" width="12" height="28" fill="#1baf7a"/></g>
+      <g stroke="#1baf7a"><line x1="150" y1="20" x2="150" y2="70" stroke-width="1"/><rect x="144" y="30" width="12" height="24" fill="#1baf7a"/></g>
+      <g stroke="#e34948"><line x1="190" y1="30" x2="190" y2="80" stroke-width="1"/><rect x="184" y="38" width="12" height="26" fill="#e34948"/></g>
+      <g stroke="#e34948"><line x1="230" y1="45" x2="230" y2="105" stroke-width="1"/><rect x="224" y="55" width="12" height="32" fill="#e34948"/></g>
+      <g stroke="#1baf7a"><line x1="270" y1="15" x2="270" y2="65" stroke-width="1"/><rect x="264" y="25" width="12" height="22" fill="#1baf7a"/></g>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="red grafo network nodos aristas conexiones relaciones">
+  <h3>Diagrama de red <span>· network graph</span></h3>
+  <div class="tags"><span class="tag">relaciones</span><span class="tag">nodos</span></div>
+  <p>Entidades como nodos y relaciones como aristas. Redes sociales, dependencias, sistemas.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 200">
+      <g stroke="#d8d6cd" stroke-width="1">
+        <line x1="170" y1="100" x2="70" y2="45"/><line x1="170" y1="100" x2="70" y2="155"/>
+        <line x1="170" y1="100" x2="270" y2="45"/><line x1="170" y1="100" x2="270" y2="155"/>
+        <line x1="70" y1="45" x2="70" y2="155"/><line x1="270" y1="45" x2="270" y2="155"/>
+        <line x1="70" y1="45" x2="170" y2="20"/><line x1="270" y1="45" x2="170" y2="20"/>
+      </g>
+      <circle cx="170" cy="100" r="15" fill="#2a78d6"/>
+      <circle cx="70" cy="45" r="10" fill="#1baf7a"/><circle cx="70" cy="155" r="10" fill="#1baf7a"/>
+      <circle cx="270" cy="45" r="10" fill="#eda100"/><circle cx="270" cy="155" r="10" fill="#eda100"/>
+      <circle cx="170" cy="20" r="8" fill="#e87ba4"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="sankey flujo energia magnitud transferencia">
+  <h3>Diagrama de Sankey <span>· sankey</span></h3>
+  <div class="tags"><span class="tag">flujo</span><span class="tag">magnitud</span></div>
+  <p>Flujos entre nodos con grosor proporcional a la cantidad. Energía, presupuesto, usuarios.</p>
+  <div class="viz">
+    <svg viewBox="0 0 300 150" role="img"><title>Flujo de energía desde su fuente hasta su consumo final</title>
+      <rect x="10" y="20" width="14" height="40" fill="#eda100" rx="2"/>
+      <rect x="10" y="75" width="14" height="55" fill="#2a78d6" rx="2"/>
+      <rect x="276" y="15" width="14" height="35" fill="#1baf7a" rx="2"/>
+      <rect x="276" y="60" width="14" height="45" fill="#e34948" rx="2"/>
+      <rect x="276" y="115" width="14" height="20" fill="#4a3aa7" rx="2"/>
+      <path d="M24 25 C 140 25, 140 20, 276 22" fill="none" stroke="#eda100" stroke-width="14" opacity="0.35"/>
+      <path d="M24 50 C 140 50, 140 75, 276 78" fill="none" stroke="#2a78d6" stroke-width="18" opacity="0.35"/>
+      <path d="M24 95 C 140 95, 140 65, 276 68" fill="none" stroke="#2a78d6" stroke-width="16" opacity="0.35"/>
+      <path d="M24 115 C 140 115, 140 125, 276 125" fill="none" stroke="#4a3aa7" stroke-width="12" opacity="0.35"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="combinado combo barras lineas dos metricas mixto">
+  <h3>Gráfico combinado <span>· combo chart</span></h3>
+  <div class="tags"><span class="tag">2 métricas</span><span class="tag">comparación</span></div>
+  <p>Barras y línea juntas para comparar métricas de naturaleza distinta (volumen vs. porcentaje).</p>
+  <div class="viz"><canvas id="cj-combo" role="img" aria-label="Combinado de barras de ventas mensuales y línea de margen de utilidad"></canvas></div>
+</div>
+
+</div>
+</section>
+
+<!-- ============ 3D ============ -->
+<section data-sec data-cat="tres">
+<h2>Tridimensionales e isométricos</h2>
+<p class="intro">Añaden una tercera dimensión espacial o la simulan visualmente. Estas son ilustraciones estáticas — un 3D verdaderamente rotable con el mouse necesita una librería como Three.js corriendo en una app real (ver nota al pie).</p>
+<div class="grid">
+
+<div class="card" data-tags="dispersion 3d scatter tres ejes espacial rotacion">
+  <h3>Dispersión 3D <span>· 3D scatter</span></h3>
+  <div class="tags"><span class="tag">3D</span><span class="tag">3 variables</span></div>
+  <p>Tres variables numéricas en ejes x, y, z. Bueno para clusters en espacio de características.</p>
+  <div class="viz tall">
+    <svg viewBox="0 0 340 240" role="img"><title>Dispersión de puntos en tres ejes x, y, z</title>
+      <line x1="170" y1="175" x2="239" y2="215" stroke="#c3c2b7" stroke-width="1.5"/>
+      <line x1="170" y1="175" x2="170" y2="95" stroke="#c3c2b7" stroke-width="1.5"/>
+      <line x1="170" y1="175" x2="101" y2="215" stroke="#c3c2b7" stroke-width="1.5"/>
+      <text x="243" y="222" font-size="10" fill="#8a8880">x</text>
+      <text x="174" y="92" font-size="10" fill="#8a8880">y</text>
+      <text x="90" y="222" font-size="10" fill="#8a8880">z</text>
+      <circle cx="179" cy="140" r="5" fill="#2a78d6"/><circle cx="187" cy="180" r="6" fill="#4a8ddd"/>
+      <circle cx="144" cy="140" r="6" fill="#6aa2e4"/><circle cx="209" cy="193" r="5" fill="#8ab7eb"/>
+      <circle cx="148" cy="173" r="7" fill="#eda100"/><circle cx="192" cy="163" r="6" fill="#f0c661"/>
+      <circle cx="131" cy="188" r="7" fill="#f6d78f"/><circle cx="213" cy="155" r="5" fill="#4a8ddd"/>
+      <circle cx="161" cy="150" r="5" fill="#6aa2e4"/><circle cx="166" cy="148" r="6" fill="#8ab7eb"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="superficie 3d surface terreno funcion relieve perdida optimizacion">
+  <h3>Superficie 3D <span>· 3D surface</span></h3>
+  <div class="tags"><span class="tag">3D</span><span class="tag">función z=f(x,y)</span></div>
+  <p>Una función de dos variables como relieve. Clásico para superficies de pérdida en ML o topografía.</p>
+  <div class="viz tall">
+    <svg viewBox="0 0 340 275" role="img"><title>Superficie 3D mostrando relieve como malla de cuadrantes coloreados por altura</title>
+      <polygon points="170,195 191,201 170,217 149,211" fill="#7fceab" stroke="#fff" stroke-width="1"/>
+      <polygon points="149,211 170,217 149,233 128,227" fill="#a9c8ee" stroke="#fff" stroke-width="1"/>
+      <polygon points="128,227 149,233 128,249 108,243" fill="#a9c8ee" stroke="#fff" stroke-width="1"/>
+      <polygon points="191,201 212,207 191,223 170,217" fill="#7fceab" stroke="#fff" stroke-width="1"/>
+      <polygon points="170,217 191,223 170,239 149,233" fill="#7fceab" stroke="#fff" stroke-width="1"/>
+      <polygon points="149,233 170,239 149,255 128,249" fill="#7fceab" stroke="#fff" stroke-width="1"/>
+      <polygon points="212,207 232,213 212,229 191,223" fill="#f6d78f" stroke="#fff" stroke-width="1"/>
+      <polygon points="191,223 212,229 191,245 170,239" fill="#f6d78f" stroke="#fff" stroke-width="1"/>
+      <polygon points="170,239 191,245 170,261 149,255" fill="#7fceab" stroke="#fff" stroke-width="1"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="lineas 3d trayectoria espacial curva helix">
+  <h3>Trayectoria 3D <span>· 3D line</span></h3>
+  <div class="tags"><span class="tag">3D</span><span class="tag">trayectoria</span></div>
+  <p>Un recorrido a través del espacio: rutas de drones, órbitas, evolución de estados.</p>
+  <div class="viz tall">
+    <svg viewBox="0 0 340 130" role="img"><title>Trayectoria en espiral ascendente en tres dimensiones</title>
+      <polyline points="200,113 159,112 129,87 140,57 181,43 211,54 200,71 159,70 129,45 140,15 181,1 211,12 200,29" fill="none" stroke="#4a3aa7" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="200" cy="29" r="4" fill="#1baf7a"/>
+      <circle cx="200" cy="113" r="4" fill="#8ab7eb"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="isometrico pseudo 3d arquitectura sistemas capas diagramas tecnicos">
+  <h3>Diagrama isométrico <span>· isometric</span></h3>
+  <div class="tags"><span class="tag">pseudo-3D</span><span class="tag">arquitectura</span></div>
+  <p>Proyección sin perspectiva real. Muy popular para arquitecturas de sistemas y capas de infraestructura.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <g>
+        <polygon points="170,150 260,105 170,60 80,105" fill="#c9def4" stroke="#2a78d6" stroke-width="1"/>
+        <polygon points="80,105 170,150 170,170 80,125" fill="#9ec3ea" stroke="#2a78d6" stroke-width="1"/>
+        <polygon points="260,105 170,150 170,170 260,125" fill="#7fb0e3" stroke="#2a78d6" stroke-width="1"/>
+      </g>
+      <g transform="translate(0,-52)">
+        <polygon points="170,150 260,105 170,60 80,105" fill="#c6ecdd" stroke="#1baf7a" stroke-width="1"/>
+        <polygon points="80,105 170,150 170,170 80,125" fill="#95dcc0" stroke="#1baf7a" stroke-width="1"/>
+        <polygon points="260,105 170,150 170,170 260,125" fill="#6fcfab" stroke="#1baf7a" stroke-width="1"/>
+      </g>
+      <g transform="translate(0,-104)">
+        <polygon points="170,150 260,105 170,60 80,105" fill="#fbe9c2" stroke="#eda100" stroke-width="1"/>
+        <polygon points="80,105 170,150 170,170 80,125" fill="#f6d78f" stroke="#eda100" stroke-width="1"/>
+        <polygon points="260,105 170,150 170,170 260,125" fill="#f0c661" stroke="#eda100" stroke-width="1"/>
+      </g>
+      <text x="285" y="70" font-size="11" fill="#8a8880">Datos</text>
+      <text x="285" y="122" font-size="11" fill="#8a8880">Lógica</text>
+      <text x="285" y="174" font-size="11" fill="#8a8880">Infra</text>
+    </svg>
+  </div>
+</div>
+
+</div>
+</section>
+
+<!-- ============ JERÁRQUICOS Y FLUJO ============ -->
+<section data-sec data-cat="jerar">
+<h2>Jerárquicos y de flujo</h2>
+<p class="intro">Para estructuras anidadas y movimientos entre categorías o etapas.</p>
+<div class="grid">
+
+<div class="card" data-tags="sunburst anillos jerarquia circular niveles">
+  <h3>Sunburst <span>· sunburst</span></h3>
+  <div class="tags"><span class="tag">jerarquía</span><span class="tag">anillos</span></div>
+  <p>Jerarquía en anillos concéntricos: el centro es la raíz y cada anillo un nivel.</p>
+  <div class="viz tall">
+    <svg viewBox="0 0 340 230" role="img"><title>Jerarquía de una empresa en dos anillos concéntricos</title>
+      <path d="M170,63 A55,55 0 0 1 218,146 L189,129 A22,22 0 0 0 170,96 Z" fill="#2a78d6"/>
+      <path d="M218,146 A55,55 0 0 1 122,146 L151,129 A22,22 0 0 0 189,129 Z" fill="#1baf7a"/>
+      <path d="M122,146 A55,55 0 0 1 170,63 L170,96 A22,22 0 0 0 151,129 Z" fill="#eda100"/>
+      <path d="M170,30 A88,88 0 0 1 246,74 L218,91 A55,55 0 0 0 170,63 Z" fill="#9ec3ea"/>
+      <path d="M246,74 A88,88 0 0 1 246,162 L218,146 A55,55 0 0 0 218,91 Z" fill="#c9def4"/>
+      <path d="M246,162 A88,88 0 0 1 170,206 L170,173 A55,55 0 0 0 218,146 Z" fill="#95dcc0"/>
+      <path d="M170,206 A88,88 0 0 1 94,162 L122,146 A55,55 0 0 0 170,173 Z" fill="#c6ecdd"/>
+      <path d="M94,162 A88,88 0 0 1 94,74 L122,91 A55,55 0 0 0 122,146 Z" fill="#f6d78f"/>
+      <path d="M94,74 A88,88 0 0 1 170,30 L170,63 A55,55 0 0 0 122,91 Z" fill="#fbe9c2"/>
+      <text x="203" y="99" font-size="10" fill="#ffffff" text-anchor="middle">Tec.</text>
+      <text x="170" y="156" font-size="10" fill="#ffffff" text-anchor="middle">Com.</text>
+      <text x="137" y="99" font-size="10" fill="#412402" text-anchor="middle">Prod.</text>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="alluvial flujo etapas cambio categorias migracion">
+  <h3>Diagrama alluvial <span>· alluvial</span></h3>
+  <div class="tags"><span class="tag">flujo</span><span class="tag">etapas</span></div>
+  <p>Como el Sankey pero enfocado en cómo los elementos cambian de categoría entre etapas.</p>
+  <div class="viz">
+    <svg viewBox="0 0 300 160" role="img"><title>Cambio de plan de suscripción entre dos periodos</title>
+      <path d="M24,35 C150,35 150,25 276,25" stroke="#2a78d6" stroke-width="16" opacity="0.35" fill="none"/>
+      <path d="M24,50 C150,50 150,75 276,75" stroke="#2a78d6" stroke-width="8" opacity="0.3" fill="none"/>
+      <path d="M24,100 C150,100 150,32 276,32" stroke="#4a3aa7" stroke-width="10" opacity="0.3" fill="none"/>
+      <path d="M24,112 C150,112 150,82 276,82" stroke="#4a3aa7" stroke-width="14" opacity="0.35" fill="none"/>
+      <path d="M24,125 C150,125 150,135 276,135" stroke="#4a3aa7" stroke-width="8" opacity="0.3" fill="none"/>
+      <rect x="10" y="20" width="14" height="50" rx="3" fill="#2a78d6"/>
+      <rect x="10" y="85" width="14" height="55" rx="3" fill="#4a3aa7"/>
+      <rect x="276" y="10" width="14" height="40" rx="3" fill="#1baf7a"/>
+      <rect x="276" y="60" width="14" height="45" rx="3" fill="#eda100"/>
+      <rect x="276" y="115" width="14" height="40" rx="3" fill="#e34948"/>
+      <text x="4" y="18" font-size="9" fill="#5f5e5a">Básico</text>
+      <text x="4" y="98" font-size="9" fill="#5f5e5a">Pro</text>
+      <text x="296" y="8" font-size="9" fill="#5f5e5a" text-anchor="end">Renovó</text>
+      <text x="296" y="58" font-size="9" fill="#5f5e5a" text-anchor="end">Cambió</text>
+      <text x="296" y="113" font-size="9" fill="#5f5e5a" text-anchor="end">Canceló</text>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="cuerdas chord circular relaciones matriz bidireccional">
+  <h3>Diagrama de cuerdas <span>· chord</span></h3>
+  <div class="tags"><span class="tag">relaciones</span><span class="tag">circular</span></div>
+  <p>Flujos entre categorías dispuestas en círculo. Migraciones, comercio entre países, llamadas entre servicios.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <g fill="none" opacity="0.45">
+        <path d="M120 40 Q170 105 240 70" stroke="#2a78d6" stroke-width="14"/>
+        <path d="M110 55 Q170 105 235 160" stroke="#1baf7a" stroke-width="9"/>
+        <path d="M245 80 Q170 105 120 170" stroke="#eda100" stroke-width="11"/>
+        <path d="M105 165 Q170 105 230 165" stroke="#e34948" stroke-width="7"/>
+      </g>
+      <path d="M 96 60 A 85 85 0 0 1 135 28" stroke="#2a78d6" stroke-width="9" fill="none"/>
+      <path d="M 215 25 A 85 85 0 0 1 252 70" stroke="#eda100" stroke-width="9" fill="none"/>
+      <path d="M 253 145 A 85 85 0 0 1 213 185" stroke="#e34948" stroke-width="9" fill="none"/>
+      <path d="M 130 185 A 85 85 0 0 1 92 148" stroke="#1baf7a" stroke-width="9" fill="none"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="dendrograma arbol clustering agrupamiento taxonomia">
+  <h3>Dendrograma <span>· dendrogram</span></h3>
+  <div class="tags"><span class="tag">clustering</span><span class="tag">árbol</span></div>
+  <p>Árbol de agrupamiento jerárquico: la altura de cada unión indica qué tan parecidos son los grupos.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <g stroke="#2a78d6" stroke-width="1.5" fill="none">
+        <path d="M50 180 V120 H110 V180"/>
+        <path d="M80 120 V70 H170 V140"/>
+        <path d="M140 140 V180 M200 180 V140 H140"/>
+        <path d="M125 70 V30 H255 V95"/>
+        <path d="M230 180 V95 M280 180 V95 H230"/>
+      </g>
+      <g fill="#1baf7a">
+        <circle cx="50" cy="184" r="5"/><circle cx="110" cy="184" r="5"/><circle cx="140" cy="184" r="5"/>
+        <circle cx="200" cy="184" r="5"/><circle cx="230" cy="184" r="5"/><circle cx="280" cy="184" r="5"/>
+      </g>
+      <text x="38" y="202" font-size="10" fill="#8a8880">A</text><text x="106" y="202" font-size="10" fill="#8a8880">B</text>
+      <text x="136" y="202" font-size="10" fill="#8a8880">C</text><text x="196" y="202" font-size="10" fill="#8a8880">D</text>
+      <text x="226" y="202" font-size="10" fill="#8a8880">E</text><text x="276" y="202" font-size="10" fill="#8a8880">F</text>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="stream streamgraph area apilada organica composicion tiempo">
+  <h3>Stream graph <span>· streamgraph</span></h3>
+  <div class="tags"><span class="tag">composición</span><span class="tag">tiempo</span></div>
+  <p>Áreas apiladas alrededor de un eje central con curvas orgánicas. Cambios de composición a gran escala.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <path d="M10 105 C60 80, 110 70, 170 85 C230 100, 280 90, 330 100 L330 110 C280 118, 230 125, 170 118 C110 111, 60 120, 10 112 Z" fill="#2a78d6" opacity="0.8"/>
+      <path d="M10 80 C60 55, 120 45, 170 60 C230 78, 280 60, 330 75 L330 100 C280 90, 230 100, 170 85 C110 70, 60 80, 10 105 Z" fill="#1baf7a" opacity="0.8"/>
+      <path d="M10 60 C70 30, 130 25, 180 38 C240 55, 290 40, 330 55 L330 75 C280 60, 230 78, 170 60 C120 45, 60 55, 10 80 Z" fill="#eda100" opacity="0.8"/>
+      <path d="M10 112 C60 120, 110 111, 170 118 C230 125, 280 118, 330 110 L330 135 C280 148, 230 152, 170 145 C110 138, 60 148, 10 140 Z" fill="#e34948" opacity="0.8"/>
+      <path d="M10 140 C60 148, 110 138, 170 145 C230 152, 280 148, 330 135 L330 155 C280 168, 230 172, 170 166 C110 160, 60 168, 10 160 Z" fill="#4a3aa7" opacity="0.8"/>
+    </svg>
+  </div>
+</div>
+
+</div>
+</section>
+
+<!-- ============ ESTADÍSTICOS ============ -->
+<section data-sec data-cat="stats">
+<h2>Estadísticos avanzados</h2>
+<p class="intro">Para análisis de distribuciones, alta dimensionalidad y datasets grandes.</p>
+<div class="grid">
+
+<div class="card" data-tags="coordenadas paralelas parallel multidimensional alta dimension filtros">
+  <h3>Coordenadas paralelas <span>· parallel coordinates</span></h3>
+  <div class="tags"><span class="tag">multivariable</span><span class="tag">filtrable</span></div>
+  <p>Cada registro es una línea que cruza ejes verticales paralelos.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <line x1="50" y1="25" x2="50" y2="180" stroke="#e6e4dd"/>
+      <line x1="133" y1="25" x2="133" y2="180" stroke="#e6e4dd"/>
+      <line x1="217" y1="25" x2="217" y2="180" stroke="#e6e4dd"/>
+      <line x1="300" y1="25" x2="300" y2="180" stroke="#e6e4dd"/>
+      <text x="50" y="195" font-size="10" fill="#8a8880" text-anchor="middle">Precio</text>
+      <text x="133" y="195" font-size="10" fill="#8a8880" text-anchor="middle">Calidad</text>
+      <text x="217" y="195" font-size="10" fill="#8a8880" text-anchor="middle">Entrega</text>
+      <text x="300" y="195" font-size="10" fill="#8a8880" text-anchor="middle">NPS</text>
+      <polyline points="50,141 133,56 217,72 300,64" fill="none" stroke="#2a78d6" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,134 133,64 217,79 300,72" fill="none" stroke="#2a78d6" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,149 133,48 217,64 300,56" fill="none" stroke="#2a78d6" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,72 133,118 217,103 300,126" fill="none" stroke="#e34948" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,79 133,110 217,95 300,118" fill="none" stroke="#e34948" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,64 133,126 217,110 300,134" fill="none" stroke="#e34948" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,103 133,95 217,87 300,95" fill="none" stroke="#eda100" stroke-width="1.5" opacity="0.75"/>
+      <polyline points="50,110 133,87 217,90 300,87" fill="none" stroke="#eda100" stroke-width="1.5" opacity="0.75"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="violin distribucion densidad forma boxplot mejorado">
+  <h3>Gráfico de violín <span>· violin plot</span></h3>
+  <div class="tags"><span class="tag">distribución</span><span class="tag">densidad</span></div>
+  <p>Como un boxplot pero mostrando la forma completa de la distribución (densidad) a cada lado.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <line x1="20" y1="105" x2="320" y2="105" stroke="#eeede7"/>
+      <path d="M90,20 C87,45 70,55 68,85 C66,110 80,130 84,160 C86,175 88,185 90,190 C92,185 94,175 96,160 C100,130 114,110 112,85 C110,55 93,45 90,20 Z" fill="#2a78d6" opacity="0.22" stroke="#2a78d6" stroke-width="1.2"/>
+      <line x1="76" y1="95" x2="104" y2="95" stroke="#2a78d6" stroke-width="2.5"/>
+      <path d="M170,20 C168,40 160,48 158,70 C156,95 172,115 174,145 C175,165 172,182 170,190 C168,182 165,165 166,145 C168,115 184,95 182,70 C180,48 172,40 170,20 Z" fill="#1baf7a" opacity="0.22" stroke="#1baf7a" stroke-width="1.2"/>
+      <line x1="156" y1="110" x2="184" y2="110" stroke="#1baf7a" stroke-width="2.5"/>
+      <path d="M250,20 C247,50 230,58 228,80 C226,100 240,120 244,150 C246,170 248,182 250,190 C252,182 254,170 256,150 C260,120 274,100 272,80 C270,58 253,50 250,20 Z" fill="#eda100" opacity="0.22" stroke="#eda100" stroke-width="1.2"/>
+      <line x1="236" y1="80" x2="264" y2="80" stroke="#eda100" stroke-width="2.5"/>
+      <text x="90" y="205" font-size="11" fill="#8a8880" text-anchor="middle">A</text>
+      <text x="170" y="205" font-size="11" fill="#8a8880" text-anchor="middle">B</text>
+      <text x="250" y="205" font-size="11" fill="#8a8880" text-anchor="middle">C</text>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="hexbin hexagonos densidad puntos overplotting datasets grandes">
+  <h3>Hexbin <span>· hexbin</span></h3>
+  <div class="tags"><span class="tag">densidad</span><span class="tag">big data</span></div>
+  <p>Agrupa millones de puntos en hexágonos coloreados por densidad. Resuelve el problema de puntos encimados.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210" id="v-hex"></svg>
+  </div>
+</div>
+
+<div class="card" data-tags="ternario triangulo tres proporciones composicion mezclas">
+  <h3>Gráfico ternario <span>· ternary</span></h3>
+  <div class="tags"><span class="tag">3 proporciones</span><span class="tag">composición</span></div>
+  <p>Tres componentes que suman 100% en un triángulo. Suelos, aleaciones, mezclas de portafolio.</p>
+  <div class="viz tall">
+    <svg viewBox="0 0 340 220">
+      <polygon points="170,30 70,195 270,195" fill="none" stroke="#c3c2b7" stroke-width="1"/>
+      <text x="170" y="20" font-size="11" fill="#5f5e5a" text-anchor="middle">Arena</text>
+      <text x="50" y="210" font-size="11" fill="#5f5e5a" text-anchor="middle">Limo</text>
+      <text x="290" y="210" font-size="11" fill="#5f5e5a" text-anchor="middle">Arcilla</text>
+      <circle cx="160" cy="96" r="6" fill="#2a78d6"/>
+      <circle cx="160" cy="129" r="6" fill="#1baf7a"/>
+      <circle cx="145" cy="154" r="6" fill="#eda100"/>
+      <circle cx="180" cy="113" r="6" fill="#4a3aa7"/>
+      <circle cx="171" cy="141" r="6" fill="#e34948"/>
+      <circle cx="170" cy="80" r="6" fill="#eb6834"/>
+      <circle cx="130" cy="162" r="6" fill="#e87ba4"/>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="rosa vientos polar direccion angulo magnitud viento">
+  <h3>Rosa polar <span>· polar / wind rose</span></h3>
+  <div class="tags"><span class="tag">dirección</span><span class="tag">magnitud</span></div>
+  <p>Magnitud por dirección o ángulo. Vientos, tráfico por hora del día, estacionalidad.</p>
+  <div class="viz tall"><canvas id="cj-rose" role="img" aria-label="Rosa polar mostrando magnitud del viento por dirección cardinal"></canvas></div>
+</div>
+
+</div>
+</section>
+
+<!-- ============ OTROS ============ -->
+<section data-sec data-cat="otros">
+<h2>Otros útiles</h2>
+<p class="intro">Formatos especializados que resuelven casos concretos mejor que cualquier gráfica genérica.</p>
+<div class="grid">
+
+<div class="card" data-tags="calendario actividad github contribuciones dias intensidad habitos">
+  <h3>Calendario de actividad <span>· calendar heatmap</span></h3>
+  <div class="tags"><span class="tag">hábitos</span><span class="tag">intensidad diaria</span></div>
+  <p>Intensidad por día a lo largo de semanas o meses. El clásico muro de contribuciones de GitHub.</p>
+  <div class="viz"><div class="cal" id="v-cal"></div></div>
+</div>
+
+<div class="card" data-tags="pendiente slope antes despues cambio comparacion dos momentos">
+  <h3>Gráfico de pendiente <span>· slope chart</span></h3>
+  <div class="tags"><span class="tag">antes/después</span><span class="tag">cambio</span></div>
+  <p>Compara dos momentos por categoría con una línea. La pendiente cuenta la historia.</p>
+  <div class="viz">
+    <svg viewBox="0 0 340 210">
+      <line x1="70" y1="20" x2="70" y2="185" stroke="#e6e4dd"/>
+      <line x1="270" y1="20" x2="270" y2="185" stroke="#e6e4dd"/>
+      <text x="70" y="205" font-size="11" fill="#8a8880" text-anchor="middle">2025</text>
+      <text x="270" y="205" font-size="11" fill="#8a8880" text-anchor="middle">2026</text>
+      <g stroke-width="2">
+        <line x1="70" y1="60" x2="270" y2="35" stroke="#1baf7a"/>
+        <line x1="70" y1="95" x2="270" y2="120" stroke="#e34948"/>
+        <line x1="70" y1="130" x2="270" y2="80" stroke="#1baf7a"/>
+        <line x1="70" y1="160" x2="270" y2="158" stroke="#b4b2a9"/>
+      </g>
+      <g fill="#1c1c1a" font-size="10">
+        <circle cx="70" cy="60" r="4" fill="#1baf7a"/><circle cx="270" cy="35" r="4" fill="#1baf7a"/>
+        <circle cx="70" cy="95" r="4" fill="#e34948"/><circle cx="270" cy="120" r="4" fill="#e34948"/>
+        <circle cx="70" cy="130" r="4" fill="#1baf7a"/><circle cx="270" cy="80" r="4" fill="#1baf7a"/>
+        <circle cx="70" cy="160" r="4" fill="#b4b2a9"/><circle cx="270" cy="158" r="4" fill="#b4b2a9"/>
+      </g>
+      <text x="60" y="63" font-size="10" fill="#5f5e5a" text-anchor="end">Norte</text>
+      <text x="60" y="98" font-size="10" fill="#5f5e5a" text-anchor="end">Centro</text>
+      <text x="60" y="133" font-size="10" fill="#5f5e5a" text-anchor="end">Bajío</text>
+      <text x="60" y="163" font-size="10" fill="#5f5e5a" text-anchor="end">Sur</text>
+    </svg>
+  </div>
+</div>
+
+<div class="card" data-tags="marimekko mosaico mekko dos categoricas area participacion mercado">
+  <h3>Marimekko <span>· mosaic / mekko</span></h3>
+  <div class="tags"><span class="tag">2 categóricas</span><span class="tag">participación</span></div>
+  <p>Ancho y alto codifican dos variables a la vez. Participación de mercado por segmento y región.</p>
+  <div class="viz" style="display:flex;gap:3px;">
+    <div class="mm-col" style="width:45%"><div class="mm-seg" style="height:55%;background:#2a78d6">55</div><div class="mm-seg" style="height:30%;background:#1baf7a">30</div><div class="mm-seg" style="height:15%;background:#eda100">15</div></div>
+    <div class="mm-col" style="width:33%"><div class="mm-seg" style="height:40%;background:#2a78d6">40</div><div class="mm-seg" style="height:45%;background:#1baf7a">45</div><div class="mm-seg" style="height:15%;background:#eda100">15</div></div>
+    <div class="mm-col" style="width:22%"><div class="mm-seg" style="height:25%;background:#2a78d6">25</div><div class="mm-seg" style="height:35%;background:#1baf7a">35</div><div class="mm-seg" style="height:40%;background:#eda100">40</div></div>
+  </div>
+</div>
+
+<div class="card" data-tags="coropletico mapa geografico regiones paises estados color">
+  <h3>Mapa coroplético <span>· choropleth</span></h3>
+  <div class="tags"><span class="tag">geografía</span><span class="tag">regiones</span></div>
+  <p>Datos por región coloreados según magnitud. Aquí en versión esquemática por bloques; una versión con geografía real usa datos topográficos (ej. D3 + TopoJSON).</p>
+  <div class="viz tall" style="display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:8px;">
+    <div style="width:68px;height:48px;border-radius:8px;background:#185fa5;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#e6f1fb;font-size:11px;">MX<br>85</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#85b7eb;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0c447c;font-size:11px;">USA<br>60</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#378add;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#e6f1fb;font-size:11px;">BR<br>72</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#b5d4f4;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0c447c;font-size:11px;">AR<br>40</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#85b7eb;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0c447c;font-size:11px;">CO<br>55</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#b5d4f4;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0c447c;font-size:11px;">CL<br>48</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#e6f1fb;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0c447c;font-size:11px;">PE<br>35</div>
+    <div style="width:68px;height:48px;border-radius:8px;background:#e6f1fb;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#0c447c;font-size:11px;">CA<br>30</div>
+  </div>
+</div>
+
+<div class="card" data-tags="nube palabras wordcloud texto frecuencia terminos">
+  <h3>Nube de palabras <span>· word cloud</span></h3>
+  <div class="tags"><span class="tag">texto</span><span class="tag">frecuencia</span></div>
+  <p>Frecuencia de términos codificada en el tamaño. Encuestas abiertas, feedback, temas.</p>
+  <div class="viz wc">
+    <span style="font-size:34px;color:#2a78d6;font-weight:600">datos</span>
+    <span style="font-size:24px;color:#1baf7a">producto</span>
+    <span style="font-size:19px;color:#eda100">usuarios</span>
+    <span style="font-size:26px;color:#4a3aa7;font-weight:600">calidad</span>
+    <span style="font-size:15px;color:#8a8880">soporte</span>
+    <span style="font-size:21px;color:#e34948">rapidez</span>
+    <span style="font-size:14px;color:#8a8880">precio</span>
+    <span style="font-size:17px;color:#eb6834">diseño</span>
+    <span style="font-size:13px;color:#b4b2a9">entrega</span>
+    <span style="font-size:16px;color:#e87ba4">equipo</span>
+  </div>
+</div>
+
+<div class="card" data-tags="bala bullet kpi objetivo meta indicador compacto dashboard">
+  <h3>Gráfico de bala <span>· bullet chart</span></h3>
+  <div class="tags"><span class="tag">KPI</span><span class="tag">vs. objetivo</span></div>
+  <p>Valor actual contra objetivo y rangos de referencia, en formato ultracompacto para dashboards.</p>
+  <div class="viz" style="display:flex;flex-direction:column;justify-content:center;gap:22px;padding:0 8px;">
+    <div>
+      <div style="font-size:11px;color:#5f5e5a;margin-bottom:4px;">Ingresos <span style="color:#8a8880">(meta 80)</span></div>
+      <div style="position:relative;height:18px;background:#efeee8;border-radius:3px;">
+        <div style="position:absolute;height:100%;width:60%;background:#e2e0d6;border-radius:3px;"></div>
+        <div style="position:absolute;height:8px;top:5px;width:72%;background:#2a78d6;border-radius:2px;"></div>
+        <div style="position:absolute;height:100%;left:80%;width:2px;background:#1c1c1a;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:#5f5e5a;margin-bottom:4px;">Satisfacción <span style="color:#8a8880">(meta 70)</span></div>
+      <div style="position:relative;height:18px;background:#efeee8;border-radius:3px;">
+        <div style="position:absolute;height:100%;width:55%;background:#e2e0d6;border-radius:3px;"></div>
+        <div style="position:absolute;height:8px;top:5px;width:84%;background:#1baf7a;border-radius:2px;"></div>
+        <div style="position:absolute;height:100%;left:70%;width:2px;background:#1c1c1a;"></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;color:#5f5e5a;margin-bottom:4px;">Adopción <span style="color:#8a8880">(meta 90)</span></div>
+      <div style="position:relative;height:18px;background:#efeee8;border-radius:3px;">
+        <div style="position:absolute;height:100%;width:65%;background:#e2e0d6;border-radius:3px;"></div>
+        <div style="position:absolute;height:8px;top:5px;width:58%;background:#e34948;border-radius:2px;"></div>
+        <div style="position:absolute;height:100%;left:90%;width:2px;background:#1c1c1a;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+</section>
+
+</main>
+
+<footer>
+  Catálogo de referencia · 38 tipos de visualización · 100% autocontenido: usa Chart.js (cdnjs.cloudflare.com) para las 11 gráficas estándar y SVG/CSS nativo para las 27 restantes — sin más dependencias externas.<br>
+  ¿Buscas 3D verdaderamente interactivo (rotar con el mouse)? Eso requiere Three.js corriendo como app real; pídemelo y te doy instrucciones para armarlo con Claude Code.
+</footer>
+
+<script>
+const AZ='#2a78d6',VE='#1baf7a',AM='#eda100',VI='#4a3aa7',RO='#e34948',NA='#eb6834',RS='#e87ba4';
+const gridColor='#eeede7', tickColor='#8a8880';
+const baseOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:gridColor,display:false},ticks:{color:tickColor,font:{size:10}}},y:{grid:{color:gridColor},ticks:{color:tickColor,font:{size:10}}}}};
+
+new Chart(document.getElementById('cj-bar'),{type:'bar',data:{labels:['Q1','Q2','Q3','Q4'],datasets:[{data:[42,58,51,69],backgroundColor:AZ,borderRadius:4,maxBarThickness:34}]},options:baseOpts});
+new Chart(document.getElementById('cj-line'),{type:'line',data:{labels:['Ene','Feb','Mar','Abr','May','Jun'],datasets:[{data:[32,35,33,29,38,44],borderColor:AZ,backgroundColor:'transparent',borderWidth:2,tension:.3,pointRadius:3,pointBackgroundColor:AZ}]},options:baseOpts});
+new Chart(document.getElementById('cj-pie'),{type:'doughnut',data:{labels:['Producto','Marketing','Operaciones','Otros'],datasets:[{data:[38,27,21,14],backgroundColor:[AZ,VE,AM,VI],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+new Chart(document.getElementById('cj-hist'),{type:'bar',data:{labels:['18-25','26-33','34-41','42-49','50-57'],datasets:[{data:[12,28,22,14,7],backgroundColor:VE,borderRadius:4,maxBarThickness:36}]},options:baseOpts});
+new Chart(document.getElementById('cj-scatter'),{type:'scatter',data:{datasets:[{data:[{x:1,y:52},{x:2,y:58},{x:2.5,y:61},{x:3,y:68},{x:4,y:70},{x:4.5,y:78},{x:5,y:82},{x:6,y:88},{x:6.5,y:85},{x:7,y:93},{x:8,y:95}],backgroundColor:NA,pointRadius:4}]},options:baseOpts});
+new Chart(document.getElementById('cj-area'),{type:'line',data:{labels:['Ene','Feb','Mar','Abr','May','Jun'],datasets:[{data:[5,12,22,30,41,55],borderColor:VI,backgroundColor:'rgba(74,58,167,0.12)',fill:true,borderWidth:2,tension:.3,pointRadius:0}]},options:baseOpts});
+new Chart(document.getElementById('cj-radar'),{type:'radar',data:{labels:['Fuerza','Velocidad','Resistencia','Agilidad','Técnica'],datasets:[{data:[80,65,70,60,75],borderColor:AZ,backgroundColor:'rgba(42,120,214,0.15)',pointRadius:2},{data:[60,85,55,80,65],borderColor:RO,backgroundColor:'rgba(227,73,72,0.15)',pointRadius:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{grid:{color:gridColor},angleLines:{color:gridColor},ticks:{display:false},pointLabels:{color:tickColor,font:{size:10}}}}}});
+new Chart(document.getElementById('cj-bubble'),{type:'bubble',data:{datasets:[{data:[{x:12,y:68,r:14},{x:45,y:79,r:22},{x:8,y:60,r:18},{x:60,y:82,r:10},{x:30,y:74,r:8}],backgroundColor:'rgba(42,120,214,0.5)',borderColor:AZ}]},options:Object.assign({},baseOpts,{layout:{padding:14},scales:{x:Object.assign({},baseOpts.scales.x,{min:0,max:70}),y:Object.assign({},baseOpts.scales.y,{min:50,max:90})}})});
+new Chart(document.getElementById('cj-water'),{type:'bar',data:{labels:['Ingresos','Costos','Gastos','Otros','Utilidad'],datasets:[{data:[[0,100],[60,100],[35,60],[35,43],[0,43]],backgroundColor:[AZ,RO,RO,VE,VI],borderRadius:3,maxBarThickness:34}]},options:Object.assign({},baseOpts,{scales:{x:Object.assign({},baseOpts.scales.x,{ticks:Object.assign({},baseOpts.scales.x.ticks,{maxRotation:30,autoSkip:false})}),y:baseOpts.scales.y}})});
+new Chart(document.getElementById('cj-combo'),{data:{labels:['Ene','Feb','Mar','Abr','May','Jun'],datasets:[{type:'bar',data:[30,42,38,50,46,58],backgroundColor:AZ,borderRadius:3,maxBarThickness:22},{type:'line',data:[18,20,17,22,21,25],borderColor:RO,backgroundColor:RO,borderWidth:2,tension:.3,pointRadius:3}]},options:baseOpts});
+new Chart(document.getElementById('cj-rose'),{type:'polarArea',data:{labels:['N','NE','E','SE','S','SO','O','NO'],datasets:[{data:[12,18,25,30,22,15,10,8],backgroundColor:[AZ,'#4a8ddd','#6aa2e4','#8ab7eb',VE,'#4dc296','#79d2b0','#a5e1c9']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{r:{grid:{color:gridColor},ticks:{display:false}}}}});
+
+/* Heatmap (vanilla, sin dependencias) */
+(function(){
+  const heat=document.getElementById('v-heat');
+  const vals=[2,8,20,35,60,55,30,3,9,22,38,65,58,32,4,10,25,40,68,62,35,3,9,21,36,62,56,31,5,12,28,45,70,64,38];
+  const max=70;
+  vals.forEach(v=>{
+    const cell=document.createElement('div');
+    const t=v/max;
+    const c1=[242,247,253],c2=[42,120,214];
+    const c=c1.map((x,i)=>Math.round(x+(c2[i]-x)*t));
+    cell.style.background='rgb('+c[0]+','+c[1]+','+c[2]+')';
+    cell.style.borderRadius='2px';
+    heat.appendChild(cell);
+  });
+})();
+
+/* Hexbin (vanilla, sin dependencias) */
+(function(){
+  const svg=document.getElementById('v-hex'),W=340,H=210,r=13,dx=r*1.74,dy=r*1.5;
+  const hex=(cx,cy)=>{let p='';for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-30);p+=(k?'L':'M')+(cx+r*Math.cos(a)).toFixed(1)+' '+(cy+r*Math.sin(a)).toFixed(1);}return p+'Z';};
+  for(let row=0;row<9;row++){for(let col=0;col<15;col++){
+    const cx=18+col*dx+(row%2?dx/2:0),cy=14+row*dy;
+    if(cx>W-8||cy>H-8)continue;
+    const d=Math.exp(-(((cx-170)/95)**2+((cy-105)/62)**2))+Math.exp(-(((cx-70)/45)**2+((cy-60)/40)**2))*0.7;
+    const t=Math.min(1,d);
+    const c1=[242,247,253],c2=[42,120,214];
+    const col2=c1.map((v,i)=>Math.round(v+(c2[i]-v)*t));
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('d',hex(cx,cy));path.setAttribute('fill','rgb('+col2[0]+','+col2[1]+','+col2[2]+')');path.setAttribute('stroke','#fff');
+    svg.appendChild(path);
+  }}
+})();
+
+/* Calendario de actividad (vanilla, sin dependencias) */
+(function(){
+  const cal=document.getElementById('v-cal');
+  const seed=[0.1,0.6,0.8,0.3,0.9,0.2,0.05];
+  for(let i=0;i<26*7;i++){
+    const v=seed[i%7]+((i*37)%100)/300;
+    const d=document.createElement('div');
+    d.style.background=v<0.3?'#efeee8':v<0.55?'#c6e3d5':v<0.75?'#7fceab':v<0.9?'#34b981':'#0e8a5c';
+    cal.appendChild(d);
+  }
+})();
+
+/* Buscador + navegación por categorías */
+const inp=document.getElementById('search');
+let activeCat='all';
+const norm=t=>t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function applyFilters(){
+  const q=norm(inp.value);
+  document.querySelectorAll('section[data-sec]').forEach(s=>{
+    const inCat=(activeCat==='all'||s.getAttribute('data-cat')===activeCat);
+    s.querySelectorAll('.card').forEach(c=>{
+      const hay=norm(c.getAttribute('data-tags')+' '+c.textContent);
+      c.classList.toggle('hidden',!inCat||(q&&!hay.includes(q)));
+    });
+    const vis=s.querySelectorAll('.card:not(.hidden)').length;
+    s.classList.toggle('hidden',vis===0);
+  });
+}
+inp.addEventListener('input',applyFilters);
+document.querySelectorAll('.pill').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.pill').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    activeCat=btn.getAttribute('data-cat');
+    applyFilters();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+/* Botón volver arriba */
+const topBtn=document.createElement('button');
+topBtn.className='top-btn';topBtn.textContent='↑';topBtn.setAttribute('aria-label','Volver arriba');
+topBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+document.body.appendChild(topBtn);
+window.addEventListener('scroll',()=>topBtn.classList.toggle('show',window.scrollY>400));
+</script>
+</body>
+</html>

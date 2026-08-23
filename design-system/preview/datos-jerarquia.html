@@ -1,0 +1,58 @@
+<!-- @dsCard group="08 · Datos" viewport="700x444" name="Datos · jerarquía y flujo" subtitle="Treemap, sunburst y sankey — cuando el dato tiene niveles o va de un lado a otro" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;line-height:1.5;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.lead u{text-decoration:none;color:#7C3AED;font-weight:800}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.pt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.pn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text)}
+.px{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.pd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.pd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.sold{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:color-mix(in oklab,var(--kb-gem) 16%,#fff);color:#3A4F9C;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.leg{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px}
+.leg span{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.leg i{width:9px;height:9px;border-radius:3px;display:block}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:11px;align-items:start}
+.g3{margin-top:11px}</style></head>
+<body class="kb-root">
+  <p class="lead"><b>el anillo se queda corto</b> · con más de 4 partes va treemap · si además hay niveles, sunburst · si el dato <i>viaja</i> de una fuente a un destino, sankey</p>
+  <div class="g">
+    <div class="p">
+      <div class="pt"><span class="pn">Treemap</span><span class="px">4–8 partes</span></div>
+      <p class="pd">El <b>tamaño es el dato</b>. Sustituye al anillo cuando hay demasiadas partes para leer porciones.</p>
+      <div id="d1"></div>
+    </div>
+    <div class="p">
+      <div class="pt"><span class="pn">Sunburst</span><span class="px">2 niveles</span></div>
+      <p class="pd">La jerarquía propia de Kibo: <b>área → proyecto</b>. Anillo interior el área, exterior sus proyectos.</p>
+      <div id="d2"></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/charts-nuevas.jsx"></script>
+<script type="text/babel" src="../reference/app/charts-catalogo.jsx"></script>
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById("d1")).render(
+  <Treemap items={[
+    { n:"Vigor", v:420, c:"var(--area-vigor)" },
+    { n:"Sabiduría", v:310, c:"var(--area-wisdom)" },
+    { n:"Voluntad", v:190, c:"var(--area-will)" },
+    { n:"Riqueza", v:120, c:"var(--area-wealth)" },
+    { n:"Comunidad", v:95, c:"var(--area-community)" },
+  ]} />);
+ReactDOM.createRoot(document.getElementById("d2")).render(
+  <Sunburst groups={[
+    { n:"VIGOR", v:420, c:"var(--area-vigor)", kids:[{n:"Correr",v:250},{n:"Fuerza",v:170}] },
+    { n:"SABID", v:310, c:"var(--area-wisdom)", kids:[{n:"Lectura",v:180},{n:"Curso",v:130}] },
+    { n:"VOLUN", v:190, c:"var(--area-will)", kids:[{n:"Meditar",v:190}] },
+    { n:"RIQUE", v:120, c:"var(--area-wealth)", kids:[{n:"Ahorro",v:120}] },
+  ]} />);
+</script>
+</body></html>

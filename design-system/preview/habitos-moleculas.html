@@ -1,0 +1,121 @@
+<!-- @dsCard group="14 · Hábitos" viewport="700x739" name="Hábitos · moléculas y tarjeta" subtitle="Las 4 moléculas y el organismo, ya migrados al DS nuevo — banda en vez de franja lateral" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;align-items:start}
+.m{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden}
+.mh{padding:6px 12px;background:var(--kb-surface);border-bottom:1px solid var(--kb-border-soft)}
+.mt{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;letter-spacing:.09em;text-transform:uppercase}
+.mt em{font-style:normal;color:var(--kb-text-3);font-weight:700}
+.mb{padding:11px 12px}
+.lvn{font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 9px;border-radius:var(--kb-r-pill);background:var(--kb-text);color:#fff;white-space:nowrap;display:inline-block;margin-bottom:8px;letter-spacing:.09em;text-transform:uppercase}
+/* átomos, con su medida real */
+.chk{width:22px;height:22px;border-radius:7px;flex:none;border:2px solid color-mix(in oklab,var(--c) 40%,var(--kb-border));display:flex;align-items:center;justify-content:center;color:#fff}
+.chk.done{background:var(--c);border-color:var(--c)}
+.day{width:22px;height:22px;border-radius:6px;background:var(--kb-surface-2);display:inline-flex;align-items:center;justify-content:center;font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text);flex:none;letter-spacing:.09em;text-transform:uppercase}
+.day.done{background:var(--ink,var(--kb-text));color:#fff}
+.ico{width:36px;height:36px;border-radius:10px;background:color-mix(in oklab,var(--c) 14%,#fff);color:var(--c);display:flex;align-items:center;justify-content:center;flex:none}
+.pip{font-family:var(--kb-f-label);font-size:10.5px;font-weight:800;padding:2.5px 8px;border-radius:var(--kb-r-xs);white-space:nowrap;background:rgba(28,164,160,.14);color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.bub{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:12px;background:color-mix(in oklab,var(--kb-coin) 18%,#fff);color:color-mix(in oklab,var(--kb-coin) 60%,#000);padding:4px 9px;border-radius:var(--kb-r-pill);flex:none;white-space:nowrap}
+.xp{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11.5px;color:var(--kb-ink-on-tint);white-space:nowrap}
+/* moneda · el otro premio; va junto al XP, nunca dentro de su píldora */
+.cn{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11.5px;color:color-mix(in oklab,var(--kb-coin) 62%,var(--kb-text));white-space:nowrap}
+.cn span{display:flex;flex:none}
+.rw{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.xpp{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:13px;color:var(--kb-primary-ink);background:var(--kb-primary-soft);padding:2.5px 10px;border-radius:var(--kb-r-pill);white-space:nowrap}
+.xpp small{color:color-mix(in oklab,var(--kb-primary-ink) 74%,var(--kb-text));font-weight:600}
+.icb{border:1px solid var(--kb-border);background:var(--kb-card);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--kb-text-2);flex:none}
+.sch{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:11px;font-weight:700;color:var(--kb-text-3);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+/* moléculas */
+.hcard{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;background:var(--kb-card);border:1px solid var(--kb-border)}
+.hcard.done{background:color-mix(in oklab,var(--c) 7%,var(--kb-card));border-color:color-mix(in oklab,var(--c) 30%,var(--kb-border))}
+.nm{font-weight:600;font-size:13.5px;color:var(--kb-text);line-height:1.25}
+.hcard.done .nm{text-decoration:line-through;color:color-mix(in oklab,var(--kb-text-2) 62%,var(--kb-text))}
+.wk{display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--kb-surface);border-radius:8px}
+.wks{margin-left:auto;font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-2);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.add{border:1.5px dashed var(--kb-border-strong);border-radius:12px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;min-height:160px}
+.add .gl{width:40px;height:40px;border-radius:50%;background:var(--kb-card);display:flex;align-items:center;justify-content:center;border:1px solid var(--kb-border);color:var(--kb-text-2);margin-bottom:4px}
+.add .lb{font-family:var(--kb-f-display);font-weight:800;font-size:14px;color:var(--kb-text)}
+.add .sb{font-size:12px;color:var(--kb-text-2)}
+/* ORGANISMO · migrado: banda de encabezado, ya no franja lateral de 4px */
+.mgr{--c:#EF4444;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden}
+.band{display:flex;align-items:center;gap:8px;padding:8px 13px;background:color-mix(in oklab,var(--c) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--c) 18%,var(--kb-border))}
+.band .t{font-family:var(--kb-f-label);font-size:11px;font-weight:700;color:var(--kb-ink-on-tint);letter-spacing:.09em;text-transform:uppercase}
+.band .r{margin-left:auto}
+.mgr .in{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.mgr .hd{display:flex;align-items:flex-start;gap:10px}
+.mgr .nfo{flex:1;min-width:0}
+.mgr .hn{font-family:var(--kb-f-display);font-weight:800;font-size:14px;color:var(--kb-text)}
+.mgr .mta{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;align-items:center}
+.mgr .ft{display:flex;justify-content:space-between;align-items:center;padding-top:8px;border-top:1px solid var(--kb-border-soft)}
+.mgr .acts{display:flex;gap:4px}
+.ok{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px}
+.ok p{margin:0;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.ok p+p{margin-top:4px}
+.ok b{color:var(--kb-text);font-weight:700}
+.ok code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.ok s{color:var(--kb-text-3);text-decoration-color:var(--kb-hp)}
+.tick{color:#1E7A52;font-weight:800}
+</style></head>
+<body class="kb-root">
+<p class="lead"><b>molécula</b> · átomos que ya dicen algo, es lo que se repite en una lista</p>
+<div class="g2">
+  <div class="m"><div class="mh"><span class="mt">fila del widget · <em>.kbv-habits-clean .card</em></span></div>
+    <div class="mb" style="display:flex;flex-direction:column;gap:8px">
+      <div class="hcard" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="chk"></span><span><span class="nm">Correr 5 km</span><br><span class="sch" id="s1">Cualquier hora</span></span><span class="rw"><span class="xp" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)">+10 XP</span><span class="cn"><span id="g1"></span>+3</span></span></div>
+      <div class="hcard done" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="chk done" id="k1"></span><span class="nm">Tomar 2 L</span><span class="rw"><span class="xp" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)">+10 XP</span><span class="cn"><span id="g2"></span>+3</span></span></div>
+    </div>
+  </div>
+  <div class="m"><div class="mh"><span class="mt">alta · <em>.kbv-habit-add-card</em></span></div>
+    <div class="mb"><div class="add"><span class="gl" id="a2"></span><span class="lb">Nuevo hábito</span><span class="sb">Suma uno a tu rutina</span></div></div>
+  </div>
+  <div class="m"><div class="mh"><span class="mt">semana · <em>.weekly</em></span></div>
+    <div class="mb"><div class="wk" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="day done">L</span><span class="day done">M</span><span class="day">M</span><span class="day done">J</span><span class="day">V</span><span class="day">S</span><span class="day">D</span><span class="wks">3 / 7</span></div></div>
+  </div>
+  <div class="m"><div class="mh"><span class="mt">encabezado · <em>.kbv-habits-clean .head</em></span></div>
+    <div class="mb" style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:var(--kb-f-display);font-weight:800;font-size:17px;color:var(--kb-text)">Hábitos</span>
+      <span class="xpp">30 <small>/ 60 XP</small></span><span class="cn"><span id="g3"></span>18</span>
+      <span style="margin-left:auto;width:30px;height:30px;border-radius:9px;border:1px dashed var(--kb-border);background:var(--kb-surface);color:var(--kb-text-2);display:flex;align-items:center;justify-content:center" id="a1"></span>
+    </div>
+  </div>
+</div>
+<span class="lvn">organismo</span>
+<div class="mgr">
+  <div class="band"><span class="t">vigor</span><span class="r"><span class="bub">21 d</span></span></div>
+  <div class="in">
+    <div class="hd">
+      <span class="ico" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)" id="i1"></span>
+      <span class="nfo"><span class="hn">Correr 5 km</span><span class="mta"><span class="pip">bueno</span><span class="sch" id="s2">4 × sem</span></span></span>
+    </div>
+    <div class="wk" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="day done">L</span><span class="day done">M</span><span class="day">M</span><span class="day done">J</span><span class="day">V</span><span class="day">S</span><span class="day">D</span><span class="wks">3 / 7</span></div>
+    <div class="ft"><span class="rw"><span class="xp" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)">+10 XP</span><span class="cn"><span id="g4"></span>+3</span></span><span class="acts"><span class="icb" id="b1"></span><span class="icb" id="b2"></span></span></div>
+  </div>
+</div>
+<div class="ok">
+  <p><span class="tick">✓ migrado</span> · <b>La franja se fue.</b> <s><code>border-left: 4px solid var(--c)</code></s> → <b>banda de encabezado</b> tintada al 11 % con la racha a la derecha. Es el patrón del DS para toda tarjeta grande.</p>
+  <p><span class="tick">✓ migrado</span> · <b>Etiquetas en Jakarta minúscula.</b> El tipo de hábito y la frecuencia ya no usan <s>mono en mayúscula con tracking</s>.</p>
+  <p><span class="tick">✓ migrado</span> · <b>El premio tiene un solo color:</b> el del área. Antes era <s><code>--area-wisdom</code> fijo</s> en el catálogo y el del área en el widget — el mismo dato pintado distinto en dos pantallas.</p>
+</div>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/personalizacion.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, color) => { const el = document.getElementById(id); if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color={color} />); };
+  put('k1','check',13,'#fff'); put('i1','vigor',18,'currentColor');
+  put('b1','edit',13,'currentColor'); put('b2','trash',13,'currentColor');
+  put('a1','plus',15,'currentColor'); put('a2','plus',19,'currentColor');
+  ['s1','s2'].forEach(id => { const el=document.getElementById(id); if(!el) return; const t=el.textContent; el.textContent=''; const s=document.createElement('i'); s.style.display='inline-flex'; el.appendChild(s); el.appendChild(document.createTextNode(t)); ReactDOM.createRoot(s).render(<I name="clock" size={12} color="currentColor" />); });
+}
+const CG = window.CurrencyGlyph;
+if (CG) { for (const id of ['g1','g2','g3','g4']) { const e = document.getElementById(id);
+  if (e) ReactDOM.createRoot(e).render(<CG glyph="coin" color="var(--kb-coin)" size={13} />); } }
+</script>
+</body></html>

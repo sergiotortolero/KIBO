@@ -1,0 +1,53 @@
+<!-- @dsCard group="03 · Medidas y movimiento" viewport="700x409" name="Radios, sombras y espaciado" subtitle="Radios suaves, sombras suaves, malla de 2px" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 8px;display:block;text-transform:uppercase}
+.hd:not(:first-of-type){margin-top:14px}
+.hd em{font-style:normal;color:var(--kb-text-2);letter-spacing:.02em;text-transform:none;font-weight:700}
+.g{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+.it{display:flex;flex-direction:column;align-items:center;gap:5px}
+.box{width:100%;height:46px;background:var(--kb-card);border:1px solid var(--kb-border)}
+.lab{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text);letter-spacing:.09em;text-transform:uppercase}
+.px{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.sg{display:grid;grid-template-columns:repeat(5,1fr);gap:11px}
+.sb{width:100%;height:46px;background:var(--kb-card);border-radius:var(--kb-r-md)}
+.sp{display:flex;align-items:flex-end;gap:9px;height:34px}
+.spi{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.bar{width:100%;background:var(--kb-border-strong);border-radius:2px 2px 0 0}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E;font-weight:800}
+</style></head>
+<body class="kb-root">
+  <span class="hd">Radios <em>— generosos y amables; en componentes el radio crudo está prohibido</em></span>
+  <div class="g">
+    <div class="it"><div class="box" style="border-radius:8px"></div><span class="lab">xs</span><span class="px">8</span></div>
+    <div class="it"><div class="box" style="border-radius:10px"></div><span class="lab">sm</span><span class="px">10</span></div>
+    <div class="it"><div class="box" style="border-radius:14px"></div><span class="lab">md</span><span class="px">14</span></div>
+    <div class="it"><div class="box" style="border-radius:18px"></div><span class="lab">lg</span><span class="px">18</span></div>
+    <div class="it"><div class="box" style="border-radius:24px"></div><span class="lab">xl</span><span class="px">24</span></div>
+    <div class="it"><div class="box" style="border-radius:999px"></div><span class="lab">pill</span><span class="px">999</span></div>
+  </div>
+  <span class="hd">Sombras <em>— azul marino de baja opacidad; la dura es solo del botón principal</em></span>
+  <div class="sg">
+    <div class="it"><div class="sb" style="box-shadow:var(--kb-sh-1)"></div><span class="lab">sh-1</span><span class="px">tarjeta en reposo</span></div>
+    <div class="it"><div class="sb" style="box-shadow:var(--kb-sh-2)"></div><span class="lab">sh-2</span><span class="px">elevada</span></div>
+    <div class="it"><div class="sb" style="box-shadow:var(--kb-sh-3)"></div><span class="lab">sh-3</span><span class="px">levantada</span></div>
+    <div class="it"><div class="sb" style="box-shadow:var(--kb-sh-pop)"></div><span class="lab">sh-pop</span><span class="px">menú, diálogo</span></div>
+    <div class="it"><div class="sb" style="box-shadow:var(--kb-elev-hard) var(--kb-primary-ink);background:var(--kb-primary)"></div><span class="lab">elev-hard</span><span class="px">botón principal</span></div>
+  </div>
+  <span class="hd">Espaciado <em>— malla de 2px · el gap por defecto es 12</em></span>
+  <div class="sp">
+    <div class="spi"><div class="bar" style="height:2px"></div><span class="px">1·2</span></div>
+    <div class="spi"><div class="bar" style="height:4px"></div><span class="px">2·4</span></div>
+    <div class="spi"><div class="bar" style="height:6px"></div><span class="px">3·6</span></div>
+    <div class="spi"><div class="bar" style="height:8px"></div><span class="px">4·8</span></div>
+    <div class="spi"><div class="bar" style="height:10px"></div><span class="px">5·10</span></div>
+    <div class="spi"><div class="bar" style="height:12px;background:var(--kb-primary)"></div><span class="px">6·12</span></div>
+    <div class="spi"><div class="bar" style="height:16px"></div><span class="px">7·16</span></div>
+    <div class="spi"><div class="bar" style="height:20px"></div><span class="px">8·20</span></div>
+    <div class="spi"><div class="bar" style="height:24px"></div><span class="px">9·24</span></div>
+  </div>
+  <p class="no"><b>--kb-sp-1 a 6 son fijos; 7 a 9 son fluidos</b> con <b>clamp()</b>. <u>Cero neumorfismo, cero cristal</u>. La transparencia es para bordes, lavados y hover — no para paneles translúcidos.</p>
+</body></html>

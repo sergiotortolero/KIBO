@@ -1,0 +1,53 @@
+<!-- @dsCard group="08 · Datos" viewport="700x427" name="Datos · radar de balance" subtitle="Vendido como wg-radar (80 gemas) y no existía — pentágono de las 5 áreas" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;line-height:1.5;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.lead u{text-decoration:none;color:#7C3AED;font-weight:800}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.pt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.pn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text)}
+.px{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.pd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.pd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.sold{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:color-mix(in oklab,var(--kb-gem) 16%,#fff);color:#3A4F9C;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.leg{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px}
+.leg span{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.leg i{width:9px;height:9px;border-radius:3px;display:block}
+.g{display:grid;grid-template-columns:1fr;gap:11px}
+.cap{max-width:250px;margin:0 auto}
+.duo{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.duo>div:first-child{flex:0 0 210px}
+.duo>div:last-child{flex:1;min-width:240px}
+</style></head>
+<body class="kb-root">
+  <p class="lead"><b>la tienda ya lo cobra</b> · widget <code>wg-radar</code> «Radar de balance», 80 gemas · <u>se vendía sin tener dibujo</u></p>
+  <div class="g">
+    <div class="p">
+      <div class="pt"><span class="pn">Radar de balance</span><span class="sold">wg-radar · 80 ◈</span></div>
+      <p class="pd">Pentágono porque son exactamente <b>5 áreas</b> — no es una elección estética, es el dato. Cada vértice lleva el color de su área y su punto en ese color; el relleno es el promedio del héroe. Su <code>viewBox</code> es propio (200), así que se acota y se centra en vez de crecer con el panel.</p>
+      <div id="r1" class="cap"></div>
+      <div class="leg" id="l1"></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/charts-nuevas.jsx"></script>
+<script type="text/babel" src="../reference/app/charts-catalogo.jsx"></script>
+<script type="text/babel">
+const AREAS = [
+  { n:"VIGOR", v:.80, c:"var(--area-vigor)" },
+  { n:"SABID", v:.65, c:"var(--area-wisdom)" },
+  { n:"RIQUE", v:.45, c:"var(--area-wealth)" },
+  { n:"COMUN", v:.70, c:"var(--area-community)" },
+  { n:"VOLUN", v:.90, c:"var(--area-will)" },
+];
+ReactDOM.createRoot(document.getElementById("r1")).render(<RadarChart areas={AREAS} />);
+ReactDOM.createRoot(document.getElementById("l1")).render(
+  <>{AREAS.map(a => <span key={a.n}><i style={{background:a.c}}></i>{`${a.n.toLowerCase()} ${Math.round(a.v*100)}%`}</span>)}</>);
+</script>
+</body></html>

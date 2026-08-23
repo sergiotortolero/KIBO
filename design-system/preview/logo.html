@@ -1,0 +1,37 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x198" name="Marca" subtitle="El logo es KIBO, no una «K» · marca y wordmark" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0}
+  body{background:var(--kb-canvas);font-family:var(--kb-f-body);display:flex;align-items:center;gap:46px;padding:30px 40px}
+  /* KIBO mascot (the brand mark) */
+  .kibo{position:relative;width:104px;height:104px;flex:none}
+  .kibo-body{position:absolute;inset:0;overflow:hidden;
+    background-color:#1CA4A0;opacity:.9;
+    border-radius:42% 42% 45% 45%/46% 46% 42% 42%;
+    animation:kbJelly 5s var(--kb-ease-standard) infinite, kbFloat 4s ease-in-out infinite;}
+  @keyframes kbJelly{0%,100%{border-radius:42% 42% 45% 45%/46% 46% 42% 42%}50%{border-radius:46% 46% 41% 41%/42% 42% 48% 48%}}
+  @keyframes kbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  .eyes{position:absolute;top:44%;left:0;right:0;display:flex;justify-content:center;gap:13px;z-index:1}
+  .eye{width:16px;height:18px;background:#0B3B39;border-radius:48%/54%;position:relative;overflow:hidden;animation:kbBlink 4.2s infinite;transform-origin:center}
+  .eye::after{content:"";position:absolute;top:15%;left:24%;width:4.8px;height:4.8px;border-radius:50%;background:#fff;opacity:.95}
+  @keyframes kbBlink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.12)}}
+  .mouth{position:absolute;top:66%;left:50%;width:34px;height:20px;transform:translateX(-50%);overflow:visible;z-index:1}
+  .mouth path{stroke:#0B3B39;stroke-width:4.4;stroke-linecap:round;fill:none}
+  .word{display:flex;flex-direction:column;gap:6px}
+  .word b{font-family:var(--kb-f-display);font-weight:800;font-size:46px;letter-spacing:-.03em;color:var(--kb-text);line-height:1}
+  .word .tg{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);text-transform:uppercase}
+  .word .note{font-size:12px;color:var(--kb-text-2);max-width:280px;line-height:1.5}
+</style></head>
+<body class="kb-root">
+  <div class="kibo" title="KIBO">
+    <div class="kibo-body"></div>
+    <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+    <svg class="mouth" viewBox="-13 -7 26 20"><path d="M -8 -0.5 Q 0 7 8 -0.5"></path></svg>
+  </div>
+  <div class="word">
+    <b>Kibo</b>
+    <span class="tg">La mascota es la marca</span>
+    <span class="note">KIBO es un ente vivo translúcido (blob) que parpadea, flota y se transforma según tu actividad. No es una «K».</span>
+  </div>
+</body></html>

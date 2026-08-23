@@ -1,0 +1,69 @@
+<!-- @dsCard group="01 · Tipografía" viewport="700x682" name="Tipografía" subtitle="Dos familias, escala de 9 pasos, piso duro de 10px" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 8px}
+.hd:not(:first-child){margin-top:15px}
+.fam{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.f{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:12px 14px}
+.fn{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);display:block;margin-bottom:7px}
+.fs{display:block;color:var(--kb-text);line-height:1.15;margin-bottom:6px}
+.fu{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:0}
+.fu code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+/* escala */
+.sc{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 14px;display:flex;flex-direction:column;gap:6px}
+.st{display:flex;align-items:baseline;gap:11px}
+.sk{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-text-3);width:38px;flex:none}
+.sv{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);width:34px;flex:none;font-variant-numeric:tabular-nums}
+.sp{font-family:var(--kb-f-display);font-weight:800;color:var(--kb-text);line-height:1.1;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.su{font-size:10px;color:var(--kb-text-3);margin-left:auto;flex:none}
+/* roles */
+.rl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.r{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:9px 11px;display:flex;flex-direction:column;gap:5px}
+.rn{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-text-3)}
+.rd{font-size:10px;color:var(--kb-text-3);line-height:1.4;margin-top:auto}
+.eyebrow{font-family:var(--kb-f-label);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-text-3)}
+.num{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:22px;color:var(--kb-text);line-height:1}
+.body{font-size:13px;color:var(--kb-text);line-height:1.5}
+.note{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Dos familias</p>
+<div class="fam">
+  <div class="f">
+    <span class="fn">--kb-f-display</span>
+    <span class="fs" style="font-family:var(--kb-f-display);font-weight:800;font-size:26px;letter-spacing:-.02em">Plus Jakarta Sans</span>
+    <p class="fu">Títulos, cifras y etiquetas. Pesos <code>700</code> y <code>800</code>. Las cifras van con <code>tabular-nums</code> para que los contadores no salten.</p>
+  </div>
+  <div class="f">
+    <span class="fn">--kb-f-body</span>
+    <span class="fs" style="font-family:var(--kb-f-body);font-weight:400;font-size:26px">Inter</span>
+    <p class="fu">Todo el texto de interfaz y de lectura. Pesos <code>400</code> a <code>700</code>.</p>
+  </div>
+</div>
+
+<p class="hd">Escala · 9 pasos</p>
+<div class="sc">
+  <div class="st"><span class="sk">4xl</span><span class="sv">34</span><span class="sp" style="font-size:22px">Sube de nivel</span><span class="su">héroe de módulo</span></div>
+  <div class="st"><span class="sk">3xl</span><span class="sv">26</span><span class="sp" style="font-size:19px">Sube de nivel</span><span class="su">título de pantalla</span></div>
+  <div class="st"><span class="sk">2xl</span><span class="sv">22</span><span class="sp" style="font-size:17px">Sube de nivel</span><span class="su">cifra destacada</span></div>
+  <div class="st"><span class="sk">xl</span><span class="sv">18</span><span class="sp" style="font-size:15px">Sube de nivel</span><span class="su">título de modal</span></div>
+  <div class="st"><span class="sk">lg</span><span class="sv">15</span><span class="sp" style="font-size:14px">Sube de nivel</span><span class="su">título de tarjeta</span></div>
+  <div class="st"><span class="sk">md</span><span class="sv">13</span><span class="sp" style="font-size:13px;font-weight:400;font-family:var(--kb-f-body)">Sube de nivel</span><span class="su">base de cuerpo</span></div>
+  <div class="st"><span class="sk">sm</span><span class="sv">12</span><span class="sp" style="font-size:12px;font-weight:700">Sube de nivel</span><span class="su">etiqueta de campo</span></div>
+  <div class="st"><span class="sk">xs</span><span class="sv">11</span><span class="sp" style="font-size:11px;font-weight:800">Sube de nivel</span><span class="su">metadato</span></div>
+  <div class="st"><span class="sk">2xs</span><span class="sv">10</span><span class="sp" style="font-size:10px;font-weight:800">Sube de nivel</span><span class="su">piso duro</span></div>
+</div>
+
+<p class="hd">Roles</p>
+<div class="rl">
+  <div class="r"><span class="rn">cejilla</span><span class="eyebrow">Vigor · Nv 12</span><span class="rd">Jakarta <code>800</code>, <code>11px</code>, MAYÚSCULAS con <code>.09em</code></span></div>
+  <div class="r"><span class="rn">cifra</span><span class="num">1 240</span><span class="rd">Jakarta <code>800</code> con <code>tabular-nums</code></span></div>
+  <div class="r"><span class="rn">cuerpo</span><span class="body">El fracaso reencauza.</span><span class="rd">Inter <code>400</code>, <code>13px</code>, interlínea <code>1.5</code></span></div>
+</div>
+
+<p class="note"><b>El piso es 10px y no tiene excepción</b> — aplica también a las etiquetas de espécimen de este sistema. <b>Las cejillas van en MAYÚSCULAS</b> con tracking de <code>.09em</code>: es la firma verbal de Kibo. <b>Las cifras nunca van en mayúsculas ni en monoespaciada</b>: usan Jakarta con <code>tabular-nums</code>, para que los contadores queden alineados sin verse mecánicos. El tracking de display es cerrado (<code>-.02em</code>); el de cejilla es abierto.</p>
+</body></html>

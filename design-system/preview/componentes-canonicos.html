@@ -1,0 +1,46 @@
+<!-- @dsCard group="06 · Moléculas" viewport="700x639" name="Componentes canónicos" subtitle="Los 14 de kbv-shared.jsx — una sola implementación; las pantallas la envuelven" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 11px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.g{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.it{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:9px 11px;display:grid;grid-template-columns:auto 1fr;gap:9px;align-items:start}
+.gl{width:26px;height:26px;border-radius:8px;background:color-mix(in oklab,var(--c) 14%,#fff);color:var(--c);display:grid;place-items:center;flex:none}
+.gl i[data-lucide]{width:13px;height:13px;stroke-width:2.2}
+.bd{min-width:0}
+.nm{font-family:var(--kb-f-label);font-size:10.5px;font-weight:800;color:var(--kb-text);letter-spacing:.09em;display:block;line-height:1.2;text-transform:uppercase}
+.ds{font-size:10.5px;color:var(--kb-text-2);line-height:1.4;display:block;margin-top:2px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:12px 0 7px;display:block;text-transform:uppercase}
+.hd:first-of-type{margin-top:0}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);margin-top:11px;letter-spacing:.09em;line-height:1.55;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>app/kbv-shared.jsx</b> · si una pantalla necesita una variante, se le pasa una prop — nunca se copia el marcado · <b>act. 16 ago 2026</b></div>
+  <span class="hd">Entidades — lo que el usuario ve como una «cosa»</span>
+  <div class="g">
+    <div class="it" style="--c:var(--kb-primary)"><span class="gl"><i data-lucide="repeat"></i></span><div class="bd"><span class="nm">KbHabitCard</span><span class="ds">Check tocable + racha + semana + recompensa. Prop <b>compact</b> para el tablero.</span></div></div>
+    <div class="it" style="--c:var(--kb-coin)"><span class="gl"><i data-lucide="gift"></i></span><div class="bd"><span class="nm">ItemCard</span><span class="ds">El arte manda y el precio va en el botón. Tienda, regalos, widgets, cosméticos.</span></div></div>
+    <div class="it" style="--c:var(--area-community)"><span class="gl"><i data-lucide="user"></i></span><div class="bd"><span class="nm">PersonRow</span><span class="ds">Liga, aportantes, ranking. La métrica de la derecha se configura por sección.</span></div></div>
+    <div class="it" style="--c:var(--area-wealth)"><span class="gl"><i data-lucide="wallet"></i></span><div class="bd"><span class="nm">MoneyRow</span><span class="ds">Cuentas, créditos y suscripciones: glifo + nombre + meta + monto.</span></div></div>
+  </div>
+  <span class="hd">Captura — donde el usuario mete un dato</span>
+  <div class="g">
+    <div class="it" style="--c:var(--kb-streak)"><span class="gl"><i data-lucide="flame"></i></span><div class="bd"><span class="nm">RateRow</span><span class="ds">La escala 1–5 canónica. Un ícono por concepto vía <b>KB_SCALES</b>.</span></div></div>
+    <div class="it" style="--c:var(--pri-urgent)"><span class="gl"><i data-lucide="chevrons-up"></i></span><div class="bd"><span class="nm">PriorityRow</span><span class="ds">Las 5 prioridades con sus glifos reales, no un punto de color.</span></div></div>
+    <div class="it" style="--c:var(--area-wisdom)"><span class="gl"><i data-lucide="chevrons-up-down"></i></span><div class="bd"><span class="nm">KbStepper</span><span class="ds">Sustituye los <b>input[type=number]</b> sueltos. Alto de control 46px.</span></div></div>
+    <div class="it" style="--c:var(--kb-boss)"><span class="gl"><i data-lucide="alert-triangle"></i></span><div class="bd"><span class="nm">useConfirm · usePrompt</span><span class="ds">Cero diálogos del navegador. La confirmación vive en el pie del modal.</span></div></div>
+  </div>
+  <span class="hd">Lectura y estructura — lo que solo se mira</span>
+  <div class="g">
+    <div class="it" style="--c:var(--kb-primary)"><span class="gl"><i data-lucide="bar-chart-3"></i></span><div class="bd"><span class="nm">Scale5</span><span class="ds">El medidor 1–5 de solo lectura: 5 barras ascendentes, en tarjetas y filtros.</span></div></div>
+    <div class="it" style="--c:var(--kb-good)"><span class="gl"><i data-lucide="target"></i></span><div class="bd"><span class="nm">GoalBar</span><span class="ds">Donde hay dinero de por medio: deseos de amigos y ahorro de Finanzas.</span></div></div>
+    <div class="it" style="--c:var(--kb-text-2)"><span class="gl"><i data-lucide="heading-3"></i></span><div class="bd"><span class="nm">SectionHead</span><span class="ds">Un solo encabezado: título + meta + acción. Antes copiado en 4 pantallas.</span></div></div>
+    <div class="it" style="--c:var(--kb-text-3)"><span class="gl"><i data-lucide="inbox"></i></span><div class="bd"><span class="nm">EmptyState</span><span class="ds">El vacío enseña qué es la sección y ofrece cómo llenarla.</span></div></div>
+  </div>
+  <p class="no"><b>Contrato de alto de controles: 46px</b> (<b>--kb-ctl-h</b>) — campos, steppers, <b>input[type=date]</b> y montos. Cubre de sobra el piso táctil de 44px en móvil. Un control suelto alineado a otra medida rompe la fila que lo contiene. <b>El proyecto v2 venía en 42px y migra a 46.</b></p>
+  <script>lucide.createIcons()</script>
+</body></html>

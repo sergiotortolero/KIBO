@@ -1,0 +1,95 @@
+<!-- @dsCard group="10 · Gamificación" viewport="700x515" name="Niveles · las escalas y sus ciclos" subtitle="Cinco escalas con su forma visual, y el ciclo de Maestro" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 9px}
+.hd:not(:first-child){margin-top:15px}
+.hd em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:var(--kb-text-3);font-size:10.5px}
+/* cinco escalas, cada una con su forma */
+.sc{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.s{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:10px;display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center}
+.sf{height:38px;display:flex;align-items:center;justify-content:center}
+.sn{font-family:var(--kb-f-display);font-weight:800;font-size:11.5px;color:var(--kb-text);line-height:1.2}
+.sr{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:10px;font-weight:800;letter-spacing:.04em;color:var(--kb-primary-ink)}
+.sd{font-size:10px;color:var(--kb-text-3);line-height:1.35;margin-top:auto}
+/* las formas reales */
+.lv{font-family:var(--kb-f-display);font-weight:800;font-size:12px;padding:5px 11px;border-radius:var(--kb-r-pill);background:var(--kb-primary-soft);color:var(--kb-primary-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pz{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:var(--kb-r-pill);background:color-mix(in oklab,#9B5CF0 13%,#fff);white-space:nowrap}
+.pz b{font-family:var(--kb-f-display);font-weight:800;font-size:11px;color:#3A1E80;font-variant-numeric:tabular-nums}
+.pz i{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#E2C9FB,#9B5CF0);display:block;flex:none}
+.stars{display:inline-flex;gap:3px}
+.stars i{width:11px;height:11px;display:block;background:var(--kb-coin);clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)}
+.stars i.off{background:var(--kb-border-strong)}
+.shield{width:32px;height:36px;background:linear-gradient(160deg,#F8DC8A,#D4A22B);clip-path:polygon(50% 0,100% 16%,100% 62%,50% 100%,0 62%,0 16%);display:flex;align-items:center;justify-content:center;font-family:var(--kb-f-display);font-weight:800;font-size:11px;color:#5E440E}
+.abar{width:100%;display:flex;flex-direction:column;gap:4px;align-items:center}
+.abar u{text-decoration:none;display:block;width:100%;height:7px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.abar u i{display:block;height:100%;width:68%;background:var(--area-wisdom);border-radius:var(--kb-r-pill)}
+.abar b{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11px;color:var(--kb-text)}
+/* ciclo de maestro */
+.cy{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:12px 14px}
+.track{position:relative;padding-bottom:2px}
+.tl{position:absolute;left:20px;right:20px;top:15px;height:9px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.tl i{display:block;height:100%;width:52%;background:var(--area-wisdom);border-radius:var(--kb-r-pill)}
+.stops{position:relative;display:flex;justify-content:space-between;align-items:flex-start}
+.st{display:flex;flex-direction:column;align-items:center;gap:5px;width:80px;flex:none}
+.dot{width:30px;height:30px;border-radius:50%;background:var(--kb-card);border:2.5px solid var(--kb-border-strong);display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+.st.on .dot{border-color:var(--area-wisdom);background:color-mix(in oklab,var(--area-wisdom) 12%,#fff)}
+.st.dk .dot{border-color:var(--kb-void-1,#3A3450);background:color-mix(in oklab,var(--kb-void-1,#3A3450) 12%,#fff)}
+.st.cn .dot{border-color:var(--kb-coin);background:color-mix(in oklab,var(--kb-coin) 14%,#fff)}
+.st.x2 .dot{border-color:var(--kb-primary);background:var(--kb-primary-soft);font-family:var(--kb-f-display);font-weight:800;font-size:11px;color:var(--kb-primary-ink)}
+.sl{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-text-2)}
+.st.on .sl{color:var(--kb-text)}
+.sw{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.3}
+.loop{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:11px;padding-top:10px;border-top:1px solid var(--kb-border-soft);font-size:10.5px;color:var(--kb-text-2)}
+.loop span{display:flex;flex:none;color:var(--kb-primary)}
+.loop b{color:var(--kb-text);font-weight:700}
+.note{margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Cinco escalas <em>— cada una tiene su propia forma, para no confundirlas de un vistazo</em></p>
+<div class="sc">
+  <div class="s"><div class="sf"><span class="lv">Nv 12</span></div><span class="sn">Nivel de héroe</span><span class="sr">1 → ∞</span><span class="sd">Sube con toda la actividad. Vive en el HUD</span></div>
+  <div class="s"><div class="sf"><span class="pz"><i></i><b>P3</b></span></div><span class="sn">Prestigio global</span><span class="sr">1 → 16</span><span class="sd">Al cerrar cada ciclo. El nombre lo elige el usuario</span></div>
+  <div class="s"><div class="sf"><span class="abar"><b>Nv 34</b><u><i></i></u></span></div><span class="sn">Nivel de área</span><span class="sr">1 → 50</span><span class="sd">Actividad de esa área. Al 50 reinicia en 1</span></div>
+  <div class="s"><div class="sf"><span class="stars"><i></i><i></i><i></i><i class="off"></i><i class="off"></i></span></div><span class="sn">Prestigio de área</span><span class="sr">0 → 5</span><span class="sd">Una estrella cada 50 niveles</span></div>
+  <div class="s"><div class="sf"><span class="shield">14</span></div><span class="sn">Rango del emblema</span><span class="sr">Nv 1 → 100</span><span class="sd">20 rangos en 9 materiales. Se gana, no se elige</span></div>
+</div>
+
+<p class="hd">Ciclo de Maestro <em>— al llegar a la 5.ª estrella el nivel ya no tiene techo: gira en ciclos de 50</em></p>
+<div class="cy">
+  <div class="track">
+    <span class="tl"><i></i></span>
+    <div class="stops">
+      <span class="st on"><span class="dot"><span id="d0"></span></span><span class="sl">1</span><span class="sw">arranca el ciclo</span></span>
+      <span class="st on dk"><span class="dot"><span id="d1"></span></span><span class="sl">10</span><span class="sw">materia oscura</span></span>
+      <span class="st on cn"><span class="dot"><span id="d2"></span></span><span class="sl">25</span><span class="sw">monedas</span></span>
+      <span class="st"><span class="dot"></span><span class="sl">40</span><span class="sw">—</span></span>
+      <span class="st x2"><span class="dot">×2</span><span class="sl">50</span><span class="sw">multiplicador de XP</span></span>
+    </div>
+  </div>
+  <div class="loop"><span id="lp"></span>Al cerrar el 50 el ciclo <b>vuelve al 1</b> conservando el multiplicador — y suma un ciclo al contador</div>
+</div>
+
+<p class="note"><b>Siempre <code>P{n} · nombre</code>, nunca el nombre solo.</b> Si el usuario reescribe los 16 prestigios, el número sigue siendo la referencia y nada se rompe. <b>El nivel de héroe y el de área no se suman ni se comparan</b>: son escalas distintas, y mezclarlas en una misma barra confunde qué se está mirando. La 5.ª estrella de área desbloquea el <b>fondo de área</b>, la única personalización que no se compra.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/personalizacion.jsx"></script>
+<script type="text/babel">
+const CG = window.CurrencyGlyph;
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+const put = (id, el) => { const n = document.getElementById(id); if (n) ReactDOM.createRoot(n).render(el); };
+if (CG) {
+  put('d1', <CG glyph="orb" color="var(--kb-void-1, #3A3450)" size={16} />);
+  put('d2', <CG glyph="coin" color="var(--kb-coin)" size={16} />);
+}
+if (I) {
+  put('d0', <I name="flag" size={14} color="var(--area-wisdom)" />);
+  put('lp', <I name="repeat" size={13} color="currentColor" />);
+}
+</script>
+</body></html>

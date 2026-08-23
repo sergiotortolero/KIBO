@@ -1,0 +1,87 @@
+<!-- @dsCard group="16 · Glosario" viewport="700x1127" name="Glosario · forma y texto" subtitle="Glifo, alto de control, cejilla, cifras tabulares, token y primitivo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 12px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.g{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:start}
+.t{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:10px 11px;display:flex;flex-direction:column;gap:8px}
+.tn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text);line-height:1.15}
+.td{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:0}
+.demo{background:var(--kb-surface);border-radius:var(--kb-r-xs);padding:11px;display:flex;align-items:center;justify-content:center;gap:8px;min-height:417px;position:relative;overflow:hidden}
+/* glifo */
+.glyph{width:34px;height:34px;border-radius:11px;background:var(--kb-primary-soft);color:var(--kb-primary-ink);display:grid;place-items:center}
+.glyph i[data-lucide]{width:17px;height:17px;stroke-width:2.2}
+.bare i[data-lucide]{width:22px;height:22px;stroke-width:2.2;color:var(--kb-text-2)}
+/* alto de control */
+.ctl{height:46px;flex:1;border:1px solid var(--kb-border-strong);border-radius:var(--kb-r-sm);background:var(--kb-card);display:flex;align-items:center;padding:0 11px;font-size:12px;color:var(--kb-text-3);min-width:0}
+.measure{display:flex;align-items:center;gap:4px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-primary);letter-spacing:.09em;flex:none;text-transform:uppercase}
+.measure em{display:flex;flex-direction:column;justify-content:space-between;width:5px;height:46px;font-style:normal}
+.measure em i{display:block;height:1.5px;background:var(--kb-primary)}
+.measure em s{display:block;width:1.5px;flex:1;background:var(--kb-primary);opacity:.4;margin:0 auto}
+/* banda */
+.mini{width:100%;border:1px solid var(--kb-border);border-radius:var(--kb-r-xs);overflow:hidden;background:var(--kb-card)}
+.mini .bd{padding:5px 8px;background:color-mix(in oklab,var(--area-wisdom) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--area-wisdom) 18%,var(--kb-border));font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;color:color-mix(in oklab,var(--area-wisdom) 74%,#1A1A2E);text-transform:uppercase}
+.mini .bb{padding:6px 8px;font-family:var(--kb-f-display);font-weight:800;font-size:11px;color:var(--kb-text)}
+/* pastilla */
+.pz{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:var(--kb-r-xs);background:color-mix(in oklab,var(--area-community) 15%,#fff);color:color-mix(in oklab,var(--area-community) 72%,#1A1A2E);font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.pz i[data-lucide]{width:11px;height:11px;stroke-width:2.4}
+/* tinta */
+.ink{display:flex;gap:6px;width:100%}
+.ink span{flex:1;border-radius:var(--kb-r-xs);padding:7px 4px;text-align:center;font-family:var(--kb-f-display);font-weight:800;font-size:10.5px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ink .bad{background:var(--kb-coin);color:#fff}
+.ink .ok{background:var(--kb-coin);color:var(--kb-coin-ink)}
+.mk{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+/* eyebrow */
+.eb{display:flex;flex-direction:column;gap:3px;align-items:flex-start;width:100%}
+.eb u{text-decoration:none;font-family:var(--kb-f-label);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);text-transform:uppercase}
+.eb b{font-family:var(--kb-f-display);font-weight:800;font-size:15px;color:var(--kb-text);line-height:1.1}
+/* elevación dura */
+.hard{padding:9px 15px;border-radius:var(--kb-r-sm);background:var(--kb-primary);color:#fff;font-family:var(--kb-f-display);font-weight:800;font-size:12px;box-shadow:0 2px 0 var(--kb-primary-ink)}
+/* medidor */
+.m5{display:inline-flex;align-items:flex-end;gap:2.5px;height:18px}
+.m5 span{width:4px;border-radius:1px;background:var(--kb-surface-2);display:block}
+.m5 span.on{background:var(--pri-urgent)}
+/* halo de foco */
+.halo{padding:8px 14px;border-radius:var(--kb-r-sm);border:1px solid var(--kb-border-strong);background:var(--kb-card);font-family:var(--kb-f-display);font-weight:700;font-size:12px;color:var(--kb-text);box-shadow:0 0 0 3px color-mix(in srgb,var(--kb-primary) 10%,transparent)}
+/* tabular */
+.tab{display:flex;flex-direction:column;gap:2px;font-family:var(--kb-f-display);font-weight:800;font-size:14px;color:var(--kb-text)}
+.tab u{text-decoration:none;font-variant-numeric:tabular-nums}
+.tab s{text-decoration:none;font-variant-numeric:normal;color:var(--kb-text-3)}
+.link{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-primary-ink);text-decoration:none;border-bottom:1px solid var(--kb-primary-border);letter-spacing:.09em;text-transform:uppercase}
+.refs{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:10px 12px;font-size:11px;color:var(--kb-text-2);line-height:1.6}
+.refs b{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);display:block;margin-bottom:5px;text-transform:uppercase}
+a{color:var(--kb-primary-ink)}a:hover{color:var(--kb-primary)}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>cada término, señalado sobre la pieza</b> · si te pregunto por algo de aquí, esta es la referencia</div>
+  <div class="g">
+    <div class="t"><span class="tn">Glifo</span>
+      <div class="demo"><span class="bare"><i data-lucide="flame"></i></span><span class="glyph"><i data-lucide="flame"></i></span></div>
+      <p class="td">El dibujito. A secas es solo el trazo; dentro de un cuadro de color se le llama <b>glifo en contenedor</b>.</p>
+    </div>
+    <div class="t"><span class="tn">Alto de control</span>
+      <div class="demo"><span class="ctl">Nombre del hábito</span><span class="measure"><em><i></i><s></s><i></i></em>46</span></div>      <p class="td">Qué tan alta es una caja donde escribes o eliges. Todas deben medir igual o la fila se ve chueca.</p>
+    </div>
+    <div class="t"><span class="tn">Cejilla <em style="font-style:normal;color:var(--kb-text-3);font-size:10px">(eyebrow)</em></span>
+      <div class="demo"><span class="eb"><u>racha activa</u><b>21 días</b></span></div>
+      <p class="td">La etiqueta chica arriba de un título. Va en Jakarta, minúscula y sin tracking — el sistema retiró la monoespaciada.</p>
+    </div>
+    <div class="t"><span class="tn">Cifras tabulares</span>
+      <div class="demo"><span class="tab"><u>1 118 · 24 000</u><s>1 118 · 24 000</s></span></div>
+      <p class="td">Arriba, cada número ocupa lo mismo y las columnas cuadran. Abajo, sin eso, bailan.</p>
+    </div>
+    <div class="t"><span class="tn">Token</span>
+      <div class="demo"><span style="font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-primary-ink);background:var(--kb-primary-soft);padding:5px 9px;border-radius:var(--kb-r-xs)">--kb-primary</span></div>
+      <p class="td">El nombre de un valor. Se cambia en un solo lugar y se actualiza en toda la plataforma.</p>
+    </div>
+    <div class="t"><span class="tn">Primitivo</span>
+      <div class="demo" style="gap:6px"><span class="hard" style="font-size:10px;padding:6px 10px">Botón</span><span class="pz" style="background:var(--kb-surface-2);color:var(--kb-text-2)">Chip</span></div>
+      <p class="td">Las piezas más chicas que se combinan para todo: botón, campo, chip, tarjeta.</p>
+    </div>
+  </div>
+  </div>
+  <script>lucide.createIcons()</script>
+</body></html>

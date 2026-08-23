@@ -1,0 +1,59 @@
+<!-- @dsCard group="02 · Color" viewport="700x475" name="Color del sistema" subtitle="Gamificación, 5 áreas de vida y 5 prioridades — cada color con un significado fijo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 8px;display:block}
+.hd:not(:first-of-type){margin-top:14px}
+.hd em{font-style:normal;color:var(--kb-text-2);letter-spacing:.02em;text-transform:none;font-weight:700}
+.g{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.s{display:flex;flex-direction:column;gap:4px}
+.c{height:42px;border-radius:var(--kb-r-sm);box-shadow:inset 0 0 0 1px rgba(20,30,50,.09);display:grid;place-items:center;font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.c .kic svg{width:16px;height:16px;stroke-width:2.4}
+.n{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.09em;text-transform:uppercase}
+.h{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em}
+.dm{position:relative;width:22px;height:22px}
+.dm i{position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 1.3px var(--kb-dark-halo);opacity:.6}
+.dm s{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:70%;height:70%;background:var(--kb-dark-core);clip-path:polygon(50% 2%,88% 30%,100% 70%,50% 100%,0 70%,12% 30%)}
+.rule{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.rule b{color:var(--kb-primary-ink)}.rule u{text-decoration:none;color:#B3261E;font-weight:800}
+</style></head>
+<body class="kb-root">
+  <span class="hd">Gamificación <em>— cada uno significa una cosa y solo esa</em></span>
+  <div class="g">
+    <div class="s"><div class="c" style="background:var(--kb-hp);color:#fff">HP</div><span class="n">hp · boss</span><span class="h">#E64545</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-xp);color:#fff">XP</div><span class="n">xp</span><span class="h">= primary</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-coin);color:var(--kb-coin-ink)">K</div><span class="n">coin</span><span class="h">#F4B740</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-void-1)"><span class="dm"><i></i><s></s></span></div><span class="n">materia oscura</span><span class="h">--kb-dark-*</span></div>
+    <div class="s"><div class="c" style="background:var(--kb-streak);color:#fff"><span class="kic" data-n="flame"></span></div><span class="n">streak</span><span class="h">#FF7A45</span></div>
+  </div>
+  <span class="hd">Áreas de vida <em>— el usuario las renombra y recolorea; el orden de las 5 prioridades no</em></span>
+  <div class="g">
+    <div class="s"><div class="c" style="background:var(--area-vigor);color:#fff"><span class="kic" data-n="vigor"></span></div><span class="n">Vigor</span><span class="h">#EF4444</span></div>
+    <div class="s"><div class="c" style="background:var(--area-wisdom);color:#fff"><span class="kic" data-n="wisdom"></span></div><span class="n">Sabiduría</span><span class="h">#3B82F6</span></div>
+    <div class="s"><div class="c" style="background:var(--area-wealth);color:#4A3708"><span class="kic" data-n="wealth"></span></div><span class="n">Riqueza</span><span class="h">#EAB308</span></div>
+    <div class="s"><div class="c" style="background:var(--area-community);color:#fff"><span class="kic" data-n="community"></span></div><span class="n">Comunidad</span><span class="h">#A855F7</span></div>
+    <div class="s"><div class="c" style="background:var(--area-will);color:#0A3A44"><span class="kic" data-n="will"></span></div><span class="n">Voluntad</span><span class="h">#06B6D4</span></div>
+  </div>
+  <span class="hd">Prioridades <em>— orden fijo</em></span>
+  <div class="g">
+    <div class="s"><div class="c" style="background:var(--pri-urgent);color:#fff">1</div><span class="n">Urgente</span><span class="h">#E64545</span></div>
+    <div class="s"><div class="c" style="background:var(--pri-high);color:#fff">2</div><span class="n">Alta</span><span class="h">#F4811F</span></div>
+    <div class="s"><div class="c" style="background:var(--pri-medium);color:#4A3708">3</div><span class="n">Media</span><span class="h">#F4B740</span></div>
+    <div class="s"><div class="c" style="background:var(--pri-low);color:#fff">4</div><span class="n">Baja</span><span class="h">#6E8CF2</span></div>
+    <div class="s"><div class="c" style="background:var(--pri-vlow);color:#fff">5</div><span class="n">Muy baja</span><span class="h">#9CA3AF</span></div>
+  </div>
+  <p class="rule"><b>Cuando compiten área y prioridad: el área pinta, la prioridad marca.</b> El área da la superficie, la pastilla y el glifo; la prioridad se lee en el medidor de barras, <u>nunca</u> en un segundo color de fondo. Sobre ámbar, amarillo, teal y naranja el texto va <b>oscuro</b>; rojo, azul y morado admiten blanco solo en tamaños grandes.</p>
+  <script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const K = window.__KIconApp;
+// el punto de montaje está vacío, así que no se puede medir: el tamaño lo
+// declara el CSS y aquí se pide con holgura para que no se pixele al escalar.
+document.querySelectorAll('.kic').forEach(el => {
+  ReactDOM.createRoot(el).render(K ? K({ name: el.dataset.n, size: 24, stroke: 2.4 }) : null);
+});
+</script>
+</body></html>

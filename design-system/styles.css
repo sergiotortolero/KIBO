@@ -1,0 +1,4 @@
+/* Kibo Design System — global stylesheet (compiler entry) */
+@import url('reference/kibo-fonts.css'); /* Inter + Plus Jakarta auto-alojadas (woff2 en fonts/) */
+@import url('colors_and_type.css');   /* canonical tokens + type classes */
+@import url('kbv-components.css');    /* real prototype component classes */

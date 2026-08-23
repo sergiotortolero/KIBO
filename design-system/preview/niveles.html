@@ -1,0 +1,105 @@
+<!-- @dsCard group="10 · Gamificación" viewport="700x489" name="Niveles · héroe y área" subtitle="La barra de XP del HUD y la ruta de recompensas por área" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 8px}
+.hd:not(:first-child){margin-top:15px}
+.hd em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:var(--kb-text-3);font-size:10.5px}
+.c{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+/* ── héroe: una sola barra en el HUD ── */
+.hero{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px}
+.lv{font-family:var(--kb-f-display);font-weight:800;font-size:12px;padding:5px 11px;border-radius:var(--kb-r-pill);background:var(--kb-primary-soft);color:var(--kb-primary-ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pbar{height:9px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.pbar i{display:block;height:100%;width:62%;background:var(--kb-primary);border-radius:var(--kb-r-pill)}
+.sub{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin-top:5px;display:block}
+.num{font-family:var(--kb-f-display);font-weight:800;font-size:11.5px;font-variant-numeric:tabular-nums;color:var(--kb-text-2);white-space:nowrap}
+/* ── ruta de recompensas: hitos con su glifo real ── */
+.route{position:relative;margin-top:12px;padding-bottom:2px}
+.rt{position:absolute;left:14px;right:14px;top:15px;height:9px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.rt i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+.stops{position:relative;display:flex;justify-content:space-between;align-items:flex-start}
+.sp{display:flex;flex-direction:column;align-items:center;gap:5px;width:56px;flex:none}
+.dot{width:28px;height:28px;border-radius:50%;background:var(--kb-card);border:2.5px solid var(--kb-border-strong);display:flex;align-items:center;justify-content:center;box-sizing:border-box}
+.sp.on .dot{border-color:var(--c);background:color-mix(in oklab,var(--c) 12%,#fff)}
+.sp.rw .dot{border-color:var(--kb-coin);background:color-mix(in oklab,var(--kb-coin) 14%,#fff)}
+.sp.rw.dark .dot{border-color:var(--kb-void-1,#3A3450);background:color-mix(in oklab,var(--kb-void-1,#3A3450) 12%,#fff)}
+.sp.rw.chest .dot{border-color:var(--area-community);background:color-mix(in oklab,var(--area-community) 12%,#fff)}
+.sn{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-text-2)}
+.sp.on .sn{color:var(--kb-text)}
+.sw{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.3}
+.sp.rw .sw{color:color-mix(in oklab,var(--kb-coin) 66%,var(--kb-text))}
+.sp.rw.dark .sw{color:var(--kb-void-1,#3A3450)}
+.sp.rw.chest .sw{color:color-mix(in oklab,var(--area-community) 70%,var(--kb-text))}
+.ah{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.an{font-family:var(--kb-f-display);font-weight:800;font-size:13px;color:var(--kb-text)}
+/* leyenda de recompensas */
+.lg{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:9px}
+.li{display:flex;align-items:center;gap:8px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 10px}
+.lgl{width:26px;height:26px;border-radius:8px;flex:none;display:flex;align-items:center;justify-content:center;background:color-mix(in oklab,var(--c) 14%,#fff)}
+.lt{min-width:0;display:flex;flex-direction:column;gap:1px}
+.ln{font-family:var(--kb-f-display);font-weight:800;font-size:11.5px;color:var(--kb-text);line-height:1.2}
+.ld{font-size:10px;color:var(--kb-text-3);line-height:1.35}
+.note{margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Nivel del héroe <em>— una sola barra de XP, siempre visible en el HUD</em></p>
+<div class="c">
+  <div class="hero">
+    <span class="lv">Nv 12</span>
+    <div><span class="pbar"><i></i></span><span class="sub">Prestigio 3 · Explorador Sideral</span></div>
+    <span class="num">2 480 / 4 000 XP</span>
+  </div>
+</div>
+
+<p class="hd">Ruta de recompensas por área <em>— cada 5 niveles hay un hito; cada 3 hitos, un premio</em></p>
+<div class="c" style="--c:var(--area-wisdom)">
+  <div class="ah"><span class="an">Sabiduría · Maestro · ciclo 2</span><span class="num">nivel 72 / 100</span></div>
+  <div class="route">
+    <span class="rt"><i style="width:44%"></i></span>
+    <div class="stops">
+      <span class="sp on"><span class="dot"><span id="s1"></span></span><span class="sn">60</span><span class="sw">50 monedas</span></span>
+      <span class="sp on"><span class="dot"></span><span class="sn">65</span><span class="sw">—</span></span>
+      <span class="sp on"><span class="dot"></span><span class="sn">70</span><span class="sw">—</span></span>
+      <span class="sp rw dark"><span class="dot"><span id="s2"></span></span><span class="sn">75</span><span class="sw">3 materia</span></span>
+      <span class="sp"><span class="dot"></span><span class="sn">80</span><span class="sw">—</span></span>
+      <span class="sp"><span class="dot"></span><span class="sn">85</span><span class="sw">—</span></span>
+      <span class="sp rw"><span class="dot"><span id="s3"></span></span><span class="sn">90</span><span class="sw">120 monedas</span></span>
+      <span class="sp"><span class="dot"></span><span class="sn">95</span><span class="sw">—</span></span>
+      <span class="sp rw chest"><span class="dot"><span id="s4"></span></span><span class="sn">100</span><span class="sw">cofre de oro</span></span>
+    </div>
+  </div>
+</div>
+
+<p class="hd">Qué da cada hito</p>
+<div class="lg">
+  <div class="li" style="--c:var(--kb-coin)"><span class="lgl" id="l1"></span><span class="lt"><span class="ln">Monedas</span><span class="ld">Cosméticos y recompensas propias</span></span></div>
+  <div class="li" style="--c:var(--kb-void-1,#3A3450)"><span class="lgl" id="l2"></span><span class="lt"><span class="ln">Materia oscura</span><span class="ld">Impulsos, protectores, consumibles</span></span></div>
+  <div class="li" style="--c:var(--area-community)"><span class="lgl" id="l3"></span><span class="lt"><span class="ln">Cofre</span><span class="ld">Materia al azar según su rango</span></span></div>
+</div>
+
+<p class="note"><b>Dos escalas que no se mezclan.</b> El <b>nivel del héroe</b> es una sola barra en el HUD y avanza con todo lo que haces. El <b>nivel por área</b> son 50 niveles por prestigio, y el 5.º prestigio —Maestro— no tiene techo: sigue en ciclos. Los hitos usan <b>el mismo glifo que la divisa</b> en toda la plataforma: si el usuario cambia el skin de monedas a <code>Fichas</code>, la ruta también muestra fichas. Un hito sin premio solo marca el paso; el círculo relleno indica lo ya alcanzado.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/personalizacion.jsx"></script>
+<script type="text/babel">
+const CG = window.CurrencyGlyph;
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+const put = (id, el) => { const n = document.getElementById(id); if (n) ReactDOM.createRoot(n).render(el); };
+if (CG) {
+  put('s1', <CG glyph="coin" color="var(--kb-coin)" size={15} />);
+  put('s2', <CG glyph="orb"  color="var(--kb-void-1, #3A3450)" size={15} />);
+  put('s3', <CG glyph="coin" color="var(--kb-coin)" size={15} />);
+  put('l1', <CG glyph="coin" color="var(--kb-coin)" size={16} />);
+  put('l2', <CG glyph="orb"  color="var(--kb-void-1, #3A3450)" size={16} />);
+}
+if (I) {
+  put('s4', <I name="trophy" size={14} color="var(--area-community)" />);
+  put('l3', <I name="trophy" size={15} color="var(--area-community)" />);
+}
+</script>
+</body></html>

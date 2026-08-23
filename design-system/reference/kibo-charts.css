@@ -1,0 +1,179 @@
+/* ============================================================================
+   Kibo · CSS de las gráficas de progress-charts.jsx
+   ----------------------------------------------------------------------------
+   EXTRAÍDO de reference/styles-extras.css — no escrito a mano.
+   OJO: el heatmap usa clases auxiliares SIN prefijo .kbv- (.hc, .hc.l0….l4,
+   .hm-body, .hm-top, .hm-month, .hm-dows). Un filtro que solo busque .kbv-
+   deja fuera .hc.l1…l4 y el heatmap sale todo gris — pasó una vez.
+   ========================================================================== */
+
+.kbv-fin-period { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: 12px; padding: 8px 14px; }
+.kbv-fin-period .kbv-meta { display: inline-flex; align-items: center; gap: 5px; }
+.kbv-fin-period .range-tabs { display: flex; gap: 2px; background: var(--kb-surface); border-radius: 9px; padding: 2px; }
+.kbv-fin-period .range-tabs button { border: 0; background: transparent; padding: 5px 12px; cursor: pointer; font: inherit; font-size: 12px; font-weight: 600; color: var(--kb-text-2); border-radius: 7px; }
+.kbv-fin-period .range-tabs button.on { background: var(--kb-card); color: var(--kb-text); box-shadow: var(--kb-sh-1); }
+.kbv-fin-period .period-note { margin-left: auto; }
+.kbv-chart-events { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+.kbv-chart-events .evt { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--kb-text-2); }
+.kbv-chart-events .evt .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.kbv-chart-events .evt strong { color: var(--c); }
+/* HEATMAP */
+.kbv-heatmap { display: grid; grid-template-columns: repeat(18, 1fr); gap: 3px; }
+.kbv-heatmap .hc, .kbv-heat-legend .hc { aspect-ratio: 1; border-radius: 3px; background: var(--kb-surface-2, #ECE9E2); }
+.kbv-heat-legend .hc { width: 12px; height: 12px; aspect-ratio: auto; }
+.hc.l0 { background: var(--kb-surface-2, #ECE9E2); }
+.hc.l1 { background: color-mix(in oklab, var(--kb-primary) 28%, #fff); }
+.hc.l2 { background: color-mix(in oklab, var(--kb-primary) 50%, #fff); }
+.hc.l3 { background: color-mix(in oklab, var(--kb-primary) 74%, #fff); }
+.hc.l4 { background: var(--kb-primary); }
+.kbv-heat-legend { display: flex; align-items: center; gap: 5px; margin-top: 8px; font-size: 10.5px; color: var(--kb-text-3); }
+.kbv-heatmap { grid-template-columns: repeat(18, 1fr); }
+/* ── Filtro de periodo (reusa .kbv-fin-period) ── */
+.kbv-period-filter { margin: 2px 0; }
+.kbv-chart-pill { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: var(--kb-text-2); white-space: nowrap; }
+.kbv-chart-pill .dot { width: 9px; height: 9px; border-radius: 999px; background: var(--c, var(--kb-primary)); }
+.kbv-linechart { margin-top: 8px; padding: 4px 2px 0; }
+.kbv-chart-axis { font-family: var(--kb-f-mono); font-size: 10px; fill: var(--kb-text-3); }
+.kbv-chart-proj-note { display: flex; align-items: center; gap: 7px; margin-top: 8px; font-size: 11px; color: var(--kb-text-2); line-height: 1.4; }
+.kbv-chart-proj-note .dash { width: 18px; height: 0; border-top: 2px dashed var(--c, var(--kb-primary)); flex-shrink: 0; }
+/* ── Heatmap etiquetado (estilo GitHub) ── */
+.kbv-heatmap-wrap { padding: 4px 2px; }
+.kbv-heatmap-scroll { overflow-x: auto; padding-bottom: 4px; }
+.kbv-heatmap-scroll .hm-top { display: flex; align-items: flex-end; gap: 4px; height: 14px; margin-bottom: 3px; }
+.kbv-heatmap-scroll .hm-corner { width: 14px; flex-shrink: 0; }
+.kbv-heatmap-scroll .hm-months { display: flex; gap: 3px; }
+.kbv-heatmap-scroll .hm-month { width: 14px; font-family: var(--kb-f-mono); font-size: 10px; font-weight: 700; color: var(--kb-text-3); white-space: nowrap; overflow: visible; flex-shrink: 0; }
+.kbv-heatmap-scroll .hm-body { display: flex; gap: 4px; }
+.kbv-heatmap-scroll .hm-dows { display: flex; flex-direction: column; gap: 3px; width: 14px; flex-shrink: 0; }
+.kbv-heatmap-scroll .hm-dows span { height: 14px; font-family: var(--kb-f-mono); font-size: 10px; color: var(--kb-text-3); line-height: 14px; text-align: right; }
+.kbv-heatmap-scroll .hm-weeks { display: flex; gap: 3px; }
+.kbv-heatmap-scroll .hm-week { display: flex; flex-direction: column; gap: 3px; }
+.kbv-heatmap-scroll .hc { width: 14px; height: 14px; border-radius: 3px; background: var(--kb-surface-2, #ECE9E2); flex-shrink: 0; }
+.kbv-heatmap-scroll .hc.empty { background: transparent; }
+.kbv-heatmap-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+.kbv-heatmap-foot .hm-caption { font-size: 11.5px; color: var(--kb-text-2); line-height: 1.4; max-width: 60%; }
+.kbv-heatmap-foot .hm-caption strong { color: var(--kb-text); }
+.kbv-heatmap-stat { margin-top: 8px; font-family: var(--kb-f-mono); font-size: 11px; font-weight: 700; color: var(--kb-primary-ink); }
+/* ── Bars chart con eje ── */
+.kbv-bars-chart { display: flex; flex-direction: column; gap: 5px; padding: 4px 2px 0; }
+.kbv-bars-chart .bars-row { display: flex; align-items: flex-end; gap: 5px; flex: 1; }
+.kbv-bars-chart .bar-col { flex: 1; display: flex; align-items: flex-end; justify-content: center; height: 100%; }
+.kbv-bars-chart .bar { width: 100%; max-width: 26px; border-radius: 5px 5px 2px 2px; min-height: 5px; transition: height 300ms; }
+.kbv-bars-chart .bars-axis { display: flex; gap: 5px; }
+.kbv-bars-chart .bx { flex: 1; text-align: center; font-family: var(--kb-f-mono); font-size: 10px; color: var(--kb-text-3); white-space: nowrap; overflow: hidden; }
+/* ── Ritmo por día de la semana ── */
+.kbv-weekday { display: flex; flex-direction: column; gap: 9px; padding: 4px 2px 0; }
+.kbv-weekday-bars { display: flex; align-items: flex-end; gap: 8px; height: 120px; }
+.kbv-weekday-bars .wd-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 5px; height: 100%; }
+.kbv-weekday-bars .wd-bar { width: 100%; max-width: 34px; min-height: 6px; border-radius: 6px 6px 3px 3px; transition: height 300ms; }
+.kbv-weekday-bars .wd-lbl { font-family: var(--kb-f-mono); font-size: 10px; font-weight: 700; color: var(--kb-text-3); }
+.kbv-weekday-bars .wd-col.best .wd-lbl { color: #B5830F; }
+.kbv-weekday-note { font-size: 12px; color: var(--kb-text-2); }
+.kbv-weekday-note strong { color: var(--kb-text); }
+.hm-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.hm-search {
+  display: inline-flex; align-items: center; gap: 8px; flex: 1; min-width: 200px;
+  height: 38px; padding: 0 12px; color: var(--kb-text-3);
+  border: 1px solid var(--kb-border); border-radius: var(--kb-r-sm, 10px); background: var(--kb-canvas);
+}
+.hm-search:focus-within { border-color: var(--kb-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--kb-primary) 18%, transparent); }
+.hm-search input { flex: 1; min-width: 0; border: 0; background: none; outline: none; font: inherit; font-size: var(--kb-fs-md, 13px); color: var(--kb-text); }
+.hm-sort { display: flex; border: 1px solid var(--kb-border); border-radius: var(--kb-r-sm, 10px); overflow: hidden; }
+.hm-sort button {
+  height: 38px; padding: 0 11px; cursor: pointer; border: 0; background: var(--kb-card);
+  font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm, 12px); color: var(--kb-text-2);
+}
+.hm-sort button + button { border-left: 1px solid var(--kb-border); }
+.hm-sort button:hover { background: var(--kb-surface); }
+.hm-sort button.on { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+.kbv-btn.hm-new { min-height: 38px; }
+.hm-list { display: flex; flex-direction: column; border: 1px solid var(--kb-border); border-radius: var(--kb-r-md, 14px); overflow: hidden; }
+.hm-row {
+  display: grid; align-items: center; gap: 10px;
+  grid-template-columns: 22px minmax(0, 1fr) 108px 84px 62px 96px 72px;
+  padding: 8px 12px; min-height: 52px;
+  border-bottom: 1px solid var(--kb-border-soft, #F0F2F6);
+  background: var(--kb-card);
+}
+.hm-row:last-child { border-bottom: 0; }
+.hm-row:hover:not(.hm-head) { background: var(--kb-surface); }
+.hm-row.hm-head {
+  min-height: 34px; padding: 0 12px; background: var(--kb-surface);
+  font-family: var(--kb-f-mono); font-size: var(--kb-fs-2xs, 10px);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--kb-text-3);
+}
+.hm-row.dragging { opacity: .5; }
+/* Pausado se lee de un vistazo sin desaparecer: sigue siendo tuyo. */
+.hm-row.paused { background: var(--kb-surface); }
+.hm-row.paused .hm-name strong, .hm-row.paused .hm-cad, .hm-row.paused .hm-pay { color: var(--kb-text-3); }
+.hm-row.paused .hm-ico { opacity: .5; }
+.hm-grip { display: grid; place-items: center; color: var(--kb-text-3); cursor: grab; }
+.hm-row.hm-head .hm-grip { cursor: default; }
+.hm-name {
+  display: flex; align-items: center; gap: 10px; min-width: 0;
+  border: 0; background: none; padding: 0; cursor: pointer; text-align: left; font: inherit;
+}
+.hm-ico {
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center; border-radius: var(--kb-r-sm, 10px);
+  color: var(--c, var(--kb-primary)); background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+}
+.hm-id { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.hm-id strong {
+  font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md, 13px); color: var(--kb-text);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hm-id em {
+  display: inline-flex; align-items: center; gap: 4px; font-style: normal;
+  font-size: var(--kb-fs-2xs, 10px); color: var(--kb-text-3);
+}
+.hm-cad, .hm-pay, .hm-streak { font-size: var(--kb-fs-sm, 12px); color: var(--kb-text-2); }
+.hm-streak { display: inline-flex; align-items: center; gap: 4px; color: var(--kb-streak-ink, var(--kb-text-2)); font-family: var(--kb-f-display); font-weight: 700; }
+.hm-streak em { font-style: normal; font-family: var(--kb-f-body); font-weight: 400; color: var(--kb-text-3); }
+.hm-streak i, .hm-pay i { font-style: normal; font-size: var(--kb-fs-2xs, 10px); color: var(--kb-text-3); margin-left: 2px; }
+.hm-pay { font-family: var(--kb-f-display); font-weight: 800; color: var(--kb-xp, var(--kb-primary)); font-variant-numeric: tabular-nums; }
+.hm-state { display: inline-flex; align-items: center; gap: 8px; }
+.hm-sw {
+  flex: none; width: 34px; height: 20px; padding: 2px; cursor: pointer;
+  border: 0; border-radius: 999px; background: var(--kb-border-strong);
+  transition: background var(--kb-dur-fast) var(--kb-ease-out);
+}
+.hm-sw i { display: block; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: var(--kb-sh-1);
+  transition: translate var(--kb-dur-fast) var(--kb-ease-out); }
+.hm-sw.on { background: var(--kb-primary); }
+.hm-sw.on i { translate: 14px 0; }
+.hm-state-l { font-size: var(--kb-fs-xs, 11px); color: var(--kb-text-3); }
+.hm-acts { display: inline-flex; justify-content: flex-end; gap: 4px; }
+.hm-acts button {
+  width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer;
+  border: 0; border-radius: var(--kb-r-sm, 10px); background: none; color: var(--kb-text-3);
+}
+.hm-acts button:hover { background: var(--kb-surface-2, #EEF1F5); color: var(--kb-text); }
+.hm-acts button.danger:hover { background: color-mix(in oklab, var(--kb-hp) 12%, transparent); color: var(--kb-hp-ink, var(--kb-hp)); }
+.hm-empty { padding: 22px 14px; text-align: center; }
+.hm-row { grid-template-columns: 22px minmax(0, 1fr) 84px 72px; grid-template-areas: 'g n c s' '. p e a'; row-gap: 4px; }
+.hm-row .hm-grip { grid-area: g; }
+.hm-row .hm-name { grid-area: n; }
+.hm-row .hm-cad { grid-area: c; }
+.hm-row .hm-streak { grid-area: s; }
+.hm-row .hm-pay { grid-area: p; }
+.hm-row .hm-state { grid-area: e; }
+.hm-row .hm-acts { grid-area: a; }
+.hm-row.hm-head { display: none; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   BLOQUE AUTORAL — lo único de este archivo que NO es extracción literal.
+   Es una corrección de ESPECIFICIDAD; los valores se reemiten tal cual salen
+   de `.hc.l0`…`.hc.l4` en styles-extras.css, sin volver a teclearlos.
+   ----------------------------------------------------------------------------
+   Defecto que repara: `.kbv-heatmap-scroll .hc` (pos ~310 000) va DESPUÉS de
+   `.hc.l0…l4` (pos ~241 700) y repone `background: var(--kb-surface-2)`. Misma
+   especificidad (2 clases) ⇒ gana por orden y las 182 celdas salen grises,
+   mientras la leyenda sí pinta porque vive en `.kbv-heatmap-foot`.
+   Arreglo de fondo en el proyecto: que `.kbv-heatmap-scroll .hc` declare solo
+   medida y radio, sin `background`. Entonces este bloque se borra.
+   ════════════════════════════════════════════════════════════════════════════ */
+.kbv-heatmap-scroll .hc.l0 { background: var(--kb-surface-2, #ECE9E2); }
+.kbv-heatmap-scroll .hc.l1 { background: color-mix(in oklab, var(--kb-primary) 28%, #fff); }
+.kbv-heatmap-scroll .hc.l2 { background: color-mix(in oklab, var(--kb-primary) 50%, #fff); }
+.kbv-heatmap-scroll .hc.l3 { background: color-mix(in oklab, var(--kb-primary) 74%, #fff); }
+.kbv-heatmap-scroll .hc.l4 { background: var(--kb-primary); }

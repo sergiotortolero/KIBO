@@ -1,0 +1,67 @@
+<!-- @dsCard group="08 · Datos" viewport="700x701" name="Datos · composición" subtitle="Anillo y barra apilada — de qué está hecho un total" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;line-height:1.5;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.lead u{text-decoration:none;color:#7C3AED;font-weight:800}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.pt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.pn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text)}
+.px{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.pd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.pd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.sold{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:color-mix(in oklab,var(--kb-gem) 16%,#fff);color:#3A4F9C;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.leg{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px}
+.leg span{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.leg i{width:9px;height:9px;border-radius:3px;display:block}
+.g{display:grid;grid-template-columns:1fr;gap:11px}
+.cap{max-width:250px;margin:0 auto}
+.duo{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.duo>div:first-child{flex:0 0 210px}
+.duo>div:last-child{flex:1;min-width:240px}
+.leg{flex-direction:column;align-items:flex-start;gap:7px}</style></head>
+<body class="kb-root">
+  <p class="lead"><b>dos formas de partir un total</b> · el anillo cuando son pocas partes de un mismo todo · la apilada cuando el total cambia con el tiempo</p>
+  <div class="g">
+    <div class="p">
+      <div class="pt"><span class="pn">Anillo</span><span class="px">4 partes máx.</span></div>
+      <p class="pd">El total al centro, <b>completo y tabular</b> — nunca abreviado: es un número protagonista, no una etiqueta de eje. Con más de 4 partes las porciones dejan de leerse y va treemap.</p>
+      <div class="duo"><div id="c1"></div><div class="leg" id="l1"></div></div>
+    </div>
+    <div class="p">
+      <div class="pt"><span class="pn">Barra apilada</span><span class="px">total variable</span></div>
+      <p class="pd">Cada columna es un periodo; los colores, su reparto. Solo la porción <b>de arriba</b> lleva esquina redonda.</p>
+      <div id="c2"></div>
+      <div class="leg" id="l2"></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/charts-nuevas.jsx"></script>
+<script type="text/babel" src="../reference/app/charts-catalogo.jsx"></script>
+<script type="text/babel">
+const P = [
+  { id:"vigor", n:"Vigor", c:"var(--area-vigor)" },
+  { id:"sabid", n:"Sabiduría", c:"var(--area-wisdom)" },
+  { id:"rique", n:"Riqueza", c:"var(--area-wealth)" },
+  { id:"volun", n:"Voluntad", c:"var(--area-will)" },
+];
+const Leg = ({ items }) => <>{items.map(k => <span key={k.id}><i style={{background:k.c}}></i>{k.n}</span>)}</>;
+ReactDOM.createRoot(document.getElementById("c1")).render(
+  <Donut slices={[{v:420,c:P[0].c},{v:310,c:P[1].c},{v:190,c:P[2].c},{v:120,c:P[3].c}]} total={1040} unit="XP" />);
+ReactDOM.createRoot(document.getElementById("l1")).render(<Leg items={P} />);
+ReactDOM.createRoot(document.getElementById("c2")).render(
+  <StackedBars keys={P} unit=" XP" cols={[
+    { label:"Feb", v:{vigor:180,sabid:140,rique:60,volun:70} },
+    { label:"Mar", v:{vigor:220,sabid:170,rique:90,volun:80} },
+    { label:"Abr", v:{vigor:260,sabid:210,rique:120,volun:95} },
+    { label:"May", v:{vigor:310,sabid:250,rique:150,volun:110} },
+    { label:"Jun", v:{vigor:420,sabid:310,rique:190,volun:120} },
+  ]} />);
+ReactDOM.createRoot(document.getElementById("l2")).render(<Leg items={P} />);
+</script>
+</body></html>

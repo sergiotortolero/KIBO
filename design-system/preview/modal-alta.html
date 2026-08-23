@@ -1,0 +1,79 @@
+<!-- @dsCard group="07 · Modales y formularios" viewport="700x515" name="Modal de alta" subtitle="El armazón canónico: encabezado, cuerpo con desplazamiento y pie de acciones" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 12px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.stage{display:grid;grid-template-columns:1fr 178px;gap:11px;align-items:start}
+/* ══ armazón real ══ */
+.card{background:var(--kb-card);border-radius:18px;max-width:580px;width:100%;display:flex;flex-direction:column;box-shadow:var(--kb-sh-pop);overflow:hidden}
+.head{padding:18px 22px 14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border-bottom:1px solid var(--kb-border-soft)}
+.title{font-family:var(--kb-f-display);font-size:19px;font-weight:800;color:var(--kb-text);margin:0}
+.sub{font-size:13px;color:var(--kb-text-2);margin:4px 0 0;max-width:460px;line-height:1.4}
+.close{width:32px;height:32px;border-radius:50%;border:1px solid var(--kb-border);background:var(--kb-card);color:var(--kb-text-2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.close:hover{background:var(--kb-surface);color:var(--kb-text)}
+.body{padding:18px 22px;display:flex;flex-direction:column;gap:14px}
+.foot{padding:14px 22px;border-top:1px solid var(--kb-border-soft);display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--kb-surface)}
+.foot .right{display:flex;gap:8px}
+/* botones del pie */
+.b{border-radius:var(--kb-r-sm);padding:0 15px;height:38px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;border:1px solid transparent}
+.b.pri{background:var(--kb-primary);color:#fff;box-shadow:0 2px 0 var(--kb-primary-ink)}
+.b.pri:active{transform:translateY(2px);box-shadow:0 0 0 var(--kb-primary-ink)}
+.b.sec{background:var(--kb-card);border-color:var(--kb-border);color:var(--kb-text)}
+.b.sec:hover{background:var(--kb-surface-2)}
+.b.gh{background:none;color:var(--kb-text-2)}
+.b.gh:hover{color:var(--kb-text)}
+/* campos, versión mínima para que el armazón se lea completo */
+.row{display:flex;flex-direction:column;gap:6px}
+.row label{font-size:12px;font-weight:700;color:var(--kb-text);letter-spacing:.02em}
+.ctl{width:100%;background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:10px;height:42px;padding:0 12px;font:500 13px/1.3 var(--kb-f-body);color:var(--kb-text);box-sizing:border-box;display:flex;align-items:center}
+.ctl.ph{color:var(--kb-text-3)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* anchos */
+.w{display:flex;flex-direction:column;gap:7px}
+.wi{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.wn{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text);letter-spacing:.09em;text-transform:uppercase}
+.wb{height:7px;border-radius:var(--kb-r-pill);background:color-mix(in oklab,var(--kb-primary) 26%,var(--kb-surface-2))}
+.wv{font-size:10px;color:var(--kb-text-3);font-family:var(--kb-f-label);font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.note{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+<p class="lead"><b>tres zonas fijas</b> · el cuerpo es lo único que se desplaza · el pie separa lo destructivo de lo que confirma</p>
+<div class="stage">
+  <div class="card">
+    <div class="head">
+      <div><h3 class="title">Nueva tarea</h3><p class="sub">Se guarda en el área que elijas y suma XP al completarse.</p></div>
+      <button class="close" id="x"></button>
+    </div>
+    <div class="body">
+      <div class="row"><label>Título</label><div class="ctl ph">¿Qué hay que hacer?</div></div>
+      <div class="grid">
+        <div class="row"><label>Área</label><div class="ctl">Sabiduría</div></div>
+        <div class="row"><label>Vence</label><div class="ctl">12 jun 2026</div></div>
+      </div>
+    </div>
+    <div class="foot">
+      <button class="b gh">Cancelar</button>
+      <span class="right"><button class="b sec">Guardar y otra</button><button class="b pri">Crear tarea</button></span>
+    </div>
+  </div>
+  <div class="w">
+    <div class="wi"><span class="wn">sm</span><div class="wb" style="width:40%"></div><span class="wv">420 · confirmar</span></div>
+    <div class="wi"><span class="wn">base</span><div class="wb" style="width:56%"></div><span class="wv">580 · alta simple</span></div>
+    <div class="wi"><span class="wn">lg</span><div class="wb" style="width:70%"></div><span class="wv">720 · formulario largo</span></div>
+    <div class="wi"><span class="wn">full</span><div class="wb" style="width:100%"></div><span class="wv">1040 · detalle</span></div>
+  </div>
+</div>
+<p class="note"><b>Encabezado, cuerpo, pie.</b> Encabezado <code>18px 22px 14px</code> con título de 19px en 800 y subtítulo de 13px; cuerpo <code>18px 22px</code> con <code>gap 14</code>, y es el único que desplaza; pie <code>14px 22px</code> sobre <code>--kb-surface</code>. Radio <b>18</b>, sombra <code>--kb-sh-pop</code>, alto máximo <code>calc(100% - 32px)</code>. Entra con <b>200ms</b> desde <code>translateY(12px) scale(.98)</code>. La <b>X</b> mide 32 y es circular. En el pie, <b>cancelar va a la izquierda</b> y las acciones que confirman a la derecha, la principal al extremo.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) { const el = document.getElementById('x'); if (el) ReactDOM.createRoot(el).render(<I name="x" size={15} color="currentColor" />); }
+</script>
+</body></html>

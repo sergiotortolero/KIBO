@@ -1,0 +1,76 @@
+<!-- @dsCard group="10 · Gamificación" viewport="700x303" name="Rangos y emblemas" subtitle="20 rangos en 9 materiales, Nv 1–100 · animados desde Diamante" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  html,body{margin:0}
+  body{background:var(--kb-canvas);padding:18px 22px;font-family:var(--kb-f-body)}
+  .lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin-bottom:14px;text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:repeat(10,1fr);gap:12px 6px}
+  .it{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .em{position:relative;width:42px;height:50px;clip-path:polygon(50% 100%, 8% 76%, 0 0, 100% 0, 92% 76%);
+    background:linear-gradient(160deg,var(--a),var(--b));color:var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    filter:drop-shadow(0 2px 3px rgba(20,30,50,.2))}
+  .em::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.45),rgba(255,255,255,0) 46%)}
+  .em svg{position:relative;z-index:1;width:26px;height:30px;display:block}
+  .shine::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(115deg,transparent 36%,rgba(255,255,255,.7) 50%,transparent 64%);transform:translateX(-130%);animation:rkShine 2.6s var(--kb-ease-out) infinite}
+  @keyframes rkShine{0%{transform:translateX(-130%)}55%,100%{transform:translateX(130%)}}
+  .oil{background:linear-gradient(120deg,#2A6FDB,#6E3BD0,#C8102E,#FF6EA8,#9B5CF0,#2A6FDB);background-size:260% 260%;animation:rkOil 4.2s ease infinite}
+  @keyframes rkOil{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .nm{font-family:var(--kb-f-body);font-weight:600;font-size:10px;line-height:1.2;color:var(--kb-text);min-height:23px;display:flex;align-items:flex-start;justify-content:center}
+  .lv{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+  <div class="lead">20 rangos · salto cada 5 niveles · la insignia crece con el grado dentro de cada material</div>
+  <div class="grid" id="grid"></div>
+<script>
+const NAMES=['Soldado','Soldado de primera','Cabo','Cabo primero','Cabo mayor','Sargento','Sargento de estado mayor','Sargento mayor','Subteniente','Alférez','Teniente','Capitán','Mayor','Teniente coronel','Coronel','General de brigada','Mayor general','Teniente general','General','Capitán general'];
+/* ── insignias dibujadas (viewBox 24×28, currentColor = ink del material) ── */
+const I={
+  chevron:c=>{let p='';for(let k=0;k<c;k++){const y=19-k*5.5;p+=`<path d="M6 ${y} L12 ${y-5} L18 ${y}" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`;}return p;},
+  bar:c=>{let p='';const y0=14+((c-1)*5.5)/2;for(let k=0;k<c;k++){p+=`<rect x="5.5" y="${y0-k*5.5-1.4}" width="13" height="2.8" rx="1.4" fill="currentColor"/>`;}return p;},
+  star:(c)=>{const st=(cx,cy,r)=>{let d='';for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,rr=i%2?r*.45:r;d+=(i?'L':'M')+(cx+Math.cos(a)*rr).toFixed(1)+' '+(cy+Math.sin(a)*rr).toFixed(1)+' ';}return d+'Z';};
+    if(c===1)return `<path d="${st(12,14,6.5)}" fill="currentColor"/>`;
+    if(c===2)return `<path d="${st(12,9.5,5)}" fill="currentColor"/><path d="${st(12,19.5,5)}" fill="currentColor"/>`;
+    return `<path d="${st(12,8.5,4.4)}" fill="currentColor"/><path d="${st(7,17.5,4.4)}" fill="currentColor"/><path d="${st(17,17.5,4.4)}" fill="currentColor"/>`;},
+  eagle:c=>{let p=`<path d="M12 7 C10.4 9.6 6.8 10.8 3 10.4 Q7.4 13.6 10.4 12.4 L9.2 19 L12 16.6 L14.8 19 L13.6 12.4 Q16.6 13.6 21 10.4 C17.2 10.8 13.6 9.6 12 7 Z" fill="currentColor"/>`;
+    for(let k=0;k<c-1;k++)p+=`<circle cx="${12+(k?5:-5)}" cy="22.5" r="1.6" fill="currentColor"/>`;
+    return p;},
+  wreath:c=>{let p=`<path d="M7 8 C4.6 12 4.8 17 8.4 20.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M17 8 C19.4 12 19.2 17 15.6 20.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="6.2" cy="10.5" r="1.3" fill="currentColor"/><circle cx="5.6" cy="14.5" r="1.3" fill="currentColor"/><circle cx="6.8" cy="18.3" r="1.3" fill="currentColor"/>
+    <circle cx="17.8" cy="10.5" r="1.3" fill="currentColor"/><circle cx="18.4" cy="14.5" r="1.3" fill="currentColor"/><circle cx="17.2" cy="18.3" r="1.3" fill="currentColor"/>`;
+    for(let k=0;k<c;k++)p+=`<circle cx="${12+(c===1?0:k?3.2:-3.2)}" cy="14" r="1.8" fill="currentColor"/>`;
+    return p;},
+  diamond:c=>{let p=`<path d="M7.5 10 L10 6.5 H14 L16.5 10 L12 19.5 Z" fill="currentColor" fill-opacity=".28"/>
+    <path d="M7.5 10 L10 6.5 H14 L16.5 10 L12 19.5 Z M7.5 10 H16.5 M10 6.5 L12 10 L14 6.5 M12 10 V19.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>`;
+    for(let k=0;k<c;k++)p+=`<circle cx="${12+(c===1?0:k?4:-4)}" cy="23.5" r="1.5" fill="currentColor"/>`;
+    return p;},
+  crown:()=>`<path d="M5 18 V10 L9 13 L12 7 L15 13 L19 10 V18 Z" fill="currentColor"/>
+    <rect x="5" y="19.5" width="14" height="2.4" rx="1.2" fill="currentColor"/>
+    <circle cx="12" cy="12.8" r="1.1" fill="var(--b)"/>`,
+  supreme:()=>`<path d="M12 4 L13.8 10.2 L20 12 L13.8 13.8 L12 20 L10.2 13.8 L4 12 L10.2 10.2 Z" fill="currentColor"/>
+    <path d="M12 1.5 V4 M12 20 V22.5 M1.5 12 H4 M20 12 H22.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>`,
+};
+function grp(i){
+  if(i<=2) return {k:'chevron',c:i+1,a:'#E0A878',b:'#A8632E',ink:'#4A2810'};
+  if(i<=5) return {k:'bar',c:i-2,a:'#D2D9E1',b:'#8A95A2',ink:'#363E48'};
+  if(i<=8) return {k:'star',c:i-5,a:'#F8DC8A',b:'#D4A22B',ink:'#5E440E'};
+  if(i<=11) return {k:'eagle',c:i-8,a:'#E9EEF3',b:'#AAB6C4',ink:'#3A434E'};
+  if(i<=13) return {k:'wreath',c:i-11,a:'#6E6880',b:'#241F30',ink:'#E6E1F2'};
+  if(i<=15) return {k:'diamond',c:i-13,a:'#CFF6FF',b:'#3FC0DE',ink:'#0E4A5A',anim:1};
+  if(i<=17) return {k:'diamond',c:i-15,a:'#A8E6C0',b:'#1E9E63',ink:'#0C4A2C',anim:1};
+  if(i===18) return {k:'crown',c:1,a:'#FF9DB0',b:'#C8102E',ink:'#FFFFFF',anim:1};
+  return {k:'supreme',c:1,oil:true,ink:'#FFFFFF',anim:1};
+}
+document.getElementById('grid').innerHTML=NAMES.map((n,i)=>{
+  const g=grp(i);
+  return `<div class="it">
+    <div class="em ${g.oil?'oil':''} ${g.anim?'shine':''}" style="--a:${g.a||'#888'};--b:${g.b||'#555'};--ink:${g.ink};color:${g.ink}">
+      <svg viewBox="0 0 24 28">${I[g.k](g.c)}</svg>
+    </div>
+    <span class="nm">${n}</span><span class="lv">Nv ${(i+1)*5}</span>
+  </div>`;
+}).join('');
+</script>
+</body></html>

@@ -1,0 +1,68 @@
+<!-- @dsCard group="08 · Datos" viewport="700x679" name="Datos · flujo" subtitle="Sankey y cascada — a dónde se va el tiempo, de dónde salió el saldo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;line-height:1.5;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.lead u{text-decoration:none;color:#7C3AED;font-weight:800}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.pt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.pn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text)}
+.px{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.pd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.pd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.sold{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:color-mix(in oklab,var(--kb-gem) 16%,#fff);color:#3A4F9C;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.leg{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px}
+.leg span{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.leg i{width:9px;height:9px;border-radius:3px;display:block}
+.g{display:grid;grid-template-columns:1fr;gap:11px}</style></head>
+<body class="kb-root">
+  <p class="lead"><b>el dato se mueve</b> · el sankey reparte una fuente entre destinos · la cascada explica cómo se llegó de un total a otro</p>
+  <div class="g">
+    <div class="p">
+      <div class="pt"><span class="pn">Sankey</span><span class="px">2 columnas</span></div>
+      <p class="pd">¿A dónde se va el tiempo? El <b>grosor es la magnitud</b>. Solo dos columnas: con tres el cruce de cintas ya no se sigue.</p>
+      <div id="e1"></div>
+    </div>
+    <div class="p">
+      <div class="pt"><span class="pn">Cascada</span><span class="px">finanzas · balance</span></div>
+      <p class="pd">Verde suma, rojo resta, y las columnas de <b>inicio y fin son totales</b> —van en teal para distinguirse de los movimientos.</p>
+      <div id="e2"></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/charts-nuevas.jsx"></script>
+<script type="text/babel" src="../reference/app/charts-catalogo.jsx"></script>
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById("e1")).render(
+  <Sankey
+    from={[
+      { id:"m", n:"Mañana", v:150, c:"var(--area-wisdom)" },
+      { id:"t", n:"Tarde",  v:210, c:"var(--area-vigor)" },
+      { id:"n", n:"Noche",  v:120, c:"var(--area-will)" },
+    ]}
+    to={[
+      { id:"h", n:"Hábitos",  v:170, c:"var(--kb-primary)" },
+      { id:"p", n:"Proyectos",v:200, c:"var(--area-community)" },
+      { id:"l", n:"Lectura",  v:110, c:"var(--area-wealth)" },
+    ]}
+    links={[
+      { s:"m", t:"h", v:80 }, { s:"m", t:"p", v:50 }, { s:"m", t:"l", v:20 },
+      { s:"t", t:"h", v:60 }, { s:"t", t:"p", v:120 }, { s:"t", t:"l", v:30 },
+      { s:"n", t:"h", v:30 }, { s:"n", t:"p", v:30 }, { s:"n", t:"l", v:60 },
+    ]} />);
+ReactDOM.createRoot(document.getElementById("e2")).render(
+  <Waterfall unit=" ◈" steps={[
+    { n:"Saldo may", v:320, total:true },
+    { n:"Retos", v:180 },
+    { n:"Cofres", v:95 },
+    { n:"Tienda", v:-140 },
+    { n:"Protector", v:-60 },
+    { n:"Saldo jun", v:395, total:true },
+  ]} />);
+</script>
+</body></html>

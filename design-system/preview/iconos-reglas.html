@@ -1,0 +1,50 @@
+<!-- @dsCard group="04 · Íconos" viewport="700x468" name="Íconos · reglas y tamaños" subtitle="Los 5 tamaños, los 3 contenedores permitidos y el trazo por tamaño" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:16px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.card{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:12px 14px;margin-bottom:9px}
+.ct{font-family:var(--kb-f-label);font-size:11.5px;font-weight:800;color:var(--kb-primary-ink);display:block;margin-bottom:11px;letter-spacing:.09em;text-transform:uppercase}
+.row{display:flex;align-items:flex-start;gap:22px}
+.sz{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--kb-text-2)}
+.sz b{font-family:var(--kb-f-label);font-size:11px;font-weight:800;color:var(--kb-text);letter-spacing:.09em;text-transform:uppercase}
+.sz s{text-decoration:none;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.3;letter-spacing:.09em;text-transform:uppercase}
+.sz>span{height:34px;display:grid;place-items:center}
+.cont{display:flex;gap:16px;align-items:flex-start}
+.ci{display:flex;flex-direction:column;align-items:center;gap:6px}
+.ci s{text-decoration:none;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.cb{width:38px;height:38px;background:var(--area-wisdom);color:#fff;display:grid;place-items:center}
+.no{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);line-height:1.6;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:10px 12px;margin:0;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}
+.no u{text-decoration:none;color:#B3261E;font-weight:800}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>reglas del set</b> · el glifo se dimensiona al texto que acompaña, nunca al revés</div>
+  <div class="card"><span class="ct">tamaños</span><div class="row" id="sizes"></div></div>
+  <div class="card"><span class="ct">contenedores permitidos</span><div class="cont" id="conts"></div></div>
+  <p class="no"><b>Trazo 2px de 22px en adelante, 2.4px de 16px o menos</b> — si no, se adelgaza. El glifo mide <b>1.15× su texto</b> y nunca excede su contenedor. Hereda el color del texto y solo toma un color de gamificación dentro de un elemento de ese color. <u>Se rellena solo uno</u>: <b>square</b>, porque es el control de <b>detener</b> — un cuadro de trazo no se lee como botón de alto. Los glifos de divisa <b>no son parte de este set</b>: viven en <code>personalizacion.jsx</code> como objetos de marca y son personalizables.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const K = window.__KIconApp;
+const G = ({ name, size }) => <span>{K ? K({ name, size, stroke: size <= 16 ? 2.4 : 2 }) : null}</span>;
+ReactDOM.createRoot(document.getElementById("sizes")).render(
+  <React.Fragment>
+    {[[12,"en pastillas y chips"],[16,"filas y metadatos"],[18,"nav y encabezados"],[22,"glifo de área y KPI"],[32,"héroe y estado vacío"]].map(([s,use]) => (
+      <div className="sz" key={s}><G name="flame" size={s} /><b>{s}</b><s>{use}</s></div>
+    ))}
+  </React.Fragment>
+);
+ReactDOM.createRoot(document.getElementById("conts")).render(
+  <React.Fragment>
+    {[["50%","círculo"],["4px","radio 4"],["12px","squircle"]].map(([r,lb]) => (
+      <div className="ci" key={lb}><span className="cb" style={{borderRadius:r}}><G name="wisdom" size={20} /></span><s>{lb}</s></div>
+    ))}
+  </React.Fragment>
+);
+</script>
+</body></html>

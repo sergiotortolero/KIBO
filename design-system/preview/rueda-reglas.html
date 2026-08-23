@@ -1,0 +1,46 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x393" name="Rueda · reglas de comportamiento" subtitle="Seis reglas que la rueda respeta — de dónde nace, cómo se elige, cuándo pagina" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<link rel="stylesheet" href="../reference/kibo-wheel.css">
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;position:relative;min-height:393px;overflow:hidden}
+.lead{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin:0;padding:15px 18px 11px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+/* lienzo: simula la app para que la rueda tenga su canaleta real */
+.canvas{position:relative;height:474px;margin:0 18px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden}
+.fake{position:absolute;inset:13px 163px 13px 13px;display:flex;flex-direction:column;gap:8px;opacity:.5}
+.fake i{display:block;border-radius:var(--kb-r-sm);background:var(--kb-surface-2)}
+.fake i:nth-child(1){height:26px;width:56%}
+.fake i:nth-child(2){height:58px}
+.fake i:nth-child(3){height:58px;width:74%}
+.fake i:nth-child(4){height:26px;width:42%}
+.fake i:nth-child(5){height:58px;width:88%}
+.gut{position:absolute;top:0;right:0;bottom:0;width:150px;border-left:1px dashed color-mix(in oklab,var(--kb-primary) 32%,transparent);background:color-mix(in oklab,var(--kb-primary) 3%,transparent);pointer-events:none}
+.gut span{position:absolute;top:7px;left:0;right:0;text-align:center;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+/* KIBO en su esquina, tal como vive en la app */
+/* Cuando la rueda abre, ella pone su propio KIBO al centro: el de la esquina se
+   desmonta o se ve un segundo KIBO apagado detrás del velo. */
+.corner{position:absolute;right:14px;bottom:12px;z-index:60}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:11px 18px 15px}
+.r{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 10px}
+.rn{font-family:var(--kb-f-display);font-weight:800;font-size:11.5px;color:var(--kb-text);display:block;line-height:1.25}
+.rd{font-size:10.5px;color:var(--kb-text-2);line-height:1.42;margin:2px 0 0}
+.rd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.lead code{font-family:var(--kb-f-label);font-weight:700;color:var(--kb-primary-ink)}
+.rd u{text-decoration:none;color:#B3261E;font-weight:800}
+.toast{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:90;display:flex;align-items:center;gap:7px;padding:8px 13px;border-radius:var(--kb-r-pill);background:var(--kb-text);color:#fff;font-family:var(--kb-f-label);font-size:11px;font-weight:700;box-shadow:var(--kb-sh-pop);white-space:nowrap;max-width:90%;letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+  <p class="lead"><b>seis reglas</b> · lo que la rueda respeta siempre, para que crezca sin romperse</p>
+  <div class="rules" style="padding:0 18px 15px">
+    <div class="r"><span class="rn">El disco nace en KIBO</span><p class="rd">El cubo viaja al centro con <code>kbw-travel</code> — 460ms y una curva con sobrepaso. La rueda se ancla a su <code>origin</code>, nunca al centro de la ventana.</p></div>
+    <div class="r"><span class="rn">Se apunta, no se clica</span><p class="rd">Mueves el cursor hacia el sector y se resalta; sueltas y se elige — como cambiar de arma en GTA V. <u>No son nueve botones</u>: es un solo gesto con dirección.</p></div>
+    <div class="r"><span class="rn">Sectores con color propio</span><p class="rd">Nueve porciones de <code>.kbw-disc</code> (un SVG). La <b>acción estelar</b> lleva la clase <code>hero</code>: doble porción, centrada arriba.</p></div>
+    <div class="r"><span class="rn">Etiquetas escalonadas</span><p class="rd">Entran a <b>22ms</b> una tras otra. Sin el escalón el disco aparece de golpe y no se alcanza a leer.</p></div>
+    <div class="r"><span class="rn">Segundo nivel</span><p class="rd">Un rubro con varias acciones abre otro disco en su lugar. Bajo KIBO viven solo dos teclas: <b>cerrar</b> y <b>editar la rueda</b> — nunca en el aro.</p></div>
+    <div class="r"><span class="rn">Pagina por legibilidad</span><p class="rd">Si hay más sectores de los que caben, pagina y avisa. <u>Nunca aprieta las porciones</u> — un sector ilegible es un sector que no se toca.</p></div>
+    <div class="r"><span class="rn">Jalar el gel</span><p class="rd">Arrastrar a KIBO lo estira; al soltar rebota con <code>kbb-jelly</code>, 620ms y dos ondas. Vive en su propia capa: el aura se apaga mientras jalas.</p></div>
+  </div>
+</body></html>

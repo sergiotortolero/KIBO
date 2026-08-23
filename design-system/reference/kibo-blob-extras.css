@@ -1,0 +1,435 @@
+/* ============================================================================
+   Kibo · capas extra de KIBO (aura, marcas, accesorios, juguetes, fichas)
+   ----------------------------------------------------------------------------
+   EXTRAÍDO de reference/styles-extras.css — no escrito a mano. Contiene solo
+   las reglas .kbb-* / .kbs-* y sus @keyframes kbb-*, para que una tarjeta del
+   design system pueda montar el KIBO real sin cargar la hoja completa de la app.
+   ========================================================================== */
+
+/* ═══════════════════════════════════════════════════════════════
+   KIBO · guardarropa (piel, accesorio, aura, personalidad)
+   ═══════════════════════════════════════════════════════════════ */
+/* (La regla base de .kbb-acc —incluida su respiración— vive en kibo-blob.css) */
+/* El gorro y la corona se dibujan por ENCIMA de y=0 del viewBox: con el
+   overflow por defecto (hidden) el svg los cortaba contra la silueta. */
+.kbb-acc svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.kbb-aura {
+  position: absolute; left: 50%; top: 44%; width: 175%; aspect-ratio: 1; z-index: 0;
+  /* Distancias de las partículas, parametrizadas: un aura dentro de una ficha
+     de catálogo es la misma pieza a otra escala, no otra pieza. */
+  --orbit: 74px; --rise: 56px; --rise-top: -78px; --fall: 70px;
+  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle, color-mix(in oklab, var(--aura) 44%, transparent) 0%, color-mix(in oklab, var(--aura) 16%, transparent) 46%, transparent 72%);
+  animation: kbb-aura-breathe 3.6s var(--kb-ease-standard, ease-in-out) infinite;
+}
+@keyframes kbb-aura-breathe { 0%, 100% { opacity: .7; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } }
+.kbb-aura .star {
+  position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--aura); box-shadow: 0 0 6px var(--aura);
+  animation: kbb-star-orbit 6s linear infinite;
+}
+.kbb-aura .star.s2 { animation-delay: -2s; width: 4px; height: 4px; }
+.kbb-aura .star.s3 { animation-delay: -4s; width: 3px; height: 3px; }
+@keyframes kbb-star-orbit {
+  from { transform: rotate(0turn) translateX(var(--orbit)) rotate(0turn); }
+  to   { transform: rotate(1turn) translateX(var(--orbit)) rotate(-1turn); }
+}
+/* Anillo neón: aro doble que pulsa */
+.kbb-aura.au-neon { background: none; }
+.kbb-aura.au-neon::before, .kbb-aura.au-neon::after {
+  content: ""; position: absolute; inset: 12%; border-radius: 50%;
+  border: 3px solid var(--aura); opacity: .7;
+  animation: kbb-neon-pulse 2.8s var(--kb-ease-standard) infinite;
+}
+.kbb-aura.au-neon::after { inset: 22%; animation-delay: 1.4s; border-width: 2px; }
+@keyframes kbb-neon-pulse { 0%, 100% { transform: scale(.94); opacity: .35; } 50% { transform: scale(1.04); opacity: .85; } }
+/* Burbujas: suben siempre */
+.kbb-aura.au-burbujas { background: none; }
+.kbb-aura.au-burbujas .star { animation: kbb-bubble-rise 4.5s ease-in infinite; box-shadow: none; border: 2px solid var(--aura); background: transparent; width: 10px; height: 10px; }
+.kbb-aura.au-burbujas .star.s2 { animation-delay: -1.6s; left: 34%; width: 7px; height: 7px; }
+.kbb-aura.au-burbujas .star.s3 { animation-delay: -3.1s; left: 64%; width: 12px; height: 12px; }
+@keyframes kbb-bubble-rise {
+  0% { transform: translateY(var(--rise)) scale(.5); opacity: 0; }
+  22% { opacity: .9; }
+  100% { transform: translateY(var(--rise-top)) scale(1.1); opacity: 0; }
+}
+/* Pétalos: caen suave */
+.kbb-aura.au-petalo { background: none; }
+.kbb-aura.au-petalo .star { border-radius: 60% 4% 60% 4%; background: color-mix(in oklab, var(--aura) 55%, #fff); box-shadow: none; width: 11px; height: 11px; animation: kbb-petal-fall 5.2s linear infinite; }
+.kbb-aura.au-petalo .star.s2 { animation-delay: -1.9s; left: 30%; }
+.kbb-aura.au-petalo .star.s3 { animation-delay: -3.6s; left: 68%; width: 8px; height: 8px; }
+@keyframes kbb-petal-fall {
+  0% { transform: translateY(calc(var(--fall) * -1)) rotate(0deg); opacity: 0; }
+  16% { opacity: .95; }
+  100% { transform: translateY(var(--fall)) translateX(18px) rotate(230deg); opacity: 0; }
+}
+/* Pieles animadas (galaxia, lava, cristal): el gradiente deriva lento.
+   OJO: el cuerpo también anima border-radius (kbBlob); aquí solo se anima
+   background-position con una animación ADICIONAL, no sustituta. */
+/* Pieles animadas · efecto Chowder: el patrón NO viaja con el cuerpo, se queda
+   fijo en pantalla y el gel actúa de ventana — al moverse KIBO, el fondo se
+   revela distinto por cada parte de su silueta. */
+.kbb.skinned .kbb-body {
+  background-attachment: scroll;
+  background-size: cover;
+  animation: kbBlob 6.5s var(--kb-ease-standard) infinite, kbb-skin-drift 14s ease-in-out infinite;
+}
+.kbb.skinned .kbb-tint { opacity: .18; }
+@keyframes kbb-skin-drift {
+  0%, 100% { background-position: 20% 30%; }
+  50% { background-position: 80% 70%; }
+}
+/* Juguetes junto a la base */
+.kbb-toy { position: absolute; z-index: 0; right: -30px; bottom: 12px; pointer-events: none; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.18)); }
+.kbb-toy.toy-pelota { animation: kbb-toy-bounce 2.6s var(--kb-ease-standard) infinite; }
+@keyframes kbb-toy-bounce { 0%, 100% { transform: translateY(0) rotate(0); } 40% { transform: translateY(-22px) rotate(50deg); } 58% { transform: translateY(0) rotate(90deg) scale(1.06, .9); } 66% { transform: translateY(-8px) rotate(120deg); } 80% { transform: translateY(0) rotate(150deg); } }
+.kbb-toy.toy-cubo { animation: kbb-toy-spin 7s linear infinite; bottom: 10px; }
+@keyframes kbb-toy-spin { 0%, 100% { transform: rotate(-8deg); } 50% { transform: rotate(8deg) translateY(-3px); } }
+.kbb-toy.toy-uke { right: -26px; bottom: 8px; transform: rotate(14deg); animation: kbb-toy-strum 5.5s var(--kb-ease-standard) infinite; transform-origin: 50% 90%; }
+@keyframes kbb-toy-strum { 0%, 84%, 100% { transform: rotate(14deg); } 88% { transform: rotate(9deg); } 92% { transform: rotate(17deg); } 96% { transform: rotate(12deg); } }
+.kbb-toy.toy-plantita { right: -28px; bottom: 10px; animation: kbb-toy-sway 4.8s var(--kb-ease-standard) infinite; transform-origin: 50% 100%; }
+@keyframes kbb-toy-sway { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(4deg); } }
+/* El juguete reacciona a las travesuras */
+.kbb.trick-squash .kbb-toy, .kbb.trick-flip .kbb-toy { animation: kbb-toy-startle 2.6s var(--kb-ease-out) 1; }
+@keyframes kbb-toy-startle { 0% { transform: translateY(0); } 18% { transform: translateY(-26px) rotate(-14deg); } 34% { transform: translateY(0); } 46% { transform: translateY(-10px); } 58% { transform: translateY(0); } }
+@keyframes kbb-skin-drift { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } }
+/* Personalidad teatral: cada travesura escala un poco más */
+.kbb.teatral .kbb-float { transform-origin: 50% 80%; }
+@media (prefers-reduced-motion: reduce) {
+  .kbb-aura, .kbb-aura .star, .kbb.skinned .kbb-body { animation: none; }
+}
+/* ═══════════════════════════════════════════════════════════════
+   ACCIÓN RÁPIDA · panel contenido (no rebasa el sidebar)
+   ═══════════════════════════════════════════════════════════════ */
+/* ═══ ANILLO RADIAL de acción rápida (DS) ═══
+   Círculos alrededor de KIBO. Al elegir un rubro los demás se opacan y
+   encogen; del elegido emergen las acciones, solo ícono. */
+.kbb-ring { position: absolute; left: 50%; top: 50%; width: 0; height: 0; z-index: 6; pointer-events: none; }
+.kbb-ring.open { pointer-events: auto; }
+.kbb-rnode, .kbb-rsub, .kbb-rutil {
+  position: absolute; left: 0; top: 0; cursor: pointer; border: 1px solid var(--kb-border);
+  border-radius: 50%; background: var(--kb-card); color: var(--c);
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: var(--kb-sh-2); padding: 0;
+  opacity: 0; transform: translate(-50%, -50%) scale(.2);
+  transition: opacity .26s var(--kb-ease-out), transform .3s cubic-bezier(.34,1.56,.64,1), background .18s, border-color .18s, filter .26s;
+}
+.kbb-rnode { width: 50px; height: 50px; }
+.kbb-rutil { width: 34px; height: 34px; background: var(--kb-card); }
+.kbb-ring.open .kbb-rutil { opacity: 1; transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1); transition-delay: calc(140ms + var(--i) * 40ms); }
+.kbb-rutil:hover { border-color: var(--c); background: color-mix(in oklab, var(--c) 12%, #fff); transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1.14); }
+.kbb-rnode.hero { width: 58px; height: 58px; background: var(--kb-primary); color: #fff; border-color: transparent; box-shadow: 0 3px 0 var(--kb-primary-hover), var(--kb-sh-2); }
+.kbb-ring.open .kbb-rnode { opacity: 1; transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1); transition-delay: calc(var(--i) * 32ms); }
+.kbb-rnode:hover { border-color: var(--c); background: color-mix(in oklab, var(--c) 10%, #fff); transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1.1); }
+.kbb-rnode.hero:hover { background: var(--kb-primary-hover); color: #fff; }
+/* El elegido crece; los demás se opacan y encogen */
+.kbb-ring.open .kbb-rnode.on { transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1.22); border-color: var(--c); background: color-mix(in oklab, var(--c) 14%, #fff); box-shadow: var(--kb-sh-3); }
+.kbb-ring.open .kbb-rnode.dim { opacity: .38; filter: saturate(.5); transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(.74); }
+.kbb-ring.open .kbb-rnode.dim:hover { opacity: .8; transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(.84); }
+/* Acciones: pequeñas, pegadas al rubro, solo ícono */
+.kbb-rsub { width: 38px; height: 38px; background: var(--c); color: #fff; border-color: transparent; box-shadow: var(--kb-sh-2); }
+.kbb-ring.open .kbb-rsub { opacity: 1; transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1); transition-delay: calc(80ms + var(--j) * 60ms); }
+.kbb-rsub:hover { transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1.16); filter: brightness(1.08); }
+/* Nombre del círculo apuntado — el texto vive aquí, no en los círculos */
+.kbb-rcap {
+  position: absolute; right: 8px; left: auto; top: 26px; white-space: nowrap;
+  font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-sm, 12px);
+  color: #fff; background: color-mix(in oklab, var(--kb-text) 88%, transparent);
+  border-radius: var(--kb-r-pill); padding: 5px 12px; pointer-events: none;
+  animation: kbb-cap-in .18s var(--kb-ease-out) both;
+}
+@keyframes kbb-cap-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+/* Burbuja de registro — junto al anillo, nunca a pantalla completa */
+.kbb-rform {
+  position: absolute; right: 64px; left: auto; bottom: -34px; width: 236px;
+  background: var(--kb-card); border: 1px solid var(--kb-border); border-top: 3px solid var(--c, var(--kb-primary));
+  border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-pop); padding: 12px;
+  display: flex; flex-direction: column; gap: 9px;
+  animation: kbb-cap-in .2s var(--kb-ease-out) both;
+}
+.kbb-rform.wide { width: 268px; }
+.kbb-rform .rf-head { display: flex; align-items: center; gap: 8px; }
+.kbb-rform .rf-back {
+  width: 24px; height: 24px; flex: none; cursor: pointer; border: 1px solid var(--kb-border);
+  border-radius: 50%; background: transparent; color: var(--kb-text-3);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.kbb-rform .rf-back svg { transform: rotate(180deg); }
+.kbb-rform .rf-title { display: inline-flex; align-items: center; gap: 6px; font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-sm, 12px); color: var(--kb-text); }
+.kbb-rform .rf-title svg { color: var(--c, var(--kb-primary)); }
+.kbb-rform .rf-x {
+  margin-left: auto; width: 24px; height: 24px; flex: none; cursor: pointer;
+  border: 0; border-radius: 50%; background: var(--kb-surface-2); color: var(--kb-text-3);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.kbb-rform .rf-x:hover { background: color-mix(in oklab, var(--kb-hp) 14%, #fff); color: var(--kb-hp-ink); }
+/* Sidebar colapsado: 76px no alcanzan para el panel — abre pegado al borde
+   del menú (mínimo útil), sin flotar en medio del contenido. */
+.kbv-shell.side-collapsed .kbb-qa { left: calc(-1 * var(--side-w, 76px) + 2px); width: 224px; }
+.kbv-logo.v2 .mark .kbb { pointer-events: none; }
+/* ═══ El objeto que KIBO saca al reaccionar ═══ */
+.kbb-prop {
+  position: absolute; right: -18px; top: 34px; z-index: 5; pointer-events: none;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.22));
+  animation: kbb-prop-pop 3.2s var(--kb-ease-out) both;
+}
+@keyframes kbb-prop-pop {
+  0% { opacity: 0; transform: translate(-14px, 10px) scale(.3) rotate(-20deg); }
+  18% { opacity: 1; transform: translate(0, -6px) scale(1.15) rotate(6deg); }
+  30% { transform: translate(0, 0) scale(1) rotate(0); }
+  74% { opacity: 1; transform: translate(2px, -4px) scale(1); }
+  100% { opacity: 0; transform: translate(8px, -22px) scale(.8); }
+}
+.kbb-prop.hit { right: auto; left: -14px; top: 20px; }
+@media (prefers-reduced-motion: reduce) { .kbb-prop { animation: none; opacity: 1; } }
+/* ═══ 50 · Chat inmersivo ═══════════════════════════════════════
+   El chat ES el espacio, no una tarjeta encima de él: fondo profundo con
+   luz que respira, KIBO grande y los mensajes sueltos a su alrededor. */
+.kbb-chat-veil {
+  position: fixed; inset: 0; z-index: 1250; display: grid; place-items: center; padding: 24px;
+  background: radial-gradient(120% 100% at 50% 0%, #101A2E 0%, #070B14 58%, #04060B 100%);
+  animation: kbb-veil-in var(--kb-dur-base, 200ms) var(--kb-ease-out);
+  overflow: hidden;
+}
+@keyframes kbb-veil-in { from { opacity: 0; } to { opacity: 1; } }
+.kbb-chat {
+  position: relative; z-index: 1;
+  width: min(720px, 100%); height: min(84vh, 760px);
+  display: grid; grid-template-rows: auto 1fr auto; gap: 10px;
+  background: none; border: 0; box-shadow: none;
+  animation: kbb-chat-in var(--kb-dur-slow, 300ms) var(--kb-ease-out);
+}
+@keyframes kbb-chat-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+.kbb-chat .kc-x {
+  position: absolute; right: 0; top: -4px; z-index: 2;
+  width: 38px; height: 38px; cursor: pointer; border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 50%; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.72);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.kbb-chat .kc-x:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.kbb-chat .kc-stage { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 4px; }
+.kbb-chat .kc-vitals {
+  font-family: var(--kb-f-mono); font-size: var(--kb-fs-2xs, 10px); font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,0.52);
+}
+.kbb-chat .kc-vitals strong { color: rgba(255,255,255,0.86); }
+.kbb-chat .kc-log {
+  overflow-y: auto; overflow-x: hidden; padding: 4px 4px 8px;
+  display: flex; flex-direction: column; gap: 12px; scrollbar-width: thin;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 6px), transparent 100%);
+          mask-image: linear-gradient(180deg, transparent 0, #000 22px, #000 calc(100% - 6px), transparent 100%);
+}
+.kbb-chat .kc-bar {
+  display: flex; align-items: center; gap: 8px; padding: 8px;
+  border: 1px solid rgba(255,255,255,0.14); border-radius: var(--kb-r-pill);
+  background: rgba(255,255,255,0.07); backdrop-filter: blur(10px);
+}
+.kbb-chat .kc-bar input {
+  flex: 1; min-width: 0; border: 0; background: none; padding: 8px 6px;
+  font: inherit; font-size: var(--kb-fs-md, 13px); color: #fff;
+}
+.kbb-chat .kc-bar input::placeholder { color: rgba(255,255,255,0.42); }
+.kbb-chat .kc-bar input:focus { outline: none; }
+.kbb-chat .kc-mic, .kbb-chat .kc-send {
+  width: 40px; height: 40px; flex: none; cursor: pointer; border: 0; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.kbb-chat .kc-mic { background: rgba(255,255,255,0.12); color: #fff; }
+.kbb-chat .kc-mic.live { background: var(--kb-hp); color: #fff; animation: qa-mic-pulse 1.2s ease-in-out infinite; }
+.kbb-chat .kc-mic.off { opacity: .45; }
+.kbb-chat .kc-send { background: var(--kb-primary); color: #fff; box-shadow: 0 2px 0 var(--kb-primary-hover); }
+.kbb-chat .kc-send:disabled { opacity: .35; box-shadow: none; cursor: not-allowed; }
+/* ═══ Dial de travesuras (anillo de KIBO) ═══ */
+.kbb-rsub.trick { border-color: color-mix(in oklab, var(--kb-streak) 34%, var(--kb-border)); }
+.kbb-rsub.trick:hover { background: color-mix(in oklab, var(--kb-streak) 12%, var(--kb-canvas)); }
+.kbb-rutil.rand {
+  border-color: var(--kb-primary); background: var(--kb-primary); color: #fff;
+  box-shadow: 0 2px 0 var(--kb-primary-hover);
+}
+.kbb-rutil.rand:hover { background: var(--kb-primary-hover); }
+/* Flechas de página del dial */
+.kbb-rpage {
+  position: absolute; left: 50%; top: 50%; z-index: 5;
+  width: 28px; height: 28px; margin: -14px 0 0 -14px;
+  transform: translate(var(--x), var(--y));
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  border: 1px solid var(--kb-border); border-radius: 50%;
+  background: var(--kb-card); color: var(--kb-text-2); box-shadow: var(--kb-sh-1);
+  animation: kbb-node-in .26s var(--kb-ease-out) both;
+}
+.kbb-rpage:hover:not(:disabled) { border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+.kbb-rpage:disabled { opacity: .35; cursor: default; }
+/* Puntos de página, bajo el dial */
+.kbb-rpagedots {
+  position: absolute; left: 50%; top: 50%; z-index: 5;
+  /* Posicionado por la misma geometría del dial (--x/--y), no por un offset
+     fijo hacia abajo: el FAB vive pegado al borde inferior. */
+  transform: translate(var(--x), var(--y)) translate(-50%, -50%);
+  display: flex; gap: 5px;
+}
+.kbb-rpagedots i { width: 6px; height: 6px; border-radius: 50%; background: var(--kb-border-strong); }
+.kbb-rpagedots i.on { background: var(--kb-streak); width: 16px; border-radius: var(--kb-r-pill); }
+/* Burbuja de registro: aire entre grupos de campos (los montos y las categorías
+   se veían encimados). */
+.kbb-rform .qa-form { gap: 12px; }
+.kbb-rform .qa-chiprow { gap: 6px; row-gap: 6px; }
+.kbb-rform .qa-chiprow.wrap { max-height: 92px; overflow-y: auto; scrollbar-width: none; }
+.kbb-rform .kbv-amount-input { margin-bottom: 2px; }
+.kbb-rform .qa-hintline { margin-top: 2px; }
+/* ═══════════════════════════════════════════════════════════════
+   BLOQUE A · Vitrina y guardarropa
+   1. Fichas de cosmético (specimens): el catálogo muestra EL ÍTEM,
+      no el KIBO completo — veinte blobs de 44px se veían idénticos.
+   2. Portadas: el elemento que da nombre a la portada es el que se
+      mueve, y la ficha de tienda usa el MISMO componente que la carta.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Specimens ─────────────────────────────────────────────── */
+.kbs { position: relative; display: grid; place-items: center; width: 100%; height: 62px; }
+.kbs-gel {
+  position: relative; overflow: hidden;
+  width: 58px; height: 52px; border-radius: 48% 52% 44% 56% / 56% 54% 46% 44%;
+  background: var(--kb-primary); background-size: 200% 200%;
+  box-shadow: inset -7px -9px 16px rgba(0,0,0,0.16), inset 7px 9px 18px rgba(255,255,255,0.30);
+  animation: kbs-wobble 6.5s var(--kb-ease-standard, ease-in-out) infinite;
+}
+.kbs-skin.anim .kbs-gel { animation: kbs-wobble 6.5s var(--kb-ease-standard, ease-in-out) infinite; }
+.kbs-mark .kbs-gel { width: 64px; height: 56px; }
+.kbs-mark-art {
+  position: absolute; left: 50%; top: 50%; width: 42px; height: 42px;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 1px 1.5px rgba(0,0,0,0.28));
+}
+.kbs-mark.none .kbs-gel { opacity: 0.34; }
+.kbs-nada { width: 44px; height: 44px; border-radius: 50%; border: 1.5px dashed var(--kb-border-strong); }
+/* Aura sola: la misma pieza, a escala de ficha (las distancias son vars). */
+.kbs-aura .kbb-aura {
+  position: absolute; left: 50%; top: 50%; width: 52px; height: 52px;
+  --orbit: 21px; --rise: 22px; --rise-top: -26px; --fall: 24px;
+}
+.kbs-aura .kbb-aura .star { width: 4px; height: 4px; }
+.kbs-aura .kbb-aura.au-burbujas .star { width: 8px; height: 8px; border-width: 1.6px; }
+.kbs-aura .kbb-aura.au-burbujas .star.s2 { width: 6px; height: 6px; }
+.kbs-aura .kbb-aura.au-burbujas .star.s3 { width: 9px; height: 9px; }
+.kbs-aura .kbb-aura.au-petalo .star { width: 8px; height: 8px; }
+.kbs-aura .kbb-aura.au-petalo .star.s3 { width: 6px; height: 6px; }
+/* Personalidad: su FIRMA de movimiento. Plano y largo = sereno; zigzag
+   apretado = juguetón. Una gota de gel recorre el trazo a su cadencia. */
+.kbs-pers { color: var(--kb-text-2); }
+.kbs-pers svg { width: 100%; height: 46px; overflow: visible; }
+@media (prefers-reduced-motion: reduce) {
+  .vt-fx, .kbs-gel, .kbs-pers circle { animation: none !important; }
+}
+/* Cada compañero descansa en SU pose: sin esto, seis tarjetas con el mismo
+   KIBO en reposo vuelven a ser seis miniaturas idénticas entre gesto y gesto. */
+.pet-prev[data-pose] .kbb-host { transition: transform var(--kb-dur-base, 200ms) var(--kb-ease-out, ease-out); }
+.pet-prev[data-pose="vt-pet-peek"] .kbb-host { transform: rotate(-9deg) translate(6px, 2px); }
+.pet-prev[data-pose="vt-pet-chill"] .kbb-host { transform: rotate(9deg) translateY(6px) scaleY(0.92); }
+.pet-prev[data-pose="vt-pet-travi"] .kbb-host { transform: rotate(-5deg) scaleX(1.06) scaleY(0.96); }
+.pet-prev[data-pose="vt-pet-dormi"] .kbb-host { transform: rotate(12deg) translateY(5px); }
+.pet-prev[data-pose="vt-pet-guino"] .kbb-host { transform: rotate(4deg) translateY(-2px); }
+.pet-prev[data-pose="vt-pet-beso"]  .kbb-host { transform: rotate(-4deg) translateY(-3px) scale(1.04); }
+/* ═══ 53 · Disco de marcar (dial de travesuras) ═══════════════════
+   Reemplaza las flechas de página: un disco con agujeros que se gira, como
+   un teléfono. Las flechas decían «siguiente»; el disco dice «hay más». */
+.kbb-dial {
+  position: absolute; left: 0; top: 0; width: 92px; height: 92px;
+  transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y)));
+  border-radius: 50%; cursor: grab; touch-action: none; z-index: 7;
+  background: radial-gradient(circle at 50% 38%, var(--kb-card) 0%, var(--kb-surface) 62%, var(--kb-surface-2) 100%);
+  border: 1px solid var(--kb-border-strong); box-shadow: var(--kb-sh-2);
+  display: grid; place-items: center;
+  opacity: 0; animation: kbb-dial-in var(--kb-dur-slow, 300ms) var(--kb-ease-out) 80ms forwards;
+}
+@keyframes kbb-dial-in { from { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(.6); } to { opacity: 1; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1); } }
+.kbb-dial:active { cursor: grabbing; }
+.kbb-dial:focus-visible { outline: none; box-shadow: var(--kb-sh-2), 0 0 0 3px color-mix(in oklab, var(--kb-primary) 30%, transparent); }
+.kbb-dial-holes { position: absolute; inset: 0; border-radius: 50%; transition: rotate 160ms var(--kb-ease-out); }
+.kbb-dial-holes i {
+  position: absolute; left: 50%; top: 50%; width: 13px; height: 13px; border-radius: 50%;
+  background: var(--kb-surface-2); border: 1px solid var(--kb-border-strong);
+  transform: rotate(var(--a)) translateY(-32px) translate(-50%, -50%);
+  transform-origin: 0 0;
+}
+.kbb-dial-core {
+  position: relative; z-index: 1; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  border: 0; background: var(--kb-primary); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 0 var(--kb-primary-hover);
+}
+.kbb-dial-core:active { transform: translateY(2px); box-shadow: none; }
+.kbb-dial-hint {
+  position: absolute; left: 50%; bottom: -17px; transform: translateX(-50%);
+  font-family: var(--kb-f-mono); font-size: var(--kb-fs-2xs, 10px); font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--kb-text-3); pointer-events: none;
+}
+/* Las de los extremos se desvanecen: dicen «sigue girando». */
+.kbb-rsub.trick.edge { opacity: .38; }
+@media (prefers-reduced-motion: reduce) { .kbb-dial { animation: none; opacity: 1; } }
+/* Tarjetas de registro dentro del chat inmersivo: papel claro sobre el
+   espacio oscuro, para que el dato se lea y el botón se vea accionable. */
+.kbb-chat .kc-props { display: flex; flex-direction: column; gap: 7px; align-items: flex-start; }
+.kbb-chat .kc-prop {
+  width: 100%; display: flex; align-items: center; gap: 10px;
+  border-radius: var(--kb-r-md); padding: 9px 10px;
+  background: rgba(255,255,255,0.94); border: 1px solid transparent;
+  border-left: 3px solid var(--c); box-shadow: var(--kb-sh-2);
+}
+.kbb-chat .kc-prop .kp-ico {
+  width: 30px; height: 30px; flex: none; border-radius: 50%;
+  background: color-mix(in oklab, var(--c) 16%, #fff); color: var(--c);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.kbb-chat .kc-prop .kp-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.kbb-chat .kc-prop .kp-txt strong { font-size: var(--kb-fs-md, 13px); font-weight: 800; color: var(--kb-text); }
+.kbb-chat .kc-prop .kp-txt em { font-style: normal; font-size: var(--kb-fs-xs, 11px); color: var(--kb-text-2); }
+/* El log no enseña su barra: rompía el fondo continuo. */
+.kbb-chat .kc-log::-webkit-scrollbar { width: 6px; }
+.kbb-chat .kc-log::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.16); border-radius: 999px; }
+.kbb-chat .kc-log::-webkit-scrollbar-track { background: transparent; }
+/* KIBO cede altura cuando la ventana es baja: la conversación es el
+   contenido, él es el anfitrión. */
+.kbb-chat .kc-log { min-height: 140px; }
+@media (max-height: 760px) {
+  .kbb-chat .kc-stage .kbb-host { scale: .72; margin-block: -20px -14px; }
+}
+@media (max-height: 620px) {
+  .kbb-chat .kc-stage .kbb-host { scale: .55; margin-block: -34px -26px; }
+}
+.kbw-hub .kbb-host { pointer-events: none; }
+/* La burbuja de registro deja de colgar del anillo: dentro de la rueda vive
+   centrada, bajo KIBO. Al soltarla del anclaje absoluto perdió también su
+   techo: «Mis carpetas» son once filas — 636px más los 96 que despejan a
+   KIBO — dentro de una ventana de 540, y como el velo es `fixed` no había
+   scroll en ninguna parte de la cadena. El techo es la ventana menos el
+   claro del cubo; lo que rebasa lo absorbe la LISTA, con el encabezado fijo. */
+.kbw .kbb-rform {
+  position: static; right: auto; bottom: auto; left: auto;
+  width: 300px; margin-top: 96px;
+  max-height: calc(100vh - 190px);
+  display: flex; flex-direction: column; min-height: 0;
+}
+.kbw .kbb-rform.wide { width: 320px; }
+.kbw .kbb-rform .rf-head { flex: none; }
+.kbw .kbb-rform .qa-custom, .kbw .kbb-rform .qa-form {
+  min-height: 0; overflow-y: auto;
+  /* Sin barra a la vista: el corte de la última fila ya avisa que sigue. */
+  scrollbar-width: thin;
+}
+/* Mientras la rueda está abierta, KIBO no está en su esquina: está al centro. */
+.kbb-fab.open .kbb-fab-trigger { opacity: 0; pointer-events: none; transition: opacity 120ms; }
+/* ═══ Rueda · barra bajo KIBO (volver · editar) ═══
+   «Volver» colgaba del propio KIBO: cada caricia era un salto de pantalla.
+   Ahora tocarlo hace una travesura y la navegación tiene su propia tecla. */
+.kbw-hub .kbb-host { margin-bottom: 24px; }
+/* Acceso directo al formulario completo: un destino, no una nota al pie. */
+.kbb-rform .rf-more {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; min-height: 42px; margin-top: 10px; cursor: pointer;
+  font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md, 13px);
+  color: var(--kb-primary-ink);
+  background: var(--kb-primary-soft);
+  border: 1px solid color-mix(in oklab, var(--kb-primary) 26%, transparent);
+  border-radius: var(--kb-r-md, 14px);
+}
+.kbb-rform .rf-more:hover { background: color-mix(in oklab, var(--kb-primary) 16%, var(--kb-canvas)); border-color: var(--kb-primary); }

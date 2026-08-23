@@ -1,0 +1,58 @@
+<!-- @dsCard group="04 · Íconos" viewport="700x476" name="Íconos · navegación y contenido" subtitle="Estructura de la app y tipos de contenido del Acervo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:16px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.dom{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:11px 13px;margin-bottom:9px}
+.dh{margin-bottom:11px}
+.dn{font-family:var(--kb-f-label);font-size:11.5px;font-weight:800;color:var(--kb-primary-ink);display:block;letter-spacing:.09em;text-transform:uppercase}
+.dd{font-size:11px;color:var(--kb-text-2);line-height:1.45;display:block;margin-top:2px}
+/* rejilla fija: los glifos ya no se aprietan */
+.set{display:grid;grid-template-columns:repeat(7,1fr);gap:11px 8px;align-items:start}
+.i{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.i>span{color:var(--kb-text-2);height:24px;display:grid;place-items:center}
+.i em{font-style:normal;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.25;overflow-wrap:anywhere;letter-spacing:.09em;text-transform:uppercase}
+.i.miss>span{background:var(--kb-hp-soft);border-radius:5px;width:26px}
+.i.miss em{color:#B3261E}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>set real</b> · monta <b>icons.jsx</b> del proyecto — un nombre sin dibujo sale vacío en rojo, que es la señal honesta</div>
+  <div id="app"></div>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const K = window.__KIconApp;
+const DOM = [
+  ["nav", "Navegación y estructura: menú lateral, pestañas, encabezados de módulo.", ["home","list","layers","folder","shop","user","settings","inbox","user-plus","pin-on","pin-off","moon"]],
+  ["medio", "Tipo de contenido en Acervo, Lectura y widgets. Nunca como acción.", ["book","book-open","film","tv","tablet","phone","laptop","cloud","headphones","image","picture","image-up","camera","mic","piggy"]]
+];
+function Glyph({ name, size = 22 }) {
+  const el = K ? K({ name, size, stroke: size <= 16 ? 2.4 : 2 }) : null;
+  return <span>{el}</span>;
+}
+function has(name) { return K ? K({ name, size: 18 }) !== null : false; }
+function App() {
+  return (
+    <React.Fragment>
+      {DOM.map(([dn, dd, names]) => (
+        <div className="dom" key={dn}>
+          <div className="dh"><span className="dn">{dn}</span><span className="dd">{dd}</span></div>
+          <div className="set">
+            {names.map(n => (
+              <span className={"i" + (has(n) ? "" : " miss")} key={n} title={has(n) ? n : n + " — sin dibujo en KIcon"}>
+                <Glyph name={n} /><em>{n}</em>
+              </span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body></html>

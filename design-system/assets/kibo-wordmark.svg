@@ -1,0 +1,9 @@
+<svg width="300" height="96" viewBox="0 0 300 96" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kibo">
+<path d="M40 12c17 0 29 11 29 26 0 17-12 32-29 32S11 55 11 38c0-15 12-26 29-26Z" fill="#1CA4A0" fill-opacity=".9"></path>
+<ellipse cx="32" cy="40" rx="6.2" ry="7.4" fill="#0B3B39"></ellipse>
+<ellipse cx="49" cy="40" rx="6.2" ry="7.4" fill="#0B3B39"></ellipse>
+<circle cx="30" cy="37" r="2.1" fill="#fff" fill-opacity=".95"></circle>
+<circle cx="47" cy="37" r="2.1" fill="#fff" fill-opacity=".95"></circle>
+<path d="M35 52q5.5 5 11 0" stroke="#0B3B39" stroke-width="3.2" stroke-linecap="round" fill="none"></path>
+<text x="88" y="60" font-family="Plus Jakarta Sans, Inter, sans-serif" font-size="46" font-weight="800" letter-spacing="-1.5" fill="#1A1A2E">KIBO</text>
+</svg>

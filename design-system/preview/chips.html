@@ -1,0 +1,83 @@
+<!-- @dsCard group="05 · Átomos" viewport="700x395" name="Chips, pastillas y badges" subtitle="Tres piezas parecidas con trabajos distintos: filtrar, etiquetar y clasificar" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 8px;display:block;text-transform:uppercase}
+.hd:not(:first-of-type){margin-top:15px}
+.hd em{font-style:normal;color:var(--kb-text-2);letter-spacing:.02em;text-transform:none;font-weight:700}
+.row{display:flex;gap:7px;flex-wrap:wrap;align-items:center;row-gap:9px}
+/* chip · filtra, es tocable, tiene estado */
+.chip{display:inline-flex;align-items:center;gap:5px;height:30px;padding:0 13px;border-radius:var(--kb-r-pill);border:1px solid var(--kb-border);background:var(--kb-card);font-family:var(--kb-f-body);font-size:12px;font-weight:600;color:var(--kb-text-2);cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--kb-border-strong);color:var(--kb-text)}
+.chip.on{background:var(--kb-primary-soft);border-color:var(--kb-primary-border);color:var(--kb-primary-ink);font-weight:700}
+.chip.off{opacity:.45;cursor:not-allowed}
+.chip i{width:8px;height:8px;border-radius:50%;background:var(--c);display:block;flex:none}
+/* tabs segmentadas */
+.tabs{display:inline-flex;background:var(--kb-surface-2);border-radius:var(--kb-r-pill);padding:3px;gap:2px}
+.tab{padding:6px 15px;border-radius:var(--kb-r-pill);font-family:var(--kb-f-body);font-size:12px;font-weight:600;color:var(--kb-text-2);cursor:pointer;white-space:nowrap}
+.tab.on{background:var(--kb-card);color:var(--kb-text);font-weight:700;box-shadow:var(--kb-sh-1)}
+/* pastilla de área · etiqueta, NO es tocable */
+.pz{display:inline-flex;align-items:center;gap:5px;padding:3.5px 9px;border-radius:var(--kb-r-xs);background:color-mix(in oklab,var(--c) 15%,#fff);color:var(--kb-ink-on-tint);font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;white-space:nowrap;text-transform:uppercase}
+.pz .kic svg{width:11px;height:11px;stroke-width:2.4;flex:none}
+/* badge de rareza · clasifica, color pleno */
+.bd{display:inline-flex;align-items:center;padding:3.5px 10px;border-radius:var(--kb-r-pill);font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;background:var(--c);color:var(--ink,#fff);white-space:nowrap;text-transform:uppercase}
+/* prioridad · medidor, NO badge de color */
+.pri{display:inline-flex;align-items:center;gap:6px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-2);letter-spacing:.09em;white-space:nowrap;text-transform:uppercase}
+.m5{display:inline-flex;align-items:flex-end;gap:2px;height:13px}
+.m5 span{width:3.5px;border-radius:1px;background:var(--kb-surface-2);display:block}
+.m5 span.on{background:var(--c)}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:13px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E;font-weight:800}
+</style></head>
+<body class="kb-root">
+  <span class="hd">Chip <em>— filtra. Es tocable, tiene estado y altura de 30px</em></span>
+  <div class="row">
+    <span class="chip on">Todas</span>
+    <span class="chip"><i style="--c:var(--area-vigor)"></i>Vigor</span>
+    <span class="chip"><i style="--c:var(--area-wisdom)"></i>Sabiduría</span>
+    <span class="chip"><i style="--c:var(--area-wealth)"></i>Riqueza</span>
+    <span class="chip"><i style="--c:var(--area-community)"></i>Comunidad</span>
+    <span class="chip off"><i style="--c:var(--area-will)"></i>Voluntad</span>
+    <span class="tabs" style="margin-left:auto"><span class="tab on">Cosméticos</span><span class="tab">Funciones</span><span class="tab">Cofres</span></span>
+  </div>
+  <span class="hd">Pastilla de área <em>— etiqueta. NO es tocable: solo dice de dónde viene algo</em></span>
+  <div class="row">
+    <span class="pz" style="--c:var(--area-vigor)"><span class="kic" data-n="vigor"></span> Vigor</span>
+    <span class="pz" style="--c:var(--area-wisdom)"><span class="kic" data-n="wisdom"></span> Sabiduría</span>
+    <span class="pz" style="--c:var(--area-wealth)"><span class="kic" data-n="wealth"></span> Riqueza</span>
+    <span class="pz" style="--c:var(--area-community)"><span class="kic" data-n="community"></span> Comunidad</span>
+    <span class="pz" style="--c:var(--area-will)"><span class="kic" data-n="will"></span> Voluntad</span>
+    <span class="pz" style="--c:var(--kb-primary)"><span class="kic" data-n="folder"></span> Proyecto Kibo</span>
+  </div>
+  <span class="hd">Badge de rareza <em>— clasifica. Color pleno, porque la rareza ES el mensaje</em></span>
+  <div class="row">
+    <span class="bd" style="--c:var(--kb-rarity-comun)">Común</span>
+    <span class="bd" style="--c:var(--kb-rarity-raro)">Raro</span>
+    <span class="bd" style="--c:var(--kb-rarity-epico)">Épico</span>
+    <span class="bd" style="--c:var(--kb-rarity-legendario);--ink:#3A2C08">Legendario</span>
+    <span class="bd" style="--c:var(--kb-rarity-secreto)">Secreto</span>
+    <span class="bd" style="--c:var(--kb-rarity-oculto)">Oculto</span>
+  </div>
+  <span class="hd">Prioridad <em>— medidor, no badge. Así no compite con el color del área</em></span>
+  <div class="row">
+    <span class="pri" style="--c:var(--pri-urgent)"><span class="m5"><span class="on" style="height:5px"></span><span class="on" style="height:8px"></span><span class="on" style="height:10px"></span><span class="on" style="height:11.5px"></span><span class="on" style="height:13px"></span></span>Urgente</span>
+    <span class="pri" style="--c:var(--pri-high)"><span class="m5"><span class="on" style="height:5px"></span><span class="on" style="height:8px"></span><span class="on" style="height:10px"></span><span class="on" style="height:11.5px"></span><span style="height:13px"></span></span>Alta</span>
+    <span class="pri" style="--c:var(--pri-medium)"><span class="m5"><span class="on" style="height:5px"></span><span class="on" style="height:8px"></span><span class="on" style="height:10px"></span><span style="height:11.5px"></span><span style="height:13px"></span></span>Media</span>
+    <span class="pri" style="--c:var(--pri-low)"><span class="m5"><span class="on" style="height:5px"></span><span class="on" style="height:8px"></span><span style="height:10px"></span><span style="height:11.5px"></span><span style="height:13px"></span></span>Baja</span>
+    <span class="pri" style="--c:var(--pri-vlow)"><span class="m5"><span class="on" style="height:5px"></span><span style="height:8px"></span><span style="height:10px"></span><span style="height:11.5px"></span><span style="height:13px"></span></span>MUY Baja</span>
+  </div>
+  <p class="no"><b>La regla para elegir:</b> si se puede tocar y cambia lo que ves, es un <b>chip</b>. Si solo informa de dónde viene algo, es una <b>pastilla</b>. Si clasifica en una escala cerrada, es un <b>badge</b>. <u>La prioridad nunca es un badge de color</u> — sería un segundo color peleando con el del área.</p>
+  <script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const K = window.__KIconApp;
+// el punto de montaje está vacío, así que no se puede medir: el tamaño lo
+// declara el CSS y aquí se pide con holgura para que no se pixele al escalar.
+document.querySelectorAll('.kic').forEach(el => {
+  ReactDOM.createRoot(el).render(K ? K({ name: el.dataset.n, size: 24, stroke: 2.4 }) : null);
+});
+</script>
+</body></html>

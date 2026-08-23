@@ -1,0 +1,123 @@
+<!-- @dsCard group="11 · Proyectos" viewport="700x575" name="Proyectos · átomos y tablero" subtitle="Estado, avance, plazo y el tablero de proyectos por área" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 9px}
+.hd:not(:first-child){margin-top:15px}
+.hd em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:var(--kb-text-3);font-size:10.5px}
+/* átomos */
+.at{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:10px 11px;display:flex;flex-direction:column;gap:7px}
+.pn{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-text);line-height:1.2}
+.pn b{font-weight:800;letter-spacing:.06em;color:var(--kb-primary-ink);font-size:9.5px}
+.p.sh{border-color:var(--kb-primary-soft);box-shadow:inset 0 0 0 1px var(--kb-primary-soft),var(--kb-sh-1)}
+.pv{font-size:10px;color:var(--kb-text-3);line-height:1.45;margin-top:auto}
+.pv code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-text-2)}
+.demo{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-height:34px}
+/* estado · tres, con tinta */
+.stt{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:var(--kb-r-pill);white-space:nowrap}
+.stt.todo{background:var(--kb-surface-2);color:var(--kb-text)}
+/* La familia amarilla (--kb-coin, --area-wealth) es demasiado clara para que una
+   mezcla porcentual con --kb-text alcance 4.5:1 contra un tinte de si misma:
+   usa la TINTA del sistema, que ya existe. coin-ink = 5.20:1 sobre este tinte. */
+.stt.prog{background:color-mix(in oklab,var(--kb-coin) 16%,#fff);color:var(--kb-coin-ink)}
+.stt.done{background:var(--kb-primary-soft);color:var(--kb-primary-ink)}
+/* avance */
+.pr{display:flex;align-items:center;gap:7px;width:100%}
+.bar{flex:1;height:4px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden;min-width:34px}
+.bar i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+.pct{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:10px;font-weight:800;color:var(--ink,var(--kb-text));white-space:nowrap}
+/* plazo */
+.dl{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-text);white-space:nowrap}
+.dl span{display:flex;flex:none;color:var(--kb-text-3)}
+.dl small{font-weight:500;color:var(--kb-text-3)}
+.dl.late{color:color-mix(in oklab,var(--pri-urgent) 72%,var(--kb-text))}
+.dl.late span{color:inherit}
+/* conteo de tareas */
+.cnt{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-text-2);white-space:nowrap}
+.cnt span{display:flex;flex:none;color:var(--kb-text-3)}
+/* El contador de la banda es parte de la banda: toma su misma tinta, porque
+   --kb-text-2 sobre el tinte del area solo da 4.27:1. */
+.col .band .cnt{color:var(--ink,var(--kb-text))}
+/* ── organismo · tablero por área ── */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.col{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden;display:flex;flex-direction:column}
+.col .band{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 11px;background:color-mix(in oklab,var(--c) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--c) 18%,var(--kb-border))}
+.ap{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink,var(--kb-text));white-space:nowrap}
+.ap i{width:6px;height:6px;border-radius:50%;background:var(--c);display:block;flex:none}
+.items{padding:8px;display:flex;flex-direction:column;gap:7px}
+.pj{background:var(--kb-surface);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 10px;display:flex;flex-direction:column;gap:6px;cursor:pointer;transition:border-color var(--kb-dur-fast) var(--kb-ease-out),background var(--kb-dur-fast) var(--kb-ease-out),box-shadow var(--kb-dur-fast) var(--kb-ease-out)}
+.pj:hover{border-color:var(--c);background:var(--kb-card);box-shadow:var(--kb-sh-1)}
+.nm{font-family:var(--kb-f-display);font-weight:700;font-size:12.5px;color:var(--kb-text);line-height:1.3}
+.ft{display:flex;align-items:center;justify-content:space-between;gap:7px}
+/* vacío */
+.empty{padding:16px 11px;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;border:1px dashed var(--kb-border);border-radius:var(--kb-r-sm);margin:8px}
+.empty span{display:flex;color:var(--kb-text-3)}
+.et{font-family:var(--kb-f-display);font-weight:700;font-size:11.5px;color:var(--kb-text-2)}
+.ed{font-size:10px;color:var(--kb-text-3);line-height:1.35}
+.note{margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Átomos <em>— tres propios del proyecto y uno compartido con tarea</em></p>
+<div class="at">
+  <div class="p"><span class="pn">estado</span><div class="demo"><span class="stt todo">por hacer</span><span class="stt prog">en curso</span><span class="stt done">listo</span></div><span class="pv"><code>10px · 800 · 2px 8px</code> tres estados, nunca más</span></div>
+  <div class="p" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)"><span class="pn">avance</span><div class="demo"><span class="pr"><span class="bar"><i style="width:62%"></i></span><span class="pct">62 %</span></span></div><span class="pv"><code>4px</code> se calcula de las tareas hechas</span></div>
+  <div class="p"><span class="pn">tareas</span><div class="demo"><span class="cnt"><span id="i3"></span>8 / 13</span></div><span class="pv">hechas sobre totales, en cifras tabulares</span></div>
+  <div class="p sh"><span class="pn">plazo <b>compartido</b></span><div class="demo"><span class="dl"><span id="i1"></span>30 jun <small>· 27 d</small></span><span class="dl late"><span id="i2"></span>vencido</span></div><span class="pv">idéntico al de <b>tarea</b>: una sola pieza</span></div>
+</div>
+
+<p class="hd">Tablero por área <em>— el organismo: cada columna es un área y recibe el arrastre</em></p>
+<div class="board">
+  <div class="col" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)">
+    <div class="band"><span class="ap"><i></i>Sabiduría</span><span class="cnt">2</span></div>
+    <div class="items">
+      <div class="pj">
+        <span class="nm">Rediseñar el onboarding</span>
+        <span class="pr"><span class="bar"><i style="width:62%"></i></span><span class="pct">62 %</span></span>
+        <div class="ft"><span class="stt prog">en curso</span><span class="dl"><span id="i4"></span>30 jun</span></div>
+      </div>
+      <div class="pj">
+        <span class="nm">Curso de estadística</span>
+        <span class="pr"><span class="bar"><i style="width:20%"></i></span><span class="pct">20 %</span></span>
+        <div class="ft"><span class="stt todo">por hacer</span><span class="cnt">2 / 10</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="col" style="--c:var(--area-wealth);--ink:var(--area-wealth-ink);--ink:var(--kb-coin-ink)">
+    <div class="band"><span class="ap"><i></i>Riqueza</span><span class="cnt">1</span></div>
+    <div class="items">
+      <div class="pj">
+        <span class="nm">Cerrar el mes</span>
+        <span class="pr"><span class="bar"><i style="width:100%"></i></span><span class="pct">100 %</span></span>
+        <div class="ft"><span class="stt done">listo</span><span class="dl late"><span id="i5"></span>vencido</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="col" style="--c:var(--area-community);--ink:var(--area-community-ink)">
+    <div class="band"><span class="ap"><i></i>Comunidad</span><span class="cnt">0</span></div>
+    <div class="empty">
+      <span id="i6"></span>
+      <span class="et">Sin proyectos</span>
+      <span class="ed">Arrastra uno aquí o crea el primero</span>
+    </div>
+  </div>
+</div>
+
+<p class="note"><b>Un proyecto no es una tarea grande.</b> Tiene <b>avance calculado</b> —sale de sus tareas hechas, no se escribe a mano—, <b>estado de tres valores</b> y <b>conteo</b>. La tarea, en cambio, tiene prioridad y casilla; el proyecto <b>no lleva ninguna de las dos</b>. El <b>plazo sí es la misma pieza</b> en los dos dominios: se define una vez y se cita.<br><b>La familia amarilla no admite mezcla.</b> <code>--kb-coin</code> y <code>--area-wealth</code> son tan claras que una mezcla al 66–74% con la tinta de texto sigue cayendo en un ocre medio, que nunca alcanza 4.5:1 contra un tinte de sí misma. Ahí se usa <code>--kb-coin-ink</code>: <b>5.20:1</b> en la píldora y <b>5.31:1</b> en la banda.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, color) => { const el = document.getElementById(id); if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color={color || 'currentColor'} />); };
+  put('i1','calendar',11); put('i2','alert',11); put('i3','list',11);
+  put('i4','calendar',10); put('i5','alert',10);
+  put('i6','folder',22,'var(--kb-border-strong)');
+}
+</script>
+</body></html>

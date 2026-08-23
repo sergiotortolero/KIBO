@@ -1,0 +1,180 @@
+<!-- @dsCard group="11 · Proyectos" viewport="700x775" name="Cronograma · el Gantt real" subtitle=".kb-gantt / .kg-* de kb-gantt.jsx — lienzo absoluto, barras arrastrables y mini-mapa" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 9px}
+.hd:not(:first-of-type){margin-top:15px}
+.hd em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:var(--kb-text-3);font-size:10.5px}
+.hd code{font-family:var(--kb-f-label);text-transform:none;letter-spacing:0;color:var(--kb-text-3);font-weight:700}
+/* ═══ .kb-gantt (:12884) ═══ el eje es un LIENZO absoluto, no pistas de rejilla:
+   eso es lo que permite zoom continuo y arrastre. --pxd = px por día. */
+.kb-gantt{display:flex;flex-direction:column;gap:10px}
+.kg-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.kg-title{display:flex;flex-direction:column;gap:2px}
+.kg-title h3{margin:0;font-family:var(--kb-f-display);font-weight:800;font-size:14px;color:var(--kb-text)}
+
+/* ═══ barra de herramientas (:12888) ═══ no hay pestañas de rango: hay ZOOM
+   continuo (rueda y ±), un letrero con el rango visible, y atajos a Todo/Hoy.
+   «Editar fechas» es un interruptor: al encenderlo, arrastrar mueve barras en
+   vez del lienzo. */
+.kg-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kg-range{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--kb-text-3);font-weight:700}
+.kg-zoom{display:flex;border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);overflow:hidden}
+.kg-zoom button{width:34px;height:34px;display:grid;place-items:center;cursor:pointer;border:0;background:var(--kb-card);color:var(--kb-text-2)}
+.kg-zoom button:hover{background:var(--kb-surface);color:var(--kb-text)}
+.kg-zoom button+button{border-left:1px solid var(--kb-border)}
+/* .kg-btn solo REDUCE el tamaño de .kbv-btn (:12900). El estilo y el estado
+   vienen de .kbv-btn-secondary / .kbv-btn-primary, que ya viven en el sistema. */
+.kbv-btn.kg-btn{min-height:34px;padding:0 12px;font-size:12px;white-space:nowrap}
+.kg-hint{margin:0}
+.kg-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kg-filters select{height:34px;padding:0 10px;font:inherit;font-size:12px;color:var(--kb-text);background:var(--kb-card);
+  border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);cursor:pointer}
+.kg-filters select:hover{border-color:var(--kb-border-strong)}
+.kg-body{display:flex;align-items:stretch;border:1px solid var(--kb-border);border-radius:var(--kb-r-md);overflow:hidden}
+.kg-labels{flex:none;width:232px;display:flex;flex-direction:column;border-right:1px solid var(--kb-border);background:var(--kb-surface)}
+.kg-corner{height:34px;display:flex;align-items:center;padding:0 12px;
+  font-family:var(--kb-f-label);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--kb-text-3);border-bottom:1px solid var(--kb-border)}
+.kg-label{display:flex;align-items:center;gap:7px;height:38px;padding:0 10px;min-width:0;
+  border-bottom:1px solid var(--kb-border-soft);color:var(--kb-text-3)}
+.kg-label.d1{padding-left:26px;background:color-mix(in oklab,var(--kb-text) 3%,transparent)}
+.kg-dot{flex:none;width:8px;height:8px;border-radius:50%;background:var(--c)}
+.kg-name{flex:1;min-width:0;text-align:left;cursor:pointer;border:0;background:none;padding:0;
+  font-family:var(--kb-f-display);font-weight:700;font-size:12px;color:var(--kb-text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kg-name:hover{color:var(--kb-primary-ink)}
+.kg-twist{flex:none;width:18px;height:18px;display:grid;place-items:center;cursor:pointer;border:0;
+  background:none;color:var(--kb-text-3);border-radius:var(--kb-r-xs);
+  transition:transform var(--kb-dur-fast) var(--kb-ease-out)}
+.kg-twist.on{transform:rotate(90deg);color:var(--kb-primary-ink)}
+.kg-twist.ghost{cursor:default;visibility:hidden}
+.kg-twist:hover:not(.ghost){background:var(--kb-surface-2)}
+.kg-canvas{position:relative;flex:1;min-width:0;overflow:hidden;background:var(--kb-card);cursor:grab;touch-action:none}
+.kg-axis{position:relative;height:34px;border-bottom:1px solid var(--kb-border);background:var(--kb-surface)}
+.kg-tick{position:absolute;top:0;height:34px;display:flex;align-items:center;padding-left:6px;white-space:nowrap;
+  font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3)}
+.kg-tick.strong{color:var(--kb-text-2);font-weight:700}
+.kg-grid{position:relative}
+.kg-grid>i{position:absolute;top:0;bottom:0;width:1px;background:var(--kb-border-soft)}
+.kg-grid>i.strong{background:var(--kb-border)}
+.kg-today{position:absolute;top:0;bottom:0;width:2px;background:var(--kb-primary);z-index:3}
+/* la fuente pone background:var(--kb-primary) con #fff, pero a 10px eso da
+   3.06:1. R-13: el relleno marcado usa la TINTA del color como fondo. */
+.kg-today em{position:absolute;top:2px;left:4px;font-style:normal;font-family:var(--kb-f-label);font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--kb-primary-ink);
+  border-radius:var(--kb-r-pill);padding:1px 6px;white-space:nowrap;font-weight:800}
+.kg-row{position:relative;height:38px;border-bottom:1px solid var(--kb-border-soft)}
+.kg-row.d1{background:color-mix(in oklab,var(--kb-text) 3%,transparent)}
+.kg-row.focus{background:var(--kb-primary-soft)}
+/* la barra: pastilla con contorno interno y el avance como capa al 62% */
+.kg-bar{position:absolute;top:7px;height:24px;z-index:2;cursor:pointer;display:flex;align-items:center;
+  padding:0 9px;overflow:hidden;border:0;border-radius:var(--kb-r-pill);
+  background:color-mix(in oklab,var(--c) 24%,var(--kb-canvas));
+  box-shadow:inset 0 0 0 1px color-mix(in oklab,var(--c) 46%,transparent)}
+.kg-bar:hover{box-shadow:inset 0 0 0 2px var(--c)}
+.editing .kg-bar{cursor:grab}
+.kg-fill{position:absolute;inset:0 auto 0 0;border-radius:var(--kb-r-pill);
+  background:color-mix(in oklab,var(--c) 62%,transparent)}
+.kg-bar-txt{position:relative;z-index:1;font-family:var(--kb-f-display);font-weight:800;font-size:11px;
+  color:var(--kb-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kg-handle{position:absolute;top:0;bottom:0;width:9px;z-index:2;cursor:ew-resize;
+  background:color-mix(in oklab,var(--c) 70%,transparent)}
+.kg-handle.s{left:0;border-radius:999px 0 0 999px}
+.kg-handle.e{right:0;border-radius:0 999px 999px 0}
+.kg-drag-hint{position:absolute;right:10px;top:40px;z-index:5;font-family:var(--kb-f-display);
+  font-weight:800;font-size:12px;color:#fff;background:var(--kb-text);border-radius:var(--kb-r-pill);padding:4px 10px}
+/* mini-mapa (:13005) */
+.kg-mini{position:relative;height:34px;cursor:pointer;overflow:hidden;border:1px solid var(--kb-border);
+  border-radius:var(--kb-r-sm);background:var(--kb-surface)}
+.kg-mini>i{position:absolute;top:50%;height:5px;margin-top:-2.5px;border-radius:999px;
+  background:color-mix(in oklab,var(--c) 55%,transparent)}
+.kg-mini-today{position:absolute;top:0;bottom:0;width:1px;background:var(--kb-primary)}
+.kg-mini-win{position:absolute;top:0;bottom:0;border-radius:var(--kb-r-xs);
+  background:color-mix(in oklab,var(--kb-primary) 12%,transparent);box-shadow:inset 0 0 0 1.5px var(--kb-primary)}
+.kg-empty{padding:30px 16px;text-align:center;color:var(--kb-text-3);font-size:12px}
+.note{margin-top:13px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Nivel área <em>— una fila por proyecto, sangradas las tareas · el eje es un lienzo, no una rejilla</em></p>
+<div class="kb-gantt editing">
+  <div class="kg-head">
+    <div class="kg-title"><h3>Sabiduría</h3><span class="kbv-meta">3 proyectos · abril a septiembre</span></div>
+    <div class="kg-tools">
+      <span class="kg-range">1 abr — 30 sep · por mes</span>
+      <div class="kg-zoom"><button type="button" title="Alejar" id="zo"></button><button type="button" title="Acercar" id="zi"></button></div>
+      <button type="button" class="kbv-btn kbv-btn-secondary kg-btn" id="bt"> Todo</button>
+      <button type="button" class="kbv-btn kbv-btn-secondary kg-btn" id="bh"> Hoy</button>
+      <button type="button" class="kbv-btn kbv-btn-primary kg-btn" id="be"> Editando fechas</button>
+    </div>
+  </div>
+  <p class="kg-hint kbv-meta">Arrastra una barra para moverla y sus bordes para estirarla. El lienzo sigue moviéndose desde el fondo.</p>
+  <div class="kg-body">
+    <div class="kg-labels">
+      <span class="kg-corner">Proyecto</span>
+      <span class="kg-label" style="--c:var(--area-wisdom)"><button class="kg-twist on" id="t1"></button><span class="kg-dot"></span><button class="kg-name">Rediseñar onboarding</button></span>
+      <span class="kg-label d1" style="--c:var(--area-wisdom)"><span class="kg-dot"></span><button class="kg-name">Prototipo navegable</button></span>
+      <span class="kg-label" style="--c:var(--area-wisdom)"><button class="kg-twist ghost"></button><span class="kg-dot"></span><button class="kg-name">Curso de sistemas</button></span>
+    </div>
+    <div class="kg-canvas">
+      <div class="kg-axis">
+        <span class="kg-tick strong" style="left:0">ABR</span><span class="kg-tick" style="left:16.6%">MAY</span>
+        <span class="kg-tick strong" style="left:33.3%">JUN</span><span class="kg-tick" style="left:50%">JUL</span>
+        <span class="kg-tick strong" style="left:66.6%">AGO</span><span class="kg-tick" style="left:83.3%">SEP</span>
+      </div>
+      <div class="kg-grid">
+        <i class="strong" style="left:0"></i><i style="left:16.6%"></i><i class="strong" style="left:33.3%"></i>
+        <i style="left:50%"></i><i class="strong" style="left:66.6%"></i><i style="left:83.3%"></i>
+        <span class="kg-today" style="left:38%"><em>Hoy</em></span>
+        <div class="kg-row" style="--c:var(--area-wisdom)">
+          <button class="kg-bar" style="left:1%;width:44%"><span class="kg-fill" style="width:62%"></span><span class="kg-handle s"></span><span class="kg-bar-txt">Rediseñar onboarding</span><span class="kg-handle e"></span></button>
+        </div>
+        <div class="kg-row d1" style="--c:var(--area-wisdom)">
+          <button class="kg-bar" style="left:22%;width:20%"><span class="kg-fill" style="width:62%"></span><span class="kg-handle s"></span><span class="kg-bar-txt">Prototipo</span><span class="kg-handle e"></span></button>
+        </div>
+        <div class="kg-row" style="--c:var(--area-wisdom)">
+          <button class="kg-bar" style="left:18%;width:66%"><span class="kg-fill" style="width:30%"></span><span class="kg-handle s"></span><span class="kg-bar-txt">Curso de sistemas</span><span class="kg-handle e"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="kg-mini" style="--c:var(--area-wisdom)">
+    <i style="left:1%;width:44%"></i><i style="left:18%;width:66%"></i>
+    <span class="kg-mini-today" style="left:38%"></span>
+    <span class="kg-mini-win" style="left:8%;width:52%"></span>
+  </div>
+</div>
+
+<p class="hd">Sin nada agendado <em>— <code>.kg-empty</code> (<code>:12998</code>)</em></p>
+<div class="kg-body"><div class="kg-labels"><span class="kg-corner">Proyecto</span></div>
+  <div class="kg-canvas"><div class="kg-axis"><span class="kg-tick strong" style="left:0">JUN</span><span class="kg-tick" style="left:50%">JUL</span></div>
+    <!-- la rejilla y sus líneas SIEMPRE se dibujan (kb-gantt.jsx:288): lo condicional
+         son las filas. El vacío vive DENTRO de .kg-grid, no suelto en el lienzo, y es
+         un div: como <p> hereda el margen del navegador y crece 24px de más. -->
+    <div class="kg-grid"><i class="strong" style="left:0"></i><i style="left:50%"></i>
+      <div class="kg-empty">Ningún proyecto de esta área tiene fechas todavía</div>
+    </div></div></div>
+
+<p class="note"><b>El eje es un lienzo absoluto, no una rejilla de columnas.</b> El comentario de la fuente lo explica (<code>:12882</code>): con cubetas fijas no hay aritmética que hacer, y sin aritmética no hay <b>zoom continuo</b> ni <b>arrastre</b>. Cada barra se posiciona con <code>left</code> y <code>width</code> en píxeles por día.<br><b>La barra es arrastrable</b>: <code>cursor: grab</code> cuando el Gantt está en modo edición, más dos <b>manijas de 9px</b> en los extremos con <code>ew-resize</code> para mover el inicio o el fin. Reagendar se hace aquí, no en un formulario.<br><b>Tres piezas fijas.</b> La barra mide 24px con el avance como capa interna al 62 % (<code>.kg-fill</code>) y contorno interno de 1px que engorda a 2px al pasar el cursor. La línea de <b>hoy</b> lleva pastilla teal con texto blanco — único uso del teal de marca aquí. El <b>mini-mapa</b> de 34px muestra todo el rango con la ventana que estás viendo.<br><b>La sangría es la jerarquía</b>: <code>.kg-label.d1</code> mete 26px y tinta la fila al 3 %, así una tarea se lee como hija de su proyecto sin necesitar líneas de conexión. La <b>flecha</b> (<code>.kg-twist</code>) gira 90° al abrir.<br><b>No hay pestañas de rango.</b> El zoom es continuo con la rueda o los botones <code>±</code>, y el letrero <code>.kg-range</code> dice qué rango estás viendo y en qué unidad. <b>Editar fechas</b> es un interruptor: apagado, arrastrar mueve el lienzo; encendido, arrastrar mueve barras. La línea <code>.kg-hint</code> cambia con él y enseña el gesto dentro del producto.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, before) => {
+    const el = document.getElementById(id); if (!el) return;
+    const s = document.createElement('span'); s.style.display = 'inline-flex';
+    before ? el.prepend(s) : el.append(s);
+    ReactDOM.createRoot(s).render(<I name={name} size={size} />);
+  };
+  put('t1', 'arrow-right', 12);
+  put('zo', 'minus', 14); put('zi', 'plus', 14);
+  put('bt', 'layers', 13, true); put('bh', 'calendar', 13, true); put('be', 'check', 13, true);
+}
+</script>
+</body></html>

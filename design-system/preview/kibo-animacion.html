@@ -1,0 +1,61 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x541" name="KIBO · los 4 relojes base" subtitle="Cuerpo 4.6s · cara 6.5s · mirada 9s · parpadeo 5.2s — ninguno múltiplo de otro" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--kb-text-3);margin:0 0 12px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.top{display:grid;grid-template-columns:186px 1fr;gap:13px;align-items:start;margin-bottom:11px}
+.st{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px;display:grid;place-items:center;min-height:473px}
+.clocks{display:flex;flex-direction:column;gap:7px}
+.ck{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 11px;display:grid;grid-template-columns:1fr auto;gap:8px 11px;align-items:center}
+.ckn{font-family:var(--kb-f-display);font-weight:800;font-size:12px;color:var(--kb-text);line-height:1.2}
+.ckd{font-size:10.5px;color:var(--kb-text-2);line-height:1.4;grid-column:1/-1;margin:1px 0 0}
+.ckd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.per{font-family:var(--kb-f-display);font-weight:800;font-size:15px;color:var(--kb-primary-ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* pista de fase: muestra los cuatro relojes corriendo juntos */
+.track{height:9px;border-radius:999px;background:var(--kb-surface-2);position:relative;overflow:hidden;grid-column:1/-1;margin-top:3px}
+.track i{position:absolute;top:0;bottom:0;width:22%;border-radius:999px;background:var(--c)}
+@keyframes sweep{0%{left:-22%}100%{left:100%}}
+.t1 i{--c:var(--kb-primary);animation:sweep 4.6s linear infinite}
+.t2 i{--c:#8B5CF6;animation:sweep 6.5s linear infinite}
+.t3 i{--c:var(--kb-coin);animation:sweep 9s linear infinite}
+.t4 i{--c:var(--kb-hp);animation:sweep 5.2s linear infinite}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.a{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 9px}
+.an{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text);display:block;line-height:1.3;letter-spacing:.09em;text-transform:uppercase}
+.ad{font-size:10px;color:var(--kb-text-2);line-height:1.4;margin:2px 0 0}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin:11px 0 7px;display:block;letter-spacing:.09em;text-transform:uppercase}
+.no{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);line-height:1.55;margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E}
+</style></head>
+<body class="kb-root">
+  
+  <p class="lead"><b>ningún reloj es múltiplo de otro</b> · por eso la mirada se desfasa del cuerpo y KIBO nunca repite la misma pose</p>
+  <div class="top">
+    <div class="st" id="pad"></div>
+    <div class="clocks">
+      <div class="ck t1"><span class="ckn">Cuerpo · flota y gira</span><span class="per">4.6 s</span>
+        <p class="ckd"><code>kbFloat</code> sobre <code>.kbb-float</code> — sube 7px y se inclina 1.2°. Es el reloj base.</p>
+        <div class="track"><i></i></div></div>
+      <div class="ck t2"><span class="ckn">Cara · deriva sola</span><span class="per">6.5 s</span>
+        <p class="ckd"><code>kbFaceIdle</code> sobre <code>.kbb-face</code> — 1.5px en diagonal. Al no ser múltiplo de 4.6 s, la cara siempre va a contratiempo del cuerpo.</p>
+        <div class="track"><i></i></div></div>
+      <div class="ck t3"><span class="ckn">Mirada · el desfase</span><span class="per">9 s</span>
+        <p class="ckd"><code>kbGaze</code> sobre <code>.kbb-eyes</code> — los ojos se van 3.5px de lado <b>encima</b> de la deriva de la cara. Este es el efecto: parecen mirar algo por su cuenta.</p>
+        <div class="track"><i></i></div></div>
+      <div class="ck t4"><span class="ckn">Parpadeo</span><span class="per">5.2 s</span>
+        <p class="ckd"><code>kbBlink</code> — un solo <code>scaleY(.08)</code> para los dos ojos, en el 92% del ciclo. Nunca cae en el mismo punto de los otros tres.</p>
+        <div class="track"><i></i></div></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/kibo-blob.jsx"></script>
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById('pad')).render(<KiboBlob size={150} mood="calma" idle={false} />);
+</script>
+</body></html>

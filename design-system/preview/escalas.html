@@ -1,0 +1,78 @@
+<!-- @dsCard group="05 · Átomos" viewport="700x449" name="Escalas 1–5" subtitle="Un control por rol: RateRow captura, Scale5 lee" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 11px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.c{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:12px 13px}
+.ct{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);display:block;margin-bottom:9px;text-transform:uppercase}
+.ct b{color:var(--kb-primary-ink)}
+/* RateRow — capturar */
+.rr{display:flex;flex-direction:column;gap:5px;margin-bottom:11px}
+.rr:last-child{margin-bottom:0}
+.rh{display:flex;align-items:baseline;gap:7px}
+.rl{font-family:var(--kb-f-display);font-weight:700;font-size:12px;color:var(--kb-text)}
+.rm{font-size:11px;color:var(--kb-text-2)}
+.dots{display:flex;align-items:center;gap:5px}
+.dot{width:30px;height:30px;border-radius:var(--kb-r-xs);border:1px solid var(--kb-border);background:var(--kb-card);display:grid;place-items:center;color:var(--kb-border-strong);cursor:pointer}
+.dot.on{background:color-mix(in oklab,var(--c) 14%,#fff);border-color:color-mix(in oklab,var(--c) 40%,#fff);color:var(--c)}
+.dot i[data-lucide]{width:14px;height:14px;stroke-width:2.2}
+.val{font-family:var(--kb-f-display);font-weight:800;font-size:11px;font-variant-numeric:tabular-nums;color:var(--kb-text-3);margin-left:3px}
+/* Scale5 — leer */
+.sc{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:9px}
+.m5{display:inline-flex;align-items:flex-end;gap:2px;height:18px;flex:none}
+.m5 span{width:4px;border-radius:1px;background:var(--kb-surface-2);display:block}
+.m5 span.on{background:var(--c)}
+.rname{font-family:var(--kb-f-display);font-weight:700;font-size:12px;color:var(--kb-text)}
+.rtok{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin-left:auto;white-space:nowrap;letter-spacing:.09em}
+/* mapa semántico */
+.map{margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.mg{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-top:8px}
+.mi{display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center}
+.mgl{width:28px;height:28px;border-radius:9px;background:color-mix(in oklab,var(--c) 15%,#fff);color:var(--c);display:grid;place-items:center}
+.mgl i[data-lucide]{width:14px;height:14px;stroke-width:2.2}
+.mn{font-family:var(--kb-f-display);font-weight:800;font-size:10.5px;color:var(--kb-text);line-height:1.15}
+.mt{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);line-height:1.3;letter-spacing:.09em;text-transform:uppercase}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);margin-top:9px;letter-spacing:.09em;line-height:1.5;text-transform:uppercase}
+.no b{color:#B3261E}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>un control por rol</b> · antes el mismo dato se capturaba con 4 controles distintos y se leía con 3 medidores</div>
+  <div class="two">
+    <div class="c">
+      <span class="ct"><b>RateRow</b> — capturar 1–5</span>
+      <div class="rr" style="--c:var(--kb-streak)">
+        <div class="rh"><span class="rl">Esfuerzo</span><span class="rm">3 · Notable</span></div>
+        <div class="dots"><span class="dot on"><i data-lucide="flame"></i></span><span class="dot on"><i data-lucide="flame"></i></span><span class="dot on"><i data-lucide="flame"></i></span><span class="dot"><i data-lucide="flame"></i></span><span class="dot"><i data-lucide="flame"></i></span><span class="val">3/5</span></div>
+      </div>
+      <div class="rr" style="--c:var(--kb-boss)">
+        <div class="rh"><span class="rl">Dificultad</span><span class="rm">4 · Duro</span></div>
+        <div class="dots"><span class="dot on"><i data-lucide="swords"></i></span><span class="dot on"><i data-lucide="swords"></i></span><span class="dot on"><i data-lucide="swords"></i></span><span class="dot on"><i data-lucide="swords"></i></span><span class="dot"><i data-lucide="swords"></i></span><span class="val">4/5</span></div>
+      </div>
+    </div>
+    <div class="c">
+      <span class="ct"><b>Scale5</b> — leer 1–5</span>
+      <div class="sc">
+        <div class="row" style="--c:var(--kb-streak)"><span class="m5"><span class="on" style="height:7px"></span><span class="on" style="height:10px"></span><span class="on" style="height:12px"></span><span style="height:15px"></span><span style="height:18px"></span></span><span class="rname">Esfuerzo 3/5</span><span class="rtok">--kb-streak</span></div>
+        <div class="row" style="--c:var(--kb-boss)"><span class="m5"><span class="on" style="height:7px"></span><span class="on" style="height:10px"></span><span class="on" style="height:12px"></span><span class="on" style="height:15px"></span><span style="height:18px"></span></span><span class="rname">Dificultad 4/5</span><span class="rtok">--kb-boss</span></div>
+        <div class="row" style="--c:var(--area-wisdom)"><span class="m5"><span class="on" style="height:7px"></span><span class="on" style="height:10px"></span><span style="height:12px"></span><span style="height:15px"></span><span style="height:18px"></span></span><span class="rname">Cognitivo 2/5</span><span class="rtok">--area-wisdom</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="map">
+    <span class="ct">Mapa semántico — <b>KB_SCALES</b> · un concepto, un ícono, un color, en toda la plataforma</span>
+    <div class="mg">
+      <div class="mi" style="--c:var(--kb-streak)"><span class="mgl"><i data-lucide="flame"></i></span><span class="mn">Esfuerzo</span><span class="mt">flame<br>--kb-streak</span></div>
+      <div class="mi" style="--c:var(--kb-boss)"><span class="mgl"><i data-lucide="swords"></i></span><span class="mn">Dificultad</span><span class="mt">sword<br>--kb-boss</span></div>
+      <div class="mi" style="--c:var(--area-wisdom)"><span class="mgl"><i data-lucide="book-open"></i></span><span class="mn">Cognitivo</span><span class="mt">wisdom<br>--area-wisdom</span></div>
+      <div class="mi" style="--c:var(--area-community)"><span class="mgl"><i data-lucide="graduation-cap"></i></span><span class="mn">Previo</span><span class="mt">graduation<br>--area-community</span></div>
+      <div class="mi" style="--c:var(--kb-primary)"><span class="mgl"><i data-lucide="sparkles"></i></span><span class="mn">Interés</span><span class="mt">sparkle<br>--kb-primary</span></div>
+    </div>
+    <p class="no"><b>El ícono vigor está reservado al área Vigor</b> — no se usa para esfuerzo. Peldaños: 1 Trivial · 2 Ligero · 3 Notable · 4 Duro · 5 Te cuesta.</p>
+  </div>
+  <script>lucide.createIcons()</script>
+</body></html>

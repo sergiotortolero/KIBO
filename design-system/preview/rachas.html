@@ -1,0 +1,116 @@
+<!-- @dsCard group="10 · Gamificación" viewport="700x337" name="Rachas" subtitle="9 tiers de llama por días acumulados · HUD, protectores y estado «en reto»" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+  html,body{margin:0}
+  body{background:var(--kb-canvas);padding:22px 26px;font-family:var(--kb-f-body)}
+  .lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin-bottom:16px;text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:repeat(9,1fr);gap:10px}
+  .it{display:flex;flex-direction:column;align-items:center;gap:7px}
+  .fw{position:relative;width:34px;height:40px;display:flex;align-items:flex-end;justify-content:center}
+  /* glow que respira en el color del tier */
+  .fw::before{content:"";position:absolute;inset:4px 2px 0;border-radius:50% 50% 45% 45%;
+    background:radial-gradient(60% 55% at 50% 62%, var(--c), transparent 72%);
+    opacity:.32;filter:blur(4px);animation:flGlow 2.4s ease-in-out infinite;animation-delay:var(--dl)}
+  @keyframes flGlow{0%,100%{opacity:.22;transform:scale(.92)}50%{opacity:.45;transform:scale(1.08)}}
+  /* flama: flicker orgánico (squash + sway) anclado a la base */
+  .fl{position:relative;transform-origin:50% 92%;animation:flFlick 1.7s ease-in-out infinite;animation-delay:var(--dl)}
+  @keyframes flFlick{
+    0%,100%{transform:scale(1,1) rotate(0deg)}
+    22%{transform:scale(.96,1.05) rotate(-1.6deg)}
+    46%{transform:scale(1.05,.95) rotate(1.2deg)}
+    68%{transform:scale(.97,1.06) rotate(-1deg)}
+    84%{transform:scale(1.03,.97) rotate(1.6deg)}}
+  /* núcleo interior pulsante */
+  .fl .core{transform-origin:50% 85%;animation:flCore 1.3s ease-in-out infinite;animation-delay:var(--dl)}
+  @keyframes flCore{0%,100%{transform:scale(1)}50%{transform:scale(.82) translateY(.6px)}}
+  /* Dorada: destello que recorre; Blanca: halo; Negra: brasas moradas */
+  .shimmer .fl::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.75) 50%,transparent 62%);
+    transform:translateX(-120%);animation:flShine 2.8s var(--kb-ease-out) infinite;
+    clip-path:path('M17 3 C 18.7 7.8, 23.5 10.6, 24.6 16 C 25.7 21.4, 22.6 27.4, 17 28.5 C 11.4 27.4, 8 21.7, 9.4 16.3 C 10.2 12.9, 12.7 11.5, 13.3 8.1 C 14.7 9.8, 15.5 11.8, 15.5 13.8 C 16.2 11, 16.7 6.7, 17 3 Z')}
+  @keyframes flShine{0%{transform:translateX(-120%)}55%,100%{transform:translateX(120%)}}
+  .halo .fw::before{opacity:.5;filter:blur(5px)}
+  .nm{font-size:10px;color:var(--kb-text);text-align:center;font-weight:600}
+  .d{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+
+
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 10px;text-transform:uppercase}
+.row{display:flex;gap:16px;align-items:center;margin-bottom:16px}
+.hud{display:inline-flex;align-items:center;gap:9px;padding:7px 13px;border-radius:var(--kb-r-pill);
+  background:var(--kb-card);border:1px solid var(--kb-border);box-shadow:var(--kb-sh-1)}
+.hud.reto{border-color:#F3C2C2;background:#FFF7F6}
+.days{font-family:var(--kb-f-label);font-size:14px;color:var(--kb-text)}
+.days b{font-weight:700}
+.days .u{font-size:10px;color:var(--kb-text-3)}
+.shields{display:flex;gap:3px}
+.fl{position:relative;display:inline-flex}
+.pip{position:absolute;right:-4px;bottom:-3px;width:13px;height:13px;border-radius:50%;background:#E64545;color:#fff;display:flex;align-items:center;justify-content:center;border:1.5px solid #fff}
+.pip svg{width:8px;height:8px}
+.cap{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.prot{display:flex;gap:14px;align-items:center}
+
+.divider{height:1px;background:var(--kb-border);margin:15px 0}
+</style></head>
+<body class="kb-root">
+
+  <div class="lead">Llamas de racha · 9 tiers por días · flicker + núcleo + glow (cada una respira distinto)</div>
+  <div class="grid" id="grid"></div>
+<script>
+const TIERS=[
+  {n:'Naranja',d:'0d',c:'#FF7A45'},
+  {n:'Roja',d:'30d',c:'#E64545'},
+  {n:'Ámbar',d:'60d',c:'#F4B740'},
+  {n:'Verde',d:'90d',c:'#4CAF82'},
+  {n:'Cyan',d:'180d',c:'#06B6D4'},
+  {n:'Violeta',d:'270d',c:'#A855F7'},
+  {n:'Dorada',d:'365d',c:'#D4A22B',cls:'shimmer',grad:['#F8DC8A','#D4A22B']},
+  {n:'Blanca',d:'730d',c:'#C8D1DA',cls:'halo',fill:'#EAF2F8',stroke:'#C8D1DA'},
+  {n:'Negra',d:'1000d',c:'#6E5A9E',fill:'#1A1A2E'},
+];
+const P='M17 3 C 18.7 7.8, 23.5 10.6, 24.6 16 C 25.7 21.4, 22.6 27.4, 17 28.5 C 11.4 27.4, 8 21.7, 9.4 16.3 C 10.2 12.9, 12.7 11.5, 13.3 8.1 C 14.7 9.8, 15.5 11.8, 15.5 13.8 C 16.2 11, 16.7 6.7, 17 3 Z';
+const CORE='M17 13.5 C 18.7 16.3, 20.4 19.2, 19 23 C 17.9 25.2, 15.7 25.4, 14.9 23.2 C 13.8 20.5, 14.9 18, 16.3 15.8 C 16.6 15, 16.8 14.2, 17 13.5 Z';
+document.getElementById('grid').innerHTML=TIERS.map((t,i)=>{
+  const fill=t.grad?`url(#g${i})`:(t.fill||t.c);
+  const defs=t.grad?`<defs><linearGradient id="g${i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${t.grad[0]}"/><stop offset="1" stop-color="${t.grad[1]}"/></linearGradient></defs>`:'';
+  const stroke=t.stroke?` stroke="${t.stroke}" stroke-width=".8"`:'';
+  const coreFill=t.fill==='#1A1A2E'?'#6E5A9E':'#FFFFFF';
+  return `<div class="it ${t.cls||''}" style="--c:${t.c};--dl:${(i*0.23).toFixed(2)}s">
+    <span class="fw"><span class="fl"><svg width="34" height="40" viewBox="0 0 34 32">${defs}
+      <path d="${P}" fill="${fill}"${stroke}></path>
+      <path class="core" d="${CORE}" fill="${coreFill}" fill-opacity="${t.fill==='#1A1A2E'?'.9':'.55'}"></path>
+    </svg></span></span>
+    <span class="nm">${t.n}</span><span class="d">${t.d}</span>
+  </div>`;
+}).join('');
+</script>
+
+<div class="divider"></div>
+
+  <div class="lead">Normal · llama del tier (23d = naranja) · protectores 1/2</div>
+  <div class="row">
+    <span class="hud">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#FF7A45"><path d="M12 2.4C13.2 5.8 16.6 7.8 17.4 11.6 18.2 15.4 16 19.6 12 20.4 8 19.6 5.6 15.6 6.6 11.8 7.2 9.4 9 8.4 9.4 6 10.4 7.2 11 8.6 11 10 11.5 8 11.8 5 12 2.4Z"/><path d="M12 9.5C13.2 11.5 14.4 13.6 13.4 16.4 12.6 18 11 18.2 10.4 16.6 9.6 14.6 10.4 12.8 11.4 11.2 11.6 10.6 11.8 10 12 9.5Z" fill="#fff" fill-opacity=".55"/></svg>
+      <span class="days"><b>23</b><span class="u">d</span></span>
+      <span class="shields">
+        <svg width="14" height="14" viewBox="0 0 24 24" style="color:var(--kb-primary)"><path d="M12 2L4 5v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5l-8-3z" fill="currentColor"/><path d="M9 12l2 2 4-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" style="color:var(--kb-text-3)"><path d="M12 2L4 5v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V5l-8-3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      </span>
+    </span>
+    <span class="cap">Cada protector salva 1 día perdido · se compran con fragmentos</span>
+  </div>
+  <div class="lead">En reto · racha en juego — tratamiento rojo + espada</div>
+  <div class="row">
+    <span class="hud reto">
+      <span class="fl">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#E64545"><path d="M12 2.4C13.2 5.8 16.6 7.8 17.4 11.6 18.2 15.4 16 19.6 12 20.4 8 19.6 5.6 15.6 6.6 11.8 7.2 9.4 9 8.4 9.4 6 10.4 7.2 11 8.6 11 10 11.5 8 11.8 5 12 2.4Z"/><path d="M12 9.5C13.2 11.5 14.4 13.6 13.4 16.4 12.6 18 11 18.2 10.4 16.6 9.6 14.6 10.4 12.8 11.4 11.2 11.6 10.6 11.8 10 12 9.5Z" fill="#fff" fill-opacity=".55"/></svg>
+        <span class="pip"><i data-lucide="swords"></i></span>
+      </span>
+      <span class="days" style="color:var(--kb-hp-ink)"><b>23</b><span class="u">d</span></span>
+    </span>
+    <span class="cap">Si fallas el reto, gastas un protector — o pierdes la llama</span>
+  </div>
+  <script>lucide.createIcons({attrs:{'stroke-width':2}});</script>
+
+</body></html>

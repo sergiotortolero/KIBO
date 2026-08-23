@@ -1,0 +1,116 @@
+/* kibo-ds-align.css — alinea el prototipo con los tokens CANÓNICOS del
+   Kibo Design System (spec iteración 11). Se carga DESPUÉS de styles-v2.css /
+   styles-extras.css: aquí manda el DS.
+   Fuente: _ds/…/colors_and_type.css  */
+
+:root {
+  /* Marca — teal «progreso sereno» (sustituye el verde heredado) */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;
+  --kb-xp:            #1CA4A0;
+
+  /* Texto — terciario canónico AA (4.83:1); el #9CA3AF anterior no pasa AA */
+  --kb-text-3: #6B7280;
+
+  /* Radios suaves canónicos */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* Escala tipográfica nombrada-9 (piso duro de legibilidad: 10px) */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  --kb-fs-4xl-fluid: clamp(26px, 5vw, 34px);
+  --kb-fs-3xl-fluid: clamp(22px, 4vw, 26px);
+  --kb-fs-2xl-fluid: clamp(20px, 3vw, 22px);
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px);
+  --kb-lh-tight: 1.15;
+  --kb-lh-snug:  1.3;
+  --kb-lh-body:  1.55;
+
+  /* Espaciado en malla de 2px */
+  --kb-sp-1: 2px;  --kb-sp-2: 4px;  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;  --kb-sp-5: 10px; --kb-sp-6: 12px;
+  --kb-sp-7: clamp(14px, 2vw, 16px);
+  --kb-sp-8: clamp(18px, 3vw, 20px);
+  --kb-sp-9: clamp(20px, 4vw, 24px);
+
+  /* Elevación dura (solo botón primario) */
+  --kb-elev-hard: 0 2px 0;
+
+  /* Z-index nombrado */
+  --kb-z-base: 1; --kb-z-raised: 10; --kb-z-sticky: 30; --kb-z-dropdown: 50;
+  --kb-z-overlay: 100; --kb-z-modal: 200; --kb-z-popover: 400; --kb-z-toast: 600;
+
+  /* Movimiento — cálido pero rápido */
+  --kb-dur-fast: 120ms; --kb-dur-base: 200ms; --kb-dur-slow: 300ms; --kb-dur-slower: 400ms;
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1);
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1);
+}
+
+/* Lienzo plano: el DS prohíbe lavados de caramelo / degradados azul-morado */
+.kbv-app {
+  background: var(--kb-canvas);
+  padding: 0;
+}
+
+/* El FAB deja de ser un botón verde: KIBO ocupa ese lugar */
+.kbv-fab-wrap { display: none; }
+
+/* Foco: halo de marca (equivalente al ring de 3px de shadcn) */
+:where(button, a, input, select, textarea, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 28%, transparent);
+  border-radius: var(--kb-r-xs);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+/* Tono oscuro de --kb-streak para texto sobre lavado claro. El DS define los
+   pares color/-ink para primary, hp, gem y coin, pero no para streak; se
+   deriva del mismo naranja en vez de repetir un hex a mano. */
+:root {
+  /* 54% y no más: este tono también se usa sobre lavados de streak y teal,
+     donde una mezcla más clara cae por debajo de AA. */
+  --kb-streak-ink: color-mix(in oklab, var(--kb-streak, #FF7A45) 54%, #4A1D00);
+  /* 42%: este tono se usa sobre lavados del propio coin (badge de hito),
+     donde una mezcla más clara no alcanza AA. */
+  --kb-coin-ink:   color-mix(in oklab, var(--kb-coin,   #F4B740) 42%, #3D2A00);
+  --kb-hp-ink:     color-mix(in oklab, var(--kb-hp,     #E64545) 74%, #3A0505);
+  --kb-boss-ink:   color-mix(in oklab, var(--kb-boss,   #E64545) 74%, #3A0505);
+  --kb-gem-ink:    color-mix(in oklab, var(--kb-gem,    #6E8CF2) 62%, #0B1640);
+
+  /* Lavados y bordes derivados — evitan repetir el mismo tinte a mano. */
+  --kb-coin-soft:    color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:  color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:     color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:   color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+  --kb-community-ink:    color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Par positivo / negativo. El DS no define un verde de "bien": Finanzas lo
+     necesita para ahorro neto, rendimientos y saldos a favor. */
+  --kb-good:     #2A6F4A;
+  --kb-good-ink: color-mix(in oklab, #2A6F4A 88%, #04180D);
+}

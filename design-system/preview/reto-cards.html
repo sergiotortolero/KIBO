@@ -1,0 +1,163 @@
+<!-- @dsCard group="15 · Retos" viewport="700x649" name="Tarjeta de reto" subtitle="v2 · banda de encabezado, medidor de exigencia y registro rápido" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.lead{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin:0 0 12px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:11px;align-items:start}
+.cap{display:block;margin-top:6px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+/* ═══ tarjeta de reto · v2 ═══ */
+.rc{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden;transition:box-shadow var(--kb-dur-fast) var(--kb-ease-out),border-color var(--kb-dur-fast) var(--kb-ease-out)}
+.rc:hover{border-color:color-mix(in oklab,var(--c) 34%,var(--kb-border));box-shadow:var(--kb-sh-2)}
+/* banda de encabezado tintada — reemplaza la franja superior de 4px */
+.rc .band{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 12px;background:color-mix(in oklab,var(--c) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--c) 18%,var(--kb-border))}
+.kind{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-ink-on-tint);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.kind span{display:flex;flex:none}
+/* medidor de exigencia · 5 barras de 4px */
+.diff{display:inline-flex;align-items:flex-end;gap:2.5px;height:16px;flex:none}
+.diff i{width:4px;border-radius:2px;background:var(--c);display:block}
+.diff i.off{background:color-mix(in oklab,var(--c) 26%,#fff)}
+.rc .bd{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.nm{margin:0;font-family:var(--kb-f-display);font-weight:800;font-size:15px;color:var(--kb-text);line-height:1.25}
+.ds{margin:0;font-size:11.5px;color:var(--kb-text-2);line-height:1.45}
+/* tira de etiquetas */
+.strip{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.pip{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:var(--kb-r-pill);white-space:nowrap;background:var(--kb-surface-2);color:var(--kb-text);letter-spacing:.09em;text-transform:uppercase}
+.pip.dmg{background:color-mix(in oklab,var(--kb-hp) 12%,#fff);color:var(--kb-hp-ink)}
+.pip span{display:flex;flex:none}
+/* progreso */
+.prow{display:flex;align-items:center;gap:8px}
+.bar{flex:1;height:8px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+.pct{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11px;color:var(--kb-ink-on-tint);white-space:nowrap}
+/* estadísticas */
+.st{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;font-size:11px;color:var(--kb-text-2)}
+.st b{color:var(--kb-text);font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800}
+.st .warn{color:var(--kb-hp-ink)}
+.rw{display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.xp{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11.5px;color:var(--kb-ink-on-tint)}
+.cn{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11.5px;color:color-mix(in oklab,var(--kb-coin) 62%,var(--kb-text))}
+.cn span{display:flex;flex:none}
+/* registro rápido */
+.reg{display:flex;gap:7px;align-items:stretch}
+.b{border-radius:var(--kb-r-sm);font:inherit;font-weight:700;cursor:pointer;white-space:nowrap;border:1px solid transparent;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+.b.main{flex:1;padding:9px 12px;font-size:12.5px;background:var(--kb-primary);color:#fff;box-shadow:0 2px 0 var(--kb-primary-ink)}
+.b.main:active{transform:translateY(2px);box-shadow:0 0 0 var(--kb-primary-ink)}
+.b.main.relapse{background:var(--kb-hp);box-shadow:0 2px 0 color-mix(in oklab,var(--kb-hp) 72%,#000)}
+.b.alt{padding:0 12px;font-size:11.5px;border-color:var(--kb-border);background:var(--kb-surface);color:var(--kb-text-2)}
+.b.alt:hover{border-color:var(--kb-border-strong);color:var(--kb-text)}
+.b.alt.dg{color:var(--kb-hp-ink);border-color:color-mix(in oklab,var(--kb-hp) 30%,var(--kb-border));background:color-mix(in oklab,var(--kb-hp) 5%,#fff)}
+/* estado ya registrado */
+.mk{flex:1;display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:6px 6px 6px 11px;background:var(--kb-surface)}
+.mkb{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:800;color:var(--kb-primary-ink)}
+.mkb span{display:flex;flex:none}
+.undo{display:inline-flex;align-items:center;gap:4px;font:inherit;font-size:10.5px;font-weight:700;border:1px solid var(--kb-border);background:var(--kb-card);color:var(--kb-text-2);border-radius:var(--kb-r-xs);padding:5px 9px;cursor:pointer}
+.undo:hover{border-color:var(--kb-text-3);color:var(--kb-text)}
+/* tiras de cierre */
+.res{display:flex;align-items:center;gap:6px;padding:8px 11px;border-radius:var(--kb-r-sm);font-size:11.5px;font-weight:600}
+.res span{display:flex;flex:none}
+.res.ok{background:color-mix(in oklab,var(--kb-primary) 10%,#fff);color:var(--kb-primary-ink);border:1px solid color-mix(in oklab,var(--kb-primary) 26%,#fff)}
+.res.fail{background:color-mix(in oklab,var(--kb-hp) 7%,#fff);color:var(--kb-hp-ink);border:1px solid color-mix(in oklab,var(--kb-hp) 22%,#fff)}
+.res em{margin-left:auto;font-style:normal;font-family:var(--kb-f-label);font-size:10px;font-weight:700;opacity:.8;letter-spacing:.09em;text-transform:uppercase}
+.auto{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--kb-text-3);line-height:1.3}
+.auto span{display:flex;flex:none}
+/* variantes de estado */
+.rc.done{opacity:.82}
+.rc.pend{border-style:dashed}
+.note{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+<p class="lead"><b>el reto vive en el color del jefe</b> · la banda lo declara · la exigencia se lee en barras, no en estrellas</p>
+<div class="two">
+  <div>
+    <article class="rc" style="--c:#E64545">
+      <div class="band">
+        <span class="kind"><span id="i1"></span>cortar mal hábito</span>
+        <span class="diff"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i class="off" style="height:16px"></i></span>
+      </div>
+      <div class="bd">
+        <h4 class="nm">Procrastinación nocturna</h4>
+        <p class="ds">Nada de pantallas después de las 23:00. Cada recaída cuesta HP.</p>
+        <div class="strip"><span class="pip">diario</span><span class="pip dmg"><span id="i2"></span>−8 HP por recaída</span></div>
+        <div class="prow"><span class="bar"><i style="width:70%"></i></span><span class="pct">70 %</span></div>
+        <div class="st"><span>Día <b>21</b>/30</span><span class="warn">Fallos <b>1</b>/2</span><span class="rw"><span class="xp">+450 XP</span><span class="cn"><span id="g1"></span>120</span></span></div>
+        <div class="reg">
+          <button class="b main relapse"><span id="i3"></span>Registrar recaída</button>
+          <button class="b alt">Hoy limpio</button>
+        </div>
+      </div>
+    </article>
+    <span class="cap">activo · reto de cortar</span>
+  </div>
+  <div>
+    <article class="rc" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)">
+      <div class="band">
+        <span class="kind"><span id="i4"></span>construir hábito</span>
+        <span class="diff"><i style="height:5px"></i><i style="height:8px"></i><i class="off" style="height:11px"></i><i class="off" style="height:14px"></i><i class="off" style="height:16px"></i></span>
+      </div>
+      <div class="bd">
+        <h4 class="nm">Leer 20 páginas al día</h4>
+        <p class="ds">Treinta días seguidos y se convierte en hábito permanente.</p>
+        <div class="strip"><span class="pip">diario</span><span class="pip">se vuelve hábito</span></div>
+        <div class="prow"><span class="bar"><i style="width:40%"></i></span><span class="pct">40 %</span></div>
+        <div class="st"><span>Día <b>12</b>/30</span><span>Sin fallos</span><span class="rw"><span class="xp">+300 XP</span><span class="cn"><span id="g2"></span>80</span></span></div>
+        <div class="reg">
+          <div class="mk"><span class="mkb"><span id="i5"></span>Registrado hoy</span><button class="undo"><span id="i6"></span>Deshacer</button></div>
+        </div>
+        <span class="auto"><span id="i7"></span>Se registra solo al cerrar la sesión de lectura</span>
+      </div>
+    </article>
+    <span class="cap">activo · ya registrado hoy</span>
+  </div>
+  <div>
+    <article class="rc done" style="--c:#1CA4A0">
+      <div class="band">
+        <span class="kind"><span id="i8"></span>construir hábito</span>
+        <span class="diff"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i class="off" style="height:14px"></i><i class="off" style="height:16px"></i></span>
+      </div>
+      <div class="bd">
+        <h4 class="nm">Maratón de lectura</h4>
+        <div class="res ok"><span id="i9"></span>Cumplido sin fallos<em>24 may</em></div>
+        <div class="st"><span>30/30 días</span><span class="rw"><span class="xp">+450 XP</span><span class="cn"><span id="g3"></span>120</span></span></div>
+      </div>
+    </article>
+    <span class="cap">cerrado · cumplido</span>
+  </div>
+  <div>
+    <article class="rc done" style="--c:#E64545">
+      <div class="band">
+        <span class="kind"><span id="i10"></span>cortar mal hábito</span>
+        <span class="diff"><i style="height:5px"></i><i style="height:8px"></i><i style="height:11px"></i><i style="height:14px"></i><i style="height:16px"></i></span>
+      </div>
+      <div class="bd">
+        <h4 class="nm">Cero azúcar añadida</h4>
+        <div class="res fail"><span id="i11"></span>Se perdió al tercer fallo<em>18 abr</em></div>
+        <div class="st"><span>Día 19/60</span><span class="auto">El fracaso reencauza: vuelve a intentarlo cuando quieras</span></div>
+      </div>
+    </article>
+    <span class="cap">cerrado · perdido</span>
+  </div>
+</div>
+<p class="note"><b>Cuatro cambios contra la v1.</b> La franja superior de 4px se va: el color del reto lo declara la <b>banda de encabezado</b> tintada al 11 %. Las <b>estrellas de exigencia</b> se sustituyen por el medidor de 5 barras de 4px, que es el mismo signo que usa la prioridad en tareas. Todo texto sobre color va en <b>tinta</b>, incluidas las tiras de cierre y la etiqueta de daño. Y el premio son <b>dos cifras</b>: XP en el color del reto y monedas en ámbar. El <code>hover</code> ya no levanta la tarjeta con <code>translateY</code> — colorea el borde y sube un paso de sombra, como el resto del sistema.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/personalizacion.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, color) => { const el = document.getElementById(id); if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color={color || 'currentColor'} />); };
+  put('i1','shield',11); put('i2','alert',10); put('i3','alert',13);
+  put('i4','target',11); put('i5','check',12); put('i6','repeat',10); put('i7','sparkle',10);
+  put('i8','target',11); put('i9','check',12);
+  put('i10','shield',11); put('i11','x',12);
+}
+const CG = window.CurrencyGlyph;
+if (CG) { for (const id of ['g1','g2','g3']) { const e = document.getElementById(id);
+  if (e) ReactDOM.createRoot(e).render(<CG glyph="coin" color="var(--kb-coin)" size={13} />); } }
+</script>
+</body></html>

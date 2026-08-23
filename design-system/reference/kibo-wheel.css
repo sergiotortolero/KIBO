@@ -1,0 +1,345 @@
+/* ============================================================================
+   Kibo · rueda de acción rápida (.kbw-*) y gestor de rubros
+   ----------------------------------------------------------------------------
+   EXTRAÍDO de reference/styles-extras.css — no escrito a mano. Solo las reglas
+   de la rueda y sus @keyframes, para montar el KiboQuickWheel real en una
+   tarjeta del design system sin cargar la hoja completa de la app.
+   ========================================================================== */
+
+.qa-hero {
+  display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer;
+  border: 1px solid transparent; border-radius: var(--kb-r-md);
+  background: var(--kb-primary); color: #fff; padding: 10px 12px; font: inherit;
+  box-shadow: 0 2px 0 var(--kb-primary-hover);
+}
+.qa-hero:active { transform: translateY(2px); box-shadow: none; }
+.qa-hero .qh-ico { width: 30px; height: 30px; border-radius: 50%; flex: none; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.2); }
+.qa-hero .qh-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.qa-hero .qh-txt strong { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md, 13px); }
+.qa-hero .qh-txt em { font-style: normal; font-size: var(--kb-fs-2xs, 10px); opacity: .85; }
+.qa-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.qa-mod {
+  display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer;
+  border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); background: var(--kb-card);
+  padding: 10px 4px 8px; font: inherit;
+  transition: border-color var(--kb-dur-fast) var(--kb-ease-out), background var(--kb-dur-fast) var(--kb-ease-out);
+}
+.qa-mod:hover { border-color: var(--c); background: color-mix(in oklab, var(--c) 7%, #fff); }
+.qa-mod .qm-ico { width: 30px; height: 30px; border-radius: var(--kb-r-xs); display: inline-flex; align-items: center; justify-content: center; background: color-mix(in oklab, var(--c) 13%, #fff); color: var(--c); }
+.qa-mod .qm-name { font-size: var(--kb-fs-xs, 11px); font-weight: 700; color: var(--kb-text); }
+.qa-footrow { display: flex; gap: 4px; flex-wrap: wrap; }
+.qa-mini {
+  flex: 1; min-width: 0; display: inline-flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer;
+  border: 0; border-radius: var(--kb-r-pill); background: var(--kb-surface-2); color: var(--kb-text-2);
+  padding: 7px 1px; font: inherit; font-size: var(--kb-fs-2xs, 10px); font-weight: 700; white-space: nowrap;
+  overflow: hidden;
+}
+.qa-mini svg { flex: none; }
+.qa-mini:hover { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+.qa-head { display: flex; align-items: center; gap: 8px; }
+.qa-head .qa-title { display: inline-flex; align-items: center; gap: 7px; font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md, 13px); color: var(--kb-text); }
+.qa-head .qa-title svg { color: var(--c); }
+.qa-head .fr-btn.ghost, .qa-assist-foot .fr-btn.ghost {
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  width: 28px; height: 28px; padding: 0; border: 1px solid var(--kb-border); border-radius: var(--kb-r-pill);
+  background: transparent; color: var(--kb-text-3);
+}
+.qa-actions { display: flex; flex-direction: column; gap: 5px; }
+.qa-action {
+  display: flex; align-items: center; gap: 9px; cursor: pointer; text-align: left;
+  border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); background: var(--kb-card);
+  padding: 10px 12px; font: inherit; font-size: var(--kb-fs-sm, 12px); font-weight: 700; color: var(--kb-text);
+}
+.qa-action:hover { border-color: var(--c); background: color-mix(in oklab, var(--c) 6%, #fff); }
+.qa-action svg:first-child { color: var(--c); }
+.qa-action svg:last-child { margin-left: auto; color: var(--kb-text-3); }
+.qa-form { display: flex; flex-direction: column; gap: 9px; }
+.qa-form textarea {
+  width: 100%; border: 1px solid var(--kb-border); border-radius: var(--kb-r-sm);
+  background: var(--kb-card); padding: 9px 11px; font: inherit; font-size: var(--kb-fs-sm, 12px);
+  color: var(--kb-text); resize: vertical; min-height: 60px;
+}
+.qa-form textarea:focus { outline: none; border-color: var(--kb-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--kb-primary) 18%, transparent); }
+.qa-chiprow { display: flex; gap: 5px; flex-wrap: wrap; }
+.qa-chip {
+  border: 1px solid var(--kb-border); border-radius: var(--kb-r-pill); background: var(--kb-card);
+  padding: 6px 11px; font: inherit; font-size: var(--kb-fs-xs, 11px); font-weight: 700; color: var(--kb-text-2); cursor: pointer;
+}
+.qa-chip.on { border-color: transparent; background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+.qa-save { align-self: stretch; justify-content: center; }
+.qa-moodrow { display: flex; gap: 4px; justify-content: space-between; }
+.qa-mood {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer;
+  border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); background: var(--kb-card);
+  padding: 9px 2px; font: inherit; font-size: var(--kb-fs-2xs, 10px); font-weight: 700; color: var(--kb-text-2);
+}
+.qa-mood:hover { border-color: var(--kb-primary); color: var(--kb-primary-ink); background: var(--kb-primary-soft); }
+.qa-mood.on { border-color: var(--c, var(--kb-primary)); color: var(--c, var(--kb-primary)); background: color-mix(in oklab, var(--c, var(--kb-primary)) 14%, #fff); }
+.qa-hintline { font-size: var(--kb-fs-xs, 11px); color: var(--kb-text-2); text-wrap: pretty; }
+.qa-assist { display: flex; flex-direction: column; gap: 9px; }
+.qa-assist-input { position: relative; }
+.qa-assist-input textarea { width: 100%; border: 1px solid var(--kb-border); border-radius: var(--kb-r-sm); background: var(--kb-card); padding: 9px 42px 9px 11px; font: inherit; font-size: var(--kb-fs-sm, 12px); color: var(--kb-text); resize: none; }
+.qa-assist-input textarea:focus { outline: none; border-color: var(--kb-primary); box-shadow: 0 0 0 3px color-mix(in oklab, var(--kb-primary) 18%, transparent); }
+.qa-mic {
+  position: absolute; right: 8px; top: 8px; width: 30px; height: 30px; cursor: pointer;
+  border: 0; border-radius: 50%; background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.qa-mic.live { background: var(--kb-hp); color: #fff; animation: qa-mic-pulse 1.2s ease-in-out infinite; }
+.qa-mic.off { opacity: .45; }
+.qa-assist-foot { display: flex; align-items: center; gap: 8px; }
+.qa-assist-foot .kbv-meta { flex: 1; }
+.qa-proposals { display: flex; flex-direction: column; gap: 6px; }
+.qa-proposal {
+  display: flex; align-items: center; gap: 9px;
+  border: 1px solid color-mix(in oklab, var(--c) 32%, var(--kb-border)); border-radius: var(--kb-r-md);
+  background: color-mix(in oklab, var(--c) 6%, #fff); padding: 9px 11px;
+}
+.qa-proposal .qp-ico { width: 28px; height: 28px; border-radius: var(--kb-r-xs); flex: none; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in oklab, var(--c) 15%, #fff); color: var(--c); }
+.qa-proposal .qp-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.qa-proposal .qp-txt strong { font-size: var(--kb-fs-sm, 12px); font-weight: 700; color: var(--kb-text); }
+.qa-proposal .qp-txt em { font-style: normal; font-size: var(--kb-fs-2xs, 10px); color: var(--kb-text-2); }
+.qa-proposal .qp-ok {
+  width: 30px; height: 30px; flex: none; cursor: pointer; border: 0; border-radius: 50%;
+  background: var(--kb-primary); color: #fff; display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 0 var(--kb-primary-hover);
+}
+.qa-proposal .qp-ok:active { transform: translateY(2px); box-shadow: none; }
+.qa-custom { display: flex; flex-direction: column; gap: 6px; }
+.qa-cust-row { display: flex; align-items: center; gap: 9px; border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); background: var(--kb-card); padding: 8px 11px; }
+.qa-cust-row .qc-ico { width: 26px; height: 26px; border-radius: var(--kb-r-xs); flex: none; display: inline-flex; align-items: center; justify-content: center; background: color-mix(in oklab, var(--c) 13%, #fff); color: var(--c); }
+.qa-cust-row .qc-name { flex: 1; font-size: var(--kb-fs-sm, 12px); font-weight: 700; color: var(--kb-text); }
+.qa-cust-row.locked .qc-name { color: var(--kb-text-3); }
+.qa-cust-row .fr-btn { display: inline-flex; align-items: center; gap: 5px; cursor: pointer; border: 1px solid transparent; border-radius: var(--kb-r-pill); padding: 6px 11px; background: var(--kb-primary-soft); color: var(--kb-primary-ink); font: inherit; font-size: var(--kb-fs-xs, 11px); font-weight: 700; }
+/* Burbuja de registro: aire entre grupos de campos (los montos y las categorías
+   se veían encimados). */
+.kbb-rform .qa-form { gap: 12px; }
+.kbb-rform .qa-chiprow { gap: 6px; row-gap: 6px; }
+.kbb-rform .qa-chiprow.wrap { max-height: 92px; overflow-y: auto; scrollbar-width: none; }
+.kbb-rform .qa-hintline { margin-top: 2px; }
+/* ═══════════════════════════════════════════════════════════════════
+   KIBO · rueda de acción rápida (estándar GTA V / Fortnite)
+   ───────────────────────────────────────────────────────────────────
+   Antes: círculos de 50px flotando en un arco de 92°, con paginación.
+   El blanco de clic era el círculo, así que había que perseguirlo, y con
+   más de seis destinos se encaballaban. Ahora el blanco es el SECTOR
+   entero y se apunta con la dirección del cursor desde el centro: 13
+   destinos caben en 360° sin tocarse y no hace falta paginar.
+   ═══════════════════════════════════════════════════════════════════ */
+.kbw {
+  position: fixed; inset: 0; z-index: var(--kb-z-modal, 1200);
+  display: grid; place-items: center;
+  background: color-mix(in oklab, var(--kb-text) 34%, transparent);
+  opacity: 0; pointer-events: none;
+  transition: opacity var(--kb-dur-base, 200ms) var(--kb-ease-out);
+}
+.kbw.open { opacity: 1; pointer-events: auto; }
+.kbw-stage {
+  position: relative; display: grid; place-items: center;
+  /* La rueda mide 420px de lado: en una ventana chica se reduce entera en vez
+     de recortarse. El factor tiene que ser un NÚMERO puro — dividir dos
+     longitudes en calc() no lo es, y un clamp() que mezcla número y longitud
+     invalida en silencio TODA declaración que lo use (transform incluido).
+     Por eso el escalón va por media query, no por cálculo. */
+  --k: 1;
+}
+.kbw-stage { --k: .82; }
+.kbw-stage { --k: .68; }
+.kbw-stage { --k: .58; }
+@media (max-height: 620px) { .kbw-stage { --k: .82; } }
+@media (max-height: 520px) { .kbw-stage { --k: .68; } }
+@media (max-height: 430px) { .kbw-stage { --k: .58; } }
+.kbw-wrap:focus { outline: none; }
+.kbw-wrap:focus-visible .kbw-lab.on { text-decoration: none; }
+.kbw-wrap:focus-visible { outline: none; }
+.kbw-wrap {
+  position: relative; width: 420px; height: 420px;
+  transform: scale(var(--k)); cursor: pointer;
+  animation: kbw-in 220ms var(--kb-ease-out) both;
+}
+@keyframes kbw-in { from { opacity: 0; transform: scale(calc(var(--k) * .92)); } }
+.kbw-disc { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.kbw-disc { filter: drop-shadow(0 10px 26px color-mix(in oklab, var(--kb-text) 16%, transparent)); }
+.kbw-disc .hubplate { fill: var(--kb-card); stroke: var(--kb-border-soft); stroke-width: 1; }
+/* Con las esquinas ya redondeadas, el contorno en reposo sobra: sumaba una
+   segunda línea junto al hueco y era justo lo que ensuciaba los bordes. */
+.kbw-disc .sec {
+  fill: var(--kb-card); stroke: none;
+  transition: fill var(--kb-dur-fast, 120ms) var(--kb-ease-out), stroke var(--kb-dur-fast) var(--kb-ease-out);
+}
+.kbw-disc .sec.hero { fill: color-mix(in oklab, var(--kb-primary) 9%, var(--kb-card)); }
+.kbw-disc .sec.on {
+  fill: color-mix(in oklab, var(--c) 17%, var(--kb-card));
+  stroke: var(--c); stroke-width: 2;
+}
+.kbw-labels { position: absolute; inset: 0; pointer-events: none; }
+.kbw-lab {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y));
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  width: var(--w, 84px); text-align: center; color: var(--c);
+  animation: kbw-lab-in 200ms var(--kb-ease-out) both;
+  animation-delay: calc(var(--i) * 22ms);
+}
+@keyframes kbw-lab-in { from { opacity: 0; } }
+.kbw-lab b {
+  font-family: var(--kb-f-display); font-weight: 800;
+  font-size: var(--kb-fs-xs, 11px); line-height: 1.15; color: var(--kb-text);
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.kbw-lab.ico b { display: none; }
+.kbw-lab.on { transform: translate(-50%, -50%) translate(var(--x), var(--y)) scale(1.12); }
+.kbw-lab.on b { color: var(--kb-text); }
+/* El cubo: KIBO entra desde su esquina y aterriza aquí. Su sitio de REPOSO es
+   el centro y la llegada es una animación que sale del origen — no una clase
+   que se añade después para disparar una transición. La diferencia importa:
+   con la transición, si el navegador no dibuja en ese instante (pestaña en
+   segundo plano, animaciones frenadas), el cubo se quedaba clavado en el punto
+   de partida; con `backwards`, aunque no se pinte un solo fotograma, el estado
+   final es el correcto. */
+.kbw-hub {
+  position: absolute; left: 50%; top: 50%; z-index: 2;
+  display: grid; place-items: center;
+  width: 132px; height: 132px; margin: -66px 0 0 -66px;
+  border: 0; background: none; padding: 0; cursor: pointer;
+  transform: none;
+  animation: kbw-travel 460ms cubic-bezier(.22, 1, .36, 1) backwards;
+}
+@keyframes kbw-travel {
+  from { transform: translate(var(--ox, 0px), var(--oy, 0px)) scale(var(--os, 1)); }
+}
+.kbw-hub.aside { transform: translateY(-118px) scale(.62); transition: transform 260ms var(--kb-ease-out); }
+.kbw-hub .kbb-host { pointer-events: none; }
+/* El gel se jala: el estiramiento vive en su propia capa para no pelearse con
+   el viaje del cubo ni con la escala de la rueda. Al soltar, el rebote (una
+   curva con sobrepaso) es lo que lo hace sentir blando y no elástico. */
+.kbw-pull {
+  --kbb-behind: var(--kb-card);
+  position: relative;
+  display: inline-flex; transform: scale(var(--k)); transform-origin: center;
+  transition: transform 520ms cubic-bezier(.22, 1.4, .36, 1);
+  will-change: transform;
+}
+.kbw-pull.pulling { transition: none; }
+.kbw-hub-back {
+  position: absolute; right: 4px; bottom: 10px;
+  width: 26px; height: 26px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--kb-card); border: 1px solid var(--kb-border);
+  box-shadow: var(--kb-sh-1); color: var(--kb-text-2);
+}
+.kbw-hub-back svg { transform: rotate(180deg); }
+/* Pie: nombre de lo que apuntas + páginas. Bajo la rueda, nunca sobre el gel. */
+.kbw-foot {
+  position: absolute; left: 50%; top: 50%; z-index: 3;
+  transform: translate(-50%, calc(var(--k) * 232px));
+  display: flex; align-items: center; gap: 10px;
+}
+.kbw-pg {
+  width: 38px; height: 38px; flex: none; cursor: pointer;
+  border-radius: 50%; border: 1px solid var(--kb-border);
+  background: var(--kb-card); color: var(--kb-text-2);
+  display: grid; place-items: center; box-shadow: var(--kb-sh-1);
+  transition: background var(--kb-dur-fast) var(--kb-ease-out), color var(--kb-dur-fast), border-color var(--kb-dur-fast);
+}
+.kbw-pg svg { transform: rotate(180deg); }
+.kbw-pg.next svg { transform: none; }
+.kbw-pg:hover { background: var(--kb-primary-soft); border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+.kbw-pg:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--kb-primary) 24%, transparent); }
+.kbw-dots { display: inline-flex; gap: 4px; margin-top: 4px; }
+.kbw-dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--kb-border-strong); }
+.kbw-dots i.on { background: var(--kb-primary); }
+.kbw-cap {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 16px; border-radius: var(--kb-r-lg, 18px);
+  background: var(--kb-card); border: 1px solid var(--kb-border);
+  box-shadow: var(--kb-sh-2); white-space: nowrap; text-align: center;
+  min-width: 168px;
+}
+.kbw-cap strong { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg, 15px); color: var(--kb-text); }
+.kbw-cap span { font-size: var(--kb-fs-xs, 11px); color: var(--kb-text-2); }
+/* La burbuja de registro deja de colgar del anillo: dentro de la rueda vive
+   centrada, bajo KIBO. Al soltarla del anclaje absoluto perdió también su
+   techo: «Mis carpetas» son once filas — 636px más los 96 que despejan a
+   KIBO — dentro de una ventana de 540, y como el velo es `fixed` no había
+   scroll en ninguna parte de la cadena. El techo es la ventana menos el
+   claro del cubo; lo que rebasa lo absorbe la LISTA, con el encabezado fijo. */
+.kbw .kbb-rform {
+  position: static; right: auto; bottom: auto; left: auto;
+  width: 300px; margin-top: 96px;
+  max-height: calc(100vh - 190px);
+  display: flex; flex-direction: column; min-height: 0;
+}
+.kbw .kbb-rform.wide { width: 320px; }
+.kbw .kbb-rform .rf-head { flex: none; }
+.kbw .kbb-rform .qa-custom, .kbw .kbb-rform .qa-form {
+  min-height: 0; overflow-y: auto;
+  /* Sin barra a la vista: el corte de la última fila ya avisa que sigue. */
+  scrollbar-width: thin;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kbw-hub, .kbw-wrap, .kbw-lab { animation: none; }
+  .kbw-hub.aside { transition: none; }
+}
+/* ═══ Rueda · barra bajo KIBO (volver · editar) ═══
+   «Volver» colgaba del propio KIBO: cada caricia era un salto de pantalla.
+   Ahora tocarlo hace una travesura y la navegación tiene su propia tecla. */
+.kbw-hub .kbb-host { margin-bottom: 24px; }
+.kbw-hub { cursor: grab; touch-action: none; }
+.kbw-hub:active { cursor: grabbing; }
+.kbw-hubbar {
+  position: absolute; left: 50%; top: 50%; z-index: 4;
+  transform: translate(-50%, calc(var(--k) * 46px));
+  display: flex; gap: 8px;
+  animation: kbw-lab-in 240ms var(--kb-ease-out) both; animation-delay: 260ms;
+}
+.kbw-hb {
+  width: 34px; height: 34px; cursor: pointer;
+  border-radius: 50%; border: 1px solid var(--kb-border);
+  background: var(--kb-card); color: var(--kb-text-2);
+  display: grid; place-items: center; box-shadow: var(--kb-sh-1);
+  transition: background var(--kb-dur-fast) var(--kb-ease-out), color var(--kb-dur-fast), border-color var(--kb-dur-fast);
+}
+.kbw-hb svg { transform: rotate(180deg); }
+.kbw-hb.more svg { transform: none; }
+.kbw-hb:hover { background: var(--kb-primary-soft); border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+.kbw-hb:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in oklab, var(--kb-primary) 24%, transparent); }
+/* Gestor de la rueda: orden, encendido y lo que falta por comprar. */
+.qa-cust-sep {
+  display: block; margin: 8px 0 2px;
+  font-family: var(--kb-f-mono); font-size: var(--kb-fs-2xs, 10px);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--kb-text-3);
+}
+/* Escoger un reto o una tarea: una lista con cara, no tres píldoras iguales.
+   El ícono lleva el color del rubro y la barra dice en qué día vas — lo que
+   permite decidir sin salir de la rueda. */
+.qa-optlist { display: flex; flex-direction: column; gap: 6px; }
+.qa-opt {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: 46px; padding: 8px 10px; cursor: pointer; text-align: left;
+  border: 1px solid var(--kb-border); border-radius: var(--kb-r-md, 14px);
+  background: var(--kb-card); color: var(--kb-text);
+  transition: border-color var(--kb-dur-fast) var(--kb-ease-out), background var(--kb-dur-fast);
+}
+.qa-opt:hover { border-color: var(--kb-border-strong); }
+.qa-opt.on { border-color: var(--c, var(--kb-primary)); background: color-mix(in oklab, var(--c, var(--kb-primary)) 8%, var(--kb-card)); }
+.qa-opt-ico {
+  flex: none; width: 30px; height: 30px; display: grid; place-items: center;
+  border-radius: var(--kb-r-sm, 10px); color: var(--c, var(--kb-primary));
+  background: color-mix(in oklab, var(--c, var(--kb-primary)) 14%, var(--kb-canvas));
+}
+.qa-opt-txt { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.qa-opt-txt strong {
+  font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md, 13px);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.qa-opt-txt em { font-style: normal; font-size: var(--kb-fs-xs, 11px); color: var(--kb-text-3); }
+.qa-opt-bar {
+  position: absolute; left: 10px; right: 10px; bottom: 5px; height: 3px;
+  border-radius: 999px; background: var(--kb-surface-2, #EEF1F5); overflow: hidden;
+}
+.qa-opt-bar i { display: block; height: 100%; border-radius: 999px; background: var(--c, var(--kb-primary)); }
+.qa-opt-check {
+  flex: none; width: 22px; height: 22px; display: grid; place-items: center;
+  border-radius: 50%; color: #fff; background: var(--c, var(--kb-primary));
+}

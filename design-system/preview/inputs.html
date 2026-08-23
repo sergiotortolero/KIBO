@@ -1,0 +1,26 @@
+<!-- @dsCard group="05 · Átomos" viewport="700x249" name="Campos y controles" subtitle="Alto de 46px para todo control de captura · halo de foco de 3px" -->
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../colors_and_type.css">
+<style>
+  html,body{margin:0}
+  body{background:var(--kb-canvas);padding:26px 32px;font-family:var(--kb-f-body)}
+  .lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin-bottom:14px;text-transform:uppercase}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  label{font-family:var(--kb-f-body);font-size:12px;font-weight:600;color:var(--kb-text)}
+  .kbv-input{font-family:var(--kb-f-body);font-size:13px;padding:9px 12px;border-radius:var(--kb-r-sm);
+    border:1px solid var(--kb-border-strong);background:var(--kb-card);color:var(--kb-text);outline:none}
+  .kbv-input::placeholder{color:var(--kb-text-3)}
+  .kbv-input.focus{border-color:var(--kb-primary);box-shadow:0 0 0 3px var(--kb-primary-soft)}
+  .kbv-input.err{border-color:var(--kb-hp);box-shadow:0 0 0 3px var(--kb-hp-soft)}
+  .errmsg{font-family:var(--kb-f-body);font-size:11px;color:var(--kb-hp)}
+</style></head>
+<body class="kb-root">
+  <div class="lead">Inputs · estados · density compacto</div>
+  <div class="grid">
+    <div class="field"><label>Nombre de usuario</label><input class="kbv-input" placeholder="tu_nombre"></div>
+    <div class="field"><label>Correo (focus)</label><input class="kbv-input focus" value="hola@kibo.mx"></div>
+    <div class="field"><label>Contraseña</label><input class="kbv-input" type="password" value="········"></div>
+    <div class="field"><label>Email (error)</label><input class="kbv-input err" value="hola@"><span class="errmsg">Email inválido</span></div>
+  </div>
+</body></html>

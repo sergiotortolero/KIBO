@@ -1,0 +1,144 @@
+<!-- @dsCard group="11 · Proyectos" viewport="700x607" name="Proyectos · moléculas y organismos" subtitle="Ficha, hitos, roll-up por área y detalle — con la línea del código en cada medida" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 9px}
+.hd:not(:first-child){margin-top:16px}
+.hd em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:var(--kb-text-3);font-size:10.5px}
+.hd code{font-family:var(--kb-f-label);text-transform:none;letter-spacing:0;color:var(--kb-text-3);font-weight:700}
+.card{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.sec{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:7px}
+.h3{font-family:var(--kb-f-display);font-weight:800;font-size:13.5px;color:var(--kb-text);margin:0}
+.meta{font-family:var(--kb-f-display);font-size:10.5px;font-weight:600;color:var(--kb-text-3)}
+/* ── MOLÉCULA · ficha (.kbv-detail-rows :6808) ── */
+.rows{display:flex;flex-direction:column;gap:2px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--kb-border-soft)}
+.row:first-child{border-top:0}
+.l{font-size:11.5px;color:var(--kb-text-2)}
+.v{font-family:var(--kb-f-display);font-weight:700;font-size:12px;color:var(--kb-text);display:inline-flex;align-items:center;gap:6px}
+/* estado (.status-pip :6837) · migrado: text-2 sobre surface-2 daba 4.27:1 */
+.sp{font-size:11px;font-weight:700;padding:2px 9px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);color:var(--kb-text);white-space:nowrap}
+.sp.prog{background:color-mix(in oklab,var(--kb-coin) 16%,#fff);color:var(--kb-coin-ink)}
+.sp.done{background:var(--kb-primary-soft);color:var(--kb-primary-ink)}
+.pr{display:flex;align-items:center;gap:7px;min-width:118px}
+.bar{flex:1;height:6px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+.pct{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-ink-on-tint);white-space:nowrap}
+/* ── MOLÉCULA · línea del tiempo de hitos · .kbv-area-timeline (:8788-8801)
+   Lo que la hace línea del tiempo y no una lista: el conector vertical de 2px
+   entre puntos, y el estado "next" con halo. --mc es el color del hito. */
+.tl{display:flex;flex-direction:column;margin-top:2px}
+.atl{display:flex;gap:12px;padding-bottom:16px;position:relative}
+.atl:not(:last-child)::before{content:'';position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--kb-border)}
+.atl:last-child{padding-bottom:0}
+.dot{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  background:color-mix(in oklab,var(--mc) 16%,#fff);color:var(--mc);flex-shrink:0;z-index:1;border:2px solid var(--kb-card)}
+.atl.next .dot{background:var(--mc);color:#fff;box-shadow:0 0 0 4px color-mix(in oklab,var(--mc) 20%,transparent)}
+.abody{display:flex;flex-direction:column;gap:2px;padding-top:1px;min-width:0}
+.ahead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+/* .atl-kind y .atl-when usan --kb-f-mono, que en el sistema es alias de Jakarta */
+.akind{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--kb-ink-on-tint,var(--mc))}
+/* la fuente pone background:var(--mc) con #fff, pero a 10px eso da 3.68:1.
+   R-13: el relleno marcado usa la TINTA del color como fondo. */
+.atl.next .akind{background:var(--ink);color:#fff;padding:1px 7px;border-radius:var(--kb-r-pill)}
+.awhen{font-family:var(--kb-f-label);font-size:10.5px;color:var(--kb-text-3)}
+.atitle{font-size:13.5px;font-weight:700;color:var(--kb-text)}
+.atl.done .atitle{color:var(--kb-text-2)}
+.adetail{font-size:11.5px;color:var(--kb-text-3)}
+/* el hito SÍ lleva barra: auditoria-ds.md:48 lo pone en la misma familia
+   de "listas de progreso con meta". Es la barra simple, con tope y porcentaje. */
+.abar{display:flex;align-items:center;gap:7px;margin-top:3px;max-width:250px}
+/* ── ORGANISMO · roll-up del área (.kbv-area-rollup :8903) ── */
+.ru{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.rc{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.ruv{font-family:var(--kb-f-display);font-weight:800;font-size:22px;color:var(--kb-text);line-height:1.1}
+.rul{font-size:11px;color:var(--kb-text-2)}
+/* ── ORGANISMO · proyecto dentro del área (.kbv-area-projcard :8912) ── */
+.pl{display:flex;flex-direction:column;gap:8px}
+/* MIGRADO: la fuente lleva border-left:3px solid var(--c). R-1 lo prohibe:
+   aqui el area la declara el glifo relleno y la pastilla, no una orilla. */
+.pc{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;padding:12px 14px;
+  background:var(--kb-surface);border:1px solid var(--kb-border);border-radius:12px;cursor:pointer;
+  transition:border-color var(--kb-dur-fast) var(--kb-ease-out),background var(--kb-dur-fast) var(--kb-ease-out)}
+.pc:hover{background:var(--kb-card);border-color:var(--c)}
+.pci{width:32px;height:32px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;
+  background:color-mix(in oklab,var(--c) 13%,#fff);color:var(--ink);flex:none}
+.pcb{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+/* .apc-bar (:8920): 5px de alto y tope de 320px — los valores de la fuente */
+.pc .pr{max-width:320px;width:100%}
+.pc .bar{height:5px}
+.pct2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pnm{font-family:var(--kb-f-display);font-weight:700;font-size:13.5px;color:var(--kb-text);line-height:1.25}
+/* .apc-type (:8917): la pastilla del TIPO, que es la que declara el área */
+.ptp{font-family:var(--kb-f-label);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;
+  color:var(--ink);background:color-mix(in oklab,var(--c) 12%,#fff);padding:2px 7px;border-radius:var(--kb-r-pill);white-space:nowrap}
+.ap{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:var(--kb-r-xs);
+  background:color-mix(in oklab,var(--c) 15%,#fff);color:var(--kb-ink-on-tint);white-space:nowrap}
+/* ── zona de peligro (.pc-danger :13059) ── */
+.dz{border-color:color-mix(in oklab,var(--kb-hp) 26%,var(--kb-border))}
+.dzr{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+.db{cursor:pointer;border:1px solid color-mix(in oklab,var(--kb-hp) 30%,var(--kb-border));background:var(--kb-card);
+  border-radius:var(--kb-r-sm);min-height:var(--kb-touch-min);padding:0 13px;font-family:var(--kb-f-display);
+  font-weight:700;font-size:12px;color:var(--kb-hp-ink);display:inline-flex;align-items:center;gap:6px}
+.db:hover{background:var(--kb-hp-soft)}
+.dzt{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:5px 0 0}
+.two{display:grid;grid-template-columns:1fr 1.2fr;gap:12px;align-items:start}
+.note{margin-top:13px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+.note u{text-decoration:none;color:var(--kb-hp-ink);font-weight:800}
+</style></head>
+<body class="kb-root">
+<p class="hd">Roll-up del área <em>— cuatro celdas, valor de 22px sobre etiqueta de 11 (<code>:8903</code>)</em></p>
+<div class="ru">
+  <div class="rc"><span class="ruv">7</span><span class="rul">Proyectos activos</span></div>
+  <div class="rc"><span class="ruv">2</span><span class="rul">Vencen esta semana</span></div>
+  <div class="rc"><span class="ruv">58 %</span><span class="rul">Avance promedio</span></div>
+  <div class="rc"><span class="ruv">41</span><span class="rul">Tareas abiertas</span></div>
+</div>
+
+<p class="hd">Proyectos del área <em>— migrado: la fuente usa <code>border-left: 3px</code>, que R-1 prohíbe</em></p>
+<div class="pl">
+  <button class="pc" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)">
+    <span class="pci" id="p1"></span>
+    <span class="pcb">
+      <span class="pct2"><span class="pnm">Rediseñar el onboarding</span><span class="ptp">Sabiduría</span><span class="sp prog">en curso</span></span>
+      <span class="pr"><span class="bar"><i style="width:62%"></i></span><span class="pct">62 %</span></span>
+    </span>
+  </button>
+  <button class="pc" style="--c:var(--area-wealth);--ink:var(--area-wealth-ink)">
+    <span class="pci" id="p2"></span>
+    <span class="pcb">
+      <span class="pct2"><span class="pnm">Cerrar el mes de finanzas</span><span class="ptp">Riqueza</span><span class="sp done">listo</span></span>
+      <span class="pr"><span class="bar"><i style="width:100%"></i></span><span class="pct">100 %</span></span>
+    </span>
+  </button>
+</div>
+
+<p class="hd">Zona de peligro <em>— <code>.pc-danger</code> (<code>:13059</code>), al pie de la configuración</em></p>
+<div class="card dz">
+  <div class="sec"><h3 class="h3">Acciones irreversibles</h3></div>
+  <p class="dzt">Archivar conserva el histórico y saca el proyecto del tablero. Borrar elimina también sus tareas y el XP ya ganado <b>no se devuelve</b>.</p>
+  <div class="dzr">
+    <button class="db"><span id="d1"></span>Archivar</button>
+    <button class="db"><span id="d2"></span>Borrar el proyecto</button>
+  </div>
+</div>
+
+<p class="note"><b>Dos migraciones en este dominio.</b> <u>1</u> <code>.kbv-area-projcard</code> (<code>:8912</code>) lleva <code>border-left: 3px solid var(--c)</code>, que R-1 prohíbe: aquí el área la declara <code>.apc-type</code> (<code>:8917</code>), la pastilla del tipo, y el glifo conserva su tinte pálido del código. <u>2</u> <code>.status-pip</code> (<code>:6837</code>) usa <code>--kb-text-2</code> sobre <code>--kb-surface-2</code>, que da 4.27:1; sube a <code>--kb-text</code> por R-14.<br><b>El roll-up es de cuatro celdas fijas</b> (<code>:8903</code>): valor de 22px sobre etiqueta de 11, sin ícono. Son conteos del área, no KPIs — por eso no llevan comparativa ni chip de estado.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, color) => { const el = document.getElementById(id);
+    if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color={color || 'currentColor'} />); };
+    put('p1','book-open',16); put('p2','wealth',16);
+  put('d1','upload',13); put('d2','trash',13);
+}
+</script>
+</body></html>

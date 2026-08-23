@@ -1,0 +1,74 @@
+<!-- @dsCard group="08 · Datos" viewport="700x812" name="Datos · medida y ranking" subtitle="Medidor, sparkline, barras horizontales y embudo — un valor contra su techo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;line-height:1.5;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.lead u{text-decoration:none;color:#7C3AED;font-weight:800}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px}
+.pt{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:2px}
+.pn{font-family:var(--kb-f-display);font-weight:800;font-size:12.5px;color:var(--kb-text)}
+.px{font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.pd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.pd code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.sold{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:3px 8px;border-radius:999px;background:color-mix(in oklab,var(--kb-gem) 16%,#fff);color:#3A4F9C;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.leg{display:flex;gap:11px;flex-wrap:wrap;margin-top:7px}
+.leg span{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.leg i{width:9px;height:9px;border-radius:3px;display:block}
+.g{display:grid;grid-template-columns:1fr;gap:11px}
+.cap{max-width:250px;margin:0 auto}
+.duo{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.duo>div:first-child{flex:0 0 210px}
+.duo>div:last-child{flex:1;min-width:240px}
+.cap{max-width:230px;margin:0}</style></head>
+<body class="kb-root">
+  <p class="lead"><b>cuando hay un techo o un orden</b> · el medidor para un valor contra su meta · el embudo para una caída por pasos · las barras horizontales para un ranking con nombres largos</p>
+  <div class="g">
+    <div class="p">
+      <div class="pt"><span class="pn">Medidor y sparkline</span><span class="px">180° · 86×26</span></div>
+      <p class="pd">Semicírculo, <b>nunca círculo completo</b>: el arco abierto dice «hay un techo». El sparkline va dentro de un KPI, sin ejes ni rejilla — el dato exacto ya lo da el valor grande, al lado.</p>
+      <div class="duo"><div id="c3"></div><div id="c5"></div></div>
+    </div>
+    <div class="p">
+      <div class="pt"><span class="pn">Barras horizontales</span><span class="px">ranking</span></div>
+      <p class="pd">Horizontal porque los nombres son largos: en vertical se voltean o se cortan.</p>
+      <div id="c4"></div>
+    </div>
+    <div class="p">
+      <div class="pt"><span class="pn">Embudo</span><span class="px">trapecio</span></div>
+      <p class="pd">La forma cuenta la caída sin leer los números. El relleno <b>se aclara</b> por pasos en vez de saturarse, y el texto usa la tinta oscura real — una mezcla del mismo teal nunca alcanza 4.5:1 contra su propio tinte.</p>
+      <div id="c6"></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/charts-nuevas.jsx"></script>
+<script type="text/babel" src="../reference/app/charts-catalogo.jsx"></script>
+<script type="text/babel">
+ReactDOM.createRoot(document.getElementById("c3")).render(
+  <Gauge value={1240} max={1800} label="meta semanal 1.8k XP" />);
+ReactDOM.createRoot(document.getElementById("c5")).render(
+  <div style={{display:"flex",alignItems:"center",gap:9,flexWrap:"nowrap"}}>
+    <span style={{fontFamily:"var(--kb-f-display)",fontWeight:800,fontSize:23,color:"var(--kb-text)",whiteSpace:"nowrap",fontVariantNumeric:"tabular-nums"}}>1&#8239;240</span>
+    <Sparkline values={[52,68,41,84,73,96,88,104]} />
+    <span style={{fontFamily:"var(--kb-f-label)",fontSize:11,fontWeight:800,color:"#1E7A52",whiteSpace:"nowrap"}}>+18%</span>
+  </div>);
+ReactDOM.createRoot(document.getElementById("c4")).render(
+  <HBars unit=" XP" rows={[
+    { n:"Leer 20 páginas", v:420, c:"var(--area-wisdom)" },
+    { n:"Correr 5 km", v:310, c:"var(--area-vigor)" },
+    { n:"Meditar", v:190, c:"var(--area-will)" },
+    { n:"Ahorrar", v:120, c:"var(--area-wealth)" },
+  ]} />);
+ReactDOM.createRoot(document.getElementById("c6")).render(
+  <Funnel steps={[
+    { n:"Reto iniciado", v:840 },
+    { n:"Primera semana", v:610 },
+    { n:"Mitad del reto", v:390 },
+    { n:"Completado", v:245 },
+  ]} />);
+</script>
+</body></html>

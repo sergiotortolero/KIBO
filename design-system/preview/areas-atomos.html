@@ -1,0 +1,154 @@
+<!-- @dsCard group="13 · Áreas de vida" viewport="700x942" name="Áreas · átomos" subtitle="Selector de ícono y color, dificultad, prestigio de área, nivel y campo fijo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../kbv-components.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:15px 18px}
+.sec{margin-bottom:13px}
+.sec>h4{margin:0 0 7px;font-family:var(--kb-f-display);font-size:9.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-text-3)}
+.sec>h4 em{font-style:normal;color:var(--kb-primary-ink);text-transform:none;letter-spacing:0;font-size:10px}
+.b{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 12px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.cap{font-family:var(--kb-f-display);font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--kb-text-2);display:block;margin-bottom:6px}
+.note{margin:6px 0 0;font-size:11px;color:var(--kb-text-2);line-height:1.45}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+/* ── selector de ícono · ICON_PALETTE, 16 opciones (areas-screen.jsx:89) ── */
+.pal{display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.pal button{cursor:pointer;aspect-ratio:1;display:grid;place-items:center;border-radius:var(--kb-r-sm);
+  border:1px solid var(--kb-border);background:var(--kb-card);color:var(--kb-text-2)}
+.pal button:hover{border-color:var(--c)}
+.pal button.on{border-color:var(--c);background:color-mix(in oklab,var(--c) 10%,#fff);color:var(--c);box-shadow:0 2px 8px color-mix(in oklab,var(--c) 18%,transparent)}
+/* ── selector de color · COLORS del modal (:140) ── */
+.sw{display:flex;gap:7px;flex-wrap:wrap}
+.sw button{cursor:pointer;width:30px;height:30px;border-radius:var(--kb-r-pill);border:2px solid transparent;background:var(--k);position:relative}
+.sw button.on{border-color:var(--kb-card);box-shadow:0 0 0 2px var(--k)}
+.sw button.dup{outline:2px dashed #B3261E;outline-offset:2px}
+.sw button.on::after{content:"";position:absolute;inset:0;display:grid;place-items:center;
+  background:no-repeat center/11px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M4 12l6 6L20 6'/%3E%3C/svg%3E")}
+/* ── dificultad · .kbv-difficulty-grid / -tile (:3511) ── */
+.dg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dt{--c:var(--kb-primary);display:flex;flex-direction:column;gap:4px;cursor:pointer;text-align:left;
+  padding:9px;border-radius:var(--kb-r-sm);border:1px solid var(--kb-border);background:var(--kb-card);transition:all 120ms}
+.dt:hover{border-color:var(--c)}
+.dt.on{background:color-mix(in oklab,var(--c) 10%,#fff);border-color:var(--c);box-shadow:0 2px 8px color-mix(in oklab,var(--c) 18%,transparent)}
+/* R-13: el multiplicador sobre su propio tinte en --c da 2.66:1. Va en tinta. */
+.dt .pip{font-family:var(--kb-f-label);font-weight:800;font-size:12px;color:var(--kb-ink-on-tint);align-self:flex-start;
+  padding:1px 6px;background:color-mix(in oklab,var(--c) 14%,#fff);border-radius:var(--kb-r-pill)}
+.dt .lbl{font-family:var(--kb-f-display);font-weight:800;font-size:14px;color:var(--kb-text);line-height:1.2}
+.dt .desc{font-size:11px;color:var(--kb-text-2);line-height:1.4}
+/* R-14: sobre el tinte del tile encendido, --kb-text-2 cae a 4.39:1. */
+.dt.on .desc{color:var(--kb-text)}
+/* ── medidor de dificultad · .kbv-diff-meter (:6917) ── */
+.dm{display:inline-flex;align-items:flex-end;gap:2.5px;height:18px}
+.dm i{width:4px;border-radius:2px;background:var(--c);opacity:.9;display:block}
+.dm i:not(.on){opacity:.5;background:var(--kb-border-strong)}
+.mrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.mlbl{font-family:var(--kb-f-display);font-weight:800;font-size:12px;color:var(--kb-text)}
+.mmul{font-family:var(--kb-f-label);font-weight:800;font-size:12px;color:var(--kb-ink-on-tint)}
+/* ── prestigio de área · .area-prestige (:7754) ── */
+.ap{display:inline-flex;align-items:center;gap:2px}
+.ap .st{font-size:11px;line-height:1;color:var(--kb-border-strong)}
+.ap .st.on{color:var(--c)}
+/* La estrella llena es un indicador (como .kbv-diff-meter), no texto: el piso es
+   3:1, no 4.5. Pero la familia ambar da 1.92 incluso contra blanco — mismo caso
+   que M-2 — asi que ahi va la tinta del token. */
+.ap.amber .st.on{color:var(--kb-coin-ink)}
+.ap.master{gap:5px;padding:2px 9px 2px 3px;border-radius:var(--kb-r-pill);background:#140F2A;
+  box-shadow:0 0 0 1px rgba(168,92,247,.45), 0 0 12px rgba(168,92,247,.35)}
+.ap.master .apl{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  background:linear-gradient(90deg,#FF5E5E,#F4B740,#22B8D6,#8A5CF0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bh{position:relative;width:16px;height:16px;border-radius:var(--kb-r-pill);flex:none;background:#000;box-shadow:0 0 6px rgba(168,92,247,.7)}
+.bh i{position:absolute;inset:-2px;border-radius:var(--kb-r-pill);
+  background:conic-gradient(#FF5E5E,#F4B740,var(--kb-primary),#22B8D6,#8A5CF0,#FF5E5E);
+  -webkit-mask:radial-gradient(circle, transparent 54%, #000 56%);mask:radial-gradient(circle, transparent 54%, #000 56%)}
+/* ── nivel y XP ── */
+.lv{display:flex;align-items:center;gap:9px}
+.lvn{font-family:var(--kb-f-display);font-weight:800;font-size:15px;color:var(--kb-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+.trk{flex:1;height:8px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.trk i{display:block;height:100%;width:64%;border-radius:var(--kb-r-pill);background:var(--c)}
+.xp{font-family:var(--kb-f-label);font-weight:800;font-size:11px;color:var(--kb-ink-on-tint);white-space:nowrap}
+/* ── campo fijo · PROPUESTA de borde discontinuo ── */
+.fl{display:flex;flex-direction:column;gap:5px}
+.fl label{font-family:var(--kb-f-display);font-size:11px;font-weight:800;color:var(--kb-text-2)}
+.fi{height:var(--kb-ctl-h);display:flex;align-items:center;padding:0 11px;border-radius:var(--kb-r-sm);
+  border:1px solid var(--kb-border);background:var(--kb-card);font-size:13px;color:var(--kb-text)}
+.fi.fixed{border-style:dashed;border-color:var(--kb-border-strong);background:var(--kb-surface);color:var(--kb-text)}
+.hint{font-size:11px;color:var(--kb-text-2);line-height:1.4}
+.lock{opacity:.45;filter:grayscale(.4);cursor:not-allowed}
+i[data-lucide]{width:15px;height:15px}
+</style></head>
+<body class="kb-root">
+  <div class="sec"><h4>Selector de ícono <em>16 glifos · ICON_PALETTE (areas-screen.jsx:89)</em></h4>
+    <div class="b" style="--c:var(--area-wisdom)"><div class="pal" id="pal"></div>
+      <p class="note">Los mismos 16 para toda área. Los cinco primeros son los glifos de las áreas de fábrica; los once restantes vienen de <code>icons.jsx</code>. El elegido toma el color del área.</p>
+    </div>
+  </div>
+
+  <div class="sec"><h4>Selector de color <em>10 entradas, 9 únicas · COLORS (:140)</em></h4>
+    <div class="two">
+      <div class="b"><span class="cap">Paleta</span><div class="sw" id="sw"></div>
+        <p class="note">El array trae <b>10 entradas</b> pero <code>--area-community</code> está <b>dos veces</b>: quedan 9 colores únicos. La repetida va marcada.</p>
+      </div>
+      <div class="b"><span class="cap">Campo fijo</span>
+        <div class="fl"><label>Dificultad</label>
+          <div class="fi fixed">Estándar · la mide el sistema</div>
+          <span class="hint">Cuatro áreas son <code>editable: 'icon-name-color'</code>: cambias nombre, ícono y color, pero <b>no</b> la dificultad. Solo Comunidad es <code>'full'</code>.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec"><h4>Dificultad <em>DIFFICULTY_LEVELS · forma y multiplicador</em></h4>
+    <div class="b" style="--c:var(--area-community)">
+      <div class="dg">
+        <button type="button" class="dt"><span class="pip">×0,6</span><span class="lbl">Suave</span><span class="desc">Sube rápido. Para áreas exploratorias.</span></button>
+        <button type="button" class="dt on"><span class="pip">×1</span><span class="lbl">Estándar</span><span class="desc">XP base — el ajuste por defecto.</span></button>
+        <button type="button" class="dt"><span class="pip">×1,6</span><span class="lbl">Exigente</span><span class="desc">Subir cuesta más. Te fuerza a la disciplina.</span></button>
+        <button type="button" class="dt"><span class="pip">×2,5</span><span class="lbl">Brutal</span><span class="desc">Solo para áreas críticas.</span></button>
+      </div>
+      <div class="mrow" style="margin-top:11px">
+        <span class="cap" style="margin:0">En tarjeta</span>
+        <span class="dm" style="--c:var(--area-community)"><i class="on" style="height:6px"></i><i class="on" style="height:10px"></i><i style="height:14px"></i><i style="height:18px"></i></span>
+        <span class="mlbl">Estándar</span><span class="mmul">×1</span>
+      </div>
+      <p class="note">Dos formas del mismo dato: la <b>reja de cuatro</b> al configurar, y el <b>medidor de 4 barras</b> (<code>.kbv-diff-meter</code>) en la tarjeta. Siempre con el multiplicador al lado, porque «Exigente» sin el ×1,6 no dice cuánto cuesta.</p>
+    </div>
+  </div>
+
+  <div class="sec"><h4>Prestigio de área <em>5 estrellas — NO son los 16 grados del héroe</em></h4>
+    <div class="two">
+      <div class="b"><span class="cap">Escala</span>
+        <div class="mrow">
+          <span class="ap" style="--c:var(--area-vigor)" title="Prestigio 2 de 5" aria-hidden="true"><span class="st on">★</span><span class="st on">★</span><span class="st">★</span><span class="st">★</span><span class="st">★</span></span>
+          <span class="ap amber" style="--c:var(--area-wealth)" title="Prestigio 4 de 5" aria-hidden="true"><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st on">★</span><span class="st">★</span></span>
+          <span class="ap master"><span class="bh"><i></i></span><span class="apl">Maestro</span></span>
+        </div>
+        <p class="note">Cinco vueltas (<code>AREA_PRESTIGE_MAX = 5</code>). Al completarlas, la insignia cambia a <b>Maestro</b>: agujero negro con disco cónico. El héroe tiene otra escala, de <b>16 grados con nombre</b> — misma palabra, dos sistemas.</p>
+        <p class="note">La estrella llena es <b>indicador</b>, no texto: su piso es 3:1. La familia ámbar no lo alcanza en color pleno (1,92:1), así que ahí va <code>--kb-coin-ink</code> — el mismo caso que el oro en las gráficas.</p>
+      </div>
+      <div class="b" style="--c:var(--area-wisdom)"><span class="cap">Nivel y XP</span>
+        <div class="lv"><span class="lvn">Nv 23</span><span class="trk"><i></i></span><span class="xp">1 480 / 2 300</span></div>
+        <p class="note">Cincuenta niveles por área. El XP que falta se calcula con el multiplicador de dificultad, así que dos áreas en el mismo nivel pueden pedir distinto.</p>
+      </div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const PAL=['vigor','wisdom','wealth','community','will','sword','flame','sparkle','book','shop','home','layers','film','book-open','edit','user'];
+/* COLORS tal como esta en areas-screen.jsx:140 — 10 entradas, pero
+   var(--area-community) aparece DOS veces (indices 5 y 9): 9 colores unicos.
+   Se rinden las 10 y se marca la repetida, porque corregirlo es decision de
+   producto, no del DS. */
+const COL=['var(--area-vigor)','var(--area-wisdom)','var(--kb-primary)','var(--kb-coin)','var(--pri-high)','var(--area-community)','var(--kb-hp)','var(--kb-gem)','var(--kb-good-soft)','var(--area-community)'];
+const K=(n,s)=>typeof KIcon==='function'?<KIcon name={n} size={s}/>:null;
+ReactDOM.createRoot(document.getElementById('pal')).render(
+  <React.Fragment>{PAL.map((n,i)=>(
+    <button type="button" key={n} className={i===1?'on':''} title={n}>{K(n,16)}</button>))}</React.Fragment>);
+ReactDOM.createRoot(document.getElementById('sw')).render(
+  <React.Fragment>{COL.map((c,i)=>(
+    <button type="button" key={i} className={(i===1?'on ':'')+(i===9?'dup':'')} style={{'--k':c}} title={i===9?c+' — repetida':c}></button>))}</React.Fragment>);
+</script>
+</body></html>

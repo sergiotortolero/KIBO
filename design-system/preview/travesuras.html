@@ -1,0 +1,62 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x661" name="KIBO · travesuras" subtitle="El repertorio real de kibo-blob.jsx · toca una para reproducirla" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 12px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.g{display:grid;gap:9px}
+.it{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.nm{font-family:var(--kb-f-display);font-weight:800;font-size:11px;color:var(--kb-text);line-height:1.15;text-align:center}
+.tk{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);text-align:center;line-height:1.25;letter-spacing:.09em;text-transform:uppercase}
+.no{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);line-height:1.55;margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E;font-weight:800}
+.g{grid-template-columns:repeat(7,1fr)}
+.it{cursor:pointer}
+.it:hover{border-color:var(--kb-primary-border)}
+.pad{height:96px;display:grid;place-items:center;width:100%;overflow:hidden}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);display:block;grid-column:1/-1;text-transform:uppercase}
+.hd.two{margin-top:6px}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>kibo/travesura/&lt;id&gt;</b> · solo ocurren con <b>idle</b> · la personalidad <em>Sereno</em> es quieta de fábrica</div>
+  <div class="g" id="g"></div>
+  <p class="no" id="note"></p>
+<script type="text/babel" src="../reference/app/kibo-blob.jsx"></script>
+<script type="text/babel">
+function Card({t}){
+  const [g,setG]=React.useState(null);
+  return (
+    <div className="it" onClick={()=>setG(t.id+'#'+Date.now())} title={t.desc||t.name}>
+      <span className="pad"><KiboBlob size={74} mood="calma" ground={false} gesture={g} /></span>
+      <span className="nm">{t.name}</span>
+      <span className="tk">{t.id}{t.needs?' · '+t.needs:''}</span>
+    </div>
+  );
+}
+const ALL=(typeof KIBO_TRICK_LIST!=='undefined'?KIBO_TRICK_LIST:[]);
+const raw=Object.values(typeof KIBO_TOY_TRICKS!=='undefined'?KIBO_TOY_TRICKS:{});
+// dedupe por id: varios juguetes mapean a la MISMA travesura (p. ej. `mirar`)
+const seen={},toys=[];
+raw.forEach(t=>{ if(!seen[t.id]){seen[t.id]=1;toys.push(t);} });
+const toyIds=toys.map(t=>t.id);
+const base=ALL.filter(t=>toyIds.indexOf(t.id)===-1);
+function App(){
+  return (
+    <React.Fragment>
+      <span className="hd">Repertorio base · {base.length}</span>
+      {base.map(t=><Card key={t.id} t={t}/>)}
+      {toys.length>0 && <span className="hd two">Exigen juguete equipado · {toys.length}</span>}
+      {toys.map(t=><Card key={t.id} t={t}/>)}
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('g')).render(<App/>);
+document.getElementById('note').innerHTML='Las <b>manopies se ocultan en reposo</b> y orbitan sobre la propiedad <b>translate</b>, nunca sobre <u>transform</u>: animar transform borraría la escala que las esconde. Un gesto del usuario <b>interrumpe</b> el que corre; los automáticos respetan la ventana de 3.4s.';
+</script>
+</body></html>

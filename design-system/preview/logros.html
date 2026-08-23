@@ -1,0 +1,122 @@
+<!-- @dsCard group="10 · Gamificación" viewport="700x543" name="Logros y rarezas" subtitle="Seis rarezas · ganado, en progreso, secreto y oculto" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 9px}
+.hd:not(:first-child){margin-top:14px}
+/* rarezas · seis tintes, el mismo lenguaje que las píldoras del sistema */
+.rar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:3px}
+.rp{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:var(--kb-r-pill);white-space:nowrap;background:color-mix(in oklab,var(--c) 13%,#fff);color:var(--kb-ink-on-tint)}
+/* tarjeta de logro */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ach{all:unset;box-sizing:border-box;display:block;cursor:pointer;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);overflow:hidden;transition:border-color var(--kb-dur-fast) var(--kb-ease-out),box-shadow var(--kb-dur-fast) var(--kb-ease-out)}
+.ach:hover{border-color:color-mix(in oklab,var(--c) 34%,var(--kb-border));box-shadow:var(--kb-sh-2)}
+/* banda de encabezado: declara la rareza, sin franja lateral */
+.ach .band{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 11px;background:color-mix(in oklab,var(--c) 11%,#fff);border-bottom:1px solid color-mix(in oklab,var(--c) 18%,var(--kb-border))}
+.rn{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--kb-ink-on-tint)}
+.fq{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:10px;font-weight:800;color:var(--kb-text-3);white-space:nowrap}
+.ach .bd{padding:9px 11px;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.ico{width:32px;height:32px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center;background:color-mix(in oklab,var(--c) 14%,#fff);color:var(--kb-ink-on-tint)}
+.tx{min-width:0;display:flex;flex-direction:column;gap:3px}
+.nm{font-family:var(--kb-f-display);font-weight:800;font-size:13px;color:var(--kb-text);line-height:1.25}
+.ds{font-size:11px;color:var(--kb-text-2);line-height:1.4}
+/* progreso */
+.pg{display:flex;align-items:center;gap:7px;margin-top:3px}
+.bar{flex:1;height:5px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+.pn{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:10px;font-weight:800;color:var(--kb-ink-on-tint);white-space:nowrap}
+/* ganado */
+.won{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-primary-ink);margin-top:2px}
+.won span{display:flex;flex:none}
+/* secreto sin desbloquear: el cuerpo se oculta, la banda se apaga */
+.ach.lock{border-style:dashed}
+.ach.lock .band{background:var(--kb-surface-2);border-bottom-color:var(--kb-border)}
+/* Bloqueado: --kb-text-3 sobre surface-2 da 4.27:1. El nombre de la rareza es
+   informacion real, no adorno, asi que sube a la tinta de texto. Lo apagado lo
+   comunican el borde punteado y el glifo gris. */
+.ach.lock .rn{color:var(--kb-text)}
+.ach.lock .ico{background:var(--kb-surface-2);color:var(--kb-text-3)}
+.ach.lock .nm{color:var(--kb-text-2)}
+.ach.lock .ds{color:var(--kb-text-3);font-style:italic}
+.note{margin-top:12px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Seis rarezas</p>
+<div class="rar">
+  <span class="rp" style="--c:#5FA98A">común</span>
+  <span class="rp" style="--c:#6E8CF2">raro</span>
+  <span class="rp" style="--c:var(--area-community);--ink:var(--area-community-ink)">épico</span>
+  <span class="rp" style="--c:#E0A82B">legendario</span>
+  <span class="rp" style="--c:#8A5CF0">secreto</span>
+  <span class="rp" style="--c:#E0561B">oculto</span>
+</div>
+
+<p class="hd">Estados</p>
+<div class="grid">
+  <button type="button" class="ach" style="--c:#5FA98A">
+    <div class="band"><span class="rn">común</span><span class="fq">28 % lo tienen</span></div>
+    <div class="bd">
+      <span class="ico" id="i1"></span>
+      <span class="tx"><span class="nm">Madrugador</span><span class="ds">Completa hábitos antes de las 7 am, 10 veces.</span>
+        <span class="won"><span id="w1"></span>04 mar</span></span>
+    </div>
+  </button>
+  <button type="button" class="ach" style="--c:var(--area-community);--ink:var(--area-community-ink)">
+    <div class="band"><span class="rn">épico</span><span class="fq">6 % lo tienen</span></div>
+    <div class="bd">
+      <span class="ico" id="i2"></span>
+      <span class="tx"><span class="nm">Maratonista</span><span class="ds">Alcanza una racha de 100 días.</span>
+        <span class="pg"><span class="bar"><i style="width:23%"></i></span><span class="pn">23/100</span></span></span>
+    </div>
+  </button>
+  <button type="button" class="ach" style="--c:#E0A82B">
+    <div class="band"><span class="rn">legendario</span><span class="fq">2,4 % lo tienen</span></div>
+    <div class="bd">
+      <span class="ico" id="i3"></span>
+      <span class="tx"><span class="nm">Sin excusas</span><span class="ds">Un mes completo sin fallar un solo hábito.</span>
+        <span class="pg"><span class="bar"><i style="width:60%"></i></span><span class="pn">18/30</span></span></span>
+    </div>
+  </button>
+  <button type="button" class="ach lock" style="--c:#8A5CF0">
+    <div class="band"><span class="rn">secreto</span><span class="fq">?</span></div>
+    <div class="bd">
+      <span class="ico" id="i4"></span>
+      <span class="tx"><span class="nm">Logro secreto</span><span class="ds">Algo sucede de madrugada…</span></span>
+    </div>
+  </button>
+  <button type="button" class="ach" style="--c:#8A5CF0">
+    <div class="band"><span class="rn">secreto</span><span class="fq">1,6 % lo tienen</span></div>
+    <div class="bd">
+      <span class="ico" id="i5"></span>
+      <span class="tx"><span class="nm">Ave Fénix</span><span class="ds">Recupera tu racha el mismo día que la perdiste.</span>
+        <span class="won"><span id="w2"></span>02 may</span></span>
+    </div>
+  </button>
+  <button type="button" class="ach" style="--c:#E0561B">
+    <div class="band"><span class="rn">oculto</span><span class="fq">0,2 % lo tienen</span></div>
+    <div class="bd">
+      <span class="ico" id="i6"></span>
+      <span class="tx"><span class="nm">Singularidad</span><span class="ds">Algo extraordinario que nadie te dijo que existía.</span>
+        <span class="won"><span id="w3"></span>27 may</span></span>
+    </div>
+  </button>
+</div>
+
+<p class="note"><b>La rareza vive en la banda, no en una franja.</b> Tinte al 11 % con el nombre en tinta, y a la derecha el <b>porcentaje de usuarios</b> que lo tienen — es lo que hace sentir raro un logro raro. Un logro <b>en progreso</b> muestra barra y fracción; uno <b>ganado</b> muestra la fecha. El <b>secreto sin desbloquear</b> apaga la banda a neutro, pone borde discontinuo y deja la descripción en cursiva: se sabe que existe pero no qué es. El <b>oculto</b> no aparece en el catálogo hasta que se gana.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size) => { const el = document.getElementById(id); if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color="currentColor" />); };
+  put('i1','clock',17); put('i2','flame',17); put('i3','shield',17);
+  put('i4','eye-off',17); put('i5','flame',17); put('i6','sparkle',17);
+  for (const w of ['w1','w2','w3']) put(w,'check',11);
+}
+</script>
+</body></html>

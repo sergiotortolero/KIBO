@@ -1,0 +1,551 @@
+/* kibo-shell.css — la plataforma a pantalla completa (sin marco de navegador)
+   y la capa responsiva del shell. Se carga AL FINAL: aquí manda el layout.
+   Conserva los nombres de clase del prototipo para no romper CSS ni el tutorial. */
+
+html, body { height: 100%; }
+
+kibo-app { display: block; min-height: 100vh; }
+
+.kbv-app {
+  min-height: 100vh;
+  display: block;
+  padding: 0;
+  background: var(--kb-canvas);
+}
+
+/* El contenedor de consulta: los saltos de esta hoja miden ESTA caja, no la
+   pantalla. Un teléfono da el mismo resultado que antes (ventana = viewport) y
+   además cualquier ventana angosta recibe el layout que le toca. */
+.kbv-window {
+  container: kbwin / inline-size;
+  /* Marco de referencia de las capas del shell. El cajón del menú y su velo
+     estaban anclados al VIEWPORT (`position: fixed`), pero la app se dibuja
+     dentro de esta ventana y a veces a escala: de ahí que el cajón saliera
+     enorme, con los botones cortados, y que el velo apagara toda la página en
+     vez de solo la app. */
+  position: relative;
+  width: 100%;
+  max-width: none;
+  /* Sin piso de 1280px: ese min-width forzaba scroll horizontal y bloqueaba
+     toda la responsividad. */
+  min-width: 0;
+  min-height: 100vh;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+/* ── El shell sigue el ancho REAL del menú ──────────────────────────
+   La columna estaba fija en 240px, así que al replegar la barra el
+   contenido no se corría: quedaba una franja vacía. */
+.kbv-shell {
+  grid-template-columns: var(--side-w, 232px) minmax(0, 1fr);
+  min-height: 100vh;
+  transition: grid-template-columns var(--kb-dur-base, 200ms) var(--kb-ease-standard, ease);
+}
+.kbv-sidebar { min-width: 0; overflow-x: hidden; grid-column: 1; }
+/* El contenido declara SU pista. Sin esto, cualquier cosa que saque la barra
+   del flujo (el cajón del menú es `position: fixed`) hacía que el contenido se
+   auto-colocara en la pista 1 —el riel de 76px— y la rejilla de widgets se
+   aplastaba a cero de ancho. El layout no puede depender del orden. */
+.kbv-content { grid-column: 2; min-width: 0; }
+.kbv-shell:not(.side-narrow):not(.side-collapsed) .kbv-content,
+.kbv-shell .kbv-content { grid-row: 1; }
+.kbv-sidebar.collapsed { width: auto; min-width: 0; }
+/* KIBO vive en la franja del menú (ver .kbb-fab), así que el contenido no
+   necesita reservar esquina: su anillo abre por encima y es efímero. */
+.kbv-main { min-width: 0; scroll-padding-bottom: 96px; }
+/* Nada dentro del contenido puede imponer su ancho al grid */
+.kbv-main > * { min-width: 0; max-width: 100%; }
+.kbv-page-head { flex-wrap: wrap; gap: var(--kb-sp-6, 12px); }
+
+/* ── Cabecera: se acomoda en lugar de romperse ─────────────────── */
+@container kbwin (max-width: 1240px) {
+  .kbv-header .left { min-width: 0; }
+  .kbv-hero-id .xp-track { max-width: 120px; }
+}
+@container kbwin (max-width: 1080px) {
+  /* El menú pasa a riel de iconos por sí solo: a este ancho el contenido
+     necesita cada pixel. Todas las reglas del riel se excluyen cuando el menú
+     está desplegado encima (.side-flyout): ahí vuelve a ser un menú completo,
+     y deshacerlas con `revert` habría borrado también los display:flex del
+     autor (la píldora de racha salía con el texto encimado). */
+  .kbv-shell { --side-w: 76px; --side-n: 76; }
+  /* «Fijo» gana al riel automático: el riel es una respuesta al ancho, y el
+     usuario ya dijo que prefiere el menú abierto a ese ancho. Debajo de 860
+     no aplica — ahí el menú es un cajón y no hay sitio que negociar. */
+  .kbv-shell.side-pinned { --side-w: 232px; --side-n: 232; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-link { justify-content: center; padding: 10px 0; font-size: 0; gap: 0; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-link svg { font-size: initial; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-link .badge { display: none; }
+  /* Lista blanca: sobreviven el logo, la píldora de racha y los enlaces.
+     Enumerar qué ocultar dejaba fuera cada clase nueva (.kbv-side-modules). */
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-sidebar > *:not(.kbv-side-top):not(.kbv-logo):not(.kbv-side-streak):not(.kbv-side-nav):not(.kbv-side-section):not(.kbv-side-collapse) { display: none; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-section > *:not(.kbv-side-link) { display: none; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-modules { display: none; }
+  /* OJO: el prefijo del riel es `:not(.side-flyout):not(.side-pinned)` — las
+     dos salidas del riel. Estas cuatro reglas se habían quedado con la mitad. */
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-streak { padding: 10px 8px; justify-content: center; gap: 0; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-streak > *:not(.flame) { display: none; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-logo .word { display: none; }
+  .kbv-shell:not(.side-flyout):not(.side-pinned) .kbv-side-top { flex-direction: column; gap: 10px; }
+  .kbv-main { padding: 22px 20px var(--kbb-clear, 132px); gap: 18px; }
+  .kbv-header { height: auto; min-height: 72px; padding: 10px 14px; flex-wrap: wrap; }
+  .kbv-header .center { order: 3; flex-basis: 100%; justify-content: flex-start; }
+  .kbv-bar { max-width: none; }
+  .kbv-habits-grid { grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr)); }
+  .kbv-gallery-grid, .kbv-project-grid { grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr)); }
+  .kbv-settings-grid { grid-template-columns: 1fr; }
+}
+@container kbwin (max-width: 860px) {
+  .kbv-main { padding: 18px 14px var(--kbb-clear, 132px); }
+  .kbv-page-head .kbv-h1 { font-size: var(--kb-fs-3xl, 26px); }
+  .kbv-habits-grid { grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)); }
+  .kbv-gallery-grid, .kbv-project-grid { grid-template-columns: 1fr 1fr; }
+  /* Tableros y cronogramas: scroll propio en vez de reventar el ancho */
+  .kbv-kanban, .kbv-timeline-scroll, .kbv-tl-scroll { overflow-x: auto; }
+  .kbv-fp-stats, .kbv-social-band { flex-wrap: wrap; }
+}
+/* Canaleta de KIBO: el contenido cede a la izquierda el ancho de su huella
+   visual completa, así el FAB nunca comparte espacio con una tarjeta. */
+/* Con el FAB al 75% (54px de huella) su borde izquierdo sube a ~833:
+   G ≥ 91 basta, y las pistas suben a (786−96)/4 ≈ 172px. */
+.kbv-shell { --kbb-gutter: 0px; --kbb-clear: 132px; }
+/* KIBO es `position: fixed`: flota sobre el mismo punto del viewport pase lo
+   que pase con el scroll, así que reservar al final del documento no despeja su
+   esquina. La canaleta lateral sí, en cualquier posición. */
+/* Sin canaleta lateral: el contenido usa todo el ancho. El hueco de KIBO se
+   paga en el pie del documento (--kbb-clear), donde no se ve. */
+.kbv-main { padding-right: var(--kb-sp-8, 20px); padding-bottom: var(--kbb-clear, 132px); }
+/* La rejilla debe tener SIEMPRE 4 pistas: los tiles se colocan con `span N`
+   (w-1…w-4) y `auto-fill` colapsaba la cuarta a 0px, haciendo desaparecer el
+   widget que cayera ahí. El ancho se recupera achicando la canaleta a la huella
+   real del FAB (72px + margen), no cambiando el número de pistas. */
+.kbv-canvas-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@container kbwin (max-width: 640px) {
+  .kbv-shell { --side-w: 62px; --side-n: 62; }
+  .kbv-main { padding: 14px 10px var(--kbb-clear, 132px); gap: 14px; }
+  .kbv-shell { --kbb-gutter: 0px; --kbb-clear: 132px; }
+  .kbv-gallery-grid, .kbv-project-grid, .kbv-habits-grid { grid-template-columns: 1fr; }
+  .kbv-header .right { flex-wrap: wrap; justify-content: flex-end; }
+  /* KIBO ya se escala solo con --side-n; aquí solo baja su piso de margen. */
+  .kbb-fab { --kbb-edge: 3px; }
+}
+
+/* ═══ Tiles de ancho fijo: el texto trunca, no se derrama ═══
+   Los tiles `w-N h-N` tienen tamaño fijo y `overflow: hidden`; sus hijos flex
+   traen `min-width: auto`, así que no podían encogerse y el texto se salía por
+   la derecha (21–46px medidos). Ninguna anchura de columna arregla eso: lo que
+   falta es permitirles encoger y truncar. */
+/* Acotado a contenedores de TEXTO: aplicado a todos los descendientes quitaba
+   también el mínimo automático de los CONTROLES, y los botones con
+   `flex: 1 1 0%` se comprimían bajo su contenido y derramaban la etiqueta
+   sobre el vecino. */
+/* Solo los botones con ETIQUETA DE TEXTO quedan fuera del min-width:0. Los
+   controles cuadrados de ícono (`.mood-tile`, 31×31, sin texto que truncar)
+   sí deben poder encoger: excluirlos les ponía un piso duro y el 5º ánimo del
+   Diario se salía de su fila. */
+.kbv-widget, .kbv-widget *:not(.kbv-btn):not(a) { min-width: 0; }
+.kbv-widget .kbv-btn {
+  /* El botón nunca se comprime por debajo de su contenido: sin esto, el
+     `overflow: hidden` que evita el derrame terminaba recortando su propia
+     etiqueta (un ítem flex con overflow != visible pierde su mínimo
+     automático, por spec). `flex-basis: auto` evita el 1 1 0% que lo aplasta. */
+  min-width: fit-content;
+  min-height: fit-content;
+  flex-basis: auto;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* La fila de acciones puede envolver antes que aplastar sus botones. */
+.kbv-widget.h-1 [class*="-actions"] { flex-wrap: wrap; }
+/* Acabado: el scroll interno del tile existe, pero sin barra a la vista. */
+.kbv-widget.h-1 * { scrollbar-width: none; }
+.kbv-widget.h-1 *::-webkit-scrollbar { width: 0; height: 0; }
+/* Texto suelto (spans sin clase) dentro de un tile de tamaño fijo: también
+   trunca. Se excluyen los contenedores de íconos y las píldoras. */
+.kbv-widget span:not([class]) {
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Frases largas: una línea con elipsis. */
+.kbv-widget .from, .kbv-widget .sub, .kbv-widget .meta, .kbv-widget .ep {
+  display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+/* Etiquetas cortas multipalabra: pueden envolver a 2 líneas antes de truncar,
+   que es lo que necesitan «Materia oscura», «HÁBITOS» y «TAREAS». */
+.kbv-widget .lbl, .kbv-widget .title, .kbv-widget .name, .kbv-widget .kbv-meta {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+  overflow: hidden; white-space: normal; overflow-wrap: anywhere;
+}
+/* Los eyebrows en mono recuperan ~10px bajando el tracking a este tamaño. */
+.kbv-widget .kbv-meta, .kbv-widget .lbl { letter-spacing: .06em; }
+
+/* ═══ Tiles h-1: el contenido cabe o se alcanza ═══
+   Los hijos flex traen `min-height: auto` y no pueden encogerse, así que el
+   contenido (203px) desbordaba la caja fija de 180px y `overflow-y: hidden`
+   lo volvía inalcanzable — los botones de Lectura quedaban cortados 11px.
+   Dos medidas sobre esa causa: dejar que encojan, y dar scroll propio al
+   bloque interno para lo que aun así no quepa. */
+.kbv-widget.h-1 > *,
+.kbv-widget-inner,
+.kbv-widget-inner > * { min-height: 0; }
+.kbv-widget.h-1 .kbv-widget-inner > * { overflow-y: auto; scrollbar-width: none; }
+/* Las filas de acción se quedan completas abajo, sin encogerse ni cortarse:
+   pegadas al fondo del área desplazable, con el fondo del tile detrás para que
+   el contenido que scrollea no se les encime. */
+.kbv-widget.h-1 [class*="-actions"] {
+  flex: 0 0 auto;
+  position: sticky; bottom: 0; z-index: 1;
+  background: var(--kb-card);
+  padding-top: 6px;
+}
+
+/* ═══ 54 · Menú desplegado sobre el contenido (anchos estrechos) ═══
+   Por debajo de 1080px la columna del menú es un riel de 76px: ahí no cabe
+   una columna de 232px sin ahogar la pantalla, así que el menú se abre
+   ENCIMA — con velo, y se cierra al elegir destino o al tocar fuera. */
+.kbv-side-scrim {
+  /* Dentro de la ventana, no sobre el navegador. Y apenas un velo: al 38% el
+     contenido desaparecía, y el menú es una capa temporal — no un modal que
+     exija olvidarse de lo que hay detrás. */
+  position: fixed; inset: 0; z-index: var(--kb-z-overlay, 100);
+  background: color-mix(in oklab, var(--kb-dark-core, #10151c) 10%, transparent);
+  animation: kbSideScrim var(--kb-dur-fast, 120ms) var(--kb-ease-out, ease) both;
+}
+@keyframes kbSideScrim { from { opacity: 0; } to { opacity: 1; } }
+.kbv-shell.side-flyout > .kbv-sidebar {
+  /* Capa: sigue al viewport (anclarla a la ventana la dejaba en el top del
+     documento y con la página desplazada aparecía fuera de la vista). Lo que
+     evita el corte no es la posición sino el REPARTO interno: alto de viewport,
+     pie fijo y la lista de secciones como único elemento que cede. */
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 244px; min-width: 244px; max-width: min(86vw, 320px);
+  max-height: 100vh;
+  z-index: calc(var(--kb-z-overlay, 100) + 1);
+  display: flex; flex-direction: column;
+  overflow-y: auto; overflow-x: hidden;
+  overscroll-behavior: contain;
+  background: var(--kb-card);
+  box-shadow: var(--kb-sh-4, 0 18px 48px rgba(16,21,28,.28));
+  padding-left: 14px; padding-right: 14px;
+  animation: kbSideIn var(--kb-dur-base, 200ms) var(--kb-ease-out, ease) both;
+}
+@keyframes kbSideIn { from { transform: translateX(-16px); opacity: .6; } to { transform: none; opacity: 1; } }
+
+/* ═══════════════════════════════════════════════════════════════════
+   55 · PASO 1 — La web responde de verdad
+   ───────────────────────────────────────────────────────────────────
+   El problema no era falta de media queries: eran DEMASIADAS, cada una
+   con su ancho propio (620, 700, 720, 860, 900, 920, 1000, 1100…). A
+   924px, por ejemplo, las tarjetas de insight de Áreas seguían en tres
+   columnas de 130px —su regla arrancaba a 920— y el texto se estrangulaba.
+   Un ancho a la deriva por componente = una rejilla rota en cada franja.
+
+   Esta capa aplica los CUATRO breakpoints del Design System
+   (bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280) a todas las rejillas
+   de pista fija de una vez. Carga al final, así que manda sobre las
+   reglas sueltas sin tener que reescribirlas una por una.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Tiras y encabezados: antes de estrangularse, envuelven. */
+:is(.kbv-fin-card, .kbv-family-strip, .kbv-obsidian-strip, .salud-sync-banner,
+    .kbv-nudge-strip, .kbv-fin-period, .kbv-section-head, .kbv-study-section-head,
+    .kbv-char-section-head, .kbv-social-band, .kbv-kanban-toolbar,
+    .kbv-filter-bar, .kbv-bl-bar) { flex-wrap: wrap; }
+
+@container kbwin (max-width: 1024px) {
+  /* Rejillas de 4+ pistas → 2. Con 1024px de ancho y un menú de 76px,
+     cuatro tarjetas de KPI quedan en 190px: cabe el número, no la etiqueta. */
+  :is(.kbv-kpi-grid, .kbv-area-rollup, .kbv-char-bench-grid, .kbv-import-steps,
+      .kbv-session-summary, .kbv-cat-grid, .kbv-fp-stats, .note-kpi-strip,
+      .kbv-difficulty-grid, .kbv-area-bgswatches, .kbv-cfg-diff,
+      .kbv-health-sync .hs-metrics, .kbv-gallery-kpi .stats) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Rejillas de 3 pistas → 1 cuando cada celda lleva párrafo. */
+  :is(.kbv-area-insights, .kbv-fin-project-grid, .kbv-subs-grid,
+      .kbv-challenge-banners, .kbv-ach-recent) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :is(.kbv-store-grid, .kbv-store-grid.cosmetics, .kbv-gallery-kpis,
+      .kbv-area-quick, .kbv-health-sync .hs-sources, .kbv-prestige-panel .pp-paragon-grid,
+      .kbv-subjects-grid, .kbv-agenda-grid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* El tablero de widgets baja a 2 pistas. OJO: un «span» mayor que el número
+     de pistas NO se recorta al ancho de la rejilla — crea pistas IMPLÍCITAS,
+     que al no tener tamaño miden 0, y con `grid-auto-flow: dense` los tiles
+     `w-1` siguientes caen dentro de ellas y salen a cero de ancho. Donde se
+     reduce el número de pistas hay que acotar los spans en el mismo sitio. */
+  .kbv-canvas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kbv-widget.w-2, .kbv-widget.w-3, .kbv-widget.w-4 { grid-column: span 2; }
+  .kbv-reto-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@container kbwin (max-width: 768px) {
+  /* Una sola columna para todo lo que lleve texto; se quedan en dos solo
+     las rejillas de fichas cortas (números, swatches, íconos). */
+  :is(.kbv-kpi-grid, .kbv-area-rollup, .kbv-char-bench-grid, .kbv-import-steps,
+      .kbv-store-grid, .kbv-store-grid.cosmetics, .kbv-gallery-kpis,
+      .kbv-subjects-grid, .kbv-prestige-panel .pp-paragon-grid,
+      .kbv-fin-project-grid, .kbv-subs-grid, .kbv-canvas-grid) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Una sola pista: ningún tile puede abarcar más de una (ver la nota del
+     escalón anterior — el sobrante se vuelve pistas de ancho cero). */
+  .kbv-widget.w-2, .kbv-widget.w-3, .kbv-widget.w-4 { grid-column: span 1; }
+  :is(.kbv-area-pulsegrid, .kbv-agenda-grid, .sc-week) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Encabezado de pantalla: el título arriba, las acciones debajo y a lo
+     ancho — no apretadas contra el borde. */
+  .kbv-page-head { flex-direction: column; align-items: stretch; }
+  .kbv-page-head .actions { flex-wrap: wrap; }
+  /* Pestañas y segmentados: se deslizan en vez de envolver a tres renglones. */
+  :is(.kbv-seg, .kbv-tabs, .kbv-study-tabs) {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+  }
+  :is(.kbv-seg, .kbv-tabs, .kbv-study-tabs)::-webkit-scrollbar { display: none; }
+  :is(.kbv-seg, .kbv-tabs, .kbv-study-tabs) > * { flex: none; white-space: nowrap; }
+}
+
+@container kbwin (max-width: 640px) {
+  :is(.kbv-area-pulsegrid, .kbv-agenda-grid, .sc-week, .kbv-cat-grid,
+      .kbv-fp-stats, .kbv-session-summary, .note-kpi-strip, .kbv-reto-kpis,
+      .kbv-health-sync .hs-metrics, .kbv-difficulty-grid) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  /* Filas densas: la fila del backlog suelta lo accesorio y deja lo que
+     importa — qué es, cuánto pesa y para cuándo. */
+  .kbv-bl-row .bl-effort { display: none; }
+  .kbv-bl-row .bl-grip { display: none; }
+}
+
+/* Tableros y cronogramas: nunca revientan el ancho de la pantalla — se
+   deslizan. La regla existía solo por debajo de 860px, así que entre 861 y
+   1024 el kanban seguía empujando (medidos +197px en Proyectos). */
+@container kbwin (max-width: 1024px) {
+  :is(.kbv-kanban, .kbv-timeline-scroll, .kbv-tl-scroll, .kbv-week-timeline) {
+    overflow-x: auto;
+  }
+}
+/* Horario de materias: en una columna estrecha, el par esfuerzo/interés
+   envuelve en vez de salirse de su clase. Envolver el contenedor no bastaba:
+   lo que no cabía era la FILA DE PUNTOS (.rr-dots, cinco botones en nowrap,
+   136px dentro de una clase de 102px con overflow:hidden). Se recortaba el
+   cuarto punto por la mitad — una escala 1–5 que miente sobre su valor. */
+.wtr, .wtc-rate { flex-wrap: wrap; }
+.wtr, .wtc-rate, .wtr .kbv-rate-scale, .wtr .rr-dots { min-width: 0; }
+.wtr .rr-dots { flex-wrap: wrap; }
+
+/* Diario · captura: «Algo que agradezco» ocupa la fila completa, y su
+   contenido imponía un mínimo de 409px sobre una columna de 369 — se metía
+   bajo la columna de la derecha. Los hijos de rejilla traen min-width:auto;
+   sin bajarlo a 0 ninguna anchura de columna los contiene. */
+.kbv-diario-reflect .rf, .kbv-diario-reflect .rf > * , .capture-left { min-width: 0; }
+@container kbwin (max-width: 1024px) {
+  .kbv-diario-reflect { grid-template-columns: minmax(0, 1fr); }
+  .kbv-diario-capture .capture-body { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* «Foto del día»: el nombre y su pista se pegaban en una sola cadena
+   («Foto del díaArrastra o haz clic»). Son dos líneas, no un renglón. */
+.kbv-diario-photo .label { display: flex; flex-direction: column; gap: 3px; }
+.kbv-diario-photo .label .name { display: block; }
+.kbv-diario-photo .label .sub { display: block; }
+
+/* Bandas de hairline (.kbv-social-band): las costuras de 1px eran el fondo gris
+   de la reja asomando por los huecos del gap — un truco que solo funciona si el
+   número de celdas es múltiplo exacto de las columnas. Con 5 celdas en 4
+   columnas quedaban tres pistas vacías, 532×71px de gris macizo que se lee como
+   tarjeta rota. La costura ahora la dibuja cada celda con su propio contorno
+   (los contornos de dos celdas vecinas se solapan dentro del hueco de 1px y se
+   ven como una sola línea), así que una pista sin celda no dibuja nada. */
+.kbv-social-band { background: transparent; border-color: transparent; }
+.kbv-social-band > * { outline: 1px solid var(--kb-border); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   55b · PASO 2 — Teléfono de verdad
+   ───────────────────────────────────────────────────────────────────
+   Hasta aquí el móvil era la web encogida: el menú seguía siendo una
+   columna (un riel de 62px = 16% de un teléfono de 390), los diálogos
+   seguían siendo tarjetas centradas con velo, y lo que se toca medía
+   32–36px. Este bloque cambia el MODELO, no los tamaños: navegación al
+   pulgar, hojas que suben desde el borde inferior, y un piso de 44px.
+   ═══════════════════════════════════════════════════════════════════ */
+.kbv-tabbar { display: none; }
+@keyframes kbSheetUp { from { transform: translateY(28px); opacity: .5; } to { transform: none; opacity: 1; } }
+
+@container kbwin (max-width: 640px) {
+  /* 1 · El menú lateral se retira; queda como cajón bajo «Más». */
+  .kbv-shell { grid-template-columns: minmax(0, 1fr); --side-w: 0px; --side-n: 0; --kbb-gutter: 12px; }
+  .kbv-shell > .kbv-sidebar { display: none; }
+  .kbv-shell.side-flyout > .kbv-sidebar {
+    display: flex; flex-direction: column;
+    width: 86vw; min-width: 0; max-width: 320px;
+    padding-bottom: 96px;
+  }
+
+  /* 2 · La barra: cinco destinos al alcance del pulgar. */
+  .kbv-tabbar {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    position: fixed; left: 0; right: 0; bottom: 0;
+    z-index: calc(var(--kb-z-overlay, 100) - 1);
+    background: var(--kb-card);
+    border-top: 1px solid var(--kb-border);
+    box-shadow: 0 -6px 20px rgba(16, 21, 28, .07);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .kbv-tabbar .tb-item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    min-height: 56px; padding: 6px 2px; border: 0; background: none; cursor: pointer;
+    color: var(--kb-text-2); font: 500 10px/1 Inter, system-ui, sans-serif;
+  }
+  .kbv-tabbar .tb-item span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+  .kbv-tabbar .tb-item.on { color: var(--kb-primary-ink); }
+  .kbv-tabbar .tb-item.on svg { color: var(--kb-primary); }
+  .kbv-tabbar .tb-item:active { background: var(--kb-surface); }
+
+  /* 3 · El contenido despeja la barra y suelta la canaleta lateral. */
+  .kbv-main {
+    padding: 14px 12px calc(78px + env(safe-area-inset-bottom, 0px));
+    padding-right: 12px;
+    scroll-padding-bottom: 150px;
+  }
+
+  /* 4 · Cabecera compacta — pero completa. Ocultar la barra de HP habría
+     borrado la única lectura de salud del jugador; lo que sobra es la
+     BÚSQUEDA (vive en el anillo de KIBO) y los protectores de racha. Con
+     `display: contents` el grupo de la derecha deja de ser una caja y sus
+     tres píldoras se reparten solas: identidad + racha en el primer
+     renglón, HP + monedas + materia en el segundo. Dos filas, ~100px. */
+  .kbv-header { min-height: 52px; height: auto; padding: 8px 12px; gap: 8px; flex-wrap: wrap; align-items: center; }
+  /* La identidad no crece: si lo hace, empuja a la racha a su propio
+     renglón y la cabecera se vuelve una columna de cinco pisos. */
+  .kbv-header .left { order: 1; flex: 0 1 auto; min-width: 0; max-width: calc(100% - 100px); }
+  .kbv-header .right { display: contents; }
+  .kbv-header .kbv-hud-streak { order: 2; }
+  .kbv-header .kbv-hud-streak .shields { display: none; }
+  .kbv-header .center { display: flex; order: 3; flex: 1 1 120px; min-width: 118px; }
+  .kbv-header .center .kbv-bar { width: 100%; }
+  .kbv-header .kbv-stat-pill { order: 4; }
+  .kbv-header .kbv-search, .kbv-header .kbv-searchbar { display: none; }
+
+  /* 5 · KIBO se sube encima de la barra: su esquina sigue siendo suya. */
+  .kbb-fab { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); right: 10px; }
+
+  /* 6 · Los diálogos suben desde abajo — donde está el pulgar, no en el
+     centro geométrico de una pantalla que se sostiene con una mano. */
+  /* El velo es `position: absolute` dentro del shell, así que su borde
+     inferior es el del DOCUMENTO, no el de la pantalla: la hoja aterrizaba
+     125px por debajo de lo visible. Anclado al viewport, sube donde debe. */
+  .kbv-modal-veil { position: fixed; inset: 0; padding: 0; align-items: flex-end; }
+  .kbv-modal-card, .kbv-modal-card.sm, .kbv-modal-card.lg, .kbv-modal-card.full {
+    width: 100%; max-width: none;
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    animation: kbSheetUp 240ms cubic-bezier(.22, 1, .36, 1);
+  }
+  .kbv-modal-card::before {
+    content: ''; flex: none;
+    width: 38px; height: 4px; margin: 8px auto 2px;
+    border-radius: 999px; background: var(--kb-border-strong);
+  }
+
+  /* 7 · Las barras de filtro se parten de verdad: envolver solo el contenedor
+     deja los grupos internos como filas rígidas que se salen del ancho. */
+  :is(.kbv-filter-bar, .kbv-bl-bar, .kbv-kanban-toolbar) :is(.filter-block, .group, .icon-group) {
+    flex-wrap: wrap; min-width: 0; max-width: 100%;
+  }
+  :is(.kbv-filter-bar, .kbv-bl-bar) > * { min-width: 0; }
+  /* Las tiras horizontales se DESLIZAN: una pestaña fuera de la pantalla no se
+     recorta, se alcanza con el pulgar. Recortarlas en la página escondía el
+     problema en vez de resolverlo — «Divisas» e «Interfaz» dejaban de existir. */
+  :is(.kbv-store-tabs, .kbv-store-tabs-v2, .kbv-ach-tabs, .range-tabs,
+      .kbv-seg, .kbv-tabs, .kbv-period-tabs, .kbv-sub-tabs) {
+    flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-x: contain;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  :is(.kbv-store-tabs, .kbv-store-tabs-v2, .kbv-ach-tabs, .range-tabs,
+      .kbv-seg, .kbv-tabs, .kbv-period-tabs, .kbv-sub-tabs)::-webkit-scrollbar { display: none; }
+  :is(.kbv-store-tabs, .kbv-store-tabs-v2, .kbv-ach-tabs, .range-tabs,
+      .kbv-seg, .kbv-tabs, .kbv-period-tabs, .kbv-sub-tabs) > * { flex: none; }
+
+  /* Ninguna caja se niega a encoger. `min-width: auto` es el valor de fábrica
+     de todo hijo de grid/flex, y es lo que hace que una pista mida más que su
+     contenedor (380px dentro de 318) empujando la fila fuera de la pantalla.
+     Se exceptúa lo que SÍ debe conservar su ancho: las tiras que se deslizan
+     y los lienzos con scroll propio. */
+  .kbv-main :is(div, section, article, li, span, button, a, label) {
+    min-width: 0;
+  }
+  .kbv-main :is(.kbv-store-tabs, .kbv-store-tabs-v2, .kbv-ach-tabs, .range-tabs,
+      .kbv-seg, .kbv-tabs, .kbv-period-tabs, .kbv-sub-tabs) > * { min-width: max-content; }
+  /* El texto de una fila apretada se recorta en vez de estirarla. */
+  .kbv-main :is(.fd-txt, .kbv-feed-row .fd-body, .ab-name, .hm-id strong) {
+    overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* 8 · Piso táctil de 44px en todo lo que se toca. Los CAMPOS conservan su
+     contrato de 42px: subirlos desalinea cada fila del proyecto. */
+  :is(.kbv-btn, .kbv-chip, .kbv-icon-btn, .kbv-seg > *, .kbv-tabs > *, .kbv-side-link) { min-height: 44px; }
+}
+
+/* ═══ El menú lateral necesita su propio scroll ═══
+   18 accesos + cabecera + pie miden 1453px: en una ventana de 540 la mitad
+   del menú (de Familia hacia abajo) quedaba fuera de la pantalla y no había
+   forma de llegar a ella — el riel no tenía scroll y la página tampoco lo
+   daba, porque el shell ya ocupa exactamente el alto de la ventana. Lo que
+   falta no es alto: es que la COLUMNA de accesos scrollee dentro del riel,
+   con la identidad arriba y Configuración/Cuenta anclados abajo.
+   `min-height: 0` es la pieza obligatoria — sin ella un hijo flex se niega
+   a encoger por debajo de su contenido y el `overflow` nunca se activa. */
+/* El riel se ancla al viewport. Sin esto, la fila del grid crece hasta el
+   contenido (1453px) y `min-height: 0` no sirve de nada: no hay altura
+   contra la cual desbordar. `align-self: start` es obligatorio — un hijo de
+   grid se estira por defecto, y un elemento estirado no puede ser sticky. */
+.kbv-sidebar {
+  position: sticky; top: 0; align-self: start;
+  height: 100vh; max-height: 100vh; min-height: 0;
+  overflow: hidden;
+}
+.kbv-sidebar > * { flex: none; }
+.kbv-side-nav {
+  flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: var(--kb-border-strong) transparent;
+  /* aire para que el último acceso no se pegue al pie */
+  padding-bottom: 4px;
+}
+.kbv-side-nav::-webkit-scrollbar { width: 6px; }
+.kbv-side-nav::-webkit-scrollbar-thumb { background: var(--kb-border-strong); border-radius: 999px; }
+.kbv-side-nav::-webkit-scrollbar-track { background: transparent; }
+.kbv-side-foot { margin-top: auto; }
+
+/* En el cajón del teléfono el pie viaja con el contenido: ahí el menú es una
+   hoja completa, no una columna con zonas fijas. */
+@container kbwin (max-width: 640px) {
+  .kbv-shell.side-flyout > .kbv-sidebar { position: fixed; overflow-y: auto; height: auto; }
+
+}
+
+/* En el cajón, la lista de secciones es lo único que cede: el pie (Módulos,
+   Configuración, Cuenta) siempre alcanzable, que es lo que se cortaba. */
+.kbv-shell.side-flyout > .kbv-sidebar > * { flex: none; }
+
+/* En el cajón (244px con 14 de padding → 216 de caja), la fila superior pedía
+   238px en una sola línea sin poder encoger: el control de replegar se salía
+   8px y el `overflow-x: hidden` del cajón se lo comía. Dos reglas, una causa:
+   la fila puede envolver y sus piezas pueden ceder. */
+.kbv-shell.side-flyout > .kbv-sidebar .kbv-side-top { flex-wrap: wrap; row-gap: 10px; }
+.kbv-shell.side-flyout > .kbv-sidebar :is(.kbv-side-modeswitch, .kbv-side-collapse) { min-width: 0; max-width: 100%; }
+/* Y el reparto vertical: la lista de 18 destinos vivía en 170px porque las
+   zonas de arriba se quedaban con su alto natural. Es la lista la que manda —
+   el resto cede lo que le sobra. */
+/* El menú es la ÚNICA región desplazable: la lista de secciones no vuelve a
+   tener ventanilla propia. Dos scrollers anidados dejaban dos barras (24 de los
+   232px) y empujaban el pie fuera de pantalla. */
+.kbv-sidebar { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.kbv-sidebar > .kbv-side-nav { overflow: visible; flex: none; min-height: 0; }

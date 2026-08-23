@@ -1,0 +1,82 @@
+<!-- @dsCard group="14 · Hábitos" viewport="700x549" name="Hábitos · átomos" subtitle="Las 10 piezas elementales, con su medida real de styles-extras.css" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.key{margin-left:auto;display:flex;gap:10px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.key span{display:inline-flex;align-items:center;gap:4px}
+.dot{width:8px;height:8px;border-radius:50%;display:block;flex:none;background:var(--kb-gem)}
+.pieces{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:10px 11px;display:flex;flex-direction:column;gap:7px;position:relative}
+.p.cust{border-color:color-mix(in oklab,var(--kb-gem) 42%,var(--kb-border))}
+.p.cust::after{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--kb-gem)}
+.pn{font-family:var(--kb-f-label);font-size:10.5px;font-weight:800;color:var(--kb-text);line-height:1.2;padding-right:13px;letter-spacing:.09em;text-transform:uppercase}
+.pv{font-size:10px;color:var(--kb-text-3);line-height:1.4;margin-top:auto}
+.pv code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.demo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:38px}
+/* medidas reales */
+.chk{width:22px;height:22px;border-radius:7px;flex:none;border:2px solid color-mix(in oklab,var(--c) 40%,var(--kb-border));display:flex;align-items:center;justify-content:center;color:#fff}
+.chk.done{background:var(--c);border-color:var(--c)}
+.day{width:22px;height:22px;border-radius:6px;background:var(--kb-surface-2);display:inline-flex;align-items:center;justify-content:center;font-family:var(--kb-f-label);font-size:10px;font-weight:800;color:var(--kb-text);flex:none;letter-spacing:.09em;text-transform:uppercase}
+.day.done{background:var(--ink,var(--kb-text));color:#fff}
+.ico{width:36px;height:36px;border-radius:10px;background:color-mix(in oklab,var(--c) 14%,#fff);color:var(--c);display:flex;align-items:center;justify-content:center;flex:none}
+.ico60{width:60px;height:60px;border-radius:14px;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;flex:none}
+/* MIGRADO · Jakarta minúscula, ya no mono en mayúscula */
+.pip{font-family:var(--kb-f-label);font-size:10.5px;font-weight:800;padding:2.5px 8px;border-radius:var(--kb-r-xs);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.pip.pos{background:rgba(28,164,160,.14);color:var(--kb-primary-ink)}
+.pip.neg{background:rgba(230,69,69,.12);color:var(--kb-hp-ink)}
+.bub{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:12px;background:color-mix(in oklab,var(--kb-coin) 18%,#fff);color:color-mix(in oklab,var(--kb-coin) 60%,#000);padding:4px 9px;border-radius:var(--kb-r-pill);flex:none;white-space:nowrap}
+/* MIGRADO · un solo color: el del área */
+.xp{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11.5px;color:var(--kb-ink-on-tint);white-space:nowrap}
+.xpp{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:13px;color:var(--kb-primary-ink);background:var(--kb-primary-soft);padding:2.5px 10px;border-radius:var(--kb-r-pill);white-space:nowrap}
+.xpp small{color:color-mix(in oklab,var(--kb-primary-ink) 74%,var(--kb-text));font-weight:600}
+/* moneda · el otro premio, siempre junto al XP y nunca dentro de su píldora */
+.cn{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11.5px;color:color-mix(in oklab,var(--kb-coin) 62%,var(--kb-text));white-space:nowrap}
+.cn span{display:flex;flex:none}
+.icb{border:1px solid var(--kb-border);background:var(--kb-card);border-radius:6px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--kb-text-2);flex:none}
+/* MIGRADO · Jakarta minúscula */
+.sch{display:inline-flex;align-items:center;gap:5px;font-family:var(--kb-f-label);font-size:11px;font-weight:700;color:var(--kb-text-3);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.foot{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.foot b{color:var(--kb-text);font-weight:700}
+.foot code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+<div class="top">
+  <p class="lead"><b>átomo</b> · una sola decisión visual, no se parte más</p>
+  <span class="key"><span><i class="dot"></i> se compra la forma en la tienda</span></span>
+</div>
+<div class="pieces">
+  <div class="p cust" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="pn">casilla · marcar</span><div class="demo"><span class="chk"></span><span class="chk done" id="k1"></span></div><span class="pv"><code>22 · r7 · borde 2px</code> teñido del área al 40 %</span></div>
+  <div class="p" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="pn">casilla · día</span><div class="demo"><span class="day">L</span><span class="day done">M</span><span class="day">M</span></div><span class="pv"><code>22 · r6</code> superficie-2, lleva la inicial</span></div>
+  <div class="p cust"><span class="pn">glifo · tarjeta</span><div class="demo"><span class="ico" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)" id="i1"></span><span class="ico" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)" id="i2"></span></div><span class="pv"><code>36 · r10</code> tinte del área al 14 %</span></div>
+  <div class="p cust"><span class="pn">glifo · detalle</span><div class="demo"><span class="ico60" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)" id="i3"></span></div><span class="pv"><code>60 · r14</code> relleno sólido, glifo blanco</span></div>
+  <div class="p"><span class="pn">tipo de hábito</span><div class="demo"><span class="pip pos">bueno</span><span class="pip neg">malo</span></div><span class="pv">construye vs. corta</span></div>
+  <div class="p"><span class="pn">burbuja de racha</span><div class="demo"><span class="bub">21 d</span><span class="bub">7 d</span></div><span class="pv">tintada de moneda al 18 %, sin llama</span></div>
+  <div class="p" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><span class="pn">premio</span><div class="demo"><span class="xp">+10 XP</span><span class="cn"><span id="c1"></span>+3</span></div><span class="pv"><code>xp = base·2+4</code> · <code>monedas = base·0,8</code> · base = energía × esfuerzo</span></div>
+  <div class="p"><span class="pn">total del día</span><div class="demo"><span class="xpp">30 <small>/ 60 XP</small></span><span class="cn"><span id="c2"></span>18</span></div><span class="pv">píldora <code>primary-soft</code> · las monedas van aparte, nunca dentro</span></div>
+  <div class="p"><span class="pn">frecuencia</span><div class="demo"><span class="sch" id="s1">Cualquier hora</span></div><span class="pv">glifo de reloj + texto</span></div>
+  <div class="p"><span class="pn">botón de ícono</span><div class="demo"><span class="icb" id="b1"></span><span class="icb" id="b2"></span></div><span class="pv"><code>24 · r6</code> · <code>danger</code> a rojo</span></div>
+</div>
+<p class="foot"><b>Dos casillas y dos glifos, no uno de cada.</b> La casilla de marcar (<code>r7</code>, borde teñido) y la del calendario (<code>r6</code>, con inicial) viven en pantallas distintas y dicen cosas distintas. Igual los glifos: <code>36</code> tintado en la tarjeta, <code>60</code> sólido en el detalle. <b>Hábitos no maneja prioridad</b> — ese átomo es de tareas. <b>Cada hábito da XP y monedas</b>, las dos derivadas de energía × esfuerzo: un hábito de 1×1 da <code>+6 XP</code> y <code>1</code> moneda; uno de 4×4 da <code>+36 XP</code> y <code>13</code>. La moneda es el piso mínimo: nunca baja de 1.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/personalizacion.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, color) => { const el = document.getElementById(id); if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color={color} />); };
+  put('k1','check',13,'#fff');
+  put('i1','vigor',18,'currentColor'); put('i2','book',18,'currentColor'); put('i3','vigor',28,'#fff');  put('b1','edit',13,'currentColor'); put('b2','trash',13,'currentColor');
+  const el = document.getElementById('s1');
+  if (el) { const t = el.textContent; el.textContent=''; const s=document.createElement('i'); s.style.display='inline-flex'; el.appendChild(s); el.appendChild(document.createTextNode(t)); ReactDOM.createRoot(s).render(<I name="clock" size={12} color="currentColor" />); }
+}
+const CG = window.CurrencyGlyph;
+if (CG) { for (const id of ['c1','c2']) { const e = document.getElementById(id);
+  if (e) ReactDOM.createRoot(e).render(<CG glyph="coin" color="var(--kb-coin)" size={13} />); } }
+</script>
+</body></html>

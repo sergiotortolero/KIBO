@@ -1,0 +1,42 @@
+<!-- @dsCard group="08 · Datos" viewport="700x416" name="Datos · constancia y lo que falta" subtitle="ConsistencyHeatmap real, con su leyenda y su cuenta de días activos" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../kbv-components.css">
+<link rel="stylesheet" href="../reference/kibo-charts.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:16px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0 0 11px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.ch{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 13px;margin-bottom:9px}
+.chh{display:flex;align-items:baseline;gap:8px;margin-bottom:9px}
+.chn{font-family:var(--kb-f-label);font-size:11.5px;font-weight:800;color:var(--kb-primary-ink);flex:none;letter-spacing:.09em;text-transform:uppercase}
+.chd{font-size:10.5px;color:var(--kb-text-2);line-height:1.4}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px;align-items:start}
+.no{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);line-height:1.6;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:10px 12px;margin:0;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>el heatmap ya existe</b> · un cuadro por día, tinte por intensidad</div>
+  <div id="app"></div>
+  <p class="no">De las <b>12 gráficas</b> del sistema existen 6: línea, barras, perfil semanal, heatmap, gantt y el filtro de periodo. <b>Faltan 8</b>: sparkline en KPI, anillo, radar de las 5 áreas, apilada, gauge, ranking horizontal, dispersión y embudo. Dos ya están prometidas en la tienda — <code>wg-radar</code> vende el radar de balance y <code>u-stats-pro</code> vende correlaciones. Detalle en <code>docs/anatomia.md</code>.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel" src="../reference/app/progress-charts.jsx"></script>
+<script type="text/babel">
+const { ConsistencyHeatmap } = window;
+function App() {
+  // El heatmap NO usa el filtro de periodo: su rango es fijo de 6 meses.
+  // Ponerle PeriodFilter encima hace ver que el control no sirve.
+  const period = '6m';
+  return (
+    <div className="ch">
+      <div className="chh"><span className="chn">heatmap de constancia</span><span className="chd">rango fijo de 6 meses · no usa el filtro de periodo</span></div>
+      {ConsistencyHeatmap ? <ConsistencyHeatmap period={period} /> : null}
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById("app")).render(<App />);
+</script>
+</body></html>

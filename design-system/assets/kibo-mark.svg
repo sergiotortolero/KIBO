@@ -1,0 +1,8 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="KIBO">
+<path d="M60 8c30 0 52 20 52 47 0 30-22 57-52 57S8 85 8 55C8 28 30 8 60 8Z" fill="#1CA4A0" fill-opacity=".9"></path>
+<ellipse cx="45" cy="58" rx="11" ry="13" fill="#0B3B39"></ellipse>
+<ellipse cx="75" cy="58" rx="11" ry="13" fill="#0B3B39"></ellipse>
+<circle cx="41" cy="53" r="3.6" fill="#fff" fill-opacity=".95"></circle>
+<circle cx="71" cy="53" r="3.6" fill="#fff" fill-opacity=".95"></circle>
+<path d="M50 80q10 9 20 0" stroke="#0B3B39" stroke-width="5" stroke-linecap="round" fill="none"></path>
+</svg>

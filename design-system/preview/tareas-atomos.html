@@ -1,0 +1,67 @@
+<!-- @dsCard group="12 · Tareas" viewport="700x389" name="Tareas · átomos" subtitle="Las 6 piezas elementales del dominio, en su forma canónica" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.top{display:flex;align-items:center;gap:11px;margin-bottom:12px}
+.lead{font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);margin:0;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.key{margin-left:auto;display:flex;gap:10px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.key span{display:inline-flex;align-items:center;gap:4px}
+.dot{width:8px;height:8px;border-radius:50%;display:block;flex:none;background:var(--kb-gem)}
+.pieces{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.p{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:10px 11px;display:flex;flex-direction:column;gap:7px;position:relative}
+.p.cust{border-color:color-mix(in oklab,var(--kb-gem) 42%,var(--kb-border))}
+.p.cust::after{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--kb-gem)}
+.pn{font-family:var(--kb-f-label);font-size:10.5px;font-weight:800;color:var(--kb-text);line-height:1.2;padding-right:13px;letter-spacing:.09em;text-transform:uppercase}
+.pv{font-size:10px;color:var(--kb-text-3);line-height:1.45;margin-top:auto}
+.pv code{font-family:var(--kb-f-label);font-weight:700;font-size:10px;color:var(--kb-text-2);letter-spacing:.09em;text-transform:uppercase}
+.demo{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-height:38px}
+/* píldora de prioridad · Jakarta minúscula, tinte 13 %, texto en tinta */
+.pri{font-family:var(--kb-f-label);font-size:10px;font-weight:800;padding:2px 7px;border-radius:var(--kb-r-pill);white-space:nowrap;background:color-mix(in oklab,var(--p) 13%,#fff);color:color-mix(in oklab,var(--p) 72%,var(--kb-text));letter-spacing:.09em;text-transform:uppercase}
+/* punto de área · 6px, exclusivo del área */
+.ap{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:var(--kb-ink-on-tint);white-space:nowrap}
+.ap i{width:6px;height:6px;border-radius:50%;background:var(--c);display:block;flex:none}
+/* casilla de deadline · 16px, borde 2px */
+.chk{width:16px;height:16px;border-radius:5px;flex:none;border:2px solid var(--kb-border-strong);display:flex;align-items:center;justify-content:center;color:#fff;background:var(--kb-card)}
+.chk.done{background:var(--kb-primary);border-color:var(--kb-primary)}
+/* fecha · día en 800, unidad en 500 */
+.dt{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-size:11px;font-weight:800;color:var(--kb-text);white-space:nowrap}
+.dt small{font-weight:500;color:var(--kb-text-3)}
+.dt.urg{color:color-mix(in oklab,var(--pri-urgent) 72%,var(--kb-text))}
+/* barra de avance · 4px, mínimo 30px */
+.bar{display:block;width:100%;min-width:30px;height:4px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--c);border-radius:var(--kb-r-pill)}
+/* botón promover · texto en tinta de marca */
+.pb{border:1px solid var(--kb-border);background:var(--kb-card);border-radius:8px;padding:5px 10px;font:inherit;font-size:11.5px;font-weight:700;color:var(--kb-primary-ink);cursor:pointer;white-space:nowrap}
+.pb:hover{background:var(--kb-primary-soft);border-color:var(--kb-primary)}
+.foot{margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.foot b{color:var(--kb-text);font-weight:700}
+.foot code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+</style></head>
+<body class="kb-root">
+<div class="top">
+  <p class="lead"><b>átomo</b> · una sola decisión visual, no se parte más</p>
+  <span class="key"><span><i class="dot"></i> se compra la forma en la tienda</span></span>
+</div>
+<div class="pieces">
+  <div class="p"><span class="pn">píldora de prioridad</span><div class="demo"><span class="pri" style="--p:#E64545">urgente</span><span class="pri" style="--p:#F4811F">alta</span><span class="pri" style="--p:#F4B740">media</span></div><span class="pv"><code>10px · 800 · 2px 7px</code> tinte del color al 13 %, texto en tinta al 72 %</span></div>
+  <div class="p"><span class="pn">punto de área</span><div class="demo"><span class="ap" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)"><i></i>Sabiduría</span><span class="ap" style="--c:var(--area-vigor);--ink:var(--area-vigor-ink)"><i></i>Vigor</span></div><span class="pv"><code>6px</code> exclusivo del área — la prioridad ya tiene píldora</span></div>
+  <div class="p cust"><span class="pn">casilla</span><div class="demo"><span class="chk"></span><span class="chk done" id="k1"></span></div><span class="pv"><code>16px · r5 · borde 2px</code> más chica que la de hábitos, que mide 22</span></div>
+  <div class="p"><span class="pn">fecha</span><div class="demo"><span class="dt">12 jun <small>· 3 d</small></span><span class="dt urg">hoy <small>· 4 h</small></span></div><span class="pv"><code>11px</code> día en 800, unidad en 500 — el peso hace la jerarquía</span></div>
+  <div class="p"><span class="pn">barra de avance</span><div class="demo" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink);display:block"><span class="bar"><i style="width:64%"></i></span><span class="bar" style="margin-top:8px"><i style="width:22%"></i></span></div><span class="pv"><code>4px · r pill · mín 30px</code> pista <code>surface-2</code>, relleno del área</span></div>
+  <div class="p"><span class="pn">botón promover</span><div class="demo"><button class="pb">↑ Promover</button></div><span class="pv"><code>r8 · 5px 10px · 11.5px 700</code> texto <code>primary-ink</code></span></div>
+</div>
+<p class="foot"><b>Un signo, un dato.</b> El punto de 6px significa <b>área</b> y nada más; la prioridad se lee por su píldora. <b>Todo texto chico sobre color va en tinta</b> —el color al 72 % mezclado con <code>--kb-text</code>— porque un color pleno no alcanza 4.5:1 contra su propio tinte. La casilla de tareas mide 16 y la de hábitos 22: son gestos distintos en pantallas distintas.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const el = document.getElementById('k1');
+  if (el) ReactDOM.createRoot(el).render(<I name="check" size={10} color="#fff" />);
+}
+</script>
+</body></html>

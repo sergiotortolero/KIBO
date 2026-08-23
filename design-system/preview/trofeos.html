@@ -1,0 +1,89 @@
+<!-- @dsCard group="10 · Gamificación" viewport="700x510" name="Trofeos y estandartes" subtitle="Trofeo mensual y estandarte de reto cumplido · alta exigencia = hito" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>html,body{margin:0}body{background:var(--kb-canvas);padding:18px 22px;font-family:var(--kb-f-body)}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin-bottom:12px;text-transform:uppercase}
+.kbv-ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kbv-ach i[data-lucide]{width:16px;height:16px}
+
+
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 10px;text-transform:uppercase}
+.monthly{display:flex;gap:10px;margin-bottom:16px}
+.trophy{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;border:1px solid var(--kb-border);border-radius:var(--kb-r-md);background:var(--kb-card);box-shadow:var(--kb-sh-1)}
+.trophy.current{border-color:var(--c);box-shadow:0 0 0 1px color-mix(in oklab,var(--c) 30%,transparent)}
+.trophy .medal{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;background:linear-gradient(160deg,color-mix(in oklab,var(--c) 75%,#fff),var(--c))}
+.trophy .tn{font-family:var(--kb-f-display);font-weight:700;font-size:12px;color:var(--kb-text)}
+.trophy .tm{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);letter-spacing:.09em;text-transform:uppercase}
+.trophy i[data-lucide]{width:18px;height:18px}
+/* Estandartes — banderín flush a la izquierda con muesca, fila completa tintada */
+.banners{display:flex;flex-direction:column;gap:8px}
+.bn{position:relative;display:flex;align-items:center;gap:14px;padding:0 14px 0 0;min-height:51px;
+  border:1px solid color-mix(in oklab,var(--c) 20%,var(--kb-border));border-radius:var(--kb-r-md);
+  background:color-mix(in oklab,var(--c) 5%,#fff);overflow:hidden}
+.bn.hito{border-color:color-mix(in oklab,var(--c) 40%,#fff);background:color-mix(in oklab,var(--c) 8%,#fff)}
+.bn .flag{position:relative;flex:none;width:56px;align-self:stretch;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,color-mix(in oklab,var(--c) 84%,#fff),var(--c));color:#fff;
+  clip-path:polygon(0 0,100% 0,78% 50%,100% 100%,0 100%)}
+.bn .flag i[data-lucide]{width:20px;height:20px;margin-right:8px}
+.bn .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;padding:9px 0}
+.bn .nm{font-size:14px;font-weight:800;color:var(--kb-text);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bn .meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.bn .diff{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;padding:2.5px 8px;border-radius:var(--kb-r-xs);white-space:nowrap;text-transform:uppercase}
+.bn .diff.alta{background:color-mix(in oklab,#E64545 14%,#fff);color:#C0392B}
+.bn .diff.media{background:color-mix(in oklab,#6E8CF2 14%,#fff);color:#3A4F9C}
+.bn .diff.baja{background:var(--kb-surface-2);color:var(--kb-text-2)}
+.bn .date{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-label);font-size:10.5px;font-weight:700;color:var(--kb-text-3);white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.bn .hito-pill{flex:none;display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;
+  padding:4px 9px;border-radius:999px;background:linear-gradient(180deg,#FFE9A8,#F4C24B);color:#6b4E0A;
+  box-shadow:0 1px 0 #d9a51f;text-transform:uppercase}
+.bn .hito-pill i[data-lucide]{width:10px;height:10px}
+.bn .date i[data-lucide]{width:10px;height:10px}
+
+.divider{height:1px;background:var(--kb-border);margin:15px 0}
+</style></head>
+<body class="kb-root">
+<div class="lead">Trofeos mensuales · el actual resalta</div>
+  <div class="monthly">
+    <div class="trophy current" style="--c:#E64545"><span class="medal"><i data-lucide="flame"></i></span><span class="tn">Imparable</span><span class="tm">May 2026</span></div>
+    <div class="trophy" style="--c:#E0A82B"><span class="medal"><i data-lucide="trophy"></i></span><span class="tn">Referente</span><span class="tm">Abr 2026</span></div>
+    <div class="trophy" style="--c:#4CAF82"><span class="medal"><i data-lucide="check"></i></span><span class="tn">Constante</span><span class="tm">Mar 2026</span></div>
+    <div class="trophy" style="--c:#6E8CF2"><span class="medal"><i data-lucide="target"></i></span><span class="tn">Enfocado</span><span class="tm">Feb 2026</span></div>
+  </div>
+  <div class="lead">Retos cumplidos · estandartes (alta exigencia = hito)</div>
+  <div class="banners">
+    <div class="bn hito" style="--c:#E64545">
+      <span class="flag"><i data-lucide="flame"></i></span>
+      <div class="body">
+        <span class="nm">Maratón de lectura · 30 días</span>
+        <span class="meta"><span class="diff alta">Alta exigencia</span><span class="date"><i data-lucide="check"></i> 24 May 2026</span></span>
+      </div>
+      <span class="hito-pill"><i data-lucide="trophy"></i> Hito</span>
+    </div>
+    <div class="bn" style="--c:#6E8CF2">
+      <span class="flag"><i data-lucide="shield"></i></span>
+      <div class="body">
+        <span class="nm">7 días sin redes sociales</span>
+        <span class="meta"><span class="diff media">Exigencia media</span><span class="date"><i data-lucide="check"></i> 08 May 2026</span></span>
+      </div>
+    </div>
+    <div class="bn hito" style="--c:#E0A82B">
+      <span class="flag"><i data-lucide="target"></i></span>
+      <div class="body">
+        <span class="nm">Sin azúcar · 30 días</span>
+        <span class="meta"><span class="diff alta">Alta exigencia</span><span class="date"><i data-lucide="check"></i> 21 Abr 2026</span></span>
+      </div>
+      <span class="hito-pill"><i data-lucide="trophy"></i> Hito</span>
+    </div>
+    <div class="bn" style="--c:var(--area-community);--ink:var(--area-community-ink)">
+      <span class="flag"><i data-lucide="sparkle"></i></span>
+      <div class="body">
+        <span class="nm">Meditar 14 días</span>
+        <span class="meta"><span class="diff baja">Exigencia baja</span><span class="date"><i data-lucide="check"></i> 15 Mar 2026</span></span>
+      </div>
+    </div>
+  </div>
+</body></html>
+  <script>lucide.createIcons({attrs:{'stroke-width':2}});</script>
+</body></html>

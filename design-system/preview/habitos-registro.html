@@ -1,0 +1,190 @@
+<!-- @dsCard group="14 · Hábitos" viewport="700x755" name="Hábitos · registro rápido" subtitle="Cómo se marca un hábito sin abrir nada — cuatro formas según su tipo" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);font-family:var(--kb-f-body);width:700px;box-sizing:border-box;padding:16px 18px}
+.hd{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--kb-primary-ink);margin:0 0 9px}
+.hd:not(:first-child){margin-top:16px}
+.hd em{font-style:normal;text-transform:none;letter-spacing:0;font-weight:600;color:var(--kb-text-3);font-size:10.5px}
+.rows{display:flex;flex-direction:column;gap:7px}
+/* ── la fila de registro · vocabulario de .kc-prop ── */
+.pr{display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:var(--kb-r-md);
+  border:1px solid color-mix(in oklab,var(--c) 34%,var(--kb-border));
+  background:color-mix(in oklab,var(--c) 7%,#fff)}
+.ico{width:30px;height:30px;flex:none;border-radius:var(--kb-r-xs);display:inline-flex;align-items:center;justify-content:center;
+  background:color-mix(in oklab,var(--c) 16%,#fff);color:var(--ink,var(--kb-text))}
+.txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.txt strong{font-size:12px;font-weight:700;color:var(--kb-text);line-height:1.25}
+/* En superficie tintada, --kb-text-2 se queda en 4.46-4.49:1. La jerarquia la
+   cargan el tamano y el peso, no la claridad. */
+.txt em{font-style:normal;font-size:10px;color:var(--kb-text);opacity:.72;line-height:1.3}
+/* botón de registro · 32px, hardElev, se hunde 2px */
+.ok{width:32px;height:32px;flex:none;cursor:pointer;border:0;border-radius:50%;
+  background:var(--kb-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 0 var(--kb-primary-hover);transition:background var(--kb-dur-fast) var(--kb-ease-out)}
+.ok:hover{background:var(--kb-primary-hover)}
+.ok:active{transform:translateY(2px);box-shadow:none}
+.ok.done{background:var(--kb-good,#1E9E63);box-shadow:0 2px 0 color-mix(in oklab,var(--kb-good,#1E9E63) 72%,#000)}
+/* corregir el numero · .kp-fix real (styles-extras.css:11056): 28px y CIRCULO,
+   para que haga par con el circulo de .kp-ok que va al lado. */
+.fix{width:28px;height:28px;flex:none;cursor:pointer;border:1px solid var(--kb-border);border-radius:50%;
+  background:var(--kb-canvas);color:var(--kb-text-3);display:inline-flex;align-items:center;justify-content:center;
+  transition:border-color var(--kb-dur-fast) var(--kb-ease-out),color var(--kb-dur-fast) var(--kb-ease-out)}
+.fix:hover{border-color:var(--kb-primary);color:var(--kb-primary-ink)}
+/* KbStepper · .st-ctl real (styles-extras.css:9935) son 38px de columna y 42px
+   de alto, pero --kb-ctl-h subio a 46px en la migracion de agosto y el token
+   nombra al stepper. Aqui va el token, no el numero viejo ni una "variante
+   compacta": esa variante NO existe en el codigo. */
+.stp{display:grid;grid-template-columns:38px 1fr 38px;align-items:center;height:var(--kb-ctl-h);flex:none;
+  border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);background:var(--kb-card);overflow:hidden}
+.stp:focus-within{border-color:var(--kb-primary);box-shadow:0 0 0 3px color-mix(in oklab,var(--kb-primary) 18%,transparent)}
+.stp button{height:100%;border:0;background:var(--kb-surface);color:var(--kb-text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:background var(--kb-dur-fast) var(--kb-ease-out),color var(--kb-dur-fast) var(--kb-ease-out)}
+.stp button:hover:not(:disabled){background:var(--kb-primary-soft);color:var(--kb-primary-ink)}
+.stp button:disabled{color:var(--kb-border-strong);cursor:not-allowed}
+.stp .v{display:inline-flex;align-items:baseline;justify-content:center;gap:3px;padding:0 4px;min-width:52px}
+.stp .v b{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:var(--kb-text)}
+.stp .v em{font-style:normal;font-size:10px;font-weight:700;color:var(--kb-text-3)}
+/* atajos de valor frecuente */
+.qk{display:flex;gap:4px;flex:none}
+.qk button{cursor:pointer;border:1px solid var(--kb-border);background:var(--kb-card);border-radius:var(--kb-r-xs);
+  height:var(--kb-ctl-h);padding:0 11px;font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:12px;color:var(--kb-text-2);
+  transition:all var(--kb-dur-fast) var(--kb-ease-out)}
+.qk button:hover{border-color:var(--kb-primary);color:var(--kb-primary-ink);background:var(--kb-primary-soft)}
+/* negativo · el logro es NO haberlo hecho */
+.pr.neg{--c:var(--kb-hp)}
+.pr.neg .ok{background:var(--kb-hp);box-shadow:0 2px 0 color-mix(in oklab,var(--kb-hp) 72%,#000)}
+.pr.neg .ok:hover{background:color-mix(in oklab,var(--kb-hp) 86%,#000)}
+.slip{cursor:pointer;border:1px solid color-mix(in oklab,var(--kb-hp) 30%,var(--kb-border));border-radius:var(--kb-r-pill);
+  background:var(--kb-card);padding:5px 11px;font-family:var(--kb-f-label);font-size:10px;font-weight:800;
+  letter-spacing:.05em;text-transform:uppercase;color:var(--kb-hp-ink);flex:none;white-space:nowrap;
+  transition:all var(--kb-dur-fast) var(--kb-ease-out)}
+.slip:hover{background:var(--kb-hp-soft)}
+/* .slip no viene del codigo, asi que no hereda la deuda tactil: la pastilla
+   mide 27px pero su zona de toque llega a --kb-touch-min por fuera del dibujo.
+   Es la tecnica propuesta para .kp-ok y .ic-btn, que hoy miden 32 y 28px. */
+.slip{position:relative}
+.slip::after{content:"";position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:var(--kb-touch-min)}
+/* registrar todos */
+.all{align-self:flex-start;cursor:pointer;display:inline-flex;align-items:center;gap:6px;border:0;border-radius:var(--kb-r-pill);
+  padding:0 16px;min-height:var(--kb-touch-min);background:var(--kb-primary);color:#fff;font-family:var(--kb-f-display);font-weight:800;font-size:14px;
+  box-shadow:0 2px 0 var(--kb-primary-hover);margin-top:8px}
+.all span{display:flex;flex:none}
+.all:active{transform:translateY(2px);box-shadow:none}
+/* dónde vive · el pie de la tarjeta de hábito */
+.card{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:11px 12px;display:flex;flex-direction:column;gap:9px}
+.chead{display:flex;align-items:flex-start;gap:10px}
+.cico{width:36px;height:36px;flex:none;border-radius:10px;display:grid;place-items:center;background:color-mix(in oklab,var(--c) 16%,#fff);color:var(--ink,var(--kb-text))}
+.cinfo{flex:1;min-width:0}
+.cnm{font-family:var(--kb-f-display);font-weight:800;font-size:14px;color:var(--kb-text);line-height:1.25}
+.cmeta{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;align-items:center}
+.pip{font-family:var(--kb-f-display);font-size:10px;font-weight:800;padding:2px 7px;border-radius:var(--kb-r-xs);
+  background:color-mix(in oklab,var(--c) 16%,#fff);color:var(--ink,var(--kb-text))}
+.sch{display:inline-flex;align-items:center;gap:4px;font-family:var(--kb-f-display);font-size:10px;font-weight:700;color:var(--kb-text-2);background:var(--kb-surface);padding:2px 7px;border-radius:var(--kb-r-pill)}
+.week{display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--kb-surface);border-radius:8px}
+.day{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;background:var(--kb-card);
+  font-family:var(--kb-f-display);font-size:10px;font-weight:800;color:var(--kb-text);border:1px solid var(--kb-border)}
+/* Blanco sobre cyan pleno = 2.43:1. El relleno del dia marcado es la TINTA. */
+.day.done{background:var(--ink);color:#fff;border-color:transparent}
+.wsum{margin-left:auto;font-family:var(--kb-f-display);font-size:10px;font-weight:700;color:var(--kb-text-2)}
+.cfoot{display:flex;justify-content:space-between;align-items:center;gap:9px;padding-top:9px;border-top:1px solid var(--kb-border-soft)}
+.xp{font-family:var(--kb-f-display);font-variant-numeric:tabular-nums;font-weight:800;font-size:11px;color:var(--ink,var(--kb-text))}
+.acts{display:flex;gap:5px;align-items:center}
+.icb{width:28px;height:28px;border:1px solid var(--kb-border);background:var(--kb-card);border-radius:var(--kb-r-xs);
+  display:grid;place-items:center;color:var(--kb-text-2);cursor:pointer;transition:all var(--kb-dur-fast) var(--kb-ease-out)}
+.icb:hover{border-color:var(--kb-primary);color:var(--kb-primary)}
+.icb.danger:hover{border-color:var(--kb-hp);color:var(--kb-hp);background:var(--kb-hp-soft)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+.note{margin-top:13px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;font-size:10.5px;color:var(--kb-text-2);line-height:1.5}
+.note b{color:var(--kb-text);font-weight:700}
+.note code{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-primary-ink)}
+</style></head>
+<body class="kb-root">
+<p class="hd">Cuatro formas de registrar <em>— el tipo de hábito decide el control, no el gusto de la pantalla</em></p>
+<div class="rows">
+  <div class="pr" style="--c:var(--kb-primary);--ink:var(--kb-primary-fill)">
+    <span class="ico" id="a1"></span>
+    <span class="txt"><strong>Meditar 10 minutos</strong><em>Sí o no · un solo toque lo cierra</em></span>
+    <button class="ok" title="Registrar" id="b1"></button>
+  </div>
+  <div class="pr" style="--c:var(--area-will);--ink:var(--area-will-ink)">
+    <span class="ico" id="a2"></span>
+    <span class="txt"><strong>Tomar 2 L de agua</strong><em>Meta numérica · 6 de 8 vasos</em></span>
+    <span class="qk"><button>+1</button><button>+2</button></span>
+    <span class="stp"><button id="s1" aria-label="Restar"></button><span class="v"><b>6</b><em>vasos</em></span><button id="s2" aria-label="Sumar"></button></span>
+    <button class="ok" title="Registrar" id="b2"></button>
+  </div>
+  <div class="pr" style="--c:var(--area-wisdom);--ink:var(--area-wisdom-ink)">
+    <span class="ico" id="a3"></span>
+    <span class="txt"><strong>Leer antes de dormir</strong><em>Ya registrado hoy · 24 páginas</em></span>
+    <button class="fix" title="Corregir el número" id="f1"></button>
+    <button class="ok done" title="Registrado" id="b3"></button>
+  </div>
+  <div class="pr neg" style="--ink:var(--kb-hp-ink)">
+    <span class="ico" id="a4"></span>
+    <span class="txt"><strong>No revisar el celular al despertar</strong><em>Hábito a cortar · el logro es no haberlo hecho</em></span>
+    <button class="slip">caí hoy</button>
+    <button class="ok" title="Aguanté" id="b4"></button>
+  </div>
+</div>
+<button class="all"><span id="ball"></span> Registrar los 3 de hoy</button>
+
+<p class="hd">Dónde vive <em>— el pie de la tarjeta gana el botón; editar y borrar pasan a secundarios</em></p>
+<div class="two">
+  <div class="card" style="--c:var(--area-will);--ink:var(--area-will-ink)">
+    <div class="chead">
+      <span class="cico" id="c1"></span>
+      <span class="cinfo"><span class="cnm">Tomar 2 L de agua</span>
+        <span class="cmeta"><span class="pip">a favor</span><span class="sch"><span id="c2"></span>diario</span></span>
+      </span>
+    </div>
+    <div class="week"><span class="day done">L</span><span class="day done">M</span><span class="day done">M</span><span class="day done">J</span><span class="day">V</span><span class="day">S</span><span class="day">D</span><span class="wsum">4 / 7</span></div>
+    <div class="cfoot">
+      <span class="xp">+15 XP</span>
+      <span class="acts">
+        <button class="icb" title="Editar" id="c3"></button>
+        <button class="icb danger" title="Borrar" id="c4"></button>
+        <span class="stp"><button id="c5" aria-label="Restar"></button><span class="v"><b>6</b><em>vasos</em></span><button id="c6" aria-label="Sumar"></button></span>
+        <button class="ok" title="Registrar" id="c7"></button>
+      </span>
+    </div>
+  </div>
+  <div class="card" style="--c:var(--kb-primary);--ink:var(--kb-primary-fill)">
+    <div class="chead">
+      <span class="cico" id="d1"></span>
+      <span class="cinfo"><span class="cnm">Meditar 10 minutos</span>
+        <span class="cmeta"><span class="pip">a favor</span><span class="sch"><span id="d2"></span>L · M · V</span></span>
+      </span>
+    </div>
+    <div class="week"><span class="day done">L</span><span class="day">M</span><span class="day done">M</span><span class="day">J</span><span class="day">V</span><span class="day">S</span><span class="day">D</span><span class="wsum">2 / 3</span></div>
+    <div class="cfoot">
+      <span class="xp">+10 XP</span>
+      <span class="acts">
+        <button class="icb" title="Editar" id="d3"></button>
+        <button class="icb danger" title="Borrar" id="d4"></button>
+        <button class="ok" title="Registrar" id="d5"></button>
+      </span>
+    </div>
+  </div>
+</div>
+
+<p class="note"><b>Registrar es la acción principal, no una más.</b> Hoy el pie de la tarjeta solo tiene <b>editar</b> y <b>borrar</b> —dos acciones que casi nunca se usan— y para marcar el hábito hay que abrir algo. El botón de registro es el único <b>relleno y con relieve</b> (círculo, se hunde 2px al presionar); editar y borrar quedan con borde, en segundo plano. Las medidas son las del código: <code>32px</code> el de registro (<code>.kp-ok</code>), <code>28px</code> y <b>circular</b> el de corregir (<code>.kp-fix</code>) para que haga par con él, y <code>28px</code> los secundarios (<code>.ic-btn</code>) — <b>los tres por debajo del piso táctil de 44px</b>, deuda de la v1 a decidir. Los controles de captura sí van al alto canónico <code>--kb-ctl-h</code> de 46px, y «caí hoy» —que es nuevo, no heredado— <b>amplía su zona de toque a 44px sin agrandar el dibujo</b>: la técnica propuesta para los tres de arriba.<br><b>El tipo decide el control.</b> Sí o no → un toque. Meta numérica → atajos del valor frecuente <b>más</b> el paso a paso, porque «+1 vaso» resuelve el 90% de los días. Ya registrado → el botón se pone verde y aparece <b>corregir</b>, nunca se bloquea. A cortar → el toque grande es «aguanté» y «caí hoy» va como acción de contorno: <b>el fracaso reencauza</b>, no se esconde ni se castiga con el botón dominante.</p>
+<script type="text/babel" src="../reference/app/icons.jsx"></script>
+<script type="text/babel">
+const I = (typeof KIcon === 'function') ? KIcon : (typeof window.__KIconApp === 'function' ? window.__KIconApp : null);
+if (I) {
+  const put = (id, name, size, color) => { const el = document.getElementById(id);
+    if (el) ReactDOM.createRoot(el).render(<I name={name} size={size} color={color || 'currentColor'} />); };
+  put('a1','will',15); put('a2','vigor',15); put('a3','book-open',15); put('a4','phone',15);
+  put('b1','check',15,'#fff'); put('b2','check',15,'#fff'); put('b3','check',15,'#fff'); put('b4','shield',15,'#fff');
+  put('f1','edit',13);
+  put('s1','minus',13); put('s2','plus',13);
+  put('ball','check',13,'#fff');
+  put('c1','vigor',18); put('c2','repeat',11); put('c3','edit',13); put('c4','trash',13);
+  put('c5','minus',12); put('c6','plus',12); put('c7','check',15,'#fff');
+  put('d1','will',18); put('d2','calendar',11); put('d3','edit',13); put('d4','trash',13); put('d5','check',15,'#fff');
+}
+</script>
+</body></html>

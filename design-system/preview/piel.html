@@ -1,0 +1,54 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x469" name="KIBO · pieles" subtitle="Las 10 pieles reales de kibo-style.jsx · las 3 animadas dejan ver el lienzo a través del gel" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);margin:0 0 12px;letter-spacing:.09em;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.g{display:grid;gap:9px}
+.it{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:9px 7px;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative}
+.pad{display:grid;place-items:center;width:100%;overflow:hidden}
+.nm{font-family:var(--kb-f-display);font-weight:800;font-size:11.5px;color:var(--kb-text);line-height:1.2;text-align:center;min-height:2.4em;display:flex;align-items:center;justify-content:center}
+.pr{font-family:var(--kb-f-label);font-size:10px;font-weight:700;text-align:center;line-height:1.25;white-space:nowrap;letter-spacing:.09em;text-transform:uppercase}
+.pr.free{color:var(--kb-good-ink)}
+.pr.coin{color:var(--kb-coin-ink)}
+.pr.dark{color:var(--kb-dark-edge)}
+.tag{position:absolute;top:6px;right:6px;font-family:var(--kb-f-label);font-size:10px;font-weight:700;padding:2px 6px;border-radius:var(--kb-r-pill);background:var(--kb-primary-soft);color:var(--kb-primary-ink);letter-spacing:.09em;text-transform:uppercase}
+.no{font-family:var(--kb-f-label);font-size:10px;font-weight:700;color:var(--kb-text-3);line-height:1.55;margin-top:11px;background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);padding:9px 11px;letter-spacing:.09em;text-transform:uppercase}
+.no b{color:var(--kb-primary-ink)}.no u{text-decoration:none;color:#B3261E}
+.g{grid-template-columns:repeat(5,1fr)}
+.pad{height:96px}
+</style></head>
+<body class="kb-root">
+  <p class="lead"><b>la piel viste el cuerpo, el ánimo sigue mandando</b> · Galaxia, Lava y Cristal son animadas</p>
+  <div class="g" id="g"></div>
+  <p class="no" id="note"></p>
+<script type="text/babel" src="../reference/app/kibo-style.jsx"></script>
+<script type="text/babel" src="../reference/app/kibo-blob.jsx"></script>
+<script type="text/babel">
+const price = it => {
+  if (!it.cost) return ['free','gratis'];
+  return it.currency === 'gem' ? ['dark', it.cost + ' frag'] : ['coin', it.cost + ' mon'];
+};
+function App(){
+  return KIBO_SKINS.map(s=>{
+    const [k,l]=price(s);
+    return (
+      <div className="it" key={s.id} title={s.desc||s.name}>
+        {s.animated && <span className="tag">viva</span>}
+        <span className="pad"><KiboBlob size={74} mood="calma" ground={false} idle={false} styleOverride={{skin:s.id,mark:'mk-none',aura:'au-none',pers:'pe-sereno',toy:'toy-none'}} /></span>
+        <span className="nm">{s.name}</span>
+        <span className={'pr '+k}>{l}</span>
+      </div>
+    );
+  });
+}
+ReactDOM.createRoot(document.getElementById('g')).render(<React.Fragment><App/></React.Fragment>);
+document.getElementById('note').innerHTML='<b>El gel nunca deja de ser translúcido.</b> Las capas <b>.kbb-skinfx</b> viven DENTRO del cuerpo, así que la piel animada se asoma por la silueta y se deforma con ella. <u>Una piel opaca rompe a KIBO</u>: dejaría de leerse como gelatina.';
+</script>
+</body></html>

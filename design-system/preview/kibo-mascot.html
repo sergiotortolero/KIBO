@@ -1,0 +1,76 @@
+<!-- @dsCard group="09 · KIBO" viewport="700x606" name="KIBO · anatomía e interacción" subtitle="El componente REAL del proyecto — kibo-blob.jsx + kibo-blob.css, sin recrear nada" -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="../reference/kibo-blob.css">
+<link rel="stylesheet" href="../reference/kibo-blob-extras.css">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>html,body{margin:0}
+body{background:var(--kb-surface);padding:15px 18px;font-family:var(--kb-f-body);width:700px;box-sizing:border-box}
+.lead{font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);margin:0 0 12px;text-transform:uppercase}
+.lead b{color:var(--kb-primary-ink)}
+.row{display:grid;grid-template-columns:268px 1fr;gap:14px;align-items:start}
+.stage{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-md);box-shadow:var(--kb-sh-1);padding:12px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.pad{min-height:190px;display:grid;place-items:center;width:100%}
+.ctl{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.ctl button{height:26px;padding:0 10px;border-radius:var(--kb-r-pill);border:1px solid var(--kb-border);background:var(--kb-card);font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;color:var(--kb-text-2);cursor:pointer;text-transform:uppercase}
+.ctl button:hover{border-color:var(--kb-border-strong);color:var(--kb-text)}
+.ctl button.on{background:var(--kb-primary-soft);border-color:var(--kb-primary-border);color:var(--kb-primary-ink)}
+.ctl .lb{font-family:var(--kb-f-label);font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:none;color:var(--kb-text-3);width:100%;text-align:center;margin-top:3px;text-transform:uppercase}
+.rules{display:flex;flex-direction:column;gap:8px}
+.r{background:var(--kb-card);border:1px solid var(--kb-border);border-radius:var(--kb-r-sm);box-shadow:var(--kb-sh-1);padding:9px 11px}
+.rn{font-family:var(--kb-f-display);font-weight:800;font-size:12px;color:var(--kb-text);display:block;line-height:1.2}
+.rd{font-size:11px;color:var(--kb-text-2);line-height:1.45;margin:3px 0 0}
+.rd b{color:var(--kb-primary-ink);font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:uppercase}
+.rd u{text-decoration:none;color:#B3261E;font-weight:800;font-family:var(--kb-f-label);font-size:10px;letter-spacing:.09em;text-transform:uppercase}
+.src{font-family:var(--kb-f-label);font-size:10px;color:var(--kb-text-3);text-align:center;letter-spacing:.09em;line-height:1.4}
+</style></head>
+<body class="kb-root">
+  <div class="lead"><b>este es el componente real</b> · la tarjeta carga <b>kibo-blob.jsx</b> y <b>kibo-blob.css</b> del proyecto — no hay una copia que se desincronice</div>
+  <div class="row">
+    <div class="stage">
+      <div class="pad" id="pad"></div>
+      <div class="ctl" id="ctl"></div>
+      <span class="src">reference/app/kibo-blob.jsx<br>reference/kibo-blob.css</span>
+    </div>
+    <div class="rules">
+      <div class="r"><span class="rn">Gel translúcido, siempre</span><p class="rd">Aunque la piel esté animada, el lienzo vivo se ve <b>a través</b> de él. Las capas <b>.kbb-skinfx</b> viven dentro del cuerpo y solo se asoman por la silueta.</p></div>
+      <div class="r"><span class="rn">El ánimo pinta, la actividad deforma</span><p class="rd">El ánimo sale del <b>HP</b> y define color, pupila y boca. La actividad y las travesuras cambian la forma. Son ejes independientes.</p></div>
+      <div class="r"><span class="rn">La cara se recorta al cuerpo</span><p class="rd"><b>.kbb-faceclip</b> recorta ojos y boca con la silueta: al aplastarse nada se desborda. El chipote del jalón vive <b>fuera</b>, o el overflow lo cortaría.</p></div>
+      <div class="r"><span class="rn">Las manopies orbitan sobre translate</span><p class="rd">Nunca sobre <u>transform</u> — animar transform borraría la escala que las oculta en reposo. Solo salen con el gesto que las usa.</p></div>
+      <div class="r"><span class="rn">Mínimo 132px renderizados</span><p class="rd"><b>KIBO_MIN</b> = 132. Por debajo la cara deja de leerse. Las marcas de logotipo se declaran <b>asMark</b> y quedan fuera del piso.</p></div>
+      <div class="r"><span class="rn">Vive en su canaleta</span><p class="rd">Abajo a la derecha, dentro de los <b>150px</b> que <b>.kbv-main</b> cede vía <b>--kbb-gutter</b>. La regla «KIBO nunca tapa contenido» se cumple ensanchando el hueco, no encogiéndolo.</p></div>
+    </div>
+  </div>
+<script type="text/babel" src="../reference/app/kibo-blob.jsx"></script>
+<script type="text/babel">
+const MOODS = ['calma','feliz','celebra','travieso','enfocado','sorpresa','cansado','triste'];
+const TRICKS = (typeof KIBO_TRICK_LIST !== 'undefined' ? KIBO_TRICK_LIST : []).filter(t => !t.needs).slice(0, 8);
+function Demo() {
+  const [mood, setMood] = React.useState('calma');
+  const [g, setG] = React.useState(null);
+  const fire = (id) => setG(id + '#' + Date.now());
+  return (
+    <React.Fragment>
+      <KiboBlob size={168} mood={mood} idle={true} gesture={g} onClick={() => fire('random')} title="Tócalo" />
+      {ReactDOM.createPortal(
+        <React.Fragment>
+          <span className="lb">Ánimo · lo deriva el HP</span>
+          {MOODS.map(m => (
+            <button key={m} className={mood === m ? 'on' : ''} onClick={() => setMood(m)}>
+              {(KIBO_MOODS[m] || {}).label || m}
+            </button>
+          ))}
+          <span className="lb">Travesura · gesto a mano</span>
+          {TRICKS.map(t => (
+            <button key={t.id} onClick={() => fire(t.id)} title={t.desc}>{t.name}</button>
+          ))}
+        </React.Fragment>,
+        document.getElementById('ctl'))}
+    </React.Fragment>
+  );
+}
+ReactDOM.createRoot(document.getElementById('pad')).render(<Demo />);
+</script>
+</body></html>
