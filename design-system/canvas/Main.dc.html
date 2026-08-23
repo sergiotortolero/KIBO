@@ -460,7 +460,7 @@
     <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
       <div class="eyebrow">tinta · texto pequeño sobre color (R-13)</div>
       <div style="display: flex; gap: var(--kb-sp-4)">
-        <div style="flex-grow: 1; padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-xs); background: var(--kb-coin-wash); font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-coin-ink)">340 monedas</div>
+        <div style="flex-grow: 1; padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-xs); background: var(--kb-coin-wash); font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-coin-ink)">340 divisas</div>
         <div style="flex-grow: 1; padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-xs); background: var(--kb-hp-soft); font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-hp-ink)">−14 HP</div>
       </div>
       <div class="src">--kb-coin-ink :201 sobre --kb-coin-wash :119 · --kb-hp-ink :202 sobre --kb-hp-soft :72</div>
@@ -534,17 +534,31 @@
     </div>
     <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
       <span class="badge bad" style="margin-top: 1px">falla</span>
-      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)"><strong>Medido:</strong> la muestra de <code>--kb-dark-core</code> contra el fondo oscuro propuesto da <strong>1.08:1</strong>, y contra su borde, 1.27:1 — la divisa premium desaparece en el tema. Y los lavados (<code>--kb-primary-soft</code>, <code>--kb-coin-wash</code>, <code>--kb-hp-soft</code>) no tienen valor oscuro propuesto, por eso arriba siguen claros. Faltan los dos juegos antes de adoptar nada.</div>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)"><strong>Medido:</strong> la muestra de <code>--kb-dark-core</code> contra el fondo oscuro propuesto da <strong>1.08:1</strong>, y contra su borde, 1.27:1 — el Elemento desaparece en el tema. Y los lavados (<code>--kb-primary-soft</code>, <code>--kb-coin-wash</code>, <code>--kb-hp-soft</code>) no tienen valor oscuro propuesto, por eso arriba siguen claros. Faltan los dos juegos antes de adoptar nada.</div>
     </div>
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5); background: var(--kb-card); border-color: var(--kb-primary); border-width: 1.5px">
-    <div style="display: flex; align-items: center; gap: var(--kb-sp-4)">
-      <span class="badge open">abierto</span>
-      <div class="eyebrow" style="color: var(--kb-text)">cómo se llama la divisa premium, como categoría</div>
+  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
+    <div class="eyebrow">las dos divisas · una se gasta, la otra se guarda</div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8)">
+      <div style="display: flex; align-items: center; gap: var(--kb-sp-5)">
+        <div style="width: 44px; height: 44px; border-radius: var(--kb-r-pill); background: var(--kb-coin); flex-shrink: 0"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text)">Divisa</div>
+          <div style="font-size: var(--kb-fs-xs); line-height: 1.45; color: var(--kb-text-2)">La corriente. Se gana haciendo y se gasta a diario.</div>
+          <div class="src"><code>--kb-coin</code> :74</div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--kb-sp-5)">
+        <div style="width: 44px; height: 44px; border-radius: var(--kb-r-pill); background: var(--kb-dark-core); border: 1.5px solid var(--kb-dark-edge); flex-shrink: 0"></div>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text)">Elemento</div>
+          <div style="font-size: var(--kb-fs-xs); line-height: 1.45; color: var(--kb-text-2)">La rara. Se gana logrando y compra lo que dura.</div>
+          <div class="src"><code>--kb-dark-*</code> :92-97</div>
+        </div>
+      </div>
     </div>
-    <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">El conjunto ya se llama <strong>Divisas</strong>. La premium no: el código la llama <code style="font-size: var(--kb-fs-xs)">dark</code> y su piel de fábrica se llama «Materia oscura», así que la categoría y una de sus pieles comparten nombre y las demás quedan huérfanas. En el producto conviven además tres nombres para un mismo saldo — gemas, materia oscura y fragmentos.</div>
-    <div class="src-tint">docs/PLAN.md · Única abierta · ANALYSIS.md · hallazgo 16 — mientras no se decida, la muestra de arriba se rotula con su token (--kb-dark-core :82), no con un nombre inventado</div>
+    <div class="src-tint" style="padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">El nombre es la unidad; la piel es el aspecto. Materia oscura, Magia, Esencia y Núcleo dejan de competir con la categoría y pasan a ser pieles de un Elemento — que es lo que rompió el nombre anterior. Se retiran de la interfaz «gema», «materia oscura» y «fragmentos» como nombres de saldo (ANALYSIS.md · hallazgo 16: los tres convivían para un mismo balance).</div>
   </div>
 
 </div>
@@ -577,8 +591,8 @@ class Component extends DCLogic {
       ],
       game: [
         { name: 'HP y jefe',      tok: '--kb-hp',        src: src(72) },
-        { name: 'Moneda',         tok: '--kb-coin',      src: src(74) },
-        { name: 'Divisa premium', tok: '--kb-dark-core', src: src(82) },
+        { name: 'Divisa',         tok: '--kb-coin',      src: src(74) },
+        { name: 'Elemento',       tok: '--kb-dark-core', src: src(82) },
         { name: 'Racha',          tok: '--kb-streak',    src: src(76) },
         { name: 'XP',             tok: '--kb-xp',        src: src(73) },
       ],
