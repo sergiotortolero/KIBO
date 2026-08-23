@@ -1,4 +1,4 @@
-# Kibo Design System — Analysis · v1.0
+# Kibo Design System — Analysis · v1.1
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
@@ -213,4 +213,4 @@ Kibo does not need new vocabulary. The button family already proves the pattern 
 
 ---
 
-End of ANALYSIS.md · v1.0
+End of ANALYSIS.md · v1.1
