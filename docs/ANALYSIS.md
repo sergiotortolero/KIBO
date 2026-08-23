@@ -3,6 +3,7 @@
 | Version | Date | What changed | Why |
 |---|---|---|---|
 | v1.0 | 2026-08-23 | Initial consolidated audit | Three independent audits (tokens & accessibility, product coverage, CSS vocabulary) merged into one living document for builders. |
+| v1.1 | 2026-08-23 | Added blocking findings 24 and 25 — two ink tokens that do not work | Both surfaced while building the foundations canvas, by composing from the tokens instead of transcribing their values. Neither was reachable by static reading: one needed the mix resolved in a browser, the other needed the substitution observed on a real element. |
 
 > Work items and status live in the central backlog ([`BACKLOG.md`](../../../../BACKLOG.md), section
 > "Kibo — Personal OS", `KIBO-001`..`KIBO-024`), never here. This document carries the evidence;
@@ -23,7 +24,7 @@
 
 ## Findings by severity
 
-### Blocking (23)
+### Blocking (25)
 
 **Tokens (3)**
 
@@ -68,6 +69,11 @@
 
 22. `finanzas-screens.jsx:349`, `screens-v2.jsx:4263`, `tienda-screen.jsx:1071`, `personal-screens.jsx:987` — **1,777 unreachable LOC** (6%). Two full screens: old Finanzas (329) and old Store (238).
 23. `finanzas-screens.jsx:100`, `character-screen.jsx:46`, `widgets-v2.jsx`, `widgets-v3.jsx` — **Seven name collisions** resolved silently by load order. Sparkline (finding 19) is the one that is an active defect; the rest are dead weight.
+
+**Ink tokens that do not work (2) — added v1.1**
+
+24. `colors_and_type.css:228` — **`--kb-ink-on-tint` always resolves to the fallback.** The recipe is `color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F)` declared on `:root`, so `var(--c)` is substituted *there* — where `--c` does not exist — and descendants inherit the already-resolved value. Measured with Riqueza's `--c`, with HP's, and with none: **always `#245C61`**, the teal fallback. The same mix written directly in the element's own property does resolve, giving `#7D6431` for Riqueza. **The recipe M-7 introduced to stop repeating eight per-card mixes paints teal over every tint.** Every piece that relies on it is wrong today; the per-token inks (`--kb-coin-ink`, `--kb-hp-ink`, `--area-*-ink`) are unaffected and are what to use until the recipe is fixed.
+25. `colors_and_type.css:205` — **`--kb-good-ink` measures 3.23:1 on white and fails AA for text.** It is the only ink mixed at **88 %**; the rest of the family sits between 42 % and 74 %, and the five area inks use the calibrated 54 %. It is used for real (the goal figure on progress bars), so this is a live contrast failure, not a latent one.
 
 ---
 

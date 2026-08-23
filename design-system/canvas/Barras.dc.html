@@ -7,93 +7,465 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
-    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
-    a { color: #0F6E6B; } a:hover { color: #178F8B; }
-    .eyebrow { font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: #6B7280; }
-    .card { background: #FFFFFF; border: 1px solid #E8ECF0; border-radius: 18px; padding: 18px 20px; }
-    .dead { font-size: 11px; color: #6B7280; line-height: 1.7; }
-    .dead s { color: #9CA3AF; }
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+    a { color: var(--kb-primary-ink); } a:hover { color: var(--kb-primary-hover); }
+    .ab { padding: 36px 40px; display: flex; flex-direction: column; gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box; }
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-3); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .lead { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 660px; }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); }
+    .src { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); }
+    .src-tint { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text); }
+    .dead { font-size: var(--kb-fs-xs); line-height: 1.8; color: var(--kb-text-2); }
+    .dead s { color: var(--kb-text-2); }
+    .badge { display: inline-flex; align-items: center; height: 17px; padding: 0 7px; border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+    .prop { background: var(--kb-coin-wash); color: var(--kb-coin-ink); }
+    .gone { background: var(--kb-hp-soft); color: var(--kb-hp-ink); }
+    .mrow { display: grid; grid-template-columns: 1fr 66px 46px; gap: var(--kb-sp-5); align-items: baseline; padding: var(--kb-sp-2) 0; border-bottom: 1px solid var(--kb-border-soft); font-size: var(--kb-fs-xs); color: var(--kb-text); }
+    code { font-size: var(--kb-fs-2xs); }
   </style>
 </helmet>
-<div style="padding: 36px 40px; display: flex; flex-direction: column; gap: 24px; background: #F7F8FA; min-height: 100%; box-sizing: border-box">
+<div class="ab">
 
-  <div style="display: flex; flex-direction: column; gap: 4px">
-    <div class="eyebrow">04 · familias · la primera consolidación</div>
-    <div style="font-family: 'Plus Jakarta Sans'; font-size: 26px; font-weight: 800; letter-spacing: -.015em; color: #1A1A2E">Barra de progreso</div>
-    <div style="font-size: 13px; line-height: 1.55; color: #6B7280; max-width: 640px">Hoy existen <strong style="color:#1A1A2E">47 implementaciones distintas</strong> en diez alturas. Esta es la única que sobrevive: un carril, cuatro alturas, cinco papeles de color. Todo lo demás se retira.</div>
+  <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
+    <div class="eyebrow">familia 1 · la primera consolidación</div>
+    <div class="h1">Barra de progreso</div>
+    <div class="lead">Es la familia más grande del sistema: <strong style="color: var(--kb-text)">109 clases</strong> y 181 usos para una sola pieza. Sobrevive una: un carril, cuatro alturas, cinco papeles de color. La técnica es mecánica, y por eso va primero.</div>
+    <div class="src" style="max-width: 660px; padding-top: var(--kb-sp-2)">Forma canónica: <code>.kbv-progress</code> + <code>.fill</code> — kbv-components.css:2272-2283 · consolidación y conteos: ANALYSIS.md § 6 · Progress bars</div>
   </div>
 
-  <div class="card" style="display: flex; flex-direction: column; gap: 18px">
-    <div class="eyebrow">ALTURAS · el tamaño lo decide el sitio, no la pantalla</div>
+  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-7)">
+    <div style="display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap">
+      <div class="eyebrow">alturas · el tamaño lo decide el sitio</div>
+      <span class="badge prop">propuesto</span>
+      <div class="src">los cuatro modificadores son diseño de la consolidación; hoy .kbv-progress tiene un solo alto, 6 px (:2274)</div>
+    </div>
     <sc-for list="{{sizes}}" as="s" hint-placeholder-count="4">
-      <div style="display: grid; grid-template-columns: 118px 1fr 44px; gap: 16px; align-items: center">
+      <div style="display: grid; grid-template-columns: 132px 1fr 48px; gap: var(--kb-sp-7); align-items: center">
         <div style="display: flex; flex-direction: column; gap: 2px">
-          <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">{{s.mod}}</div>
-          <div style="font-size: 10px; color: #6B7280">{{s.use}}</div>
+          <div style="font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text)">{{s.mod}}</div>
+          <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text-2)">{{s.use}}</div>
         </div>
-        <div style="height: {{s.h}}; border-radius: 999px; background: #EEF1F5; overflow: hidden">
-          <div style="width: 62%; height: 100%; border-radius: 999px; background: #1CA4A0"></div>
+        <div style="height: {{s.h}}; border-radius: var(--kb-r-pill); background: var(--kb-surface-2); overflow: hidden">
+          <div style="width: 62%; height: 100%; border-radius: var(--kb-r-pill); background: var(--kb-primary)"></div>
         </div>
-        <div style="font-size: 11px; color: #6B7280; text-align: right">{{s.h}}</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); text-align: right">{{s.h}}</div>
       </div>
     </sc-for>
+    <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
+      <span class="badge gone" style="margin-top: 1px">defecto</span>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">El relleno de la clase base todavía pinta <code>#6E8CF2</code> —el azul de gema retirado— escrito a mano dentro de la hoja que todas las tarjetas cargan.<div class="src" style="padding-top: 2px">kbv-components.css:2281 · ANALYSIS.md · hallazgos 20 y 21</div></div>
+    </div>
   </div>
 
-  <div class="card" style="display: flex; flex-direction: column; gap: 18px">
-    <div class="eyebrow">PAPELES · el color dice qué se está midiendo</div>
-    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 26px">
+  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-7)">
+    <div style="display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap">
+      <div class="eyebrow">papeles · el color dice qué se está midiendo</div>
+      <span class="badge prop">propuesto</span>
+      <div class="src">los nombres tone-* no existen en el código: el único modificador de tono declarado es .tone-danger</div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8) var(--kb-sp-9)">
       <sc-for list="{{roles}}" as="r" hint-placeholder-count="5">
-        <div style="display: flex; flex-direction: column; gap: 7px">
+        <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
           <div style="display: flex; justify-content: space-between; align-items: baseline">
-            <div style="font-size: 12px; font-weight: 600; color: #1A1A2E">{{r.name}}</div>
-            <div style="font-family: 'Plus Jakarta Sans'; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; color: {{r.ink}}">{{r.label}}</div>
+            <div style="font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text)">{{r.name}}</div>
+            <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700; font-variant-numeric: tabular-nums; color: var({{r.ink}})">{{r.label}}</div>
           </div>
-          <div style="height: 8px; border-radius: 999px; background: {{r.track}}; overflow: hidden">
-            <div style="width: {{r.pct}}; height: 100%; border-radius: 999px; background: {{r.fill}}"></div>
+          <div style="height: 8px; border-radius: var(--kb-r-pill); background: var({{r.track}}); overflow: hidden">
+            <div style="width: {{r.pct}}; height: 100%; border-radius: var(--kb-r-pill); background: var({{r.fill}})"></div>
           </div>
-          <div style="font-size: 10px; color: #6B7280">{{r.mod}}</div>
+          <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text-2)">{{r.mod}} · relleno {{r.fill}} · tinta {{r.ink}}</div>
         </div>
       </sc-for>
     </div>
+    <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
+      <span class="badge gone" style="margin-top: 1px">falla</span>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">La cifra de <strong>Meta</strong> va en <code>--kb-good-ink</code>, que mide <strong>3.23:1 sobre blanco</strong> y no pasa AA. Se deja tal cual: es un defecto del token, no de esta tarjeta.<div class="src" style="padding-top: 2px">colors_and_type.css:205 · ver artboard 02 · Color</div></div>
+    </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px">
-    <div class="card" style="display: flex; flex-direction: column; gap: 10px">
-      <div class="eyebrow">LO QUE ABSORBE · 89 usos activos, 20 clases huérfanas</div>
-      <div class="dead"><s>hp-bar-track</s> · <s>hp-bar-fill</s> · <s>hb-track</s> · <s>hb-fill</s> · <s>xp-track</s> · <s>xp-fill</s> · <s>kbv-bar</s> · <s>ch-level-bar</s> · <s>og-bar</s> · <s>sg-bar</s> · <s>fw-bar</s> · <s>wi-bar</s> · <s>weight-bar</s> · <s>sbd-track</s> · <s>sh-bar</s> · <s>smx-bar</s> · <s>wr-bar</s> · <s>wc-bar</s> · <s>ht-track</s> · <s>ht-fill</s> · <s>ea-track</s> · <s>ev-bar</s> · <s>rk-bar</s> · <s>sem-bar</s> · <s>arp-track</s> · <s>all-track</s> · <s>cmp-track</s> · <s>ab-bar</s> · <s>rt-bar-track</s> · <s>rt-bar-fill</s> · <s>evr-track</s> · <s>evr-fill</s> · <s>rm-track</s> · <s>ach-bar</s> · <s>ah-bar</s> · <s>pp-track</s> · <s>ptl-track</s> · y 17 variantes más, una por pantalla</div>
-    </div>
-    <div style="display: flex; flex-direction: column; gap: 12px">
-      <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #E4F4F3; border: 1px solid #E8ECF0">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1CA4A0" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M20 6 9 17l-5-5"/></svg>
-        <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E">Nada cambia en pantalla salvo la barra de HP, que pasa de 12 a 10&nbsp;px. El resto se mueve un píxel o ninguno.</div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--kb-sp-8)">
+
+    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
+      <div class="eyebrow">medido · relleno contra su carril · método M-1</div>
+      <div style="display: grid; grid-template-columns: 1fr 66px 46px; gap: var(--kb-sp-5); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2)">
+        <div>Papel</div><div>Medido</div><div>Veredicto</div>
       </div>
-      <div style="display: flex; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E8ECF0">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B26A00" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
-        <div style="font-size: 12px; line-height: 1.45; color: #1A1A2E">Las 27 llamadas que pasan alto y color <strong>en línea</strong> pasan a modificador. Es lo que hace que la familia no vuelva a crecer.</div>
+      <sc-for list="{{measured}}" as="m" hint-placeholder-count="6">
+        <div class="mrow">
+          <div>{{m.pair}}</div>
+          <div style="font-variant-numeric: tabular-nums; font-weight: 700; color: var(--kb-text)">{{m.cr}}</div>
+          <div style="font-weight: {{m.w}}; color: var(--kb-text)">{{m.v}}</div>
+        </div>
+      </sc-for>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-2)">Una barra es un indicador, así que su piso es <strong>3:1 contra el carril</strong>, no 4.5. Cuatro de seis no llegan. Donde la barra va sola, sin la cifra al lado, el carril es el único portador del dato.</div>
+      <div class="src">Es una propiedad del sistema —relleno de marca sobre --kb-surface-2—, no de esta tarjeta: corregirlo toca los tokens y es Fase 2.</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: var(--kb-sp-8)">
+      <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
+        <div class="eyebrow">lo que absorbe · 89 usos activos, 20 clases huérfanas</div>
+        <div class="dead"><s>hp-bar-track</s> · <s>hp-bar-fill</s> · <s>hb-track</s> · <s>hb-fill</s> · <s>xp-track</s> · <s>xp-fill</s> · <s>kbv-bar</s> · <s>ch-level-bar</s> · <s>og-bar</s> · <s>sg-bar</s> · <s>fw-bar</s> · <s>wi-bar</s> · <s>weight-bar</s> · <s>sbd-track</s> · <s>sh-bar</s> · <s>smx-bar</s> · <s>wr-bar</s> · <s>wc-bar</s> · <s>ht-track</s> · <s>ht-fill</s> · <s>ea-track</s> · <s>ev-bar</s> · <s>rk-bar</s> · <s>sem-bar</s> · <s>arp-track</s> · <s>all-track</s> · <s>cmp-track</s> · <s>ab-bar</s> · <s>rt-bar-track</s> · <s>rt-bar-fill</s> · <s>evr-track</s> · <s>evr-fill</s> · <s>rm-track</s> · <s>ach-bar</s> · <s>ah-bar</s> · <s>pp-track</s> · <s>ptl-track</s> · y el resto, hasta 109</div>
+        <div class="src">ANALYSIS.md § 6 · Progress bars — la lista completa vive ahí; esta es la cabeza de cada grupo</div>
+      </div>
+      <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5); background: var(--kb-primary-soft); border-color: var(--kb-primary-border)">
+        <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">Nada cambia en pantalla salvo la barra de HP, que pasa de 12 a 10 px. Las <strong>27 llamadas</strong> que hoy pasan alto en línea se vuelven modificador: es lo que hace que la familia no vuelva a crecer.</div>
+        <div class="src-tint">ANALYSIS.md § 6 · Progress bars · «What breaks» y «Effort»</div>
       </div>
     </div>
+
   </div>
 
 </div>
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":900}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1496}}'>
 class Component extends DCLogic {
   renderVals() {
     return {
       sizes: [
-        { mod: 'xs',            h: '4px',  use: 'Dentro de una fila densa' },
-        { mod: 'sm',            h: '6px',  use: 'Tarjeta compacta' },
-        { mod: 'md · por defecto', h: '8px', use: 'El caso normal' },
-        { mod: 'lg',            h: '10px', use: 'Protagonista de la vista' },
+        { mod: 'xs',               h: '4px',  use: 'Dentro de una fila densa' },
+        { mod: 'sm · el actual',   h: '6px',  use: 'Tarjeta compacta — es el alto que .kbv-progress tiene hoy' },
+        { mod: 'md · por defecto', h: '8px',  use: 'El caso normal' },
+        { mod: 'lg',               h: '10px', use: 'Protagonista de la vista' },
       ],
       roles: [
-        { name: 'HP',      mod: 'tone-hp',       label: '46 / 80',  pct: '58%', fill: '#E64545', track: '#FDECEC', ink: '#B02B2B' },
-        { name: 'XP',      mod: 'tone-xp',       label: 'Nv 16',    pct: '72%', fill: '#1CA4A0', track: '#E4F4F3', ink: '#0F6E6B' },
-        { name: 'Meta',    mod: 'tone-goal',     label: '62 %',     pct: '62%', fill: '#10B981', track: '#EEF1F5', ink: '#0B7355' },
-        { name: 'Racha',   mod: 'tone-streak',   label: '23 días',  pct: '38%', fill: '#FF7A45', track: '#EEF1F5', ink: '#9A3B10' },
-        { name: 'Avance',  mod: 'tone-progress', label: '9 / 12',   pct: '75%', fill: '#6B7280', track: '#EEF1F5', ink: '#1A1A2E' },
+        { name: 'HP',     mod: 'tone-hp',       label: '46 / 80', pct: '58%', fill: '--kb-hp',        track: '--kb-hp-soft',      ink: '--kb-hp-ink' },
+        { name: 'XP',     mod: 'tone-xp',       label: 'Nv 16',   pct: '72%', fill: '--kb-xp',        track: '--kb-primary-soft', ink: '--kb-primary-ink' },
+        { name: 'Meta',   mod: 'tone-goal',     label: '62 %',    pct: '62%', fill: '--kb-good',      track: '--kb-surface-2',    ink: '--kb-good-ink' },
+        { name: 'Racha',  mod: 'tone-streak',   label: '23 días', pct: '38%', fill: '--kb-streak',    track: '--kb-surface-2',    ink: '--kb-streak-ink' },
+        { name: 'Avance', mod: 'tone-progress', label: '9 / 12',  pct: '75%', fill: '--kb-text-2',    track: '--kb-surface-2',    ink: '--kb-text' },
+      ],
+      measured: [
+        { pair: 'Avance · --kb-text-2 sobre --kb-surface-2',   cr: '4.27:1', v: 'pasa 3.0',    w: '400' },
+        { pair: 'HP · --kb-hp sobre --kb-hp-soft',             cr: '3.47:1', v: 'pasa 3.0',    w: '400' },
+        { pair: 'XP · --kb-primary sobre --kb-primary-soft',   cr: '2.70:1', v: 'no pasa 3.0', w: '700' },
+        { pair: 'Alturas · --kb-primary sobre --kb-surface-2', cr: '2.70:1', v: 'no pasa 3.0', w: '700' },
+        { pair: 'Racha · --kb-streak sobre --kb-surface-2',    cr: '2.28:1', v: 'no pasa 3.0', w: '700' },
+        { pair: 'Meta · --kb-good sobre --kb-surface-2',       cr: '2.24:1', v: 'no pasa 3.0', w: '700' },
       ],
     };
   }

@@ -7,128 +7,612 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
-    body { margin: 0; font-family: 'Inter', system-ui, sans-serif; }
-    a { color: #0F6E6B; } a:hover { color: #178F8B; }
-    .sw { display: flex; flex-direction: column; gap: 6px; }
-    .chipv { width: 100%; height: 44px; border-radius: 10px; }
-    .nm { font-size: 12px; font-weight: 600; line-height: 1.3; }
-    .hx { font-family: 'Inter'; font-size: 10px; letter-spacing: .02em; }
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+    a { color: var(--kb-primary-ink); } a:hover { color: var(--kb-primary-hover); }
+    .ab { padding: 36px 40px; display: flex; flex-direction: column; gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box; }
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-3); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .lead { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 660px; }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); }
+    .fam { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-5); }
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .chipv { width: 100%; height: 44px; border-radius: var(--kb-r-sm); border: 1px solid var(--kb-border); }
+    .nm { font-size: var(--kb-fs-sm); font-weight: 600; line-height: 1.3; color: var(--kb-text); }
+    .tk { font-size: var(--kb-fs-2xs); line-height: 1.4; color: var(--kb-text-2); }
+    .src { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); }
+    .src-tint { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text); }
+    .note { font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); max-width: 760px; }
+    .badge { display: inline-flex; align-items: center; height: 17px; padding: 0 7px; border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+    .prop { background: var(--kb-coin-wash); color: var(--kb-coin-ink); }
+    .open { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .bad  { background: var(--kb-hp-soft); color: var(--kb-hp-ink); }
+    .mrow { display: grid; grid-template-columns: 1fr 76px 56px; gap: var(--kb-sp-5); align-items: baseline; padding: var(--kb-sp-2) 0; border-bottom: 1px solid var(--kb-border-soft); font-size: var(--kb-fs-xs); color: var(--kb-text); }
+    code { font-size: var(--kb-fs-2xs); }
   </style>
 </helmet>
-<div style="padding: 36px 40px; display: flex; flex-direction: column; gap: 26px; background: {{bg}}; min-height: 100%; box-sizing: border-box">
+<div class="ab" style="{{vars}}">
 
-  <div style="display: flex; flex-direction: column; gap: 4px">
-    <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; letter-spacing: .01em; color: {{t3}}">01 · fundamentos</div>
-    <div style="font-family: 'Plus Jakarta Sans'; font-size: 26px; font-weight: 800; letter-spacing: -.015em; color: {{tx}}">Color</div>
-    <div style="font-size: 13px; line-height: 1.55; color: {{t2}}; max-width: 620px">Una capa de valores, dos tablas. El tema oscuro no cambia una sola clase: cambia lo que vale cada token. Por eso ningún color puede quedar escrito a mano fuera de esta capa.</div>
+  <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
+    <div class="eyebrow">02 · fundamentos</div>
+    <div class="h1">Color</div>
+    <div class="lead">Una capa de valores, y el tema oscuro no cambia una sola clase: cambia lo que vale cada token. Por eso ningún color puede quedar escrito a mano fuera de esta capa.</div>
+    <div class="src" style="max-width: 680px; padding-top: var(--kb-sp-2)">Ninguna muestra de este lienzo lleva un hex escrito: todas se pintan con su <code>var(--kb-*)</code>, y al lado va la línea de la que sale. <span class="badge prop">propuesto</span> = sin línea que citar · <span class="badge open">abierto</span> = necesita decisión · <span class="badge bad">falla</span> = medido y no pasa.</div>
   </div>
 
-  <div style="display: flex; flex-direction: column; gap: 10px">
-    <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: {{t3}}">MARCA · un solo acento</div>
-    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+  <div class="fam">
+    <div class="eyebrow">marca · un solo acento</div>
+    <div class="g4">
       <sc-for list="{{brand}}" as="c" hint-placeholder-count="4">
         <div class="sw">
-          <div class="chipv" style="background: {{c.hex}}; border: 1px solid {{bd}}"></div>
-          <div class="nm" style="color: {{tx}}">{{c.name}}</div>
-          <div class="hx" style="color: {{t2}}">{{c.tok}}</div>
+          <div class="chipv" style="background: var({{c.tok}})"></div>
+          <div class="nm">{{c.name}}</div>
+          <div class="tk">{{c.tok}}</div>
+          <div class="src">{{c.src}}</div>
         </div>
       </sc-for>
     </div>
+    <div class="note">La tinta es la que admite texto chico. El primario pleno no: blanco encima mide 3.06:1 (ver medido).</div>
   </div>
 
-  <div style="display: flex; flex-direction: column; gap: 10px">
-    <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: {{t3}}">GAMIFICACIÓN · cada color significa algo</div>
-    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+  <div class="fam">
+    <div class="eyebrow">gamificación · cada color significa algo</div>
+    <div class="g5">
       <sc-for list="{{game}}" as="c" hint-placeholder-count="5">
         <div class="sw">
-          <div class="chipv" style="background: {{c.hex}}; border: 1px solid {{bd}}"></div>
-          <div class="nm" style="color: {{tx}}">{{c.name}}</div>
-          <div class="hx" style="color: {{t2}}">{{c.tok}}</div>
+          <div class="chipv" style="background: var({{c.tok}})"></div>
+          <div class="nm">{{c.name}}</div>
+          <div class="tk">{{c.tok}}</div>
+          <div class="src">{{c.src}}</div>
         </div>
       </sc-for>
     </div>
+    <div class="note">--kb-gem (:75) está marcado DEPRECADO en el propio archivo pero sigue vivo en tres tokens derivados y en la API pública (ANALYSIS.md · hallazgo 3). --kb-xp (:73) y --kb-boss (:77) son alias de --kb-primary y --kb-hp.</div>
   </div>
 
-  <div style="display: flex; flex-direction: column; gap: 10px">
-    <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: {{t3}}">ÁREAS DE VIDA · recoloreables por el usuario</div>
-    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+  <div class="fam">
+    <div class="eyebrow">áreas de vida · recoloreables por el usuario</div>
+    <div class="g5">
       <sc-for list="{{areas}}" as="c" hint-placeholder-count="5">
         <div class="sw">
-          <div class="chipv" style="background: {{c.hex}}; border: 1px solid {{bd}}"></div>
-          <div class="nm" style="color: {{tx}}">{{c.name}}</div>
-          <div class="hx" style="color: {{t2}}">{{c.tok}}</div>
+          <div class="chipv" style="background: var({{c.tok}})"></div>
+          <div class="nm">{{c.name}}</div>
+          <div class="tk">{{c.tok}}</div>
+          <div class="src">{{c.src}}</div>
         </div>
       </sc-for>
     </div>
+    <div class="note">Cada una tiene su tinta al 54 % (:215-219): el porcentaje calibrado para pasar AA sobre blanco, sobre el tinte al 7 % y al 16 %, y admitir texto blanco encima cuando la tinta es el relleno.</div>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
-
-    <div style="display: flex; flex-direction: column; gap: 10px">
-      <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: {{t3}}">TEXTO · dos niveles, no tres</div>
-      <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; background: {{card}}; border: 1px solid {{bd}}; border-radius: 14px">
-        <div style="font-size: 15px; font-weight: 600; color: {{tx}}">Texto principal · --kb-text</div>
-        <div style="font-size: 13px; color: {{t2}}">Texto secundario · --kb-text-2</div>
-        <div style="display: flex; align-items: center; gap: 8px; padding-top: 6px; border-top: 1px solid {{bd}}">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B26A00" stroke-width="2.4" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
-          <div style="font-size: 11px; line-height: 1.4; color: {{t2}}"><strong style="color: {{tx}}">--kb-text-3 se retira.</strong> Vale lo mismo que --kb-text-2; la jerarquía la cargan tamaño y peso.</div>
+  <div class="fam">
+    <div class="eyebrow">prioridades · orden fijo, cinco valores</div>
+    <div class="g5">
+      <sc-for list="{{pri}}" as="c" hint-placeholder-count="5">
+        <div class="sw">
+          <div class="chipv" style="background: var({{c.tok}})"></div>
+          <div class="nm">{{c.name}}</div>
+          <div class="tk">{{c.tok}}</div>
+          <div class="src">{{c.src}}</div>
         </div>
+      </sc-for>
+    </div>
+    <div class="note">Colisiones reales, no alias deliberados: --pri-urgent = --kb-hp, --pri-medium = --kb-coin y --pri-low = --kb-gem comparten hex con la familia de gamificación (ANALYSIS.md · Important).</div>
+  </div>
+
+  <div class="fam">
+    <div class="eyebrow">superficies y bordes · lo que pinta todo lo demás</div>
+    <div class="g7">
+      <sc-for list="{{surf}}" as="c" hint-placeholder-count="7">
+        <div class="sw">
+          <div class="chipv" style="background: var({{c.tok}})"></div>
+          <div class="nm">{{c.name}}</div>
+          <div class="tk">{{c.tok}}</div>
+          <div class="src">{{c.src}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div class="note">--kb-canvas y --kb-card valen lo mismo hoy; se declaran aparte porque el tema oscuro los distingue. Son los siete valores con los que está pintado este lienzo.</div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8)">
+
+    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
+      <div class="eyebrow">texto · dos niveles, tres nombres</div>
+      <div style="font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text)">Texto principal · --kb-text</div>
+      <div style="font-size: var(--kb-fs-md); color: var(--kb-text-2)">Texto secundario · --kb-text-2</div>
+      <div class="src">colors_and_type.css:60 · :61 · :62 — --kb-text-3 vale exactamente lo mismo que --kb-text-2</div>
+      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
+        <span class="badge prop" style="margin-top: 1px">propuesto</span>
+        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Retirar <code>--kb-text-3</code> y dejar dos niveles. Hoy es una observación, no una decisión tomada: el token sigue declarado y <code>.kbv-eyebrow</code> lo consume (:263).</div>
+      </div>
+      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
+        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)"><strong>R-14.</strong> Sobre superficie tintada el neutro secundario cae a 4.27:1. Ahí va <code>--kb-text</code>, y la jerarquía la cargan el tamaño y el peso.</div>
       </div>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 10px">
-      <div style="font-family: 'Plus Jakarta Sans'; font-size: 11px; font-weight: 700; color: {{t3}}">TINTA · texto pequeño sobre color</div>
-      <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; background: {{card}}; border: 1px solid {{bd}}; border-radius: 14px">
-        <div style="display: flex; gap: 8px">
-          <div style="flex-grow: 1; padding: 8px 10px; border-radius: 8px; background: #FBF1D8; font-size: 11px; font-weight: 600; color: #8A6410">340 monedas</div>
-          <div style="flex-grow: 1; padding: 8px 10px; border-radius: 8px; background: #FDECEC; font-size: 11px; font-weight: 600; color: #B02B2B">−14 HP</div>
-        </div>
-        <div style="font-size: 11px; line-height: 1.4; color: {{t2}}">Nunca color pleno bajo 14&nbsp;px. Blanco sobre color solo a 18.66&nbsp;px negrita o más — el umbral de WCAG, no los 14&nbsp;px que dice hoy la regla R-13.</div>
+    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
+      <div class="eyebrow">tinta · texto pequeño sobre color (R-13)</div>
+      <div style="display: flex; gap: var(--kb-sp-4)">
+        <div style="flex-grow: 1; padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-xs); background: var(--kb-coin-wash); font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-coin-ink)">340 monedas</div>
+        <div style="flex-grow: 1; padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-xs); background: var(--kb-hp-soft); font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-hp-ink)">−14 HP</div>
+      </div>
+      <div class="src">--kb-coin-ink :201 sobre --kb-coin-wash :119 · --kb-hp-ink :202 sobre --kb-hp-soft :72</div>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Nunca color pleno para texto chico. Cada matiz con tinta propia la usa; para los demás existía la receta <code>--kb-ink-on-tint</code> (:228), que hoy no funciona — ver la falla de abajo.</div>
+      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
+        <span class="badge prop" style="margin-top: 1px">propuesto</span>
+        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Blanco sobre color solo a <strong>18.66 px</strong> negrita, que es donde WCAG baja el umbral a 3:1. R-13 dice hoy 14 px; corregir la regla está pendiente.<div class="src" style="padding-top: 2px">docs/PLAN.md · R-13 · ANALYSIS.md · hallazgo 5</div></div>
       </div>
     </div>
 
   </div>
 
-  <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: 14px; background: {{note}}; border: 1px solid {{bd}}">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1CA4A0" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4"/></svg>
-    <div style="font-size: 12px; line-height: 1.45; color: {{tx}}"><strong>La paleta oscura es propuesta, no medida.</strong> Ningún valor sale de una línea que se pueda citar todavía: se declara aquí para decidirla, y se mide antes de adoptarla.</div>
+  <div style="display: grid; grid-template-columns: 1.15fr 1fr; gap: var(--kb-sp-8)">
+
+    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-4)">
+      <div class="eyebrow">medido · método M-1, 23 ago 2026</div>
+      <div style="display: grid; grid-template-columns: 1fr 76px 56px; gap: var(--kb-sp-5); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2)">
+        <div>Par</div><div>Medido</div><div>Veredicto</div>
+      </div>
+      <sc-for list="{{measured}}" as="m" hint-placeholder-count="7">
+        <div class="mrow">
+          <div>{{m.pair}}</div>
+          <div style="font-variant-numeric: tabular-nums; font-weight: 700; color: var(--kb-text)">{{m.cr}}</div>
+          <div style="font-weight: {{m.w}}; color: var(--kb-text)">{{m.v}}</div>
+        </div>
+      </sc-for>
+      <div class="src" style="padding-top: var(--kb-sp-2)">Color computado rasterizado en un canvas de 1×1, con cada capa translúcida compuesta hasta el fondo. getComputedStyle serializa color-mix y oklab como floats 0–1, así que una función de luminancia que asuma bytes 0–255 da un aprobado falso.</div>
+    </div>
+
+    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5); background: var(--kb-card); border-color: var(--kb-hp-ink); border-width: 1.5px">
+      <div style="display: flex; align-items: center; gap: var(--kb-sp-4)">
+        <span class="badge bad">falla</span>
+        <div class="eyebrow" style="color: var(--kb-text)">defecto del token, no del lienzo</div>
+      </div>
+      <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)"><code style="font-size: var(--kb-fs-xs)">--kb-good-ink</code> mide <strong>3.23:1 sobre blanco</strong>: no pasa AA para texto. Es la única tinta mezclada al <strong>88 %</strong>; el resto de la familia va entre 42 % y 74 %, y las cinco de área al 54 % calibrado.</div>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Se muestra tal cual está, sin sustituirlo por un hex que sí pase. Corregirlo es Fase 2 y todavía no está registrado.</div>
+      <div style="padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-xs); background: var(--kb-canvas); font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-good-ink)">Ahorro del mes · así se ve hoy sobre el lienzo</div>
+      <div class="src-tint">colors_and_type.css:205 — comparar con :200 (54 %), :201 (42 %), :202 (74 %) y :215-219 (54 %)</div>
+    </div>
+
+  </div>
+
+  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5); background: var(--kb-card); border-color: var(--kb-hp-ink); border-width: 1.5px">
+    <div style="display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap">
+      <span class="badge bad">falla</span>
+      <div class="eyebrow" style="color: var(--kb-text)">la receta de tinta genérica no resuelve el --c de la pieza</div>
+    </div>
+    <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)"><strong>Medido:</strong> con <code style="font-size: var(--kb-fs-xs)">--c</code> de Riqueza, con el de HP o sin <code style="font-size: var(--kb-fs-xs)">--c</code>, <code style="font-size: var(--kb-fs-xs)">var(--kb-ink-on-tint)</code> devuelve <strong>siempre el mismo teal</strong> — el del <em>fallback</em>, que es <code style="font-size: var(--kb-fs-xs)">--kb-primary-fill</code>. La misma mezcla escrita directamente en la propiedad del elemento sí da la tinta correcta.</div>
+    <div style="display: flex; gap: var(--kb-sp-6); flex-wrap: wrap">
+      <div style="padding: var(--kb-sp-4) var(--kb-sp-6); border-radius: var(--kb-r-xs); background: var(--kb-coin-wash); font-size: var(--kb-fs-xs); font-weight: 700; color: var(--area-wealth-ink)">Riqueza · con su token --area-wealth-ink</div>
+      <div style="--c: var(--area-wealth); padding: var(--kb-sp-4) var(--kb-sp-6); border-radius: var(--kb-r-xs); background: var(--kb-primary-soft); font-size: var(--kb-fs-xs); font-weight: 700; color: var(--kb-ink-on-tint)">Riqueza · lo que devuelve la receta</div>
+    </div>
+    <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">La causa es de lenguaje: la receta se declara en <code style="font-size: var(--kb-fs-2xs)">:root</code>, así que su <code style="font-size: var(--kb-fs-2xs)">var(--c)</code> se sustituye ahí —donde <code style="font-size: var(--kb-fs-2xs)">--c</code> no existe— y los hijos heredan el valor ya resuelto. La receta que M-7 introdujo para no repetir ocho mezclas pinta teal sobre cualquier tinte.</div>
+    <div class="src-tint">colors_and_type.css:228 · mientras no se corrija, este lienzo usa las tintas por token (--kb-hp-ink :202, --kb-primary-ink :69, --area-*-ink :215-219) y no la receta</div>
+  </div>
+
+  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6); border-color: var(--kb-coin-border)">
+    <div style="display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap">
+      <span class="badge prop">propuesto</span>
+      <div class="eyebrow">tema oscuro · diez valores, ninguno en el archivo de tokens</div>
+    </div>
+    <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">El interruptor de tema no cambia ninguna clase de este lienzo: redefine estos diez tokens sobre la raíz, que es exactamente la forma decidida para el tema oscuro. Ninguno sale de <code style="font-size: var(--kb-fs-xs)">colors_and_type.css</code> todavía; se declaran aquí para decidirlos.</div>
+    <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-5)">
+      <sc-for list="{{darkset}}" as="d" hint-placeholder-count="10">
+        <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
+          <div style="height: 26px; border-radius: var(--kb-r-xs); background: {{d.hex}}; border: 1px solid var(--kb-border)"></div>
+          <div class="tk" style="color: var(--kb-text)">{{d.tok}}</div>
+          <div class="tk">{{d.hex}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
+      <span class="badge bad" style="margin-top: 1px">falla</span>
+      <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)"><strong>Medido:</strong> la muestra de <code>--kb-dark-core</code> contra el fondo oscuro propuesto da <strong>1.08:1</strong>, y contra su borde, 1.27:1 — la divisa premium desaparece en el tema. Y los lavados (<code>--kb-primary-soft</code>, <code>--kb-coin-wash</code>, <code>--kb-hp-soft</code>) no tienen valor oscuro propuesto, por eso arriba siguen claros. Faltan los dos juegos antes de adoptar nada.</div>
+    </div>
+  </div>
+
+  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5); background: var(--kb-card); border-color: var(--kb-primary); border-width: 1.5px">
+    <div style="display: flex; align-items: center; gap: var(--kb-sp-4)">
+      <span class="badge open">abierto</span>
+      <div class="eyebrow" style="color: var(--kb-text)">cómo se llama la divisa premium, como categoría</div>
+    </div>
+    <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">El conjunto ya se llama <strong>Divisas</strong>. La premium no: el código la llama <code style="font-size: var(--kb-fs-xs)">dark</code> y su piel de fábrica se llama «Materia oscura», así que la categoría y una de sus pieles comparten nombre y las demás quedan huérfanas. En el producto conviven además tres nombres para un mismo saldo — gemas, materia oscura y fragmentos.</div>
+    <div class="src-tint">docs/PLAN.md · Única abierta · ANALYSIS.md · hallazgo 16 — mientras no se decida, la muestra de arriba se rotula con su token (--kb-dark-core :82), no con un nombre inventado</div>
   </div>
 
 </div>
 </x-dc>
-<script data-dc-script data-props='{"theme":{"editor":"enum","options":["claro","oscuro"],"default":"claro","section":"Tema"},"$preview":{"width":900,"height":760}}'>
+<script data-dc-script data-props='{"theme":{"editor":"enum","options":["claro","oscuro"],"default":"claro","section":"Tema"},"$preview":{"width":940,"height":2745}}'>
 class Component extends DCLogic {
   renderVals() {
     const dark = (this.props.theme ?? 'claro') === 'oscuro';
+    const darkset = [
+      { tok: '--kb-surface',       hex: '#12131A' },
+      { tok: '--kb-canvas',        hex: '#171922' },
+      { tok: '--kb-card',          hex: '#171922' },
+      { tok: '--kb-surface-2',     hex: '#1F2230' },
+      { tok: '--kb-border',        hex: '#2A2E3D' },
+      { tok: '--kb-border-strong', hex: '#3A3F52' },
+      { tok: '--kb-border-soft',   hex: '#232735' },
+      { tok: '--kb-text',          hex: '#EDEFF5' },
+      { tok: '--kb-text-2',        hex: '#9AA3B8' },
+      { tok: '--kb-text-3',        hex: '#9AA3B8' },
+    ];
+    const src = (l) => 'colors_and_type.css:' + l;
     return {
-      bg:   dark ? '#12131A' : '#F7F8FA',
-      card: dark ? '#171922' : '#FFFFFF',
-      note: dark ? '#10312F' : '#E4F4F3',
-      bd:   dark ? '#2A2E3D' : '#E8ECF0',
-      tx:   dark ? '#EDEFF5' : '#1A1A2E',
-      t2:   dark ? '#9AA3B8' : '#6B7280',
-      t3:   dark ? '#9AA3B8' : '#6B7280',
+      vars: dark ? darkset.map(d => d.tok + ':' + d.hex).join(';') : '',
+      darkset,
       brand: [
-        { name: 'Primario',  tok: '--kb-primary',       hex: '#1CA4A0' },
-        { name: 'Hover',     tok: '--kb-primary-hover',  hex: '#178F8B' },
-        { name: 'Lavado',    tok: '--kb-primary-soft',   hex: '#E4F4F3' },
-        { name: 'Tinta',     tok: '--kb-primary-ink',    hex: '#0F6E6B' },
+        { name: 'Primario', tok: '--kb-primary',       src: src(66) },
+        { name: 'Hover',    tok: '--kb-primary-hover', src: src(67) },
+        { name: 'Lavado',   tok: '--kb-primary-soft',  src: src(68) },
+        { name: 'Tinta',    tok: '--kb-primary-ink',   src: src(69) },
       ],
       game: [
-        { name: 'HP y jefe',      tok: '--kb-hp',        hex: '#E64545' },
-        { name: 'Moneda',         tok: '--kb-coin',      hex: '#F4B740' },
-        { name: 'Quilate',        tok: '--kb-dark-core', hex: '#171A2E' },
-        { name: 'Racha',          tok: '--kb-streak',    hex: '#FF7A45' },
-        { name: 'XP',             tok: '--kb-xp',        hex: '#1CA4A0' },
+        { name: 'HP y jefe',      tok: '--kb-hp',        src: src(72) },
+        { name: 'Moneda',         tok: '--kb-coin',      src: src(74) },
+        { name: 'Divisa premium', tok: '--kb-dark-core', src: src(82) },
+        { name: 'Racha',          tok: '--kb-streak',    src: src(76) },
+        { name: 'XP',             tok: '--kb-xp',        src: src(73) },
       ],
       areas: [
-        { name: 'Vigor',     tok: '--area-vigor',     hex: '#EF4444' },
-        { name: 'Sabiduría', tok: '--area-wisdom',    hex: '#3B82F6' },
-        { name: 'Riqueza',   tok: '--area-wealth',    hex: '#EAB308' },
-        { name: 'Comunidad', tok: '--area-community', hex: '#A855F7' },
-        { name: 'Voluntad',  tok: '--area-will',      hex: '#06B6D4' },
+        { name: 'Vigor',     tok: '--area-vigor',     src: src(128) },
+        { name: 'Sabiduría', tok: '--area-wisdom',    src: src(129) },
+        { name: 'Riqueza',   tok: '--area-wealth',    src: src(130) },
+        { name: 'Comunidad', tok: '--area-community', src: src(131) },
+        { name: 'Voluntad',  tok: '--area-will',      src: src(132) },
+      ],
+      pri: [
+        { name: 'Urgente', tok: '--pri-urgent', src: src(135) },
+        { name: 'Alta',    tok: '--pri-high',   src: src(136) },
+        { name: 'Media',   tok: '--pri-medium', src: src(137) },
+        { name: 'Baja',    tok: '--pri-low',    src: src(138) },
+        { name: 'Mínima',  tok: '--pri-vlow',   src: src(139) },
+      ],
+      surf: [
+        { name: 'Lienzo',       tok: '--kb-canvas',        src: src(51) },
+        { name: 'Superficie',   tok: '--kb-surface',       src: src(52) },
+        { name: 'Superficie 2', tok: '--kb-surface-2',     src: src(53) },
+        { name: 'Tarjeta',      tok: '--kb-card',          src: src(54) },
+        { name: 'Borde',        tok: '--kb-border',        src: src(56) },
+        { name: 'Borde fuerte', tok: '--kb-border-strong', src: src(57) },
+        { name: 'Borde suave',  tok: '--kb-border-soft',   src: src(58) },
+      ],
+      measured: [
+        { pair: '--kb-coin-ink sobre --kb-coin-wash', cr: '5.04:1', v: 'pasa 4.5',    w: '400' },
+        { pair: '--kb-hp-ink sobre --kb-hp-soft',     cr: '5.24:1', v: 'pasa 4.5',    w: '400' },
+        { pair: '--kb-streak-ink sobre blanco',       cr: '5.63:1', v: 'pasa 4.5',    w: '400' },
+        { pair: '--area-community-ink sobre blanco',  cr: '8.84:1', v: 'pasa 4.5',    w: '400' },
+        { pair: '--kb-good-ink sobre blanco',         cr: '3.23:1', v: 'no pasa 4.5', w: '700' },
+        { pair: 'blanco sobre --kb-primary pleno',    cr: '3.06:1', v: 'no pasa 4.5', w: '700' },
+        { pair: 'blanco sobre --area-will pleno',     cr: '2.43:1', v: 'no pasa 4.5', w: '700' },
       ],
     };
   }

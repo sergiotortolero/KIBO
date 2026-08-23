@@ -4,31 +4,31 @@
     { "id": "familias", "name": "Familias" }
   ],
   "artboards": [
-    { "file": "Plataformas.dc.html", "page": "fundamentos", "x": 0,    "y": 0, "w": 940, "h": 760, "title": "00 · Un sistema, dos plataformas" },
-    { "file": "Main.dc.html",        "page": "fundamentos", "x": 1000, "y": 0, "w": 900, "h": 760, "title": "01 · Color" },
-    { "file": "Tipografia.dc.html",  "page": "fundamentos", "x": 1960, "y": 0, "w": 900, "h": 880, "title": "02 · Tipografía" },
-    { "file": "Medidas.dc.html",     "page": "fundamentos", "x": 2920, "y": 0, "w": 940, "h": 820, "title": "03 · Medidas" },
+    { "file": "Plataformas.dc.html", "page": "fundamentos", "x": 0,    "y": 0, "w": 940, "h": 1279,  "title": "00 · Un sistema, dos plataformas" },
+    { "file": "Tipografia.dc.html",  "page": "fundamentos", "x": 1000, "y": 0, "w": 940, "h": 1592, "title": "01 · Tipografía" },
+    { "file": "Main.dc.html",        "page": "fundamentos", "x": 2000, "y": 0, "w": 940, "h": 2745, "title": "02 · Color" },
+    { "file": "Medidas.dc.html",     "page": "fundamentos", "x": 3000, "y": 0, "w": 940, "h": 1878, "title": "03 · Medidas y movimiento" },
 
-    { "file": "Barras.dc.html",      "page": "familias", "x": 0,    "y": 0, "w": 940, "h": 900, "title": "04 · Barra de progreso" },
-    { "file": "Chips.dc.html",       "page": "familias", "x": 1000, "y": 0, "w": 940, "h": 700, "title": "05 · Chip, etiqueta y contador" },
-    { "file": "Tarjeta.dc.html",     "page": "familias", "x": 2000, "y": 0, "w": 940, "h": 880, "title": "06 · Tarjeta y regla de acento" }
+    { "file": "Barras.dc.html",      "page": "familias", "x": 0,    "y": 0, "w": 940, "h": 1496, "title": "Familia 1 · Barra de progreso" },
+    { "file": "Tarjeta.dc.html",     "page": "familias", "x": 1000, "y": 0, "w": 940, "h": 1206, "title": "Familia 2 · Tarjeta y regla de acento" },
+    { "file": "Chips.dc.html",       "page": "familias", "x": 2000, "y": 0, "w": 940, "h": 1062,  "title": "Familia 3 · Chip, etiqueta y contador" }
   ],
   "annotations": [
     {
       "id": "nota-fundamentos",
       "page": "fundamentos",
       "x": 0,
-      "y": -150,
-      "w": 620,
-      "text": "Fundamentos: la capa que web y Android comparten.\n\nCada valor sale de colors_and_type.css, salvo lo que va marcado como PROPUESTO — esos aún no se pueden citar de una línea del código, y se declaran aquí para decidirlos.\n\nEmpieza por 00: es la decisión que ordena todo lo demás."
+      "y": -190,
+      "w": 660,
+      "text": "Fundamentos: la capa que web y Android comparten.\n\nLa numeración sigue el índice de docs/PLAN.md — 01 Tipografía, 02 Color, 03 Medidas y movimiento. El 00 es la decisión de plataforma, que ordena a las demás.\n\nContrato: ningún valor del sistema está escrito a mano. Cada artboard carga ../colors_and_type.css y se dibuja con var(--kb-*), y al lado de cada cifra va la línea de la que sale. Lo que no tiene línea citable va marcado PROPUESTO; lo que necesita una decisión de Sergio, ABIERTO; lo que está medido y no pasa, FALLA.\n\nEmpieza por 00: es la decisión que ordena todo lo demás."
     },
     {
       "id": "nota-familias",
       "page": "familias",
       "x": 0,
-      "y": -150,
-      "w": 620,
-      "text": "Familias: la forma canónica de cada pieza, y lo que absorbe.\n\nEl orden no es estético, es de riesgo. Barras primero (la más grande y la más mecánica), tarjeta junto con la regla de acento (tocan las mismas 53 clases), chips al final (es la única que no se puede automatizar).\n\nLo que no aparezca aquí ni en una pantalla de la v1, se retira."
+      "y": -190,
+      "w": 660,
+      "text": "Familias: la forma canónica de cada pieza, y lo que absorbe.\n\nEl orden no es estético, es de riesgo, y es el mismo del plan de ataque de ANALYSIS.md § 6: barras primero (la más grande y la más mecánica), tarjeta junto con la regla de acento (tocan las mismas 53 clases), chips al final (es la única que no se puede automatizar).\n\nNo llevan número de índice: los índices 04, 05 y 06 de PLAN.md son Íconos, Átomos y Moléculas. Estas tres son consolidaciones de vocabulario, no dominios.\n\nCada pieza se compone de su clase real —.kbv-progress, .kbv-card, .kbv-chip, .kbv-tag— y la cita. Lo que no existe en el código va marcado PROPUESTO."
     }
   ],
   "launch": { "view": "canvas", "page": "fundamentos" }
