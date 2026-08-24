@@ -1,7 +1,8 @@
-# Kibo Design System — The Recipe · v1.2
+# Kibo Design System — The Recipe · v1.3
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
+| v1.3 | 2026-08-24 | Data visualization (§6.9) and gamification (§6.10) close the vocabulary; the system is complete. Records the two recipe findings and the new token families | The last two families the old DS covered are re-expressed in the new standard, themeable by channel. What remains is content, not system |
 | v1.2 | 2026-08-24 | KIBO's mood retired as a body colour (AD-23); the domain page, the fact envelope and the action wheel joined the canvas | Sergio ruled the mood must change only the face so skins can be user-customisable, and the domain cards rebuild the kernel in the component vocabulary |
 | v1.1 | 2026-08-23 | Four open questions ruled and moved to §11; the card set is rebuilt around the kernel | Sergio ruled the button face, the recoloured-área behaviour, the rarity ladder and the fate of the 71 cards. Only the name of `--kb-medal` stays open |
 | v1.0 | 2026-08-23 | Initial recipe: value layer, the two colour recipes, both theme tables, the seven canonical component families, the non-negotiable rules, the platform split, and the gap between this document and `colors_and_type.css` | The canvas renders the standard but cannot be read while building. This document is what a building agent reads to produce interface in brand without re-deriving it, and without the canvas open beside it |
@@ -470,6 +471,33 @@ Title: `--kb-f-display` 600 `--kb-fs-xl`, `--kb-lh-snug`. Sub: `--kb-fs-sm` `--k
 
 These are settled in `ANALYSIS.md` §6 and are not re-specified here; build against the canonical form named there: **section head** (`SectionHead`, `kbv-shared.jsx:138` → `.kbv-section-head`, `styles-extras.css:9606`; `.kbv-page-head` is a different hierarchy level and stays separate) · **toolbar** (`.kbv-filter-bar`, `styles-extras.css:589`) · **stage** (`.kbv-stage` + height modifiers) · **empty state** (`EmptyState`, `kbv-shared.jsx` — icon · title · description · CTA) · **tabs / segmented** (`.kbv-seg`, `styles-extras.css:9811`, unifying the eight tab-strip names in `kibo-shell.css:465-492`; **six real tab strips are missing from the responsive selector and do not scroll on phone**).
 
+### 6.9 · Data visualization
+
+The chart language is measured from the prototype, not chosen: **viewBox 520 wide**, `padL 40 · padR 16 · padT 16 · padB 26`, horizontal grid at 0 / 0.5 / 1 dotted `3 4` at 60 %, **2.4 px** stroke with round caps, area fill a vertical gradient of the hue `.26 → 0` (`charts-catalogo.jsx:5-24`, `charts-nuevas.jsx:7-30`, `progress-charts.jsx:83-125`; axis `kibo-charts.css:36`).
+
+**Ten canonical types**, consolidated from the prototype's 25, with one shared empty state: tendencia (`progress-charts.jsx:81-142`) · comparación (`:258-276`) · ranking (`charts-nuevas.jsx:199-226`) · distribución (`charts-catalogo.jsx:279-335`) · composición (`charts-nuevas.jsx:107-171`) · relación (`charts-nuevas.jsx:75-105`) · constancia / heatmap (`progress-charts.jsx:153-226` + `kibo-charts.css:20-56`) · meta (`charts-nuevas.jsx:173-197`) · radar (`charts-nuevas.jsx:32-73`). The progress bar (§6.4) and KPI (§6.6) are the eleventh and twelfth; not repeated here.
+
+**New token ramps — charts stop borrowing area/priority hues** (that borrowing is what breaks when the user recolours an área):
+- `--kb-cat-1..8` — the **categorical** ramp, a CVD-safe qualitative palette. The first pair is blue/orange so a two-series comparison is the most robust case. **Eight is a hard cap**: the set holds a minimum ΔE of 8.6 under normal vision plus the three colour-blindness simulations; beyond eight series the standard requires direct labelling, not a ninth colour.
+- `--kb-seq-1..5` — the **sequential** ramp, one hue light→dark, for heatmaps and intensity.
+- `--kb-div-neg-2 · -neg-1 · -mid · -pos-1 · -pos-2` — the **divergent** ramp, two hues around a neutral midpoint, for over/under budget and mood valence.
+
+**Hard semantic anchor:** `--kb-gain` = `--kb-good`, `--kb-loss` = `--kb-hp`; they never cross, and the sign travels **also by position and a direction glyph**, never by colour alone.
+
+**Channel:** all colour, so **token** — the whole family is themeable, subject to F-2 (categorical distinguishability under CVD) and the gain/loss anchor (F-3, `ARCHITECTURE.md` §9.1).
+
+### 6.10 · Gamification
+
+The recurring **visual pieces**, never the catalogue (which ranks, which achievements, the prices = content).
+
+- **Emblema** — the rank shield by material. `--kb-mat-1..9` is an **ordinal ladder** (the token is the *tier*; the material name is content); madera/hierro/oro map to tiers 1–3. Its ink is **anchored by luminance** (mixed 20 % toward black or white), **not** the single 54 % ink recipe — a ladder that runs from light gold to dark obsidian has no single ink direction. `KbEmblem.jsx:2-16`, `prestige-system.jsx:52-60,311`.
+- **Rareza** — **four grades**: común · raro · épico · legendario. `--kb-rarity-*` re-declared clean, no gem-blue alias. **Visibility is a separate, orthogonal axis** (visible · secreto · oculto) — *secreto* and *oculto* were never rarities. `achievements.jsx:8-15,49-52`.
+- **Llama** — its own ramp `--kb-flame-1..9` (it stops borrowing streak/hp/coin), with a dark outline to edge the warm tones. Warmth is expressive, so **themeable**. `streak-system.jsx:5-15,30-64`.
+- **Divisa** — the pill and glyph of **Divisa** (`--kb-coin`) and **Elemento** (`--kb-dark-*`). Elemento is never a flat fill; its **halo** separates it. `streak-system.jsx:189-222`, `KbStatPill.jsx`.
+- **Tarjeta de logro** — states (ganado · en progreso · bloqueado) with the four rarities; and the **milestone line** for levels and prestige (a form, not a catalogue). `achievements.jsx:68-131`, `prestige-system.jsx:16-51`.
+
+**Channel per piece:** the *colour / material / rarity* as value is **token** (themeable); the *artwork* — the shield die, the faceted Elemento glyph, the frame ornament — is **asset** (the wardrobe channel, AD-16/22). Each piece states which.
+
 ---
 
 ## 7 · The platform split
@@ -524,17 +552,19 @@ This document describes the destination. `colors_and_type.css` and `kbv-componen
 | Control height | `preview/formulario-campos.html:19` says and does 42 px | `--kb-ctl-h` = 46 px (§4.4) |
 | `--kb-mood-*` (`:91-98`) | Eight mood **colours** — mood mapped to a body hue | Retired as body colour (AD-23). Mood is carried by the **face** (eyes, pupils, mouth, brow); the body colour is `--skin`, a user-customisable dimension independent of mood. A per-mood accent, if ever wanted, is the **aura** — a wardrobe layer, never the skin |
 | State tokens | None exist; `disabled` is `opacity: 0.45`, `error` is a raw `rgba` | Real states per family (§6.1, §6.2) |
+| Data & gamification token families | The chart ramps, the flame ramp, and the material ladder **do not exist**; charts borrow area/priority hues ad hoc, `--kb-mat-*` has three entries, `--kb-rarity-*` still declares six and aliases the retired `--kb-gem` | Standard (rendered on the canvas, §6.9–6.10): `--kb-cat-1..8` · `--kb-seq-1..5` · `--kb-div-*` · `--kb-gain`/`--kb-loss` · `--kb-mat-1..9` (+ink, luminance-anchored) · `--kb-flame-1..9` · `--kb-rarity-*` cleaned to four with visibility as a separate axis |
 | New tokens | `--kb-sh-4`, `--kb-warn-soft`, `--kb-warn-border`, `--kb-warn-ink`, `--kb-w-page`, `--kb-w-prose` are **not declared** | Declared and rendered on the canvas. `--kb-sh-4` is the step between popover and modal; the alert inks (HP, reto, warning) mix at **74 %**, not the 54 % every other ink uses; page width is 1200 px and prose width 72 ch |
 
 ---
 
-## 9 · Not yet covered by this recipe
+## 9 · What remains is content, not system
 
-Iconography, KIBO, the shell, the five minor families, the KPI data states and the undeclared tokens were all closed on the canvas 2026-08-23. What is left is content, not system:
+The design-system **vocabulary is complete** — foundations, components, data visualization, gamification, the shell, KIBO and the action wheel are all rendered on the canvas and specified here. What is left is **content**, decided by Sergio and filled in during the platform rebuild, never invented in the system:
 
-- **The 18 real menu destinations and their sections**, and **the five phone tab-bar destinations** — the shell renders six and five as samples. Which ones they are is product.
-- **KIBO's wardrobe catalogue** — which skins, marks, auras and personalities exist, their prices and their currency. The composition matrix uses a generic purchased skin painted with a system token so no catalogue colour enters the canvas.
-- **KIBO's travesura repertoire and the lines it says.**
+- The **names of the nine emblem materials** and the nine flame tiers (the tokens are ordinal; the names are content).
+- **Which** ranks, achievements, prestige grades, chest odds and prices exist.
+- The **theme catalogue** (which themes are sold, at what price) — the mechanism is `ARCHITECTURE.md` §9.1 / AD-24–26; the catalogue is content.
+- The **18 real menu destinations**, the **five phone tab-bar destinations**, the **wheel's actual actions**, and **KIBO's wardrobe catalogue and travesura lines**.
 
 ## 10 · Open questions
 
@@ -556,4 +586,4 @@ Only one is left. The rest were ruled on 2026-08-23 and are recorded in §11.
 
 ---
 
-*End of DESIGN-SYSTEM.md · v1.2*
+*End of DESIGN-SYSTEM.md · v1.3*

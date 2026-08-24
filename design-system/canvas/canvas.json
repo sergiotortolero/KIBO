@@ -9,6 +9,14 @@
       "name": "Componentes"
     },
     {
+      "id": "datos",
+      "name": "Datos"
+    },
+    {
+      "id": "gamificacion",
+      "name": "Gamificación"
+    },
+    {
       "id": "dominio",
       "name": "Núcleo"
     },
@@ -170,6 +178,51 @@
       "w": 940,
       "h": 2275,
       "title": "03 · Rueda de acción"
+    },
+    {
+      "file": "Rampas.dc.html",
+      "page": "datos",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 3126,
+      "title": "01 · Rampas de datos"
+    },
+    {
+      "file": "Graficas.dc.html",
+      "page": "datos",
+      "x": 1000,
+      "y": 0,
+      "w": 940,
+      "h": 2885,
+      "title": "02 · Tipos de gráfica"
+    },
+    {
+      "file": "Emblema.dc.html",
+      "page": "gamificacion",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 942,
+      "title": "01 · Emblema y materiales"
+    },
+    {
+      "file": "Insignias.dc.html",
+      "page": "gamificacion",
+      "x": 1000,
+      "y": 0,
+      "w": 940,
+      "h": 1188,
+      "title": "02 · Rareza, racha y divisa"
+    },
+    {
+      "file": "Logro.dc.html",
+      "page": "gamificacion",
+      "x": 2000,
+      "y": 0,
+      "w": 940,
+      "h": 1526,
+      "title": "03 · Tarjeta de logro"
     }
   ],
   "annotations": [
@@ -204,6 +257,22 @@
       "y": -170,
       "w": 660,
       "text": "La aplicación — donde los valores y las piezas se vuelven producto.\n\nEl armazón es la rejilla que sostiene las 21 pantallas: menú, cabecera y contenido, con los mismos cuatro cortes en las tres anchuras.\n\nKIBO es la identidad de marca. Dos entradas ortogonales lo gobiernan: la salud pinta la cara (la expresión), el usuario elige el color (la piel). No se tocan.\n\nLa rueda de acción es su organismo de captura: un disco de sectores que abre desde el FAB y registra cualquier cosa sin cambiar de pantalla."
+    },
+    {
+      "id": "nota-datos",
+      "page": "datos",
+      "x": 0,
+      "y": -200,
+      "w": 660,
+      "text": "Datos — el vocabulario de la visualización, no las pantallas.\n\nUna línea es vocabulario; «la pantalla de Finanzas» es composición y se hace en el rediseño. El hallazgo que ordena todo: las gráficas dejaban de pedir prestados matices de área y prioridad, y eso es lo que se rompía al recolorear. Aquí nacen tres rampas propias —categórica, secuencial, divergente— como tokens temables.\n\nEl ancla dura: en datos el verde de ganancia y el rojo de pérdida no se cruzan, y dos series de una misma gráfica nunca quedan indistinguibles, ni en daltonismo. Medido, no estimado."
+    },
+    {
+      "id": "nota-gamificacion",
+      "page": "gamificacion",
+      "x": 0,
+      "y": -200,
+      "w": 660,
+      "text": "Gamificación — las piezas visuales recurrentes, no el catálogo.\n\nUn emblema de rango es vocabulario; «la pantalla de Progreso», no. El emblema por material, la escalera de nueve materiales, los cuatro grados de rareza, la rampa de la llama, y las dos monedas con su regla de halo.\n\nDos entradas gobiernan la personalización: el color/material/rareza como valor viaja por temas (token); el arte —el troquel del escudo, el glifo facetado del Elemento, el ornamento del marco— viaja por el guardarropa (asset). Un tema cambia el valor, nunca cruza el ancla."
     }
   ],
   "launch": {
