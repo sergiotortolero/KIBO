@@ -1,7 +1,8 @@
-# Kibo Design System — The Recipe · v1.0
+# Kibo Design System — The Recipe · v1.1
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
+| v1.1 | 2026-08-23 | Four open questions ruled and moved to §11; the card set is rebuilt around the kernel | Sergio ruled the button face, the recoloured-área behaviour, the rarity ladder and the fate of the 71 cards. Only the name of `--kb-medal` stays open |
 | v1.0 | 2026-08-23 | Initial recipe: value layer, the two colour recipes, both theme tables, the seven canonical component families, the non-negotiable rules, the platform split, and the gap between this document and `colors_and_type.css` | The canvas renders the standard but cannot be read while building. This document is what a building agent reads to produce interface in brand without re-deriving it, and without the canvas open beside it |
 
 > **What this is.** The recipe. It is READ, to build from.
@@ -84,7 +85,7 @@ Named tokens already carry this for the frequent hues (`:200-206`, `:215-220`). 
 | Text | `--kb-text` · `--kb-text-2` · `--kb-text-inverse` | `:60-63` |
 | Gamification | `--kb-hp` · `--kb-xp` · `--kb-coin` · `--kb-streak` · `--kb-boss` · `--kb-media` | `:72-78` |
 | Elemento (the rare currency) | `--kb-dark-core` · `--kb-dark-edge` · `--kb-dark-halo` · `--kb-dark-facet` · `--kb-dark-glint` · `--kb-void-1` · `--kb-void-2` | `:82-88` |
-| Rarity (6 grades) | `--kb-rarity-*` | `:101-107` |
+| Rarity (4 grades — §11) | `--kb-rarity-comun` · `--kb-rarity-raro` · `--kb-rarity-epico` · `--kb-rarity-legendario` | `:101-107` |
 | Chest & emblem materials | `--kb-mat-madera` · `--kb-mat-hierro` · `--kb-mat-oro` (+ their inks) | `:109-112` |
 | Support semantics | `--kb-good` · `--kb-good-soft` · `--kb-medal` · `--kb-warn` · `--kb-coin-wash` | `:114-119` |
 | Ceremony sparks | `--kb-spark-*` | `:121-125` |
@@ -538,14 +539,22 @@ Named so nobody builds these from memory. Each needs a specimen on the canvas be
 
 ## 10 · Open questions
 
-These are not decided. Do not resolve them inside a component.
+Only one is left. The rest were ruled on 2026-08-23 and are recorded in §11.
 
-1. **How vivid is the primary button's face?** The standard renders the ink at 54 % (white on it measures 7.7:1). The plain `--kb-primary` with white measures **3.06:1** and fails AA at any viable label size. Choosing "bright teal and accept 3.06" versus "deep teal and pass" is a brand call.
-2. **What is `--kb-medal` called to the user?** The token is a role; the user-facing name is not set.
-3. **What happens when a user-recoloured área does not reach contrast?** The áreas are recolourable by design. Whether the system silently corrects the chosen hue, warns, or refuses it is undecided.
-4. **What does "raro" mean now that Elemento is the rare currency?** `--kb-rarity-raro` still aliases the retired gem blue. The rarity ladder and the currency ladder need separating.
-5. **How is accessibility solved once Radix goes?** Headless a11y primitives, hand-written ARIA patterns, or a recorded reduced floor for v1 — `ARCHITECTURE.md` §13, Q3.
+1. **What is `--kb-medal` called to the user?** The token is a role; the user-facing name of the sixth gamification slot is not set.
 
 ---
 
-*End of DESIGN-SYSTEM.md · v1.0*
+## 11 · Decisions taken (2026-08-23)
+
+**The solid button face is the ink, not the plain hue.** `color-mix(in oklab, <hue> 54%, var(--kb-void-2))` — white on it measures 7.7:1. `--kb-primary` at full strength measures 3.06:1 with white and fails AA at every viable label size, so it does not fill a control. It keeps painting progress, XP, focus rings, links and active states: the brand colour is unchanged, only the solid fill is.
+
+**A user-recoloured área is corrected silently.** The person picks any hue; the system derives its wash and its ink through the two recipes in §2.1, exactly as it does for every other hue. What renders is always legible, and no one is ever told their colour was wrong. The accepted cost: the rendered tone can differ from the swatch that was tapped.
+
+**Rarity is four grades, and visibility is a separate axis.** común · raro · épico · legendario. The retired "secreto" and "oculto" were never rarities — they describe whether an achievement can be seen before it is earned, which is a different property from how rare it is. Collapsing both into one ladder is what made six grades necessary. Each grade takes its own hue from the system; none uses the retired gem blue.
+
+**The card set is rebuilt around the kernel, not restandardised as it stands.** Foundations and components are kept and corrected; the domain cards are redone against the kernel — one card for the fact record and its types, rather than six card families for six "modules" that turned out to be the same envelope. This is the retirement criterion (AD-17) applied to the design system itself.
+
+---
+
+*End of DESIGN-SYSTEM.md · v1.1*
