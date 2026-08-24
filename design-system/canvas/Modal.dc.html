@@ -408,160 +408,235 @@
     .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
     .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
   </style>
+  <style>
+    /* .kbv-modal — velo, tarjeta, encabezado, cuerpo y pie. */
+    .kbv-modal-veil {
+      position: absolute; inset: 0; z-index: var(--kb-z-modal);
+      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+      display: flex; align-items: center; justify-content: center; padding: var(--kb-sp-9);
+      box-sizing: border-box;
+    }
+    .kbv-modal-card {
+      background: var(--kb-card); border-radius: var(--kb-r-xl);
+      max-width: 580px; width: 100%; max-height: 100%;
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: var(--kb-sh-pop); box-sizing: border-box;
+    }
+    .kbv-modal-card.sm   { max-width: 420px; }
+    .kbv-modal-card.lg   { max-width: 720px; }
+    .kbv-modal-card.full { max-width: 1040px; }
+
+    .kbv-modal-head {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: var(--kb-sp-6);
+      padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+      border-bottom: 1px solid var(--kb-border-soft);
+    }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl); font-weight: 800; line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); color: var(--kb-text-2); margin-top: var(--kb-sp-2); max-width: 46ch; }
+    .kbv-modal-close {
+      width: var(--kb-touch-min); height: var(--kb-touch-min); border-radius: var(--kb-r-pill);
+      border: 1.5px solid var(--kb-border); background: var(--kb-card); color: var(--kb-text-2);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
+      box-sizing: border-box;
+    }
+    .kbv-modal-body { padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); overflow-y: auto; flex: 1; }
+    .kbv-modal-foot {
+      display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5);
+      padding: var(--kb-sp-7) var(--kb-sp-9);
+      border-top: 1px solid var(--kb-border-soft); background: var(--kb-surface);
+    }
+    .kbv-modal-foot .right { display: flex; gap: var(--kb-sp-4); }
+
+    /* En móvil toda anchura se vuelve hoja inferior. */
+    .kbv-modal-veil.sheet { align-items: flex-end; padding: 0; }
+    .kbv-modal-veil.sheet .kbv-modal-card { max-width: none; border-radius: var(--kb-r-xl) var(--kb-r-xl) 0 0; }
+    .kbv-modal-card .grab { width: 36px; height: 4px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong); margin: var(--kb-sp-4) auto 0; }
+
+    .stage { position: relative; border-radius: var(--kb-r-md); overflow: hidden; background: var(--kb-surface); border: 1px solid var(--kb-border); }
+    .stage .under { padding: var(--kb-sp-8); display: flex; flex-direction: column; gap: var(--kb-sp-6); filter: saturate(.6); }
+
+    /* Botón y campo, compuestos igual que en sus tableros. */
+    .kbv-btn {
+      -webkit-appearance: none; appearance: none; border: 0; box-sizing: border-box;
+      font-family: var(--kb-f-display); font-weight: 700; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+      height: var(--kb-ctl-h); padding: 0 var(--kb-sp-8); font-size: var(--kb-fs-lg);
+      border-radius: var(--kb-r-md); white-space: nowrap; cursor: pointer;
+    }
+    .kbv-btn-primary {
+      background: color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2)); color: var(--kb-text-inverse);
+      box-shadow: var(--kb-elev-hard) color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-sh-1);
+    }
+    .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text); box-shadow: inset 0 0 0 1.5px var(--kb-border-strong), var(--kb-sh-1); }
+    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); }
+    .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-label { font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+    .kbv-input {
+      height: var(--kb-ctl-h); box-sizing: border-box; display: flex; align-items: center;
+      background: var(--kb-card); border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-md);
+      padding: 0 var(--kb-sp-7); font: 500 var(--kb-fs-lg)/1 var(--kb-f-body); color: var(--kb-text);
+    }
+    .kbv-input.ph { color: var(--kb-text-2); font-weight: 400; }
+
+    .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+  </style>
 </helmet>
 <div class="ab">
 
   <div class="hd">
-    <div class="eyebrow">Fundamentos · 02</div>
-    <div class="h1">Tipografía</div>
-    <div class="one">Dos familias y nueve pasos. Un tamaño que no está en la escala no existe.</div>
-  </div>
-
-  <div class="g2">
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Display y etiqueta</div>
-        <div class="use">Títulos, cifras y cejillas.</div>
-      </div>
-      <div style="font-family: var(--kb-f-display); font-size: 42px; font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Plus Jakarta Sans</div>
-      <div class="tok">--kb-f-display · --kb-f-label</div>
-    </div>
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Cuerpo</div>
-        <div class="use">Todo lo que se lee de corrido.</div>
-      </div>
-      <div style="font-family: var(--kb-f-body); font-size: 42px; font-weight: 500; letter-spacing: -.01em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Inter</div>
-      <div class="tok">--kb-f-body</div>
-    </div>
+    <div class="eyebrow">Componentes · 07</div>
+    <div class="h1">Modal</div>
+    <div class="one">Un solo cascarón y cuatro anchos. El ancho lo decide el contenido, no la importancia.</div>
   </div>
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Escala</div>
-      <div class="use">Nueve pasos. El piso duro de legibilidad son 10 px.</div>
+      <div class="eyebrow">El cascarón</div>
+      <div class="use">Encabezado, cuerpo y pie. Solo el cuerpo hace scroll.</div>
+    </div>
+    <div class="stage" style="height: 430px">
+      <div class="under">
+        <div class="h2">Hábitos de hoy</div>
+        <div style="height: 56px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg)"></div>
+        <div style="height: 56px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg)"></div>
+        <div style="height: 56px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg)"></div>
+      </div>
+      <div class="kbv-modal-veil">
+        <div class="kbv-modal-card">
+          <div class="kbv-modal-head">
+            <div>
+              <div class="title">Nuevo hábito</div>
+              <div class="sub">Lo que se repite es lo que cuenta. Empieza por algo que puedas sostener.</div>
+            </div>
+            <button class="kbv-modal-close" aria-label="Cerrar">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+          <div class="kbv-modal-body">
+            <div class="kbv-field">
+              <label class="kbv-label">Nombre</label>
+              <div class="kbv-input ph">Correr 5 km</div>
+            </div>
+            <div class="g2" style="gap: var(--kb-sp-6)">
+              <div class="kbv-field">
+                <label class="kbv-label">Área</label>
+                <div class="kbv-input">Vigor</div>
+              </div>
+              <div class="kbv-field">
+                <label class="kbv-label">Frecuencia</label>
+                <div class="kbv-input">3 por semana</div>
+              </div>
+            </div>
+          </div>
+          <div class="kbv-modal-foot">
+            <button class="kbv-btn kbv-btn-ghost">Cancelar</button>
+            <div class="right">
+              <button class="kbv-btn kbv-btn-secondary">Guardar borrador</button>
+              <button class="kbv-btn kbv-btn-primary">Crear</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rule">El velo es <strong>tinta de texto al 55 %</strong> con desenfoque de 2 px, en <code>--kb-z-modal</code>. Cerrar mide 44 px. Se cierra con Escape, con el velo y con el botón; el foco queda atrapado dentro mientras está abierto.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Cuatro anchos</div>
+      <div class="use">El ancho es el máximo; por debajo, el modal ocupa lo que hay.</div>
     </div>
     <div class="col" style="gap: var(--kb-sp-6)">
-      <sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
-        <div style="display: grid; grid-template-columns: 100px 1fr 200px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-5); border-bottom: 1px solid var(--kb-border-soft)">
-          <div class="tok">{{s.tok}}</div>
-          <div style="font-family: {{s.f}}; font-size: {{s.fs}}; font-weight: {{s.w}}; line-height: var(--kb-lh-snug); color: var(--kb-text)">{{s.sample}}</div>
-          <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); text-align: right">{{s.px}} · {{s.use}}</div>
+      <sc-for list="{{widths}}" as="w" hint-placeholder-count="4">
+        <div style="display: grid; grid-template-columns: 74px 1fr 300px; gap: var(--kb-sp-7); align-items: center">
+          <div class="spec">{{w.mod}}</div>
+          <div style="height: 34px; width: {{w.bar}}; border-radius: var(--kb-r-sm); background: var(--kb-primary-soft); box-shadow: inset 0 0 0 1.5px var(--kb-primary-border); display: flex; align-items: center; padding: 0 var(--kb-sp-5); font-size: var(--kb-fs-xs); font-weight: 700; color: var(--kb-primary-ink); box-sizing: border-box">{{w.px}}</div>
+          <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)">{{w.use}}</div>
         </div>
       </sc-for>
     </div>
+    <div class="rule">Separación al borde de la ventana: <code>--kb-sp-9</code>. Si el contenido no cabe, crece el cuerpo con scroll — <strong>nunca el ancho</strong>.</div>
   </div>
 
   <div class="g2">
     <div class="pane">
       <div class="head">
-        <div class="eyebrow">Pasos fluidos</div>
-        <div class="use">Los que usan los encabezados de verdad.</div>
+        <div class="eyebrow">En móvil</div>
+        <div class="use">Los cuatro anchos se vuelven la misma hoja inferior.</div>
       </div>
-      <div class="col" style="gap: var(--kb-sp-5)">
-        <sc-for list="{{fluid}}" as="f" hint-placeholder-count="4">
-          <div style="display: grid; grid-template-columns: 150px 1fr; gap: var(--kb-sp-6); align-items: baseline">
-            <div class="tok">{{f.tok}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums">{{f.val}}</div>
+      <div class="stage" style="height: 330px; max-width: 300px">
+        <div class="under" style="padding: var(--kb-sp-7)">
+          <div class="spec">Hábitos</div>
+          <div style="height: 44px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg)"></div>
+        </div>
+        <div class="kbv-modal-veil sheet">
+          <div class="kbv-modal-card">
+            <div class="grab"></div>
+            <div class="kbv-modal-head" style="padding: var(--kb-sp-6) var(--kb-sp-7) var(--kb-sp-5)">
+              <div><div class="title" style="font-size: var(--kb-fs-xl)">Nuevo hábito</div></div>
+              <button class="kbv-modal-close" aria-label="Cerrar" style="width: 36px; height: 36px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </button>
+            </div>
+            <div class="kbv-modal-body" style="padding: var(--kb-sp-6) var(--kb-sp-7)">
+              <div class="kbv-field">
+                <label class="kbv-label">Nombre</label>
+                <div class="kbv-input ph">Correr 5 km</div>
+              </div>
+            </div>
+            <div class="kbv-modal-foot" style="padding: var(--kb-sp-6) var(--kb-sp-7)">
+              <button class="kbv-btn kbv-btn-primary" style="width: 100%">Crear</button>
+            </div>
           </div>
-        </sc-for>
+        </div>
       </div>
-      <div class="rule">Un encabezado nunca se escribe a tamaño fijo: el paso fluido es el que se declara.</div>
+      <div class="rule">La hoja llega a <strong>ancho completo</strong>, redondea solo arriba y lleva asa. El primario del pie pasa a ancho completo.</div>
     </div>
 
     <div class="pane">
       <div class="head">
-        <div class="eyebrow">Interlineado</div>
-        <div class="use">Tres valores, cada rol trae el suyo.</div>
+        <div class="eyebrow">Confirmación</div>
+        <div class="use">El caso corto: sin cuerpo largo y con la acción destructiva a la derecha.</div>
       </div>
-      <div class="col" style="gap: var(--kb-sp-6)">
-        <sc-for list="{{lh}}" as="l" hint-placeholder-count="3">
-          <div style="display: grid; grid-template-columns: 118px 1fr 34px; gap: var(--kb-sp-6); align-items: start">
-            <div class="tok">{{l.tok}}</div>
-            <div style="font-size: var(--kb-fs-sm); line-height: {{l.v}}; color: var(--kb-text)">{{l.use}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums; text-align: right">{{l.v}}</div>
+      <div class="stage" style="height: 330px">
+        <div class="under" style="padding: var(--kb-sp-7)">
+          <div class="spec">Ajustes</div>
+          <div style="height: 44px; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg)"></div>
+        </div>
+        <div class="kbv-modal-veil" style="padding: var(--kb-sp-7)">
+          <div class="kbv-modal-card sm">
+            <div class="kbv-modal-head">
+              <div>
+                <div class="title" style="font-size: var(--kb-fs-xl)">¿Eliminar «Correr 5 km»?</div>
+                <div class="sub">Se pierden 23 días de racha. No se puede deshacer.</div>
+              </div>
+            </div>
+            <div class="kbv-modal-foot">
+              <button class="kbv-btn kbv-btn-ghost">Cancelar</button>
+              <div class="right">
+                <button class="kbv-btn kbv-btn-primary" style="background: color-mix(in oklab, var(--kb-hp) 54%, var(--kb-void-2)); box-shadow: var(--kb-elev-hard) color-mix(in oklab, var(--kb-hp) 30%, var(--kb-void-2)), var(--kb-sh-1)">Eliminar</button>
+              </div>
+            </div>
           </div>
-        </sc-for>
+        </div>
       </div>
+      <div class="rule">Una confirmación <strong>no tiene botón de cerrar</strong>: obliga a elegir. El título dice qué se pierde y el verbo del botón repite la acción.</div>
     </div>
-  </div>
-
-  <div class="pane">
-    <div class="head">
-      <div class="eyebrow">Roles</div>
-      <div class="use">Cada nivel es una clase, no una combinación suelta de tamaño y peso.</div>
-    </div>
-    <div class="col" style="gap: var(--kb-sp-7)">
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-4xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.02em; color: var(--kb-text)">El fracaso reencauza</div>
-        <div class="tok" style="text-align: right">.kbv-h1</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.015em; color: var(--kb-text)">Tu semana en cinco áreas</div>
-        <div class="tok" style="text-align: right">.kbv-h2</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xl-fluid); line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text)">Hábitos de hoy</div>
-        <div class="tok" style="text-align: right">.kbv-h3</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl); line-height: var(--kb-lh-snug); color: var(--kb-text)">Correr 5 km</div>
-        <div class="tok" style="text-align: right">.kbv-h4</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); max-width: 560px">Cerraste la semana con 14 de 18 hábitos y subiste de nivel en Vigor. Lo que se repite es lo que cuenta.</div>
-        <div class="tok" style="text-align: right">.kbv-body</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-snug); color: var(--kb-text-2)">Vigor · vence hoy · 40 XP</div>
-        <div class="tok" style="text-align: right">.kbv-meta</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl); letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--kb-text)">1 480</div>
-        <div class="tok" style="text-align: right">.kbv-num</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline">
-        <div class="eyebrow">Áreas de vida</div>
-        <div class="tok" style="text-align: right">.kbv-eyebrow</div>
-      </div>
-    </div>
-    <div class="rule">La cejilla va en <strong>mayúsculas con tracking de .09em</strong>, a 11 px peso 800, en display. Un literal de código nunca se pone en mayúsculas.</div>
   </div>
 
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1710}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1596}}'>
 class Component extends DCLogic {
   renderVals() {
-    const J = 'var(--kb-f-display)', I = 'var(--kb-f-body)';
-    const step = (tok, px, use, w, f, sample) => ({
-      tok: '--kb-fs-' + tok, fs: 'var(--kb-fs-' + tok + ')', px, use, w, f, sample,
-    });
     return {
-      steps: [
-        step('2xs', '10 px', 'Cejilla y contador',      '800', J, 'ÁREAS DE VIDA'),
-        step('xs',  '11 px', 'Etiqueta y metadato',     '700', J, 'Nivel 16 · Vigor'),
-        step('sm',  '12 px', 'Metadato secundario',     '400', I, 'Vence hoy a las 19:00'),
-        step('md',  '13 px', 'Texto base de interfaz',  '400', I, 'Cerraste 14 de 18 hábitos'),
-        step('lg',  '15 px', 'Fila destacada y campo',  '600', I, 'Correr 5 km'),
-        step('xl',  '18 px', 'Encabezado de tarjeta',   '600', J, 'Hábitos de hoy'),
-        step('2xl', '22 px', 'Título de sección',       '700', J, 'Tu semana'),
-        step('3xl', '26 px', 'Título de pantalla',      '700', J, 'Panel'),
-        step('4xl', '34 px', 'Display y cifra heroica', '800', J, '1 480'),
-      ],
-      fluid: [
-        { tok: '--kb-fs-4xl-fluid', val: 'clamp(26px, 5vw, 34px)' },
-        { tok: '--kb-fs-3xl-fluid', val: 'clamp(22px, 4vw, 26px)' },
-        { tok: '--kb-fs-2xl-fluid', val: 'clamp(20px, 3vw, 22px)' },
-        { tok: '--kb-fs-xl-fluid',  val: 'clamp(16px, 2.4vw, 18px)' },
-      ],
-      lh: [
-        { tok: '--kb-lh-tight', v: '1.15', use: 'Display y títulos de pantalla' },
-        { tok: '--kb-lh-snug',  v: '1.3',  use: 'Encabezados de tarjeta y metadatos' },
-        { tok: '--kb-lh-body',  v: '1.55', use: 'Texto corrido, párrafos y descripciones largas' },
+      widths: [
+        { mod: 'sm',   px: '420', bar: '40%',  use: 'Confirmación y aviso. Un párrafo y dos botones.' },
+        { mod: 'md',   px: '580', bar: '56%',  use: 'Por defecto. Un formulario de hasta seis campos.' },
+        { mod: 'lg',   px: '720', bar: '69%',  use: 'Formulario de dos columnas o lista con detalle.' },
+        { mod: 'full', px: '1040', bar: '100%', use: 'Tabla, importación o galería. Es una pantalla dentro de la pantalla.' },
       ],
     };
 

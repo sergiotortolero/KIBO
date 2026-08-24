@@ -332,163 +332,253 @@
 </style>
   <style>
     body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
-    a { color: var(--kb-primary-ink); } a:hover { color: var(--kb-primary-hover); }
-    .ab { padding: 36px 40px; display: flex; flex-direction: column; gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box; }
-    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-3); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
     .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
-    .lead { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
-    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); }
-    .src { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); }
-    .src-tint { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text); }
-    .cap { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
 
-    /* .kbv-chip — kbv-components.css:639-655, compuesto tal cual */
-    .chip { position: relative; display: inline-flex; align-items: center; gap: var(--kb-sp-3);
-            padding: var(--kb-sp-4) 14px; border-radius: var(--kb-r-pill);
-            border: 1.5px solid var(--kb-border); background: var(--kb-card);
-            color: var(--kb-text-2); font-size: var(--kb-fs-md); font-weight: 600; cursor: pointer;
-            transition: all var(--kb-dur-fast) var(--kb-ease-standard); }
-    .chip::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-                   width: 100%; height: var(--kb-touch-min); min-width: var(--kb-touch-min); }
-    .chip.active { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
 
-    /* .kbv-tag — kbv-components.css:1569-1577, compuesto tal cual */
-    .tag { display: inline-flex; align-items: center; gap: var(--kb-sp-2);
-           padding: 3px var(--kb-sp-4); border-radius: var(--kb-r-pill);
-           background: var(--kb-surface); color: var(--kb-text-2);
-           font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; }
-    .tag.wash { background: color-mix(in oklab, var(--c) 10%, var(--kb-canvas)); color: var(--ink); }
-    .tag.flat { background: var(--kb-surface-2); color: var(--kb-text); }
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
 
-    /* contador — sin clase en el sistema */
-    .badge-n { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
-               padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill); color: var(--kb-text-inverse);
-               font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700; font-variant-numeric: tabular-nums; }
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
 
-    .badge { display: inline-flex; align-items: center; height: 17px; padding: 0 7px; border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
-    .prop { background: var(--kb-coin-wash); color: var(--kb-coin-ink); }
-    .dot { width: 7px; height: 7px; border-radius: var(--kb-r-pill); flex-shrink: 0; }
-    .mrow { display: grid; grid-template-columns: 1fr 66px 46px; gap: var(--kb-sp-5); align-items: baseline; padding: var(--kb-sp-2) 0; border-bottom: 1px solid var(--kb-border-soft); font-size: var(--kb-fs-xs); color: var(--kb-text); }
-    code { font-size: var(--kb-fs-2xs); }
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    /* .kbv-chip — se toca. Alto 36, el mismo del control sm. */
+    .kbv-chip {
+      position: relative; box-sizing: border-box;
+      display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+      height: 36px; padding: 0 var(--kb-sp-6);
+      border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-pill);
+      background: var(--kb-card); color: var(--kb-text-2);
+      font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: border-color var(--kb-dur-fast), background var(--kb-dur-fast), color var(--kb-dur-fast);
+    }
+    .kbv-chip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: var(--kb-touch-min); transform: translateY(-50%); }
+    .kbv-chip.is-hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
+    .kbv-chip.active { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-chip.is-focus { box-shadow: var(--kb-focus-halo); }
+    .kbv-chip.is-off { background: var(--kb-surface-2); border-color: var(--kb-border); color: var(--kb-text-2); cursor: not-allowed; }
+    .kbv-chip .dot { width: 8px; height: 8px; border-radius: var(--kb-r-pill); flex-shrink: 0; }
+
+    /* .kbv-tag — se lee. No responde al tacto. */
+    .kbv-tag {
+      display: inline-flex; align-items: center; gap: var(--kb-sp-2); box-sizing: border-box;
+      height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
+      background: var(--kb-surface-2); color: var(--kb-text);
+      font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em;
+      white-space: nowrap;
+    }
+    .kbv-tag.tint { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
+
+    /* .kbv-badge — se cuenta. Escala cerrada. */
+    .kbv-badge {
+      display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+      min-width: 20px; height: 20px; padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
+      background: color-mix(in oklab, var(--c, var(--kb-hp)) 54%, var(--kb-void-2)); color: var(--kb-text-inverse);
+      font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700;
+      font-variant-numeric: tabular-nums; letter-spacing: 0;
+    }
+    .kbv-badge.quiet { background: var(--kb-surface-2); color: var(--kb-text); }
+    .kbv-badge.dot { min-width: 10px; width: 10px; height: 10px; padding: 0; }
+
+    .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); align-items: flex-start; }
   </style>
 </helmet>
 <div class="ab">
 
-  <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
-    <div class="eyebrow">familia 3 · la que necesita criterio · va al final</div>
+  <div class="hd">
+    <div class="eyebrow">Componentes · 03</div>
     <div class="h1">Chip, etiqueta y contador</div>
-    <div class="lead">Hoy son <strong style="color: var(--kb-text)">140 usos repartidos en unas 74 clases</strong> — 1.9 usos cada una. No es una pieza con variantes: son tres piezas distintas que se confundieron por parecerse. La pregunta que las separa es qué hace el usuario con ellas.</div>
-    <div class="src" style="max-width: 680px; padding-top: var(--kb-sp-2)">Chip y etiqueta se <strong>componen</strong> de la clase real, no se re-estilan: <code>.kbv-chip</code> kbv-components.css:639-655 · <code>.kbv-tag</code> :1569-1577 · el contador no existe todavía. Criterio y conteos: ANALYSIS.md § 6 · Chip / pill / tag</div>
+    <div class="one">Tres piezas distintas que se parecen. Lo que las separa es qué hace la persona con ellas.</div>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8)">
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-1)">
-        <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text)">Chip</div>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)"><strong style="color: var(--kb-text)">Se toca.</strong> Filtra, alterna, elige. Tiene estado y responde.</div>
-      </div>
-      <div style="display: flex; flex-wrap: wrap; gap: var(--kb-sp-4)">
-        <div class="chip active"><span class="dot" style="background: var(--kb-primary)"></span>Hoy</div>
-        <div class="chip">Semana</div>
-        <div class="chip">Todo</div>
-        <div class="chip"><span class="dot" style="background: var(--area-community)"></span>Comunidad</div>
-      </div>
-      <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">Relleno 8/14, borde 1.5, texto 13 px, radio pastilla — los valores de <code>.kbv-chip</code> (:639-649). El 14 y el 3 de la etiqueta están fuera de la escala de espaciado en la propia fuente: se reproducen tal cual, no se redondean aquí. El estado encendido es <code>.kbv-chip.active</code> (:651-655), no un <code>.on</code> inventado. Zona de toque de 44 px con un <code>::after</code> transparente centrado, sin cambiar el dibujo (--kb-touch-min :192).</div>
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El criterio</div>
+      <div class="use">Tres preguntas, en este orden.</div>
     </div>
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-1)">
-        <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text)">Etiqueta</div>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)"><strong style="color: var(--kb-text)">Se lee.</strong> Clasifica un elemento. No responde al tacto.</div>
-      </div>
-      <div style="display: flex; flex-wrap: wrap; gap: var(--kb-sp-4)">
-        <div class="tag wash" style="--c: var(--pri-urgent); --ink: var(--kb-hp-ink)">Urgente</div>
-        <div class="tag wash" style="--c: var(--kb-primary); --ink: var(--kb-primary-ink)">En curso</div>
-        <div class="tag wash" style="--c: var(--area-wealth); --ink: var(--area-wealth-ink)">Riqueza</div>
-        <div class="tag flat">Sin fecha</div>
-        <div class="tag">Neutra</div>
-      </div>
-      <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">11 px peso 700, relleno 3/8, tracking <code>.02em</code>, radio pastilla — <code>.kbv-tag</code> (:1569-1577). La neutra es la clase tal cual; las tintadas llevan la tinta propia de su token — <code>--kb-hp-ink</code> :202, <code>--kb-primary-ink</code> :69, <code>--area-wealth-ink</code> :217.</div>
-      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-        <span class="badge prop" style="margin-top: 1px">propuesto</span>
-        <div style="font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text)">La variante tintada no está declarada: la única que existe es <code>.kbv-tag.soon</code> (:1578) con tres colores escritos a mano. El lavado aquí va al 10 %, igual que <code>--kb-community-soft</code> (:236); el sistema tiene también uno al 12 % (<code>--kb-coin-soft</code> :232) y unificarlos sigue abierto.</div>
-      </div>
-    </div>
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6); border-color: var(--kb-coin-border)">
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-1)">
-        <div style="display: flex; align-items: center; gap: var(--kb-sp-4)">
-          <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text)">Contador</div>
-          <span class="badge prop">propuesto</span>
-        </div>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)"><strong style="color: var(--kb-text)">Se cuenta.</strong> Escala cerrada: un número o un estado, nada más.</div>
-      </div>
-      <div style="display: flex; flex-wrap: wrap; gap: var(--kb-sp-4); align-items: center">
-        <div class="badge-n" style="background: var(--kb-hp-ink)">3</div>
-        <div class="badge-n" style="background: var(--kb-surface-2); color: var(--kb-text)">12</div>
-        <div class="badge-n" style="background: var(--kb-primary-ink)">99+</div>
-        <div class="badge-n" style="background: var(--kb-primary-ink)">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round"><path d="M20 6 9 17l-5-5"/></svg>
-        </div>
-      </div>
-      <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">No hay clase para esto en el sistema: <code>.kbv-badge</code> es una propuesta declarada en ANALYSIS § 6, y el alto de 20 px no sale de ninguna línea.</div>
-      <div style="font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text)">Un contador es una <strong>cifra</strong>, o sea texto, no un glifo: le aplica el piso de 4.5:1. Por eso el relleno es la <strong>tinta</strong> y no el color pleno (R-13) — blanco sobre <code>--kb-hp</code> mide 3.96:1 y no pasa.</div>
-    </div>
-
-  </div>
-
-  <div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--kb-sp-8)">
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div class="eyebrow">el criterio · tres preguntas, en este orden</div>
-      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7)">
-        <sc-for list="{{rules}}" as="r" hint-placeholder-count="3">
-          <div style="display: flex; gap: var(--kb-sp-5); align-items: flex-start">
-            <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl); font-weight: 800; color: var(--kb-primary); line-height: 1">{{r.n}}</div>
-            <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">{{r.q}} <strong>{{r.a}}</strong></div>
-          </div>
-        </sc-for>
-      </div>
-      <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">ANALYSIS.md § 6 · «touchable → chip; closed scale → badge; otherwise → tag». Se quedan aparte <code>kbv-stat-pill</code> (contador propio) y <code>kbv-tag-input</code> / <code>vt-tag-input</code> (campos).</div>
-      <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)"><strong>Esta familia va al final del trabajo.</strong> Es la única que no se puede automatizar: <strong>32</strong> de las clases actuales traen su propio tinte bajo tres nombres de variable distintos —<code>--c</code>, <code>--p</code> y <code>--tc</code>—, y cada uso hay que mirarlo para saber cuál de las tres piezas es.</div>
-    </div>
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
-      <div class="eyebrow">medido · método M-1</div>
-      <div style="display: grid; grid-template-columns: 1fr 66px 46px; gap: var(--kb-sp-5); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2)">
-        <div>Par</div><div>Medido</div><div>Veredicto</div>
-      </div>
-      <sc-for list="{{measured}}" as="m" hint-placeholder-count="4">
-        <div class="mrow">
-          <div>{{m.pair}}</div>
-          <div style="font-variant-numeric: tabular-nums; font-weight: 700; color: var(--kb-text)">{{m.cr}}</div>
-          <div style="font-weight: {{m.w}}; color: var(--kb-text)">{{m.v}}</div>
+    <div class="g3">
+      <sc-for list="{{rules}}" as="r" hint-placeholder-count="3">
+        <div class="row" style="gap: var(--kb-sp-5); align-items: flex-start; flex-wrap: nowrap">
+          <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl); font-weight: 800; color: var(--kb-primary); line-height: 1">{{r.n}}</div>
+          <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2)">{{r.q}} <strong style="color: var(--kb-text)">{{r.a}}</strong></div>
         </div>
       </sc-for>
-      <div class="src" style="padding-top: var(--kb-sp-2)">Las dos filas en rojo son la razón de que el contador lleno vaya en tinta: son las que había antes en esta tarjeta.</div>
+    </div>
+  </div>
+
+  <div class="g3">
+
+    <div class="pane">
+      <div class="head">
+        <div class="h2">Chip</div>
+        <div class="use">Se toca. Filtra, alterna, elige.</div>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-4)">
+        <span class="kbv-chip active"><span class="dot" style="background: var(--kb-primary)"></span>Hoy</span>
+        <span class="kbv-chip">Semana</span>
+        <span class="kbv-chip">Todo</span>
+        <span class="kbv-chip"><span class="dot" style="background: var(--area-community)"></span>Comunidad</span>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-4)">
+        <span class="kbv-chip is-hover">Hover</span>
+        <span class="kbv-chip is-focus">Foco</span>
+        <span class="kbv-chip is-off">Deshabilitado</span>
+      </div>
+      <div class="rule">36 px de alto, radio pastilla, texto de 13 en peso 600. Dibuja 36 y <strong>toca 44</strong>. Encendido: borde y tinta de marca sobre su lavado.</div>
     </div>
 
+    <div class="pane">
+      <div class="head">
+        <div class="h2">Etiqueta</div>
+        <div class="use">Se lee. Clasifica un elemento.</div>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-4)">
+        <span class="kbv-tag tint" style="--c: var(--pri-urgent)">Urgente</span>
+        <span class="kbv-tag tint" style="--c: var(--kb-primary)">En curso</span>
+        <span class="kbv-tag tint" style="--c: var(--area-wealth)">Riqueza</span>
+        <span class="kbv-tag">Sin fecha</span>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-4)">
+        <span class="kbv-tag solid" style="--c: var(--area-vigor)">Vigor</span>
+        <span class="kbv-tag solid" style="--c: var(--area-will)">Voluntad</span>
+        <span class="kbv-tag solid" style="--c: var(--kb-streak)">Racha viva</span>
+      </div>
+      <div class="rule">22 px de alto y texto de 11 en peso 700. Tintada usa las dos recetas: <strong>lavado de fondo, tinta de texto</strong>. Sólida invierte: tinta de fondo, blanco encima.</div>
+    </div>
+
+    <div class="pane">
+      <div class="head">
+        <div class="h2">Contador</div>
+        <div class="use">Se cuenta. Escala cerrada.</div>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-5)">
+        <span class="kbv-badge">3</span>
+        <span class="kbv-badge quiet">12</span>
+        <span class="kbv-badge">99+</span>
+        <span class="kbv-badge" style="--c: var(--kb-primary)">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+        <span class="kbv-badge dot"></span>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-6); padding-top: var(--kb-sp-3)">
+        <div class="row" style="gap: var(--kb-sp-4); flex-wrap: nowrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="color: var(--kb-text-2)"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 20a2 2 0 0 1-3.4 0"/></svg>
+          <span class="kbv-badge">3</span>
+        </div>
+        <div class="row" style="gap: var(--kb-sp-4); flex-wrap: nowrap">
+          <span style="font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text)">Pendientes</span>
+          <span class="kbv-badge quiet">12</span>
+        </div>
+      </div>
+      <div class="rule">Una cifra es texto: le aplica el piso de 4.5:1. Por eso el relleno es la <strong>tinta</strong> del papel y nunca el color pleno. Tope de tres caracteres: más allá es <code>99+</code>.</div>
+    </div>
+
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Lo que no es ninguna de las tres</div>
+      <div class="use">Piezas con nombre propio, para que no vuelvan a caer aquí.</div>
+    </div>
+    <div class="g3">
+      <div class="col" style="gap: var(--kb-sp-4); padding: var(--kb-sp-7); background: var(--kb-surface); border-radius: var(--kb-r-md)">
+        <div class="spec">Pastilla de estado</div>
+        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)">Lleva glifo y cifra de un recurso vivo — racha, divisa, elemento. Es del encabezado, no de la lista.</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4); padding: var(--kb-sp-7); background: var(--kb-surface); border-radius: var(--kb-r-md)">
+        <div class="spec">Campo de etiquetas</div>
+        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)">Se escribe dentro. Es un campo con fichas removibles, y hereda el alto y el foco del campo.</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4); padding: var(--kb-sp-7); background: var(--kb-surface); border-radius: var(--kb-r-md)">
+        <div class="spec">Pastilla de área</div>
+        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)">Es la regla de acento de una tarjeta compacta. Se ve como etiqueta tintada, pero su papel es pintar el área.</div>
+      </div>
+    </div>
   </div>
 
 </div>
+
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1062}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":866}}'>
 class Component extends DCLogic {
   renderVals() {
     return {
       rules: [
-        { n: '1', q: '¿Se puede tocar y cambia algo?',    a: 'Es chip.' },
-        { n: '2', q: '¿Es una cuenta o una escala cerrada?', a: 'Es contador.' },
-        { n: '3', q: 'En cualquier otro caso,',            a: 'es etiqueta.' },
-      ],
-      measured: [
-        { pair: 'blanco sobre --kb-hp-ink (contador lleno)', cr: '6.19:1', v: 'pasa 4.5',    w: '400' },
-        { pair: 'blanco sobre --kb-primary-ink',             cr: '6.06:1', v: 'pasa 4.5',    w: '400' },
-        { pair: 'blanco sobre --kb-hp pleno',                cr: '3.96:1', v: 'no pasa 4.5', w: '700' },
-        { pair: 'blanco sobre --kb-primary pleno',           cr: '3.06:1', v: 'no pasa 4.5', w: '700' },
+        { n: '1', q: '¿Se toca y cambia de estado?', a: 'Es chip.' },
+        { n: '2', q: '¿Es una escala cerrada: una cifra o un estado?', a: 'Es contador.' },
+        { n: '3', q: 'Si no, solo clasifica.', a: 'Es etiqueta.' },
       ],
     };
+
   }
 }
 </script>

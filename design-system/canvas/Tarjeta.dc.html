@@ -332,145 +332,323 @@
 </style>
   <style>
     body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
-    a { color: var(--kb-primary-ink); } a:hover { color: var(--kb-primary-hover); }
-    .ab { padding: 36px 40px; display: flex; flex-direction: column; gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box; }
-    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-3); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
     .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
-    .lead { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
-    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); }
-    .card { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1); }
-    .src { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); }
-    .src-tint { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text); }
-    .ttl { font-family: var(--kb-f-display); font-size: var(--kb-fs-lg); font-weight: 700; color: var(--kb-text); }
-    .cap { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
-    .wash { background: color-mix(in oklab, var(--c) 10%, var(--kb-canvas)); color: var(--ink); }
-    .badge { display: inline-flex; align-items: center; height: 17px; padding: 0 7px; border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
-    .prop { background: var(--kb-coin-wash); color: var(--kb-coin-ink); }
-    .open { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
-    code { font-size: var(--kb-fs-2xs); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    /* .kbv-card — una base, cuatro densidades. */
+    .kbv-card {
+      background: var(--kb-card); border: 1px solid var(--kb-border);
+      border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+      display: flex; flex-direction: column; gap: var(--kb-sp-5);
+      padding: var(--kb-sp-7); box-sizing: border-box; overflow: hidden;
+      transition: box-shadow var(--kb-dur-base) var(--kb-ease-standard),
+                  transform var(--kb-dur-base) var(--kb-ease-standard);
+    }
+    .kbv-card.flush   { padding: 0; gap: 0; }
+    .kbv-card.compact { padding: var(--kb-sp-6); gap: var(--kb-sp-4); }
+    .kbv-card.roomy   { padding: var(--kb-sp-8); gap: var(--kb-sp-6); }
+    .kbv-card.is-hover { box-shadow: var(--kb-sh-2); transform: translateY(-1px); }
+    .kbv-card.is-focus { box-shadow: var(--kb-sh-1), var(--kb-focus-halo); border-color: var(--kb-primary); }
+
+    .kbv-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--kb-sp-5); }
+    .kbv-card-title { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 600; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-card-sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-card-foot { display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+
+    /* Acento 1 — banda de encabezado. Tarjeta grande. */
+    .kbv-band {
+      display: flex; align-items: center; gap: var(--kb-sp-4);
+      padding: var(--kb-sp-5) var(--kb-sp-7);
+      background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+      border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas));
+      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      font-size: var(--kb-fs-sm); font-weight: 700;
+    }
+    /* Acento 2 — pastilla de área. Pieza compacta. */
+    .kbv-areapill {
+      display: inline-flex; align-items: center; gap: var(--kb-sp-2); align-self: flex-start;
+      height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
+      background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      font-size: var(--kb-fs-xs); font-weight: 700;
+    }
+    /* Acento 3 — barra sólida. Cronograma. */
+    .kbv-slab {
+      display: flex; align-items: center; padding: 0 var(--kb-sp-5); height: 28px;
+      border-radius: var(--kb-r-xs);
+      background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      color: var(--kb-text-inverse); font-size: var(--kb-fs-xs); font-weight: 700;
+    }
+    /* Acento 4 — fondo tintado con glifo. Nota o aviso. */
+    .kbv-note {
+      display: flex; gap: var(--kb-sp-5); padding: var(--kb-sp-6) var(--kb-sp-7);
+      border-radius: var(--kb-r-md);
+      background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+      color: var(--kb-text); font-size: var(--kb-fs-sm); line-height: 1.5;
+    }
+    .kbv-note svg { flex-shrink: 0; margin-top: 2px; color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+
+    .kbv-check {
+      width: 22px; height: 22px; border-radius: var(--kb-r-xs); box-sizing: border-box;
+      border: 1.5px solid var(--kb-border-strong); background: var(--kb-card); flex-shrink: 0;
+    }
+    .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+    .kbv-badge {
+      display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+      min-width: 20px; height: 20px; padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
+      background: color-mix(in oklab, var(--c, var(--kb-hp)) 54%, var(--kb-void-2)); color: var(--kb-text-inverse);
+      font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700; font-variant-numeric: tabular-nums;
+    }
+    .kbv-badge.quiet { background: var(--kb-surface-2); color: var(--kb-text); }
   </style>
 </helmet>
 <div class="ab">
 
-  <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
-    <div class="eyebrow">familia 2 · una base y una regla, en un solo movimiento</div>
-    <div class="h1">Tarjeta y regla de acento</div>
-    <div class="lead">Hay <strong style="color: var(--kb-text)">281 usos sobre cuatro «bases»</strong> que son la misma pieza: 81 · 74 · 35 · 14, y dos de ellas se diferencian en 2 px de separación interna. Queda una base con tres densidades. Y como <strong style="color: var(--kb-text)">53 clases</strong> llevan franja de color en la orilla, el acento se corrige en la misma pasada: separarlos es hacer el trabajo dos veces.</div>
-    <div class="src" style="max-width: 680px; padding-top: var(--kb-sp-2)">Forma canónica: <code>.kbv-card</code> — kbv-components.css:1243-1249 · consolidación y conteos: ANALYSIS.md § 6 · Card · regla R-1: docs/PLAN.md</div>
+  <div class="hd">
+    <div class="eyebrow">Componentes · 05</div>
+    <div class="h1">Tarjeta</div>
+    <div class="one">Una base y tres densidades. El color de un área entra por una de cuatro formas, nunca por una franja en la orilla.</div>
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-7)">
-    <div style="display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap">
-      <div class="eyebrow">densidades · lo único que cambia es el aire de adentro</div>
-      <span class="badge prop">propuesto</span>
-      <div class="src">18 y 14 px salen de ANALYSIS § 6 · Card y no tienen token propio — coinciden con el piso de --kb-sp-8 y --kb-sp-7; el gap interno no está especificado y aquí se toma de la escala</div>
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Densidades</div>
+      <div class="use">Lo único que cambia es el aire de adentro.</div>
     </div>
-    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7); align-items: start">
+    <div class="g3 specs">
       <sc-for list="{{dens}}" as="d" hint-placeholder-count="3">
-        <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-          <div class="card" style="padding: {{d.pad}}; display: flex; flex-direction: column; gap: {{d.gap}}">
-            <div class="ttl">Correr 5 km</div>
-            <div style="font-size: var(--kb-fs-sm); color: var(--kb-text-2)">Vigor · vence hoy</div>
+        <div class="cell">
+          <div class="kbv-card {{d.mod}}">
+            <div class="kbv-card-title">Correr 5 km</div>
+            <div class="kbv-card-sub">Vigor · vence hoy</div>
           </div>
-          <div style="display: flex; justify-content: space-between; align-items: baseline">
-            <div class="cap">{{d.mod}}</div>
-            <div class="src">{{d.lbl}}</div>
-          </div>
+          <div class="spec">{{d.name}}</div>
+          <div class="tok">{{d.tok}}</div>
         </div>
       </sc-for>
     </div>
-    <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
-      <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)"><strong>Lo que se ve distinto:</strong> el relleno se mueve 4 px hacia adentro en 74 tarjetas, las que hoy escriben <code>18px 22px</code>. Se nota comparando lado a lado; no se nota usando la aplicación.</div>
-      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-        <span class="badge open" style="margin-top: 1px">abierto</span>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Qué radio queda. <code>.kbv-card</code> es hoy <strong>16 px</strong> (:1245), que es escala retirada. Aquí se dibuja con <code>--kb-r-lg</code> (18), pero <code>--kb-r-md</code> (14) también es candidato: son 152 usos por migrar y conviene decidirlo una vez.</div>
-      </div>
-    </div>
+    <div class="rule">Radio <code>--kb-r-lg</code>, borde de 1 px y elevación 1 en toda tarjeta. Existe además <code>flush</code>, sin relleno, para que el contenido llegue a la orilla —una banda, una imagen, una lista—: no es una densidad, es una utilidad.</div>
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-7)">
-    <div class="eyebrow">acento · cuatro patrones, y ninguno es una franja en la orilla</div>
-    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8) var(--kb-sp-9)">
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Regla de acento</div>
+      <div class="use">Cuatro formas de meter el color de un área. La forma la decide el tamaño de la pieza.</div>
+    </div>
+    <div class="g2 specs" style="gap: var(--kb-sp-8) var(--kb-sp-9)">
 
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div class="card" style="overflow: hidden">
-          <div style="padding: var(--kb-sp-5) var(--kb-sp-7); background: var(--kb-community-soft); border-bottom: 2px solid var(--kb-community-border); display: flex; align-items: center; gap: var(--kb-sp-4)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="color: var(--area-community-ink)"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M17 11h4"/><path d="M19 9v4"/></svg>
-            <div style="font-size: var(--kb-fs-sm); font-weight: 700; color: var(--area-community-ink)">Comunidad</div>
+      <div class="cell">
+        <div class="kbv-card flush">
+          <div class="kbv-band" style="--c: var(--area-community)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M17 11h4"/><path d="M19 9v4"/></svg>
+            Comunidad
           </div>
-          <div style="padding: var(--kb-sp-7) var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-2)">
-            <div class="ttl">Cena con los papás</div>
-            <div style="font-size: var(--kb-fs-sm); color: var(--kb-text-2)">Nivel 7 · 340 XP para el 8</div>
+          <div style="padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-2)">
+            <div class="kbv-card-title">Cena con los papás</div>
+            <div class="kbv-card-sub">Nivel 7 · 340 XP para el 8</div>
           </div>
         </div>
-        <div class="cap">Banda de encabezado</div>
-        <div class="src">--kb-community-soft :236 (10 %) · borde --kb-community-border :237 (32 %) · tinta --area-community-ink :218 — tarjeta grande, de 120 px de alto para arriba</div>
+        <div class="spec">Banda de encabezado</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Tarjeta grande, de 120 px de alto para arriba.</div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div class="card" style="padding: var(--kb-sp-7) var(--kb-sp-7); display: flex; align-items: center; gap: var(--kb-sp-5)">
-          <div style="width: 18px; height: 18px; border-radius: var(--kb-r-xs); border: 1.6px solid var(--kb-border-strong); flex-shrink: 0"></div>
-          <div style="flex-grow: 1; display: flex; flex-direction: column; gap: var(--kb-sp-1)">
-            <div style="font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text)">Revisar el presupuesto</div>
-            <div class="wash" style="--c: var(--area-wealth); --ink: var(--area-wealth-ink); display: inline-flex; align-items: center; height: 20px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill); font-size: var(--kb-fs-2xs); font-weight: 700; align-self: flex-start">Riqueza</div>
-          </div>
-          <div style="display: flex; align-items: center; gap: var(--kb-sp-2); flex-shrink: 0">
-            <div style="width: 7px; height: 7px; border-radius: var(--kb-r-pill); background: var(--pri-high)"></div>
-            <div style="font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text-2)">Alta</div>
+      <div class="cell">
+        <div class="kbv-card">
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap; align-items: flex-start">
+            <span class="kbv-check"></span>
+            <div class="col" style="flex-grow: 1; gap: var(--kb-sp-3)">
+              <div style="font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text)">Revisar el presupuesto</div>
+              <span class="kbv-areapill" style="--c: var(--area-wealth)">Riqueza</span>
+            </div>
+            <div class="row" style="gap: var(--kb-sp-2); flex-wrap: nowrap; flex-shrink: 0">
+              <div style="width: 7px; height: 7px; border-radius: var(--kb-r-pill); background: var(--pri-high)"></div>
+              <div style="font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text-2)">Alta</div>
+            </div>
           </div>
         </div>
-        <div class="cap">Pastilla de área</div>
-        <div class="src">lavado al 10 %, misma mezcla que --kb-community-soft :236 · tinta --area-wealth-ink :217 · prioridad --pri-high :136</div>
-        <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-          <span class="badge prop" style="margin-top: 1px">propuesto</span>
-          <div style="font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text)">El lavado al 10 % solo tiene token para Comunidad; generalizarlo a las cinco áreas está sin declarar. Y el marcador de prioridad es un dibujo de esta tarjeta: el control real, <code>kbv-priority-row.glyphs</code>, sigue sin documentar (PLAN 07).</div>
-        </div>
+        <div class="spec">Pastilla de área</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Pieza compacta. Cuando compiten área y prioridad: el área pinta, la prioridad marca.</div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div class="card" style="padding: var(--kb-sp-7) var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-4)">
-          <div style="display: flex; justify-content: space-between; align-items: baseline">
-            <div class="cap">Martes</div>
+      <div class="cell">
+        <div class="kbv-card">
+          <div class="row" style="justify-content: space-between; align-items: baseline">
+            <div class="spec">Martes</div>
             <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">09:00 — 11:30</div>
           </div>
-          <div style="height: 26px; border-radius: var(--kb-r-xs); background: var(--area-will-ink); display: flex; align-items: center; padding: 0 var(--kb-sp-5)">
-            <div style="font-size: var(--kb-fs-xs); font-weight: 700; color: var(--kb-text-inverse)">Bloque de foco</div>
-          </div>
+          <div class="kbv-slab" style="--c: var(--area-will)">Bloque de foco</div>
         </div>
-        <div class="cap">Barra sólida</div>
-        <div class="src">R-13: un relleno marcado usa la tinta como fondo, no el color pleno — blanco sobre --area-will pleno mide 2.43:1; sobre --area-will-ink :219, pasa</div>
+        <div class="spec">Barra sólida</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Cronograma. El relleno es la tinta del área, para que el texto blanco encima se lea.</div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div class="card" style="padding: var(--kb-sp-7) var(--kb-sp-7); background: var(--kb-primary-soft); display: flex; gap: var(--kb-sp-5)">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="flex-shrink: 0; margin-top: 1px; color: var(--kb-primary-ink)"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4"/></svg>
-          <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">Perdiste la racha ayer, pero recuperarla hoy cuenta doble. El fracaso reencauza.</div>
+      <div class="cell">
+        <div class="kbv-card">
+          <div class="kbv-note" style="--c: var(--kb-primary)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 3v3"/><path d="M12 18v3"/><path d="M3 12h3"/><path d="M18 12h3"/><circle cx="12" cy="12" r="4"/></svg>
+            <div>Perdiste la racha ayer, pero recuperarla hoy cuenta doble. El fracaso reencauza.</div>
+          </div>
         </div>
-        <div class="cap">Fondo tintado</div>
-        <div class="src">--kb-primary-soft :68 con tinta --kb-primary-ink :69 · nota, cita o aviso, siempre con glifo · el texto va en --kb-text porque sobre superficie tintada el neutro cae a 4.27:1 (R-14)</div>
+        <div class="spec">Fondo tintado con glifo</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Nota, cita o aviso. Nunca sin glifo: el color solo no es un mensaje.</div>
       </div>
 
     </div>
+    <div class="rule">La franja de color en una sola orilla <strong>no existe en el sistema</strong>. El acento entra por el lavado y la tinta, que son las dos recetas de color.</div>
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-5); background: var(--kb-primary-soft); border-color: var(--kb-primary-border)">
-    <div class="eyebrow" style="color: var(--kb-text)">por qué esta familia va junto con R-1</div>
-    <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">Las 53 clases con franja de orilla y las cuatro bases de tarjeta son <strong>el mismo conjunto de archivos</strong>. Unificar la base y aplicar R-1 por separado significa abrir dos veces los mismos 53 selectores. Sobreviven además dos franjas en la hoja publicada — <code>.kbv-boss</code> y <code>.kbv-prompt</code>.</div>
-    <div class="src-tint">ANALYSIS.md § 6 · Card · «Must be executed together with the R-1 migration» · kbv-components.css:1160 y :2189</div>
+  <div class="g2">
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Anatomía</div>
+        <div class="use">Encabezado, cuerpo y pie. El pie solo cuando hay acción.</div>
+      </div>
+      <div class="kbv-card roomy">
+        <div class="kbv-card-head">
+          <div class="col" style="gap: 2px">
+            <div class="kbv-card-title">Hábitos de hoy</div>
+            <div class="kbv-card-sub">4 de 6 completados</div>
+          </div>
+          <span class="kbv-badge quiet">4/6</span>
+        </div>
+        <div class="col" style="gap: var(--kb-sp-5)">
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap"><span class="kbv-check"></span><div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Leer 20 minutos</div></div>
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap"><span class="kbv-check"></span><div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Caminar 6 000 pasos</div></div>
+        </div>
+        <div class="kbv-card-foot">
+          <div style="font-size: var(--kb-fs-sm); color: var(--kb-text-2)">Se reinicia a medianoche</div>
+          <div style="font-family: var(--kb-f-display); font-size: var(--kb-fs-md); font-weight: 700; color: var(--kb-primary-ink)">Ver todos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Interactiva</div>
+        <div class="use">Cuando la tarjeta entera es el botón.</div>
+      </div>
+      <div class="g2" style="gap: var(--kb-sp-6)">
+        <div class="cell">
+          <div class="kbv-card compact">
+            <div class="spec">Proyecto</div>
+            <div class="kbv-card-sub">Mudanza</div>
+          </div>
+          <div class="tok">Reposo</div>
+        </div>
+        <div class="cell">
+          <div class="kbv-card compact is-hover">
+            <div class="spec">Proyecto</div>
+            <div class="kbv-card-sub">Mudanza</div>
+          </div>
+          <div class="tok">Hover</div>
+        </div>
+        <div class="cell">
+          <div class="kbv-card compact is-focus">
+            <div class="spec">Proyecto</div>
+            <div class="kbv-card-sub">Mudanza</div>
+          </div>
+          <div class="tok">Foco</div>
+        </div>
+        <div class="cell">
+          <div class="kbv-card compact" style="background: var(--kb-surface-2); box-shadow: none; border-style: dashed">
+            <div class="spec" style="color: var(--kb-text-2)">Sin proyectos</div>
+            <div class="kbv-card-sub">Crea el primero</div>
+          </div>
+          <div class="tok">Vacía</div>
+        </div>
+      </div>
+      <div class="rule">Al pasar por encima sube <strong>1 px</strong> y gana un nivel de elevación. Si la tarjeta es interactiva, dentro no puede haber otro destino.</div>
+    </div>
   </div>
 
 </div>
+
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1206}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1352}}'>
 class Component extends DCLogic {
   renderVals() {
     return {
       dens: [
-        { mod: 'flush',            pad: '0px',  gap: '0px',            lbl: '0' },
-        { mod: 'md · por defecto', pad: '18px', gap: 'var(--kb-sp-3)', lbl: '18 px · piso de --kb-sp-8 (:165)' },
-        { mod: 'tight',            pad: '14px', gap: 'var(--kb-sp-2)', lbl: '14 px · piso de --kb-sp-7 (:164)' },
+        { name: 'compacta', mod: 'compact', tok: '--kb-sp-6' },
+        { name: 'estándar', mod: '',        tok: '--kb-sp-7' },
+        { name: 'amplia',   mod: 'roomy',   tok: '--kb-sp-8' },
       ],
     };
+
   }
 }
 </script>

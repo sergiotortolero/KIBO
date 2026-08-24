@@ -332,155 +332,215 @@
 </style>
   <style>
     body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
-    a { color: var(--kb-primary-ink); } a:hover { color: var(--kb-primary-hover); }
-    .ab { padding: 36px 40px; display: flex; flex-direction: column; gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box; }
-    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-3); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
     .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
-    .h4 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
-    .lead { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
-    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); }
-    .lbl { font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2); }
-    .lbl-tint { font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text); }
-    .k { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
-    .src { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); }
-    .src-tint { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text); }
-    .badge { display: inline-flex; align-items: center; height: 17px; padding: 0 7px; border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
-    .prop { background: var(--kb-coin-wash); color: var(--kb-coin-ink); }
-    .open { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
-    .dot { width: 5px; height: 5px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong); margin-top: 7px; flex-shrink: 0; }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
   </style>
 </helmet>
 <div class="ab">
 
-  <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
-    <div class="eyebrow">00 · fundamentos · la decisión que ordena todo lo demás</div>
+  <div class="hd">
+    <div class="eyebrow">Fundamentos · 04</div>
     <div class="h1">Un sistema, dos plataformas</div>
-    <div class="lead">La v1 sale en web y en Android. Eso no significa dos sistemas de diseño independientes: significa <strong style="color: var(--kb-text)">una capa de valores compartida</strong> y dos implementaciones que la consumen. Lo que se comparte son los números; lo que no, es el código.</div>
-    <div class="src" style="max-width: 680px; padding-top: var(--kb-sp-2)">Contrato de este lienzo — cada cifra lleva la línea de la que sale. Lo que no sale de una línea citable va marcado <span class="badge prop">propuesto</span> y lo que necesita una decisión tuya, <span class="badge open">abierto</span>.</div>
+    <div class="one">Una capa de valores, dos implementaciones. Se comparten los números; no se comparte el código.</div>
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6); border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo)">
-    <div style="display: flex; align-items: center; gap: var(--kb-sp-5)">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--kb-primary)"><path d="M12 2 3 7l9 5 9-5-9-5Z"/><path d="m3 17 9 5 9-5"/><path d="m3 12 9 5 9-5"/></svg>
-      <div class="h4">Se comparte · un solo origen de verdad</div>
+  <div class="pane" style="border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo)">
+    <div class="head">
+      <div class="eyebrow">La capa compartida</div>
+      <div class="use">Se escribe una vez y se compila a las dos plataformas.</div>
     </div>
-    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7)">
+    <div class="g4">
       <sc-for list="{{shared}}" as="s" hint-placeholder-count="4">
-        <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2); padding: var(--kb-sp-6) var(--kb-sp-7); background: var(--kb-primary-soft); border-radius: var(--kb-r-md)">
-          <div class="k">{{s.name}}</div>
-          <div class="lbl-tint">{{s.what}}</div>
-          <div class="src-tint">{{s.src}}</div>
+        <div class="col" style="gap: var(--kb-sp-2); padding: var(--kb-sp-6) var(--kb-sp-7); background: var(--kb-primary-soft); border-radius: var(--kb-r-md)">
+          <div class="spec">{{s.name}}</div>
+          <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">{{s.what}}</div>
         </div>
       </sc-for>
     </div>
-    <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">Se escriben una vez y de ahí se generan las variables de CSS para web y el objeto de estilos para Android. <strong>El archivo de tokens deja de escribirse a mano.</strong> <span class="badge open">abierto</span> — en qué formato, abajo.</div>
+    <div class="rule">El archivo de tokens es <strong>generado</strong>, no escrito a mano. Un valor que solo existe en una plataforma no es un token del sistema.</div>
   </div>
 
-  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8)">
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div style="display: flex; align-items: center; gap: var(--kb-sp-5)">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--kb-text-2)"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
-        <div class="h4">Web</div>
+  <div class="g2">
+    <div class="pane">
+      <div class="head">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--kb-text-2)"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg>
+        <div class="h2">Web</div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
-        <sc-for list="{{web}}" as="w" hint-placeholder-count="4">
-          <div style="display: flex; gap: var(--kb-sp-4); align-items: flex-start">
-            <div class="dot"></div>
-            <div style="display: flex; flex-direction: column; gap: 2px">
-              <div class="lbl"><strong style="color: var(--kb-text)">{{w.k}}</strong> — {{w.v}}</div>
-              <div class="src">{{w.src}}</div>
-            </div>
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <sc-for list="{{web}}" as="w" hint-placeholder-count="5">
+          <div style="display: flex; gap: var(--kb-sp-5); align-items: flex-start">
+            <div style="width: 5px; height: 5px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong); margin-top: 8px; flex-shrink: 0"></div>
+            <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2)"><strong style="color: var(--kb-text)">{{w.k}}</strong> — {{w.v}}</div>
           </div>
         </sc-for>
       </div>
     </div>
 
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div style="display: flex; align-items: center; gap: var(--kb-sp-5)">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--kb-text-2)"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
-        <div class="h4">Android</div>
+    <div class="pane">
+      <div class="head">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--kb-text-2)"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18.5h2"/></svg>
+        <div class="h2">Android</div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-5)">
-        <sc-for list="{{android}}" as="a" hint-placeholder-count="4">
-          <div style="display: flex; gap: var(--kb-sp-4); align-items: flex-start">
-            <div class="dot"></div>
-            <div style="display: flex; flex-direction: column; gap: 2px">
-              <div class="lbl"><strong style="color: var(--kb-text)">{{a.k}}</strong> — {{a.v}}</div>
-              <div class="src">{{a.src}}</div>
-            </div>
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <sc-for list="{{android}}" as="a" hint-placeholder-count="5">
+          <div style="display: flex; gap: var(--kb-sp-5); align-items: flex-start">
+            <div style="width: 5px; height: 5px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong); margin-top: 8px; flex-shrink: 0"></div>
+            <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2)"><strong style="color: var(--kb-text)">{{a.k}}</strong> — {{a.v}}</div>
           </div>
         </sc-for>
       </div>
     </div>
-
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-    <div class="eyebrow">cortes responsivos · declarados, todavía no tokenizados</div>
-    <div style="display: flex; gap: var(--kb-sp-7); flex-wrap: wrap; align-items: center">
-      <sc-for list="{{bp}}" as="b" hint-placeholder-count="4">
-        <div style="display: flex; flex-direction: column; gap: 2px; padding: var(--kb-sp-3) var(--kb-sp-6); background: var(--kb-surface-2); border-radius: var(--kb-r-sm)">
-          <div class="k">{{b.n}}</div>
-          <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text)">{{b.px}}</div>
-        </div>
-      </sc-for>
-      <div style="flex-grow: 1; min-width: 300px; font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">Viven como comentario, no como token, porque <code style="font-size: var(--kb-fs-xs)">@media</code> no lee <code style="font-size: var(--kb-fs-xs)">var()</code>. Para Android hay que exportarlos igual, así que el formato de tokens tiene que contemplarlos.<div class="src" style="padding-top: 2px">colors_and_type.css:240-241</div></div>
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Lo que no viaja igual</div>
+      <div class="use">Tres casos donde el valor compartido necesita una traducción declarada.</div>
     </div>
-  </div>
-
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6); background: var(--kb-primary-soft); border-color: var(--kb-primary-border)">
-    <div class="eyebrow" style="color: var(--kb-text)">abierto · necesita tu decisión antes de construir</div>
-    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7)">
-      <sc-for list="{{ask}}" as="q" hint-placeholder-count="3">
-        <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
-          <div style="font-size: var(--kb-fs-sm); font-weight: 700; color: var(--kb-text)">{{q.q}}</div>
-          <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">{{q.why}}</div>
-          <div class="src-tint">{{q.src}}</div>
+    <div class="g3">
+      <sc-for list="{{gaps}}" as="g" hint-placeholder-count="3">
+        <div class="col" style="gap: var(--kb-sp-4); padding: var(--kb-sp-7); background: var(--kb-surface); border-radius: var(--kb-r-md)">
+          <div class="spec">{{g.name}}</div>
+          <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)">{{g.v}}</div>
         </div>
       </sc-for>
     </div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">La regla de nombres</div>
+      <div class="use">El mismo token se llama igual en las dos plataformas.</div>
+    </div>
+    <div class="col" style="gap: var(--kb-sp-5)">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--kb-sp-7); padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border)">
+        <div class="eyebrow">Valor del sistema</div>
+        <div class="eyebrow">Web</div>
+        <div class="eyebrow">Android</div>
+      </div>
+      <sc-for list="{{names}}" as="n" hint-placeholder-count="3">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border-soft)">
+          <div class="tok" style="color: var(--kb-text)">{{n.src}}</div>
+          <div class="tok">{{n.web}}</div>
+          <div class="tok">{{n.and}}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div class="rule">La unidad es el nombre; la sintaxis es de cada plataforma. Renombrar un token es un cambio del sistema, no de una implementación.</div>
   </div>
 
 </div>
+
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1279}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1215}}'>
 class Component extends DCLogic {
   renderVals() {
     return {
       shared: [
-        { name: 'Color',      what: 'Marca, gamificación, áreas, prioridades y sus tintas', src: 'colors_and_type.css:51-139 · 200-237' },
-        { name: 'Tipografía', what: 'Dos familias, nueve pasos y sus interlineados',        src: 'colors_and_type.css:19-48' },
-        { name: 'Medidas',    what: 'Espaciado, radios, sombras, alto de control',          src: 'colors_and_type.css:142-192' },
-        { name: 'Movimiento', what: 'Cuatro duraciones y tres curvas, con nombre',          src: 'colors_and_type.css:179-185' },
+        { name: 'Color',       what: 'Matices, superficies, texto y las dos recetas — en las dos tablas de tema.' },
+        { name: 'Tipografía',  what: 'Dos familias, nueve pasos, tres interlineados y los pesos por rol.' },
+        { name: 'Medida',      what: 'Espaciado, radios, elevación, alto de control y apilamiento.' },
+        { name: 'Movimiento',  what: 'Cuatro duraciones y tres curvas, con sus nombres.' },
       ],
       web: [
-        { k: 'Forma',       v: 'variables de CSS, que es lo que el sistema ya publica', src: 'colors_and_type.css:18' },
-        { k: 'Sin shadcn',  v: 'el vocabulario del sistema sustituye la librería',      src: 'ANALYSIS.md · Contexto · decisión 2' },
-        { k: 'Piso táctil', v: 'aplica igual — la web también se usa en teléfono',      src: 'colors_and_type.css:192' },
-        { k: 'Densidad',    v: 'filas más apretadas y estados de hover para ratón · PROPUESTO', src: 'sin línea que citar — los 3 modos responsivos están sin documentar (ANALYSIS.md · hallazgo 14)' },
+        { k: 'Consumo',     v: 'variables CSS sobre :root, y el tema como segunda tabla en el atributo de tema.' },
+        { k: 'Componentes', v: 'clases .kbv-* compuestas, nunca reestilizadas desde fuera.' },
+        { k: 'Adaptación',  v: 'los pasos fluidos con clamp() y los cortes 640 · 768 · 1024 · 1280.' },
+        { k: 'Foco',        v: ':focus-visible con el aro de marca al 10 %.' },
+        { k: 'Fuera',       v: 'sin librería de componentes de terceros: el sistema se implementa a mano.' },
       ],
       android: [
-        { k: 'Componentes', v: 'implementación propia: las interfaces se escriben dos veces', src: 'ANALYSIS.md · Contexto · decisión 3' },
-        { k: 'Piso táctil', v: '44 px es el mínimo, no el objetivo',                          src: 'colors_and_type.css:192' },
-        { k: 'Forma',       v: 'objeto de estilos generado del mismo origen · PROPUESTO',     src: 'el formato no está decidido — ver abierto' },
-        { k: 'Navegación',  v: 'pestañas abajo en vez de menú lateral · PROPUESTO',           src: 'sin línea que citar — el armazón está sin documentar (ANALYSIS.md · hallazgo 14)' },
+        { k: 'Consumo',     v: 'un objeto de estilos generado desde la misma capa de valores.' },
+        { k: 'Componentes', v: 'los mismos nombres de pieza y de modificador que en web.' },
+        { k: 'Adaptación',  v: 'los pasos fluidos se resuelven por clase de ancho, no por vw.' },
+        { k: 'Foco',        v: 'estado de foco e indicación táctil con el mismo aro al 10 %.' },
+        { k: 'Fuera',       v: 'sin componentes de plataforma sin envolver: la piel es siempre la de Kibo.' },
       ],
-      bp: [
-        { n: 'sm', px: '640' }, { n: 'md', px: '768' }, { n: 'lg', px: '1024' }, { n: 'xl', px: '1280' },
+      gaps: [
+        { name: 'Pasos fluidos', v: 'clamp() no existe fuera de la web. La capa de valores declara mínimo y máximo; cada plataforma elige cómo interpolar.' },
+        { name: 'Elevación',     v: 'la sombra de la web y la elevación de Android no son la misma unidad. Se mapean nivel a nivel: 1, 2, 3 y pop.' },
+        { name: 'Zona de toque', v: 'el piso táctil de 44 px es la misma regla en las dos, pero en web se logra con un área transparente y en Android con el propio contenedor.' },
       ],
-      ask: [
-        { q: '¿En qué formato neutro se escriben los tokens?',
-          why: 'Es la primera pregunta de quien construya el generador. Y no es cosmética: tres pasos de espaciado son clamp() y catorce tintas son color-mix(in oklab, …). Android no tiene ninguna de las dos, así que el formato decide si se exporta el valor ya resuelto por corte o la fórmula.',
-          src: 'colors_and_type.css:164-166 · 200-228' },
-        { q: '¿Una pantalla de 1280 se rediseña para 390, o se adapta?',
-          why: 'El sistema no lo dice hoy. Es la diferencia entre documentar tres modos responsivos o documentar dos recorridos distintos, y cambia cuánto trabajo hay por delante.',
-          src: 'ANALYSIS.md · hallazgo 14 — armazón y modos responsivos sin documentar' },
-        { q: '¿KIBO sobrevive al cambio de plataforma?',
-          why: 'La mascota está construida con animación de navegador. Hasta que se pruebe, su papel en Android es un supuesto, no un plan. Conviene probarlo antes de comprometerlo.',
-          src: 'sin medición todavía — no hay prototipo en Android' },
+      names: [
+        { src: 'primary',           web: '--kb-primary',  and: 'KbColor.primary' },
+        { src: 'sp-6',              web: '--kb-sp-6',     and: 'KbSpace.sp6' },
+        { src: 'r-lg',              web: '--kb-r-lg',     and: 'KbRadius.lg' },
       ],
     };
+
   }
 }
 </script>

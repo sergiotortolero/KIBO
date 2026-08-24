@@ -332,171 +332,227 @@
 </style>
   <style>
     body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
-    a { color: var(--kb-primary-ink); } a:hover { color: var(--kb-primary-hover); }
-    .ab { padding: 36px 40px; display: flex; flex-direction: column; gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box; }
-    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-3); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
     .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
-    .lead { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
-    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); }
-    .tok { font-size: var(--kb-fs-xs); font-weight: 600; color: var(--kb-text); }
-    .val { font-size: var(--kb-fs-xs); color: var(--kb-text-2); }
-    .src { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text-2); }
-    .src-tint { font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); line-height: 1.5; color: var(--kb-text); }
-    .badge { display: inline-flex; align-items: center; height: 17px; padding: 0 7px; border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
-    .prop { background: var(--kb-coin-wash); color: var(--kb-coin-ink); }
-    .open { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
-    .gone { background: var(--kb-hp-soft); color: var(--kb-hp-ink); }
-    code { font-size: var(--kb-fs-2xs); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
   </style>
 </helmet>
 <div class="ab">
 
-  <div style="display: flex; flex-direction: column; gap: var(--kb-sp-2)">
-    <div class="eyebrow">03 · fundamentos</div>
-    <div class="h1">Medidas y movimiento</div>
-    <div class="lead">El 68 % de los espaciados y el 76 % de los tamaños ya caen exactamente en un peldaño — escritos a mano. No falta diseño: falta adopción.</div>
-    <div class="src" style="max-width: 680px; padding-top: var(--kb-sp-2)">Cada barra, radio y sombra de este lienzo se dibuja con su token. Los tres peldaños altos de espaciado son <code>clamp()</code>: la barra que ves es su valor real al ancho de este marco, no el máximo. <span class="badge prop">propuesto</span> · <span class="badge open">abierto</span> · <span class="badge gone">defecto</span></div>
+  <div class="hd">
+    <div class="eyebrow">Fundamentos · 03</div>
+    <div class="h1">Medida y movimiento</div>
+    <div class="one">Rejilla de 2 px, radios suaves, cuatro elevaciones y un solo alto de control.</div>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--kb-sp-8)">
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div class="eyebrow">espaciado · rejilla de 2 px</div>
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-4)">
+  <div class="g2">
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Espaciado</div>
+        <div class="use">Nueve peldaños sobre rejilla de 2 px.</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4)">
         <sc-for list="{{sp}}" as="s" hint-placeholder-count="9">
-          <div style="display: grid; grid-template-columns: 78px 1fr 150px; gap: var(--kb-sp-6); align-items: center">
+          <div style="display: grid; grid-template-columns: 84px 1fr 158px; gap: var(--kb-sp-6); align-items: center">
             <div class="tok">{{s.tok}}</div>
             <div style="height: 12px; width: var({{s.tok}}); border-radius: 3px; background: {{s.color}}"></div>
-            <div class="val" style="text-align: right">{{s.note}}</div>
+            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); text-align: right">{{s.note}}</div>
           </div>
         </sc-for>
       </div>
-      <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">colors_and_type.css:158-166 — los tres últimos son clamp(mín, vw, máx); aquí se dibujan resueltos.</div>
-      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-        <span class="badge open" style="margin-top: 1px">abierto</span>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">ANALYSIS reporta <strong>250 usos de 14 px escritos a mano</strong> y propone añadir el peldaño. Pero 14 px ya es el <strong>piso de <code>--kb-sp-7</code></strong> (:164): en teléfono ese token vale 14. ¿Hace falta un peldaño fijo de 14, o esos 250 usos son <code>--kb-sp-7</code> mal escrito? Cambia si la respuesta es «token nuevo» o «migración».</div>
-      </div>
+      <div class="rule">Los tres peldaños altos son <code>clamp()</code>: aquí se dibujan resueltos al ancho de este marco, no a su máximo.</div>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: var(--kb-sp-8)">
-
-      <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-        <div class="eyebrow">radios · suaves, nunca crudos</div>
-        <div style="display: flex; gap: var(--kb-sp-6); flex-wrap: wrap">
-          <sc-for list="{{rad}}" as="r" hint-placeholder-count="6">
-            <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3); align-items: center">
-              <div style="width: 56px; height: 44px; background: var(--kb-surface-2); border: 1px solid var(--kb-border); border-radius: var({{r.tok}})"></div>
-              <div style="font-size: var(--kb-fs-2xs); font-weight: 600; color: var(--kb-text)">{{r.name}}</div>
-              <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text-2)">{{r.px}}</div>
-            </div>
-          </sc-for>
-        </div>
-        <div style="display: flex; align-items: center; gap: var(--kb-sp-4); padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">
-          <span class="badge gone">se retiran</span>
-          <div style="font-size: var(--kb-fs-xs); color: var(--kb-text)">12 y 16 px, de la escala vieja — 152 usos por migrar</div>
-        </div>
-        <div class="src">colors_and_type.css:142-147 · ANALYSIS.md · Escalas · Radius — 274 escrituras de 999px pasan al token pill</div>
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Radios</div>
+        <div class="use">El radio crece con la caja.</div>
       </div>
-
-      <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-        <div class="eyebrow">sombras · azul marino, siempre suaves</div>
-        <div style="display: flex; gap: var(--kb-sp-6)">
-          <sc-for list="{{sh}}" as="s" hint-placeholder-count="4">
-            <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3); align-items: center; flex-grow: 1">
-              <div style="width: 100%; height: 40px; background: var(--kb-card); border-radius: var(--kb-r-md); box-shadow: var({{s.tok}})"></div>
-              <div style="font-size: var(--kb-fs-2xs); font-weight: 600; color: var(--kb-text)">{{s.name}}</div>
-              <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text-2)">{{s.use}}</div>
-            </div>
-          </sc-for>
-        </div>
-        <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">colors_and_type.css:150-153 · fuera de escala, --kb-elev-hard :155 — el labio duro del botón primario</div>
-        <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-          <span class="badge prop" style="margin-top: 1px">propuesto</span>
-          <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Declarar <code>--kb-sh-4</code>: la sombra del cajón es un nivel de elevación real y hoy no tiene token.<div class="src" style="padding-top: 2px">ANALYSIS.md · Declare, do not retire</div></div>
-        </div>
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <sc-for list="{{rad}}" as="r" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 68px 96px 1fr; gap: var(--kb-sp-6); align-items: center">
+            <div style="width: 64px; height: 40px; background: var(--kb-surface-2); border: 1px solid var(--kb-border); border-radius: var({{r.tok}})"></div>
+            <div class="tok" style="color: var(--kb-text)">{{r.px}}</div>
+            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">{{r.use}}</div>
+          </div>
+        </sc-for>
       </div>
-
+      <div class="rule">Las escalas retiradas son 12 y 16: un radio fuera de estos seis no existe en el sistema.</div>
     </div>
   </div>
 
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-    <div class="eyebrow">alto de control · una cifra canónica y un piso táctil, que no son lo mismo</div>
-    <div style="display: flex; align-items: flex-end; gap: var(--kb-sp-9); flex-wrap: wrap">
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div style="height: var(--kb-ctl-h); width: 160px; border-radius: var(--kb-r-sm); border: 1.5px solid var(--kb-primary); background: var(--kb-card); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); box-shadow: var(--kb-focus-halo)">46 px · canónico</div>
-        <div style="font-size: var(--kb-fs-xs); font-weight: 700; color: var(--kb-primary-ink)">--kb-ctl-h</div>
-        <div class="src">colors_and_type.css:191 — «un control suelto a otra medida rompe su fila» (:188-190)</div>
+  <div class="g2">
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Elevación</div>
+        <div class="use">Cuatro niveles, más el labio duro.</div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div style="height: 42px; width: 160px; border-radius: var(--kb-r-sm); border: 1px solid var(--kb-border-strong); background: var(--kb-card); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); color: var(--kb-text)">42 px · lo que corre</div>
-        <div style="font-size: var(--kb-fs-xs); font-weight: 700; color: var(--kb-hp-ink)">divergencia</div>
-        <div class="src">ANALYSIS.md · hallazgo 8 — la tarjeta de campos dice y hace 42; ninguno de los dos usa el token</div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); padding: var(--kb-sp-7) var(--kb-sp-6); background: var(--kb-surface); border-radius: var(--kb-r-md)">
+        <sc-for list="{{sh}}" as="s" hint-placeholder-count="4">
+          <div class="col" style="align-items: center; gap: var(--kb-sp-4)">
+            <div style="width: 100%; height: 44px; background: var(--kb-card); border-radius: var(--kb-r-md); box-shadow: var({{s.tok}})"></div>
+            <div style="font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text)">{{s.name}}</div>
+            <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text-2); text-align: center; line-height: 1.4">{{s.use}}</div>
+          </div>
+        </sc-for>
       </div>
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-3)">
-        <div style="height: var(--kb-touch-min); width: 160px; border-radius: var(--kb-r-sm); border: 1px dashed var(--kb-border-strong); background: var(--kb-surface-2); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); color: var(--kb-text)">44 px · piso táctil</div>
-        <div style="font-size: var(--kb-fs-xs); font-weight: 700; color: var(--kb-text-2)">--kb-touch-min</div>
-        <div class="src">colors_and_type.css:192 — «el control de 46 ya lo cumple»</div>
-      </div>
+      <div class="rule">Fuera de la escala vive <code>--kb-elev-hard</code>, el labio de 2 px del botón sólido: es dibujo de marca, no elevación.</div>
     </div>
-    <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
-      <span class="badge prop" style="margin-top: 1px">propuesto</span>
-      <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); max-width: 760px">Bajar el alto canónico de 46 a 44 para que coincida con el piso táctil. <strong>No está decidido y no sale de ninguna línea:</strong> el comentario del token dice lo contrario — 46 es canónico desde la migración de agosto 2026 y ya cumple el piso. El piso es un mínimo, no un objetivo. La divergencia que sí hay que cerrar es la de 42.</div>
+
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Foco</div>
+        <div class="use">Un solo aro, en toda pieza enfocable.</div>
+      </div>
+      <div class="row" style="gap: var(--kb-sp-7)">
+        <div style="height: var(--kb-ctl-h); width: 170px; border-radius: var(--kb-r-md); border: 1.5px solid var(--kb-primary); background: var(--kb-card); display: flex; align-items: center; padding: 0 var(--kb-sp-7); font-size: var(--kb-fs-lg); color: var(--kb-text); box-shadow: var(--kb-focus-halo)">Con foco</div>
+        <div style="height: var(--kb-ctl-h); border-radius: var(--kb-r-md); background: color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2)); box-shadow: var(--kb-elev-hard) color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-focus-halo); display: flex; align-items: center; padding: 0 var(--kb-sp-8); font-family: var(--kb-f-display); font-size: var(--kb-fs-lg); font-weight: 700; color: var(--kb-text-inverse)">Con foco</div>
+        <div style="height: 36px; border-radius: var(--kb-r-pill); border: 1.5px solid var(--kb-primary); background: var(--kb-primary-soft); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-primary-ink); box-shadow: var(--kb-focus-halo)">Con foco</div>
+      </div>
+      <div class="rule">Aro difuso de marca al <strong>10 %</strong> y 3 px, <code>--kb-focus-halo</code>. Se declara en <code>:focus-visible</code>, se suma al labio y nunca sustituye al borde.</div>
     </div>
   </div>
 
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--kb-sp-8)">
-
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div class="eyebrow">foco y estados · el hueco más grande del sistema</div>
-      <div style="display: flex; align-items: center; gap: var(--kb-sp-7); flex-wrap: wrap">
-        <div style="height: var(--kb-ctl-h); width: 170px; border-radius: var(--kb-r-sm); border: 1.5px solid var(--kb-primary); background: var(--kb-card); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); color: var(--kb-text); box-shadow: var(--kb-focus-halo)">Con foco</div>
-        <div style="flex-grow: 1; min-width: 220px; font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">Aro difuso de marca al <strong>10 %</strong> (T-9), dibujado con el token, no con un <code>rgba</code> a mano.<div class="src" style="padding-top: 2px">--kb-focus-halo · colors_and_type.css:28</div></div>
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Alto de control</div>
+      <div class="use">Tres tamaños y un piso táctil que ninguno pisa.</div>
+    </div>
+    <div class="g4" style="align-items: end">
+      <div class="col">
+        <div style="height: 36px; border-radius: var(--kb-r-sm); border: 1.5px solid var(--kb-border); background: var(--kb-card); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); color: var(--kb-text-2)">36 px</div>
+        <div class="spec">sm</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Barra de herramientas, fila densa</div>
       </div>
-      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4); padding-top: var(--kb-sp-3); border-top: 1px solid var(--kb-border-soft)">
-        <span class="badge gone" style="margin-top: 1px">defecto</span>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">El token tiene <strong>cero consumidores</strong> y no hay una sola regla <code>:focus-visible</code> en la capa publicada; un campo queda invisible al enfocarse. Tampoco existen tokens de estado — <code>loading</code>, <code>error</code>, <code>disabled</code>, <code>selected</code>: hoy son <code>opacity: .45</code> y <code>rgba</code> crudos.<div class="src" style="padding-top: 2px">ANALYSIS.md · hallazgos 2 y 6</div></div>
+      <div class="col">
+        <div style="height: var(--kb-ctl-h); border-radius: var(--kb-r-md); border: 1.5px solid var(--kb-primary); background: var(--kb-card); display: flex; align-items: center; padding: 0 var(--kb-sp-7); font-size: var(--kb-fs-lg); font-weight: 500; color: var(--kb-text); box-shadow: var(--kb-focus-halo)">46 px</div>
+        <div class="spec">md · por defecto</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Todo control de captura y acción</div>
       </div>
-      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-        <span class="badge open" style="margin-top: 1px">abierto</span>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)">La matriz de estados es diseño nuevo, no adopción. ¿Cuántos estados por pieza y con qué anatomía? Sin eso, ningún componente se puede cerrar.</div>
+      <div class="col">
+        <div style="height: 54px; border-radius: var(--kb-r-lg); background: color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2)); box-shadow: var(--kb-elev-hard) color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-sh-1); display: flex; align-items: center; justify-content: center; font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text-inverse)">54 px</div>
+        <div class="spec">lg</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Acción única de una pantalla</div>
+      </div>
+      <div class="col">
+        <div style="height: var(--kb-touch-min); border-radius: var(--kb-r-md); border: 1px dashed var(--kb-border-strong); background: var(--kb-surface-2); display: flex; align-items: center; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); color: var(--kb-text-2)">44 px</div>
+        <div class="spec">Piso táctil</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Mínimo, no objetivo</div>
       </div>
     </div>
+    <div class="rule">El alto canónico es <strong>46 px</strong>, <code>--kb-ctl-h</code>. Un control por debajo del piso táctil lo alcanza con una zona de toque transparente y centrada, sin cambiar su dibujo.</div>
+  </div>
 
-    <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-      <div class="eyebrow">movimiento · cuatro duraciones, tres curvas</div>
-      <div style="display: flex; flex-direction: column; gap: var(--kb-sp-4)">
+  <div class="g2">
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Movimiento</div>
+        <div class="use">Cuatro duraciones, tres curvas.</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-5)">
         <sc-for list="{{motion}}" as="m" hint-placeholder-count="7">
-          <div style="display: grid; grid-template-columns: 130px 1fr; gap: var(--kb-sp-6); align-items: baseline">
+          <div style="display: grid; grid-template-columns: 140px 1fr; gap: var(--kb-sp-6); align-items: baseline">
             <div class="tok">{{m.tok}}</div>
-            <div class="val">{{m.v}}</div>
+            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">{{m.v}}</div>
           </div>
         </sc-for>
       </div>
-      <div class="src" style="padding-top: var(--kb-sp-2); border-top: 1px solid var(--kb-border-soft)">colors_and_type.css:179-185</div>
-      <div style="display: flex; align-items: flex-start; gap: var(--kb-sp-4)">
-        <span class="badge gone" style="margin-top: 1px">defecto</span>
-        <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text)"><code>prefers-reduced-motion</code> está invertido: corta a KIBO y perdona todo lo demás.<div class="src" style="padding-top: 2px">colors_and_type.css:316-318 · ANALYSIS.md · Important</div></div>
+      <div class="rule">Con <code>prefers-reduced-motion</code> se apaga todo el movimiento de interfaz. <strong>Sobrevive KIBO</strong>: la mascota es contenido, no transición.</div>
+    </div>
+
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Apilamiento</div>
+        <div class="use">Ocho niveles con nombre.</div>
       </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-4)">
+        <sc-for list="{{z}}" as="v" hint-placeholder-count="8">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; gap: var(--kb-sp-5); padding: var(--kb-sp-4) var(--kb-sp-6); background: var(--kb-surface); border-radius: var(--kb-r-sm)">
+            <div class="tok" style="color: var(--kb-text)">{{v.tok}}</div>
+            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums">{{v.v}}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div class="rule">Ningún <code>z-index</code> suelto: una pieza que necesita apilarse toma uno de estos ocho.</div>
     </div>
-
-  </div>
-
-  <div class="pane" style="display: flex; flex-direction: column; gap: var(--kb-sp-6)">
-    <div class="eyebrow">apilamiento · ocho niveles con nombre</div>
-    <div style="display: flex; gap: var(--kb-sp-6); flex-wrap: wrap">
-      <sc-for list="{{z}}" as="v" hint-placeholder-count="8">
-        <div style="display: flex; flex-direction: column; gap: 2px; padding: var(--kb-sp-3) var(--kb-sp-6); background: var(--kb-surface-2); border-radius: var(--kb-r-sm); min-width: 96px">
-          <div style="font-size: var(--kb-fs-2xs); font-weight: 600; color: var(--kb-text)">{{v.tok}}</div>
-          <div style="font-size: var(--kb-fs-2xs); color: var(--kb-text); font-variant-numeric: tabular-nums">{{v.v}}</div>
-        </div>
-      </sc-for>
-    </div>
-    <div class="src">colors_and_type.css:169-176 — la escala está bien; lo que falta es adopción: 27 declaraciones de la capa de aplicación siguen sin mapear (ANALYSIS.md · Escalas)</div>
   </div>
 
 </div>
+
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1878}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1539}}'>
 class Component extends DCLogic {
   renderVals() {
     const T = 'var(--kb-primary)', G = 'var(--kb-border-strong)';
@@ -505,47 +561,48 @@ class Component extends DCLogic {
         { tok: '--kb-sp-1', color: G, note: '2 px' },
         { tok: '--kb-sp-2', color: G, note: '4 px' },
         { tok: '--kb-sp-3', color: G, note: '6 px' },
-        { tok: '--kb-sp-4', color: T, note: '8 px · el más usado' },
+        { tok: '--kb-sp-4', color: T, note: '8 px · glifo y su texto' },
         { tok: '--kb-sp-5', color: G, note: '10 px' },
         { tok: '--kb-sp-6', color: T, note: '12 px · densidad por defecto' },
         { tok: '--kb-sp-7', color: G, note: 'clamp(14, 2vw, 16)' },
         { tok: '--kb-sp-8', color: G, note: 'clamp(18, 3vw, 20)' },
-        { tok: '--kb-sp-9', color: G, note: 'clamp(20, 4vw, 24)' },
+        { tok: '--kb-sp-9', color: T, note: 'clamp(20, 4vw, 24) · entre bloques' },
       ],
       rad: [
-        { name: 'xs',   tok: '--kb-r-xs',   px: '8 px' },
-        { name: 'sm',   tok: '--kb-r-sm',   px: '10 px' },
-        { name: 'md',   tok: '--kb-r-md',   px: '14 px' },
-        { name: 'lg',   tok: '--kb-r-lg',   px: '18 px' },
-        { name: 'xl',   tok: '--kb-r-xl',   px: '24 px' },
-        { name: 'pill', tok: '--kb-r-pill', px: '999 px' },
+        { tok: '--kb-r-xs',   px: '8',   use: 'Casilla, muestra, glifo' },
+        { tok: '--kb-r-sm',   px: '10',  use: 'Pieza interior' },
+        { tok: '--kb-r-md',   px: '14',  use: 'Botón y campo' },
+        { tok: '--kb-r-lg',   px: '18',  use: 'Tarjeta y KPI' },
+        { tok: '--kb-r-xl',   px: '24',  use: 'Modal y hoja' },
+        { tok: '--kb-r-pill', px: 'pill', use: 'Chip, etiqueta, barra' },
       ],
       sh: [
-        { name: 'sh-1',   tok: '--kb-sh-1',   use: 'reposo' },
-        { name: 'sh-2',   tok: '--kb-sh-2',   use: 'elevada' },
-        { name: 'sh-3',   tok: '--kb-sh-3',   use: 'levantada' },
-        { name: 'sh-pop', tok: '--kb-sh-pop', use: 'diálogo' },
+        { tok: '--kb-sh-1',   name: '1', use: 'Tarjeta en reposo' },
+        { tok: '--kb-sh-2',   name: '2', use: 'Tarjeta levantada' },
+        { tok: '--kb-sh-3',   name: '3', use: 'Menú y popover' },
+        { tok: '--kb-sh-pop', name: 'pop', use: 'Modal y hoja' },
       ],
       motion: [
-        { tok: '--kb-dur-fast',      v: '120 ms' },
-        { tok: '--kb-dur-base',      v: '200 ms' },
-        { tok: '--kb-dur-slow',      v: '300 ms' },
-        { tok: '--kb-dur-slower',    v: '400 ms' },
-        { tok: '--kb-ease-standard', v: 'cubic-bezier(.4, 0, .2, 1)' },
-        { tok: '--kb-ease-out',      v: 'cubic-bezier(0, 0, .2, 1)' },
-        { tok: '--kb-ease-in',       v: 'cubic-bezier(.4, 0, 1, 1)' },
+        { tok: '--kb-dur-fast',      v: '120 ms · color, opacidad, presión' },
+        { tok: '--kb-dur-base',      v: '200 ms · entrada y salida de una pieza' },
+        { tok: '--kb-dur-slow',      v: '300 ms · panel, cajón, modal' },
+        { tok: '--kb-dur-slower',    v: '400 ms · celebración y recompensa' },
+        { tok: '--kb-ease-standard', v: 'cubic-bezier(.4, 0, .2, 1) · lo que entra y sale' },
+        { tok: '--kb-ease-out',      v: 'cubic-bezier(0, 0, .2, 1) · lo que aparece' },
+        { tok: '--kb-ease-in',       v: 'cubic-bezier(.4, 0, 1, 1) · lo que se va' },
       ],
       z: [
-        { tok: '--kb-z-base',     v: '1' },
-        { tok: '--kb-z-raised',   v: '10' },
-        { tok: '--kb-z-sticky',   v: '30' },
-        { tok: '--kb-z-dropdown', v: '50' },
-        { tok: '--kb-z-overlay',  v: '100' },
-        { tok: '--kb-z-modal',    v: '200' },
-        { tok: '--kb-z-popover',  v: '400' },
-        { tok: '--kb-z-toast',    v: '600' },
+        { tok: 'base',     v: '1' },
+        { tok: 'raised',   v: '10' },
+        { tok: 'sticky',   v: '30' },
+        { tok: 'dropdown', v: '50' },
+        { tok: 'overlay',  v: '100' },
+        { tok: 'modal',    v: '200' },
+        { tok: 'popover',  v: '400' },
+        { tok: 'toast',    v: '600' },
       ],
     };
+
   }
 }
 </script>

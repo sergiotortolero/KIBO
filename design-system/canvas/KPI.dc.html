@@ -408,160 +408,220 @@
     .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
     .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
   </style>
+  <style>
+    /* .kbv-kpi — una cifra dominante con su papel y su comparativa. */
+    .kbv-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    .kbv-kpi {
+      background: var(--kb-card); border: 1px solid var(--kb-border);
+      border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+      display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box;
+    }
+    .kbv-kpi .band {
+      display: flex; align-items: center; gap: var(--kb-sp-3);
+      padding: var(--kb-sp-4) var(--kb-sp-6);
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
+      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+      letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+    }
+    .kbv-kpi .body { padding: var(--kb-sp-6); display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-kpi .val {
+      font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800;
+      line-height: 1; letter-spacing: -.02em; color: var(--kb-text);
+      font-variant-numeric: tabular-nums;
+      display: flex; align-items: baseline; gap: var(--kb-sp-2);
+    }
+    .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
+    .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-kpi .delta.up   { color: var(--kb-primary-ink); font-weight: 700; }
+    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+
+    .kbv-progress { height: 6px; border-radius: var(--kb-r-pill); overflow: hidden;
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) 24%, var(--kb-canvas)); }
+    .kbv-progress .fill { height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary)); }
+
+    .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+  </style>
 </helmet>
 <div class="ab">
 
   <div class="hd">
-    <div class="eyebrow">Fundamentos · 02</div>
-    <div class="h1">Tipografía</div>
-    <div class="one">Dos familias y nueve pasos. Un tamaño que no está en la escala no existe.</div>
-  </div>
-
-  <div class="g2">
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Display y etiqueta</div>
-        <div class="use">Títulos, cifras y cejillas.</div>
-      </div>
-      <div style="font-family: var(--kb-f-display); font-size: 42px; font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Plus Jakarta Sans</div>
-      <div class="tok">--kb-f-display · --kb-f-label</div>
-    </div>
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Cuerpo</div>
-        <div class="use">Todo lo que se lee de corrido.</div>
-      </div>
-      <div style="font-family: var(--kb-f-body); font-size: 42px; font-weight: 500; letter-spacing: -.01em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Inter</div>
-      <div class="tok">--kb-f-body</div>
-    </div>
+    <div class="eyebrow">Componentes · 06</div>
+    <div class="h1">KPI</div>
+    <div class="one">Una cifra dominante, su papel arriba y su comparativa abajo. Nunca una cifra sola.</div>
   </div>
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Escala</div>
-      <div class="use">Nueve pasos. El piso duro de legibilidad son 10 px.</div>
+      <div class="eyebrow">La rejilla</div>
+      <div class="use">Cuatro por fila en escritorio, dos en tableta, una en móvil.</div>
     </div>
-    <div class="col" style="gap: var(--kb-sp-6)">
-      <sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
-        <div style="display: grid; grid-template-columns: 100px 1fr 200px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-5); border-bottom: 1px solid var(--kb-border-soft)">
-          <div class="tok">{{s.tok}}</div>
-          <div style="font-family: {{s.f}}; font-size: {{s.fs}}; font-weight: {{s.w}}; line-height: var(--kb-lh-snug); color: var(--kb-text)">{{s.sample}}</div>
-          <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); text-align: right">{{s.px}} · {{s.use}}</div>
+    <div class="kbv-kpi-grid">
+      <div class="kbv-kpi" style="--c: var(--kb-primary)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          Constancia
         </div>
-      </sc-for>
+        <div class="body">
+          <div class="val">86<span class="unit">%</span></div>
+          <div class="delta up">▲ 4 pts vs. mes pasado</div>
+        </div>
+      </div>
+      <div class="kbv-kpi" style="--c: var(--area-vigor)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+          Vigor
+        </div>
+        <div class="body">
+          <div class="val">12<span class="unit">sesiones</span></div>
+          <div class="delta down">▼ 2 vs. mes pasado</div>
+        </div>
+      </div>
+      <div class="kbv-kpi" style="--c: var(--area-wealth)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 6H9a3 3 0 0 0 0 6h6a3 3 0 0 1 0 6H7"/></svg>
+          Riqueza
+        </div>
+        <div class="body">
+          <div class="val">4 200</div>
+          <div class="delta up">▲ 9 % ahorrado</div>
+        </div>
+      </div>
+      <div class="kbv-kpi" style="--c: var(--area-community)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 19c0-3.3 2.7-5 6-5s6 1.7 6 5"/></svg>
+          Comunidad
+        </div>
+        <div class="body">
+          <div class="val">7<span class="unit">planes</span></div>
+          <div class="delta">— sin cambio</div>
+        </div>
+      </div>
     </div>
+    <div class="rule">El papel entra por la <strong>banda de encabezado</strong>, igual que en la tarjeta: glifo y etiqueta sobre el lavado, en la tinta. Un KPI no lleva franja en la orilla.</div>
   </div>
 
   <div class="g2">
     <div class="pane">
       <div class="head">
-        <div class="eyebrow">Pasos fluidos</div>
-        <div class="use">Los que usan los encabezados de verdad.</div>
+        <div class="eyebrow">Anatomía</div>
+        <div class="use">Cuatro partes, y solo la cifra es obligatoria.</div>
       </div>
-      <div class="col" style="gap: var(--kb-sp-5)">
-        <sc-for list="{{fluid}}" as="f" hint-placeholder-count="4">
-          <div style="display: grid; grid-template-columns: 150px 1fr; gap: var(--kb-sp-6); align-items: baseline">
-            <div class="tok">{{f.tok}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums">{{f.val}}</div>
+      <div class="row" style="gap: var(--kb-sp-8); align-items: flex-start; flex-wrap: nowrap">
+        <div style="width: 190px; flex-shrink: 0">
+          <div class="kbv-kpi" style="--c: var(--area-wisdom)">
+            <div class="band">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5h9l7 7v7z"/></svg>
+              Lectura
+            </div>
+            <div class="body">
+              <div class="val">148<span class="unit">min</span></div>
+              <div class="delta up">▲ 22 % vs. semana pasada</div>
+            </div>
           </div>
-        </sc-for>
+        </div>
+        <div class="col" style="gap: var(--kb-sp-5); flex-grow: 1">
+          <sc-for list="{{parts}}" as="p" hint-placeholder-count="4">
+            <div class="col" style="gap: 2px">
+              <div class="spec">{{p.n}}</div>
+              <div style="font-size: var(--kb-fs-xs); line-height: 1.5; color: var(--kb-text-2)">{{p.v}}</div>
+            </div>
+          </sc-for>
+        </div>
       </div>
-      <div class="rule">Un encabezado nunca se escribe a tamaño fijo: el paso fluido es el que se declara.</div>
     </div>
 
     <div class="pane">
       <div class="head">
-        <div class="eyebrow">Interlineado</div>
-        <div class="use">Tres valores, cada rol trae el suyo.</div>
+        <div class="eyebrow">Comparativa</div>
+        <div class="use">Tres direcciones y una sola forma de decirlas.</div>
       </div>
       <div class="col" style="gap: var(--kb-sp-6)">
-        <sc-for list="{{lh}}" as="l" hint-placeholder-count="3">
-          <div style="display: grid; grid-template-columns: 118px 1fr 34px; gap: var(--kb-sp-6); align-items: start">
-            <div class="tok">{{l.tok}}</div>
-            <div style="font-size: var(--kb-fs-sm); line-height: {{l.v}}; color: var(--kb-text)">{{l.use}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums; text-align: right">{{l.v}}</div>
-          </div>
-        </sc-for>
+        <div class="row" style="gap: var(--kb-sp-6); flex-wrap: nowrap">
+          <div style="width: 130px" class="tok">Sube</div>
+          <div class="kbv-kpi" style="border: 0; box-shadow: none; flex-grow: 1"><div class="body" style="padding: 0"><div class="delta up">▲ 22 % vs. semana pasada</div></div></div>
+        </div>
+        <div class="row" style="gap: var(--kb-sp-6); flex-wrap: nowrap">
+          <div style="width: 130px" class="tok">Baja</div>
+          <div class="kbv-kpi" style="border: 0; box-shadow: none; flex-grow: 1"><div class="body" style="padding: 0"><div class="delta down">▼ 9 % vs. semana pasada</div></div></div>
+        </div>
+        <div class="row" style="gap: var(--kb-sp-6); flex-wrap: nowrap">
+          <div style="width: 130px" class="tok">Igual</div>
+          <div class="kbv-kpi" style="border: 0; box-shadow: none; flex-grow: 1"><div class="body" style="padding: 0"><div class="delta">— sin cambio</div></div></div>
+        </div>
       </div>
+      <div class="rule">Subir es de marca y bajar es de HP, <strong>en tinta</strong>. La dirección también va en el glifo: el color solo no dice el sentido.</div>
     </div>
   </div>
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Roles</div>
-      <div class="use">Cada nivel es una clase, no una combinación suelta de tamaño y peso.</div>
+      <div class="eyebrow">Variantes</div>
+      <div class="use">La cifra cambia de acompañante, no de anatomía.</div>
     </div>
-    <div class="col" style="gap: var(--kb-sp-7)">
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-4xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.02em; color: var(--kb-text)">El fracaso reencauza</div>
-        <div class="tok" style="text-align: right">.kbv-h1</div>
+    <div class="g4 specs">
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band">Meta del mes</div>
+          <div class="body">
+            <div class="val">62<span class="unit">%</span></div>
+            <div class="kbv-progress"><div class="fill" style="width: 62%"></div></div>
+          </div>
+        </div>
+        <div class="spec">Con barra</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Cuando la cifra es parte de un todo.</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.015em; color: var(--kb-text)">Tu semana en cinco áreas</div>
-        <div class="tok" style="text-align: right">.kbv-h2</div>
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-streak)">
+          <div class="band">Racha</div>
+          <div class="body">
+            <div class="val">23<span class="unit">días</span></div>
+            <div class="delta">Récord: 41</div>
+          </div>
+        </div>
+        <div class="spec">Con referencia</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Cuando importa contra qué se compara.</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xl-fluid); line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text)">Hábitos de hoy</div>
-        <div class="tok" style="text-align: right">.kbv-h3</div>
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-coin)">
+          <div class="band">Divisa</div>
+          <div class="body">
+            <div class="val">1 480</div>
+          </div>
+        </div>
+        <div class="spec">Desnudo</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">Un saldo no se compara con nada.</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl); line-height: var(--kb-lh-snug); color: var(--kb-text)">Correr 5 km</div>
-        <div class="tok" style="text-align: right">.kbv-h4</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); max-width: 560px">Cerraste la semana con 14 de 18 hábitos y subiste de nivel en Vigor. Lo que se repite es lo que cuenta.</div>
-        <div class="tok" style="text-align: right">.kbv-body</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-snug); color: var(--kb-text-2)">Vigor · vence hoy · 40 XP</div>
-        <div class="tok" style="text-align: right">.kbv-meta</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl); letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--kb-text)">1 480</div>
-        <div class="tok" style="text-align: right">.kbv-num</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline">
-        <div class="eyebrow">Áreas de vida</div>
-        <div class="tok" style="text-align: right">.kbv-eyebrow</div>
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-text-2)">
+          <div class="band">Sin datos</div>
+          <div class="body">
+            <div class="val" style="color: var(--kb-text-2)">—</div>
+            <div class="delta">Empieza a registrar</div>
+          </div>
+        </div>
+        <div class="spec">Vacío</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2)">La raya ocupa el sitio de la cifra.</div>
       </div>
     </div>
-    <div class="rule">La cejilla va en <strong>mayúsculas con tracking de .09em</strong>, a 11 px peso 800, en display. Un literal de código nunca se pone en mayúsculas.</div>
+    <div class="rule">La cifra va a <code>--kb-fs-3xl</code> en display 800 con cifras tabulares, y su unidad a <code>--kb-fs-lg</code> en secundario: la unidad <strong>no compite</strong> con el número.</div>
   </div>
 
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1710}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1114}}'>
 class Component extends DCLogic {
   renderVals() {
-    const J = 'var(--kb-f-display)', I = 'var(--kb-f-body)';
-    const step = (tok, px, use, w, f, sample) => ({
-      tok: '--kb-fs-' + tok, fs: 'var(--kb-fs-' + tok + ')', px, use, w, f, sample,
-    });
     return {
-      steps: [
-        step('2xs', '10 px', 'Cejilla y contador',      '800', J, 'ÁREAS DE VIDA'),
-        step('xs',  '11 px', 'Etiqueta y metadato',     '700', J, 'Nivel 16 · Vigor'),
-        step('sm',  '12 px', 'Metadato secundario',     '400', I, 'Vence hoy a las 19:00'),
-        step('md',  '13 px', 'Texto base de interfaz',  '400', I, 'Cerraste 14 de 18 hábitos'),
-        step('lg',  '15 px', 'Fila destacada y campo',  '600', I, 'Correr 5 km'),
-        step('xl',  '18 px', 'Encabezado de tarjeta',   '600', J, 'Hábitos de hoy'),
-        step('2xl', '22 px', 'Título de sección',       '700', J, 'Tu semana'),
-        step('3xl', '26 px', 'Título de pantalla',      '700', J, 'Panel'),
-        step('4xl', '34 px', 'Display y cifra heroica', '800', J, '1 480'),
-      ],
-      fluid: [
-        { tok: '--kb-fs-4xl-fluid', val: 'clamp(26px, 5vw, 34px)' },
-        { tok: '--kb-fs-3xl-fluid', val: 'clamp(22px, 4vw, 26px)' },
-        { tok: '--kb-fs-2xl-fluid', val: 'clamp(20px, 3vw, 22px)' },
-        { tok: '--kb-fs-xl-fluid',  val: 'clamp(16px, 2.4vw, 18px)' },
-      ],
-      lh: [
-        { tok: '--kb-lh-tight', v: '1.15', use: 'Display y títulos de pantalla' },
-        { tok: '--kb-lh-snug',  v: '1.3',  use: 'Encabezados de tarjeta y metadatos' },
-        { tok: '--kb-lh-body',  v: '1.55', use: 'Texto corrido, párrafos y descripciones largas' },
+      parts: [
+        { n: 'Banda',       v: 'El papel: glifo y etiqueta a 10 px en mayúsculas, sobre el lavado y en la tinta.' },
+        { n: 'Cifra',       v: 'El dato dominante, con su unidad en secundario. Cifras tabulares siempre.' },
+        { n: 'Comparativa', v: 'Contra qué. Lleva glifo de dirección y va en tinta de marca o de HP.' },
+        { n: 'Acompañante', v: 'Barra, referencia o nada. Nunca dos a la vez.' },
       ],
     };
 

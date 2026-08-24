@@ -408,160 +408,215 @@
     .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
     .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
   </style>
+  <style>
+    /* .kbv-btn — la base. Tres tamaños, cinco variantes, seis estados. */
+    .kbv-btn {
+      -webkit-appearance: none; appearance: none; border: 1.5px solid transparent;
+      font-family: var(--kb-f-display); font-weight: 700; letter-spacing: .005em; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+      white-space: nowrap; text-decoration: none; cursor: pointer; box-sizing: border-box;
+      height: var(--kb-ctl-h); padding: 0 var(--kb-sp-8);
+      font-size: var(--kb-fs-lg); border-radius: var(--kb-r-md);
+      transition: background var(--kb-dur-fast) var(--kb-ease-standard),
+                  box-shadow var(--kb-dur-fast) var(--kb-ease-standard),
+                  transform var(--kb-dur-fast) var(--kb-ease-standard);
+    }
+    .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
+    .kbv-btn.lg { height: 54px; padding: 0 var(--kb-sp-9); font-size: var(--kb-fs-xl); border-radius: var(--kb-r-lg); }
+    .kbv-btn.block { width: 100%; }
+
+    /* Cara sólida: la tinta del papel. Labio: esa tinta, más honda. */
+    .kbv-btn-primary, .kbv-btn-danger {
+      --face: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      --lip:  color-mix(in oklab, var(--c) 30%, var(--kb-void-2));
+      background: var(--face); color: var(--kb-text-inverse);
+      box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
+    }
+    .kbv-btn-primary { --c: var(--kb-primary); }
+    .kbv-btn-danger  { --c: var(--kb-hp); }
+    .kbv-btn-primary.is-hover, .kbv-btn-danger.is-hover { background: color-mix(in oklab, var(--face) 78%, var(--c)); }
+
+    .kbv-btn-secondary {
+      background: var(--kb-card); color: var(--kb-text);
+      border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1);
+      --spin: var(--kb-text-2);
+    }
+    .kbv-btn-secondary.is-hover { background: var(--kb-surface); }
+
+    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); box-shadow: none; --spin: var(--kb-primary-ink); }
+    .kbv-btn-ghost.is-hover { background: var(--kb-primary-soft); }
+
+    .kbv-btn-link {
+      background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+      height: auto; padding: 0; font-size: var(--kb-fs-md); text-underline-offset: 3px;
+    }
+    .kbv-btn-link.is-hover { text-decoration: underline; }
+
+    .kbv-btn.is-focus { box-shadow: var(--kb-elev-hard) var(--lip, transparent), var(--kb-focus-halo); }
+    .kbv-btn.is-press { transform: translateY(2px); box-shadow: var(--kb-sh-1); }
+    .kbv-btn:disabled, .kbv-btn.is-off {
+      background: var(--kb-surface-2); color: var(--kb-text-2);
+      border-color: transparent; box-shadow: none; cursor: not-allowed;
+    }
+    .kbv-btn.is-load { color: transparent; position: relative; }
+    .kbv-btn.is-load::after {
+      content: ""; position: absolute; width: 16px; height: 16px; border-radius: var(--kb-r-pill);
+      border: 2.4px solid color-mix(in srgb, var(--spin, var(--kb-text-inverse)) 30%, transparent);
+      border-top-color: var(--spin, var(--kb-text-inverse));
+      animation: kbvSpin var(--kb-dur-slower) linear infinite;
+    }
+    @keyframes kbvSpin { to { transform: rotate(360deg); } }
+
+    .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); align-items: flex-start; }
+  </style>
 </helmet>
 <div class="ab">
 
   <div class="hd">
-    <div class="eyebrow">Fundamentos · 02</div>
-    <div class="h1">Tipografía</div>
-    <div class="one">Dos familias y nueve pasos. Un tamaño que no está en la escala no existe.</div>
-  </div>
-
-  <div class="g2">
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Display y etiqueta</div>
-        <div class="use">Títulos, cifras y cejillas.</div>
-      </div>
-      <div style="font-family: var(--kb-f-display); font-size: 42px; font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Plus Jakarta Sans</div>
-      <div class="tok">--kb-f-display · --kb-f-label</div>
-    </div>
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Cuerpo</div>
-        <div class="use">Todo lo que se lee de corrido.</div>
-      </div>
-      <div style="font-family: var(--kb-f-body); font-size: 42px; font-weight: 500; letter-spacing: -.01em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Inter</div>
-      <div class="tok">--kb-f-body</div>
-    </div>
+    <div class="eyebrow">Componentes · 01</div>
+    <div class="h1">Botón</div>
+    <div class="one">Una acción. Cinco variantes que dicen cuánto pesa, tres tamaños y seis estados.</div>
   </div>
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Escala</div>
-      <div class="use">Nueve pasos. El piso duro de legibilidad son 10 px.</div>
+      <div class="eyebrow">Variantes</div>
+      <div class="use">La variante dice la jerarquía; solo hay un primario por vista.</div>
     </div>
-    <div class="col" style="gap: var(--kb-sp-6)">
-      <sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
-        <div style="display: grid; grid-template-columns: 100px 1fr 200px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-5); border-bottom: 1px solid var(--kb-border-soft)">
-          <div class="tok">{{s.tok}}</div>
-          <div style="font-family: {{s.f}}; font-size: {{s.fs}}; font-weight: {{s.w}}; line-height: var(--kb-lh-snug); color: var(--kb-text)">{{s.sample}}</div>
-          <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); text-align: right">{{s.px}} · {{s.use}}</div>
+    <div class="g5 specs">
+      <div class="cell">
+        <button class="kbv-btn kbv-btn-primary">Empezar</button>
+        <div class="spec">Primario</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">La acción que la pantalla espera.</div>
+      </div>
+      <div class="cell">
+        <button class="kbv-btn kbv-btn-secondary">Guardar</button>
+        <div class="spec">Secundario</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">Una acción real, pero no la principal.</div>
+      </div>
+      <div class="cell">
+        <button class="kbv-btn kbv-btn-ghost">Cancelar</button>
+        <div class="spec">Fantasma</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">Salida o descarte, sin peso visual.</div>
+      </div>
+      <div class="cell">
+        <button class="kbv-btn kbv-btn-danger">Eliminar</button>
+        <div class="spec">Peligro</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">Destruye algo. Siempre pide confirmación.</div>
+      </div>
+      <div class="cell">
+        <div style="height: var(--kb-ctl-h); display: flex; align-items: center">
+          <button class="kbv-btn kbv-btn-link">Ver el detalle</button>
         </div>
-      </sc-for>
+        <div class="spec">Enlace</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">Navega. Vive dentro del texto.</div>
+      </div>
     </div>
+    <div class="rule">La cara sólida es <strong>la tinta del papel</strong> —el matiz al 54 %— y el labio es esa misma tinta más honda. Es lo que permite texto blanco encima.</div>
   </div>
 
   <div class="g2">
     <div class="pane">
       <div class="head">
-        <div class="eyebrow">Pasos fluidos</div>
-        <div class="use">Los que usan los encabezados de verdad.</div>
+        <div class="eyebrow">Tamaños</div>
+        <div class="use">El radio crece con la caja.</div>
       </div>
-      <div class="col" style="gap: var(--kb-sp-5)">
-        <sc-for list="{{fluid}}" as="f" hint-placeholder-count="4">
-          <div style="display: grid; grid-template-columns: 150px 1fr; gap: var(--kb-sp-6); align-items: baseline">
-            <div class="tok">{{f.tok}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums">{{f.val}}</div>
-          </div>
-        </sc-for>
+      <div class="row" style="align-items: flex-end; gap: var(--kb-sp-7)">
+        <div class="cell">
+          <button class="kbv-btn kbv-btn-primary sm">Añadir</button>
+          <div class="tok">sm · 36 px</div>
+        </div>
+        <div class="cell">
+          <button class="kbv-btn kbv-btn-primary">Añadir hábito</button>
+          <div class="tok">md · 46 px</div>
+        </div>
+        <div class="cell">
+          <button class="kbv-btn kbv-btn-primary lg">Empezar el día</button>
+          <div class="tok">lg · 54 px</div>
+        </div>
       </div>
-      <div class="rule">Un encabezado nunca se escribe a tamaño fijo: el paso fluido es el que se declara.</div>
+      <div class="rule">En móvil el primario de una pantalla va a <strong>ancho completo</strong> con el tamaño lg.</div>
     </div>
 
     <div class="pane">
       <div class="head">
-        <div class="eyebrow">Interlineado</div>
-        <div class="use">Tres valores, cada rol trae el suyo.</div>
+        <div class="eyebrow">Con glifo</div>
+        <div class="use">El glifo mide 1.15× su texto y va antes de la etiqueta.</div>
       </div>
-      <div class="col" style="gap: var(--kb-sp-6)">
-        <sc-for list="{{lh}}" as="l" hint-placeholder-count="3">
-          <div style="display: grid; grid-template-columns: 118px 1fr 34px; gap: var(--kb-sp-6); align-items: start">
-            <div class="tok">{{l.tok}}</div>
-            <div style="font-size: var(--kb-fs-sm); line-height: {{l.v}}; color: var(--kb-text)">{{l.use}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums; text-align: right">{{l.v}}</div>
-          </div>
-        </sc-for>
+      <div class="row" style="gap: var(--kb-sp-6)">
+        <button class="kbv-btn kbv-btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+          Nueva tarea
+        </button>
+        <button class="kbv-btn kbv-btn-secondary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+          Reintentar
+        </button>
+        <button class="kbv-btn kbv-btn-secondary" style="width: 46px; padding: 0" aria-label="Más">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/></svg>
+        </button>
       </div>
+      <div class="rule">El botón de solo glifo es <strong>cuadrado al alto de su tamaño</strong> y lleva siempre etiqueta accesible.</div>
     </div>
   </div>
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Roles</div>
-      <div class="use">Cada nivel es una clase, no una combinación suelta de tamaño y peso.</div>
+      <div class="eyebrow">Estados</div>
+      <div class="use">Los seis existen en toda variante.</div>
     </div>
     <div class="col" style="gap: var(--kb-sp-7)">
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-4xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.02em; color: var(--kb-text)">El fracaso reencauza</div>
-        <div class="tok" style="text-align: right">.kbv-h1</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.015em; color: var(--kb-text)">Tu semana en cinco áreas</div>
-        <div class="tok" style="text-align: right">.kbv-h2</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xl-fluid); line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text)">Hábitos de hoy</div>
-        <div class="tok" style="text-align: right">.kbv-h3</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl); line-height: var(--kb-lh-snug); color: var(--kb-text)">Correr 5 km</div>
-        <div class="tok" style="text-align: right">.kbv-h4</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); max-width: 560px">Cerraste la semana con 14 de 18 hábitos y subiste de nivel en Vigor. Lo que se repite es lo que cuenta.</div>
-        <div class="tok" style="text-align: right">.kbv-body</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-snug); color: var(--kb-text-2)">Vigor · vence hoy · 40 XP</div>
-        <div class="tok" style="text-align: right">.kbv-meta</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl); letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--kb-text)">1 480</div>
-        <div class="tok" style="text-align: right">.kbv-num</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline">
-        <div class="eyebrow">Áreas de vida</div>
-        <div class="tok" style="text-align: right">.kbv-eyebrow</div>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+        <div style="display: grid; grid-template-columns: 108px repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-6); align-items: center">
+          <div class="spec">{{r.name}}</div>
+          <button class="kbv-btn {{r.cls}} sm">{{r.label}}</button>
+          <button class="kbv-btn {{r.cls}} sm is-hover">{{r.label}}</button>
+          <button class="kbv-btn {{r.cls}} sm is-focus">{{r.label}}</button>
+          <button class="kbv-btn {{r.cls}} sm is-press">{{r.label}}</button>
+          <button class="kbv-btn {{r.cls}} sm is-off">{{r.label}}</button>
+          <button class="kbv-btn {{r.cls}} sm is-load">{{r.label}}</button>
+        </div>
+      </sc-for>
+      <div style="display: grid; grid-template-columns: 108px repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-6)">
+        <div></div>
+        <div class="tok">Reposo</div>
+        <div class="tok">Hover</div>
+        <div class="tok">Foco</div>
+        <div class="tok">Presionado</div>
+        <div class="tok">Deshabilitado</div>
+        <div class="tok">Cargando</div>
       </div>
     </div>
-    <div class="rule">La cejilla va en <strong>mayúsculas con tracking de .09em</strong>, a 11 px peso 800, en display. Un literal de código nunca se pone en mayúsculas.</div>
+    <div class="rule">Al presionar, el botón baja <strong>2 px</strong> y el labio se anula: el gesto es la altura que pierde. Deshabilitado no es opacidad — es superficie 2 con texto secundario. Cargando conserva el ancho de la etiqueta.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">En grupo</div>
+      <div class="use">El orden es fijo: el primario va a la derecha.</div>
+    </div>
+    <div class="row" style="justify-content: space-between; padding: var(--kb-sp-7) var(--kb-sp-8); background: var(--kb-surface); border-radius: var(--kb-r-md)">
+      <button class="kbv-btn kbv-btn-ghost">Descartar</button>
+      <div class="row" style="gap: var(--kb-sp-4)">
+        <button class="kbv-btn kbv-btn-secondary">Guardar borrador</button>
+        <button class="kbv-btn kbv-btn-primary">Publicar</button>
+      </div>
+    </div>
+    <div class="rule">Separación entre botones: <code>--kb-sp-4</code>. La acción destructiva nunca es vecina del primario.</div>
   </div>
 
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1710}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1336}}'>
 class Component extends DCLogic {
   renderVals() {
-    const J = 'var(--kb-f-display)', I = 'var(--kb-f-body)';
-    const step = (tok, px, use, w, f, sample) => ({
-      tok: '--kb-fs-' + tok, fs: 'var(--kb-fs-' + tok + ')', px, use, w, f, sample,
-    });
     return {
-      steps: [
-        step('2xs', '10 px', 'Cejilla y contador',      '800', J, 'ÁREAS DE VIDA'),
-        step('xs',  '11 px', 'Etiqueta y metadato',     '700', J, 'Nivel 16 · Vigor'),
-        step('sm',  '12 px', 'Metadato secundario',     '400', I, 'Vence hoy a las 19:00'),
-        step('md',  '13 px', 'Texto base de interfaz',  '400', I, 'Cerraste 14 de 18 hábitos'),
-        step('lg',  '15 px', 'Fila destacada y campo',  '600', I, 'Correr 5 km'),
-        step('xl',  '18 px', 'Encabezado de tarjeta',   '600', J, 'Hábitos de hoy'),
-        step('2xl', '22 px', 'Título de sección',       '700', J, 'Tu semana'),
-        step('3xl', '26 px', 'Título de pantalla',      '700', J, 'Panel'),
-        step('4xl', '34 px', 'Display y cifra heroica', '800', J, '1 480'),
-      ],
-      fluid: [
-        { tok: '--kb-fs-4xl-fluid', val: 'clamp(26px, 5vw, 34px)' },
-        { tok: '--kb-fs-3xl-fluid', val: 'clamp(22px, 4vw, 26px)' },
-        { tok: '--kb-fs-2xl-fluid', val: 'clamp(20px, 3vw, 22px)' },
-        { tok: '--kb-fs-xl-fluid',  val: 'clamp(16px, 2.4vw, 18px)' },
-      ],
-      lh: [
-        { tok: '--kb-lh-tight', v: '1.15', use: 'Display y títulos de pantalla' },
-        { tok: '--kb-lh-snug',  v: '1.3',  use: 'Encabezados de tarjeta y metadatos' },
-        { tok: '--kb-lh-body',  v: '1.55', use: 'Texto corrido, párrafos y descripciones largas' },
+      rows: [
+        { name: 'Primario',   cls: 'kbv-btn-primary',   label: 'Empezar' },
+        { name: 'Secundario', cls: 'kbv-btn-secondary', label: 'Guardar' },
+        { name: 'Fantasma',   cls: 'kbv-btn-ghost',     label: 'Cancelar' },
+        { name: 'Peligro',    cls: 'kbv-btn-danger',    label: 'Eliminar' },
       ],
     };
 

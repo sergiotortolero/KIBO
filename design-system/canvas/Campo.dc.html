@@ -408,163 +408,230 @@
     .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
     .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
   </style>
+  <style>
+    /* .kbv-field — etiqueta, control, ayuda. Un solo alto: --kb-ctl-h. */
+    .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-label { font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+    .kbv-label .opt { font-weight: 400; color: var(--kb-text-2); }
+
+    .kbv-input {
+      width: 100%; box-sizing: border-box; height: var(--kb-ctl-h);
+      background: var(--kb-card); border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-md);
+      padding: 0 var(--kb-sp-7); display: flex; align-items: center;
+      font: 500 var(--kb-fs-lg)/1 var(--kb-f-body); color: var(--kb-text);
+      outline: none; -webkit-appearance: none; appearance: none;
+      transition: border-color var(--kb-dur-fast), box-shadow var(--kb-dur-fast);
+    }
+    .kbv-input.ph { color: var(--kb-text-2); font-weight: 400; }
+    .kbv-input.is-focus { border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo); }
+    .kbv-input.is-error { border-color: var(--kb-hp); box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-hp) 10%, transparent); }
+    .kbv-input.is-off { background: var(--kb-surface-2); border-color: var(--kb-border); color: var(--kb-text-2); cursor: not-allowed; }
+    .kbv-input.is-read { background: var(--kb-surface); border-color: transparent; }
+
+    .kbv-input-row { position: relative; display: flex; align-items: center; }
+    .kbv-input-row .lead, .kbv-input-row .trail {
+      position: absolute; display: inline-flex; align-items: center; justify-content: center;
+      color: var(--kb-text-2); pointer-events: none;
+    }
+    .kbv-input-row .lead { left: var(--kb-sp-6); }
+    .kbv-input-row .trail { right: var(--kb-sp-6); }
+    .kbv-input-row.has-lead .kbv-input { padding-left: 42px; }
+    .kbv-input-row.has-trail .kbv-input { padding-right: 42px; }
+
+    .kbv-area { height: auto; min-height: 108px; padding: var(--kb-sp-6) var(--kb-sp-7); display: block; line-height: var(--kb-lh-body); font-weight: 400; resize: none; }
+
+    .kbv-help { font-size: var(--kb-fs-sm); line-height: 1.45; color: var(--kb-text-2); }
+    .kbv-error {
+      display: flex; align-items: center; gap: var(--kb-sp-3);
+      font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-hp-ink);
+    }
+
+    .kbv-check {
+      width: 22px; height: 22px; border-radius: var(--kb-r-xs); box-sizing: border-box;
+      border: 1.5px solid var(--kb-border-strong); background: var(--kb-card);
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+      color: var(--kb-text-inverse);
+    }
+    .kbv-check.on { background: color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2)); border-color: transparent; }
+    .kbv-radio { border-radius: var(--kb-r-pill); }
+    .kbv-radio.on { background: var(--kb-card); border: 6.5px solid color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2)); }
+
+    .kbv-switch {
+      width: 46px; height: 26px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong);
+      display: inline-flex; align-items: center; padding: 3px; box-sizing: border-box; flex-shrink: 0;
+    }
+    .kbv-switch.on { background: color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2)); justify-content: flex-end; }
+    .kbv-switch i { width: 20px; height: 20px; border-radius: var(--kb-r-pill); background: var(--kb-text-inverse); box-shadow: var(--kb-sh-1); display: block; }
+
+    .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+  </style>
 </helmet>
 <div class="ab">
 
   <div class="hd">
-    <div class="eyebrow">Fundamentos · 02</div>
-    <div class="h1">Tipografía</div>
-    <div class="one">Dos familias y nueve pasos. Un tamaño que no está en la escala no existe.</div>
+    <div class="eyebrow">Componentes · 02</div>
+    <div class="h1">Campo</div>
+    <div class="one">Etiqueta arriba, control, ayuda debajo. Todo control de captura mide 46 px.</div>
   </div>
 
-  <div class="g2">
+  <div class="g3">
     <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Display y etiqueta</div>
-        <div class="use">Títulos, cifras y cejillas.</div>
+      <div class="head"><div class="eyebrow">Anatomía</div></div>
+      <div class="kbv-field">
+        <label class="kbv-label">Nombre del hábito</label>
+        <div class="kbv-input-row"><div class="kbv-input">Correr 5 km</div></div>
+        <div class="kbv-help">Cómo lo vas a ver en tu día.</div>
       </div>
-      <div style="font-family: var(--kb-f-display); font-size: 42px; font-weight: 800; letter-spacing: -.02em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Plus Jakarta Sans</div>
-      <div class="tok">--kb-f-display · --kb-f-label</div>
+      <div class="rule">La etiqueta <strong>siempre está</strong>. El texto fantasma es un ejemplo, nunca la etiqueta.</div>
     </div>
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Cuerpo</div>
-        <div class="use">Todo lo que se lee de corrido.</div>
-      </div>
-      <div style="font-family: var(--kb-f-body); font-size: 42px; font-weight: 500; letter-spacing: -.01em; line-height: 1; color: var(--kb-text)">Aa</div>
-      <div class="spec">Inter</div>
-      <div class="tok">--kb-f-body</div>
-    </div>
-  </div>
 
-  <div class="pane">
-    <div class="head">
-      <div class="eyebrow">Escala</div>
-      <div class="use">Nueve pasos. El piso duro de legibilidad son 10 px.</div>
+    <div class="pane">
+      <div class="head"><div class="eyebrow">Opcional</div></div>
+      <div class="kbv-field">
+        <label class="kbv-label">Nota <span class="opt">· opcional</span></label>
+        <div class="kbv-input-row"><div class="kbv-input ph">Para qué lo haces</div></div>
+        <div class="kbv-help">Se marca lo opcional, no lo obligatorio.</div>
+      </div>
+      <div class="rule">Nada de asteriscos: en un formulario casi todo es obligatorio, así que se etiqueta la excepción.</div>
     </div>
-    <div class="col" style="gap: var(--kb-sp-6)">
-      <sc-for list="{{steps}}" as="s" hint-placeholder-count="9">
-        <div style="display: grid; grid-template-columns: 100px 1fr 200px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-5); border-bottom: 1px solid var(--kb-border-soft)">
-          <div class="tok">{{s.tok}}</div>
-          <div style="font-family: {{s.f}}; font-size: {{s.fs}}; font-weight: {{s.w}}; line-height: var(--kb-lh-snug); color: var(--kb-text)">{{s.sample}}</div>
-          <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); text-align: right">{{s.px}} · {{s.use}}</div>
+
+    <div class="pane">
+      <div class="head"><div class="eyebrow">Con error</div></div>
+      <div class="kbv-field">
+        <label class="kbv-label">Meta semanal</label>
+        <div class="kbv-input-row"><div class="kbv-input is-error">12</div></div>
+        <div class="kbv-error">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v6"/><path d="M12 16.5v.01"/></svg>
+          El máximo por semana es 7.
         </div>
-      </sc-for>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Pasos fluidos</div>
-        <div class="use">Los que usan los encabezados de verdad.</div>
       </div>
-      <div class="col" style="gap: var(--kb-sp-5)">
-        <sc-for list="{{fluid}}" as="f" hint-placeholder-count="4">
-          <div style="display: grid; grid-template-columns: 150px 1fr; gap: var(--kb-sp-6); align-items: baseline">
-            <div class="tok">{{f.tok}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums">{{f.val}}</div>
-          </div>
-        </sc-for>
-      </div>
-      <div class="rule">Un encabezado nunca se escribe a tamaño fijo: el paso fluido es el que se declara.</div>
-    </div>
-
-    <div class="pane">
-      <div class="head">
-        <div class="eyebrow">Interlineado</div>
-        <div class="use">Tres valores, cada rol trae el suyo.</div>
-      </div>
-      <div class="col" style="gap: var(--kb-sp-6)">
-        <sc-for list="{{lh}}" as="l" hint-placeholder-count="3">
-          <div style="display: grid; grid-template-columns: 118px 1fr 34px; gap: var(--kb-sp-6); align-items: start">
-            <div class="tok">{{l.tok}}</div>
-            <div style="font-size: var(--kb-fs-sm); line-height: {{l.v}}; color: var(--kb-text)">{{l.use}}</div>
-            <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); font-variant-numeric: tabular-nums; text-align: right">{{l.v}}</div>
-          </div>
-        </sc-for>
-      </div>
+      <div class="rule">El mensaje <strong>sustituye</strong> a la ayuda, no se le suma, y dice cómo corregir.</div>
     </div>
   </div>
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Roles</div>
-      <div class="use">Cada nivel es una clase, no una combinación suelta de tamaño y peso.</div>
+      <div class="eyebrow">Estados</div>
+      <div class="use">Cinco, iguales en todo tipo de control.</div>
     </div>
-    <div class="col" style="gap: var(--kb-sp-7)">
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-4xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.02em; color: var(--kb-text)">El fracaso reencauza</div>
-        <div class="tok" style="text-align: right">.kbv-h1</div>
+    <div class="g5">
+      <div class="cell">
+        <div class="kbv-input ph">Escribe aquí</div>
+        <div class="tok">Reposo</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl-fluid); line-height: var(--kb-lh-tight); letter-spacing: -.015em; color: var(--kb-text)">Tu semana en cinco áreas</div>
-        <div class="tok" style="text-align: right">.kbv-h2</div>
+      <div class="cell">
+        <div class="kbv-input is-focus">Escribe aquí</div>
+        <div class="tok">Foco</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xl-fluid); line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text)">Hábitos de hoy</div>
-        <div class="tok" style="text-align: right">.kbv-h3</div>
+      <div class="cell">
+        <div class="kbv-input">Con valor</div>
+        <div class="tok">Con valor</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl); line-height: var(--kb-lh-snug); color: var(--kb-text)">Correr 5 km</div>
-        <div class="tok" style="text-align: right">.kbv-h4</div>
+      <div class="cell">
+        <div class="kbv-input is-error">Con valor</div>
+        <div class="tok">Error</div>
       </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); max-width: 560px">Cerraste la semana con 14 de 18 hábitos y subiste de nivel en Vigor. Lo que se repite es lo que cuenta.</div>
-        <div class="tok" style="text-align: right">.kbv-body</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-body); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-snug); color: var(--kb-text-2)">Vigor · vence hoy · 40 XP</div>
-        <div class="tok" style="text-align: right">.kbv-meta</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline; padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft)">
-        <div style="font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl); letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--kb-text)">1 480</div>
-        <div class="tok" style="text-align: right">.kbv-num</div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 190px; gap: var(--kb-sp-7); align-items: baseline">
-        <div class="eyebrow">Áreas de vida</div>
-        <div class="tok" style="text-align: right">.kbv-eyebrow</div>
+      <div class="cell">
+        <div class="kbv-input is-off">No editable</div>
+        <div class="tok">Deshabilitado</div>
       </div>
     </div>
-    <div class="rule">La cejilla va en <strong>mayúsculas con tracking de .09em</strong>, a 11 px peso 800, en display. Un literal de código nunca se pone en mayúsculas.</div>
+    <div class="rule">El aro de foco es el mismo del sistema, al <strong>10 %</strong>. El de error es la misma receta con el color de HP. El mensaje de error va en <strong>tinta</strong>, no en el rojo pleno.</div>
+  </div>
+
+  <div class="g2">
+    <div class="pane">
+      <div class="head">
+        <div class="eyebrow">Tipos</div>
+        <div class="use">El mismo campo, distinto contenido.</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-7)">
+        <div class="kbv-field">
+          <label class="kbv-label">Buscar</label>
+          <div class="kbv-input-row has-lead">
+            <span class="lead"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+            <div class="kbv-input ph">Hábito, tarea o proyecto</div>
+          </div>
+        </div>
+        <div class="kbv-field">
+          <label class="kbv-label">Contraseña</label>
+          <div class="kbv-input-row has-trail">
+            <div class="kbv-input">••••••••••</div>
+            <span class="trail"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z"/><circle cx="12" cy="12" r="2.6"/></svg></span>
+          </div>
+        </div>
+        <div class="kbv-field">
+          <label class="kbv-label">Área de vida</label>
+          <div class="kbv-input-row has-trail">
+            <div class="kbv-input">Vigor</div>
+            <span class="trail"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+          </div>
+        </div>
+        <div class="kbv-field">
+          <label class="kbv-label">Por qué importa</label>
+          <div class="kbv-input kbv-area ph">Una línea basta. Se lee cuando no tengas ganas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" style="gap: var(--kb-sp-8)">
+      <div class="pane">
+        <div class="head">
+          <div class="eyebrow">Elección</div>
+          <div class="use">Casilla, opción y conmutador comparten el relleno de la marca.</div>
+        </div>
+        <div class="col" style="gap: var(--kb-sp-6)">
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap">
+            <span class="kbv-check on"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+            <div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Recordármelo por la mañana</div>
+          </div>
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap">
+            <span class="kbv-check"></span>
+            <div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Contar como racha</div>
+          </div>
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap">
+            <span class="kbv-check kbv-radio on"></span>
+            <div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Todos los días</div>
+          </div>
+          <div class="row" style="gap: var(--kb-sp-5); flex-wrap: nowrap">
+            <span class="kbv-check kbv-radio"></span>
+            <div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Días entre semana</div>
+          </div>
+          <div class="row" style="gap: var(--kb-sp-5); justify-content: space-between; flex-wrap: nowrap">
+            <div style="font-size: var(--kb-fs-md); color: var(--kb-text)">Sonido al completar</div>
+            <span class="kbv-switch on"><i></i></span>
+          </div>
+        </div>
+        <div class="rule">La zona de toque llega a <strong>44 px</strong> aunque el dibujo mida 22: la extiende la etiqueta, que también activa.</div>
+      </div>
+
+      <div class="pane">
+        <div class="head">
+          <div class="eyebrow">En fila</div>
+          <div class="use">Dos columnas como máximo; en móvil, una.</div>
+        </div>
+        <div class="g2" style="gap: var(--kb-sp-6)">
+          <div class="kbv-field">
+            <label class="kbv-label">Empieza</label>
+            <div class="kbv-input">01/09/2026</div>
+          </div>
+          <div class="kbv-field">
+            <label class="kbv-label">Termina</label>
+            <div class="kbv-input ph">Sin fecha</div>
+          </div>
+        </div>
+        <div class="rule">Los campos de una fila comparten alto y línea base. Separación entre campos: <code>--kb-sp-6</code>.</div>
+      </div>
+    </div>
   </div>
 
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1710}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1235}}'>
 class Component extends DCLogic {
   renderVals() {
-    const J = 'var(--kb-f-display)', I = 'var(--kb-f-body)';
-    const step = (tok, px, use, w, f, sample) => ({
-      tok: '--kb-fs-' + tok, fs: 'var(--kb-fs-' + tok + ')', px, use, w, f, sample,
-    });
-    return {
-      steps: [
-        step('2xs', '10 px', 'Cejilla y contador',      '800', J, 'ÁREAS DE VIDA'),
-        step('xs',  '11 px', 'Etiqueta y metadato',     '700', J, 'Nivel 16 · Vigor'),
-        step('sm',  '12 px', 'Metadato secundario',     '400', I, 'Vence hoy a las 19:00'),
-        step('md',  '13 px', 'Texto base de interfaz',  '400', I, 'Cerraste 14 de 18 hábitos'),
-        step('lg',  '15 px', 'Fila destacada y campo',  '600', I, 'Correr 5 km'),
-        step('xl',  '18 px', 'Encabezado de tarjeta',   '600', J, 'Hábitos de hoy'),
-        step('2xl', '22 px', 'Título de sección',       '700', J, 'Tu semana'),
-        step('3xl', '26 px', 'Título de pantalla',      '700', J, 'Panel'),
-        step('4xl', '34 px', 'Display y cifra heroica', '800', J, '1 480'),
-      ],
-      fluid: [
-        { tok: '--kb-fs-4xl-fluid', val: 'clamp(26px, 5vw, 34px)' },
-        { tok: '--kb-fs-3xl-fluid', val: 'clamp(22px, 4vw, 26px)' },
-        { tok: '--kb-fs-2xl-fluid', val: 'clamp(20px, 3vw, 22px)' },
-        { tok: '--kb-fs-xl-fluid',  val: 'clamp(16px, 2.4vw, 18px)' },
-      ],
-      lh: [
-        { tok: '--kb-lh-tight', v: '1.15', use: 'Display y títulos de pantalla' },
-        { tok: '--kb-lh-snug',  v: '1.3',  use: 'Encabezados de tarjeta y metadatos' },
-        { tok: '--kb-lh-body',  v: '1.55', use: 'Texto corrido, párrafos y descripciones largas' },
-      ],
-    };
-
+    return {};
   }
 }
 </script>
