@@ -1,0 +1,568 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    /* El glifo se dibuja en una caja de 24 y hereda el color del texto: el
+       tamano y el trazo son lo unico que cambia entre usos. */
+    .kg { display: block; flex: none; color: currentColor; overflow: visible; }
+
+    .kcell { display: flex; flex-direction: column; align-items: center; gap: var(--kb-sp-3); }
+    .kcell .nm { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700;
+                 letter-spacing: .02em; color: var(--kb-text-2); text-align: center; overflow-wrap: anywhere; }
+    .kset { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: var(--kb-sp-7) var(--kb-sp-4); }
+    .kdom { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+    .kdom .hd2 { display: flex; align-items: baseline; gap: var(--kb-sp-5); flex-wrap: wrap;
+                 border-bottom: 1px solid var(--kb-border-soft); padding-bottom: var(--kb-sp-3); }
+
+    /* La ruta del icono: dominio / nombre / variante. */
+    .path { display: inline-flex; align-items: baseline; font-family: var(--kb-f-label);
+            font-size: var(--kb-fs-sm); font-weight: 800; letter-spacing: .02em; }
+    .path .d { color: var(--kb-primary-ink); }
+    .path .n { color: var(--kb-text); }
+    .path .v { color: var(--kb-text-2); }
+    .path .s { color: var(--kb-border-strong); padding: 0 2px; }
+
+    /* Pastilla de area: el patron compacto de R-1, con su glifo a 12. */
+    .pastilla { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
+                padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+                background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+                font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; }
+
+    /* La casilla con la que el usuario elige el glifo de lo que crea. */
+    .tile { display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: var(--kb-sp-3); height: 72px; border-radius: var(--kb-r-sm);
+            border: 1.5px solid var(--kb-border); background: var(--kb-card);
+            color: var(--kb-text-2); cursor: pointer; }
+    .tile .lb { font-size: var(--kb-fs-2xs); font-weight: 700; }
+    .tile.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+
+    /* Boton de solo icono: cuadrado al alto de su tamano. */
+    .iconbtn { width: var(--kb-ctl-h); height: var(--kb-ctl-h); border-radius: var(--kb-r-md);
+               border: 1.5px solid var(--kb-border-strong); background: var(--kb-card);
+               color: var(--kb-text); display: inline-flex; align-items: center; justify-content: center;
+               box-shadow: var(--kb-sh-1); cursor: pointer; }
+    .iconbtn.sm { width: 36px; height: 36px; border-radius: var(--kb-r-sm); }
+    .iconbtn.lg { width: 54px; height: 54px; border-radius: var(--kb-r-lg); }
+
+    .swrow { display: flex; align-items: center; gap: var(--kb-sp-9); flex-wrap: wrap; }
+
+    /* Especimenes de cinco renglones, alineados entre columnas. */
+    .specs5 { grid-template-rows: auto auto auto auto auto; align-items: start; }
+    .specs5 > .cell { grid-row: span 5; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-3); }
+    .pair { display: flex; align-items: center; gap: var(--kb-sp-4); }
+  </style>
+</helmet>
+<div class="ab">
+
+  <div class="hd">
+    <div class="eyebrow">Fundamentos &middot; 04</div>
+    <div class="h1">&Iacute;conos</div>
+    <div class="one">Un solo set, trazado a la misma regla. El glifo acompa&ntilde;a al texto y hereda su color; nunca lo sustituye.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">La escala</div>
+      <div class="use">Cinco tama&ntilde;os. Uno fuera de estos cinco no existe.</div>
+    </div>
+    <div class="g5 specs5"><div class="cell"><div style="display:flex;align-items:center;justify-content:center;height:40px;color:var(--kb-text)"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><div class="spec">12 px</div><div class="tok">trazo 2,4 px</div><div class="tok" style="color:var(--kb-text)">--kb-fs-2xs</div><div style="font-size:var(--kb-fs-xs);color:var(--kb-text-2);line-height:1.45">Cejilla, banda de KPI, contador</div></div><div class="cell"><div style="display:flex;align-items:center;justify-content:center;height:40px;color:var(--kb-text)"><svg class="kg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><div class="spec">16 px</div><div class="tok">trazo 2,4 px</div><div class="tok" style="color:var(--kb-text)">--kb-fs-sm &middot; --kb-fs-md</div><div style="font-size:var(--kb-fs-xs);color:var(--kb-text-2);line-height:1.45">Chip, etiqueta, control sm</div></div><div class="cell"><div style="display:flex;align-items:center;justify-content:center;height:40px;color:var(--kb-text)"><svg class="kg" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><div class="spec">18 px</div><div class="tok">trazo 2 px</div><div class="tok" style="color:var(--kb-text)">--kb-fs-lg</div><div style="font-size:var(--kb-fs-xs);color:var(--kb-text-2);line-height:1.45">Botón, campo, fila &mdash; el tamaño por defecto</div></div><div class="cell"><div style="display:flex;align-items:center;justify-content:center;height:40px;color:var(--kb-text)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><div class="spec">22 px</div><div class="tok">trazo 2 px</div><div class="tok" style="color:var(--kb-text)">--kb-fs-xl</div><div style="font-size:var(--kb-fs-xs);color:var(--kb-text-2);line-height:1.45">Encabezado de tarjeta, menú lateral</div></div><div class="cell"><div style="display:flex;align-items:center;justify-content:center;height:40px;color:var(--kb-text)"><svg class="kg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div><div class="spec">32 px</div><div class="tok">trazo 2 px</div><div class="tok" style="color:var(--kb-text)">--kb-fs-3xl</div><div style="font-size:var(--kb-fs-xs);color:var(--kb-text-2);line-height:1.45">Estado vacío, ceremonia</div></div></div>
+    <div class="rule">Dos trazos y un solo corte: <strong>2,4 px hasta 16 px &middot; 2 px desde 18 px</strong>. El glifo se dibuja siempre en una caja de 24 y se escala; engrosar el trazo abajo es lo que evita que se deshaga.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El glifo y su texto</div>
+      <div class="use">Cada tama&ntilde;o de glifo pertenece a un paso de la escala tipogr&aacute;fica.</div>
+    </div>
+    <div class="swrow"><div class="pair"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:var(--kb-fs-2xs);font-weight:800;color:var(--kb-text);letter-spacing:.09em;font-family:var(--kb-f-label)">RACHA</span></div><div class="pair"><svg class="kg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style=""><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:var(--kb-fs-md);font-weight:500;color:var(--kb-text)">Hábito cumplido</span></div><div class="pair"><svg class="kg" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg><span style="font-size:var(--kb-fs-lg);font-weight:600;color:var(--kb-text)">Meta del mes</span></div><div class="pair"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 14.5V18M14 14.5V18M8 20h8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:var(--kb-fs-xl);font-weight:600;color:var(--kb-text);font-family:var(--kb-f-display)">Logros</span></div><div class="pair"><svg class="kg" width="32" height="32" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 13h4l2 3h4l2-3h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:var(--kb-fs-3xl);font-weight:700;color:var(--kb-text);font-family:var(--kb-f-display)">Sin nada</span></div></div>
+    <div class="rule">El glifo es el <strong>paso siguiente</strong> al de su texto &mdash; alrededor de 1,2 veces su tama&ntilde;o. No se calcula en el punto de uso: se elige de la tabla.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">La ruta</div>
+      <div class="use">Tres partes: dominio, nombre y variante.</div>
+    </div>
+    <div class="row" style="gap: var(--kb-sp-9)">
+      <div class="pair"><span style="color:var(--area-vigor-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="path"><span class="d">area</span><span class="s">/</span><span class="n">vigor</span><span class="s">/</span><span class="v">line</span></div></div>
+      <div class="pair"><span style="color:var(--kb-streak-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="path"><span class="d">game</span><span class="s">/</span><span class="n">flame</span><span class="s">/</span><span class="v">solid</span></div></div>
+      <div class="pair"><span style="color:var(--kb-text-2)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v6M12 17v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="path"><span class="d">state</span><span class="s">/</span><span class="n">alert</span><span class="s">/</span><span class="v">line</span></div></div>
+    </div>
+    <div class="g5 specs"><div class="cell"><div class="row" style="gap:var(--kb-sp-7);justify-content:center;height:40px"><span style="color:var(--kb-text-2)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 20.5C7 16.5 3.5 13.4 3.5 9.6A4.4 4.4 0 0 1 12 7.8a4.4 4.4 0 0 1 8.5 1.8c0 3.8-3.5 6.9-8.5 10.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="color:var(--kb-primary-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 20.5C7 16.5 3.5 13.4 3.5 9.6A4.4 4.4 0 0 1 12 7.8a4.4 4.4 0 0 1 8.5 1.8c0 3.8-3.5 6.9-8.5 10.9z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="spec">heart</div><div class="tok">line &middot; solid</div></div><div class="cell"><div class="row" style="gap:var(--kb-sp-7);justify-content:center;height:40px"><span style="color:var(--kb-text-2)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3.2c3.4 3.7 5.4 6.4 5.4 8.9a5.4 5.4 0 0 1-10.8 0c0-2.5 2-5.2 5.4-8.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="color:var(--kb-primary-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3.2c3.4 3.7 5.4 6.4 5.4 8.9a5.4 5.4 0 0 1-10.8 0c0-2.5 2-5.2 5.4-8.9z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="spec">droplet</div><div class="tok">line &middot; solid</div></div><div class="cell"><div class="row" style="gap:var(--kb-sp-7);justify-content:center;height:40px"><span style="color:var(--kb-text-2)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="color:var(--kb-primary-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="spec">sparkle</div><div class="tok">line &middot; solid</div></div><div class="cell"><div class="row" style="gap:var(--kb-sp-7);justify-content:center;height:40px"><span style="color:var(--kb-text-2)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="color:var(--kb-primary-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="spec">shield</div><div class="tok">line &middot; solid</div></div><div class="cell"><div class="row" style="gap:var(--kb-sp-7);justify-content:center;height:40px"><span style="color:var(--kb-text-2)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span style="color:var(--kb-primary-ink)"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="currentColor" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="spec">flame</div><div class="tok">line &middot; solid</div></div></div>
+    <div class="rule"><strong>line</strong> es la variante por defecto y la &uacute;nica obligatoria. <strong>solid</strong> existe s&oacute;lo donde la silueta cierra, y marca una sola cosa: lo activo o lo ya ganado. Un nombre nuevo entra con su <code>line</code>; su <code>solid</code>, s&oacute;lo si alguien lo necesita.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El set</div>
+      <div class="use">Cinco dominios. Un glifo pertenece a uno y s&oacute;lo a uno.</div>
+    </div>
+    <div class="col" style="gap: var(--kb-sp-9)"><div class="kdom"><div class="hd2"><div class="path"><span class="d">area</span><span class="s">/</span><span class="v">&hellip;</span></div><div class="use">Las cinco áreas de vida. Su glifo se pinta con la tinta del área.</div><div class="tok" style="margin-left:auto">5</div></div><div class="kset"><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">vigor</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 5h7a3 3 0 0 1 3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5h-7a3 3 0 0 0-3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">wisdom</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">wealth</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 14.2c2.5 0 6 1.4 6 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">community</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8l-2 4h2.5l-1.5 4 4-5h-2.5l1.5-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">will</div></div></div></div><div class="kdom"><div class="hd2"><div class="path"><span class="d">game</span><span class="s">/</span><span class="v">&hellip;</span></div><div class="use">La capa de juego: lo que se gana, lo que se defiende y lo que se persigue.</div><div class="tok" style="margin-left:auto">9</div></div><div class="kset"><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">flame</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 5H4v2a3 3 0 0 0 3 3M17 5h3v2a3 3 0 0 1-3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 14.5V18M14 14.5V18M8 20h8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">trophy</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 18h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7l4 4 5-6 5 6 4-4-2 11H5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">crown</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">shield</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M14 4l6 0 0 6-9 9-3-3 9-9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16l-4 4M5 16l3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">sword</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg><div class="nm">target</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">sparkle</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M5 19a9 9 0 1 1 14 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14l4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="14" r="1.4" fill="currentColor" stroke="none"/></svg><div class="nm">gauge</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">repeat</div></div></div></div><div class="kdom"><div class="hd2"><div class="path"><span class="d">data</span><span class="s">/</span><span class="v">&hellip;</span></div><div class="use">Medida, gráfica y tiempo.</div><div class="tok" style="margin-left:auto">8</div></div><div class="kset"><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">bar-chart</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">chart</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 16l5-5 4 4 7-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8h4v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">trending-up</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 8l5 5 4-4 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16h4v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">trending-down</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9h18M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">calendar</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">clock</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">layers</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg><div class="nm">grip</div></div></div></div><div class="kdom"><div class="hd2"><div class="path"><span class="d">state</span><span class="s">/</span><span class="v">&hellip;</span></div><div class="use">Confirmación, error, aviso y ánimo. Vocabulario fijo: no se personaliza.</div><div class="tok" style="margin-left:auto">13</div></div><div class="kset"><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">check</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">x</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v6M12 17v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">alert</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7.6v.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">info</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">eye</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.6 6.2A9.7 9.7 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3.2 4M6.6 6.6C3.7 8.4 2 12 2 12s3.5 6 10 6c1.7 0 3.2-.4 4.5-1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">eye-off</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 20.5C7 16.5 3.5 13.4 3.5 9.6A4.4 4.4 0 0 1 12 7.8a4.4 4.4 0 0 1 8.5 1.8c0 3.8-3.5 6.9-8.5 10.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">heart</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 3.2c3.4 3.7 5.4 6.4 5.4 8.9a5.4 5.4 0 0 1-10.8 0c0-2.5 2-5.2 5.4-8.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">droplet</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 14s1.5 3 4 3 4-3 4-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 9.5L9.5 11M16 9.5L14.5 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">mood-great</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 14.5s1 1.5 3 1.5 3-1.5 3-1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="10" r="0.8" fill="currentColor"/><circle cx="15" cy="10" r="0.8" fill="currentColor"/></svg><div class="nm">mood-good</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 15h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="10" r="0.8" fill="currentColor"/><circle cx="15" cy="10" r="0.8" fill="currentColor"/></svg><div class="nm">mood-meh</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16.5s1-1.5 3-1.5 3 1.5 3 1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="10" r="0.8" fill="currentColor"/><circle cx="15" cy="10" r="0.8" fill="currentColor"/></svg><div class="nm">mood-low</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 16s1.5-3 4-3 4 3 4 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 9.5l3 1.5M16 9.5l-3 1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">mood-sad</div></div></div></div><div class="kdom"><div class="hd2"><div class="path"><span class="d">ui</span><span class="s">/</span><span class="v">&hellip;</span></div><div class="use">Navegación, acción y objeto.</div><div class="tok" style="margin-left:auto">40</div></div><div class="kset"><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">search</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">home</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg><div class="nm">list</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 13h4l2 3h4l2-3h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">inbox</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">plus</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">minus</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">edit</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 7h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 11v6M14 11v6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">trash</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="9" y="9" width="11" height="11" rx="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 5H7a3 3 0 0 0-3 3v8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">copy</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="6" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="5.5" r="2.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="18.5" r="2.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.4 10.7l6.7-3.9M8.4 13.3l6.7 3.9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">share</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 15V4M7 9l5-5 5 5M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">upload</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">arrow-left</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">arrow-right</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01A1.65 1.65 0 0 0 20.91 10H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">settings</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">folder</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2V5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18a2 2 0 0 1 2-2h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">book</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 5c-2-2-5-2-8-1v15c3-1 6-1 8 1m0-15c2-2 5-2 8-1v15c-3-1-6-1-8 1m0-15v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">book-open</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 9l1.5-5h15L21 9M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M3 9h18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 13a4 4 0 0 0 8 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">shop</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M2 9l10-4 10 4-10 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><line x1="22" y1="9" x2="22" y2="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">graduation</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="12" cy="9" r="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20c1.5-3.5 4-5 7-5s5.5 1.5 7 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">user</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="9" cy="8" r="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 20c0-3.2 2.8-5 6-5s6 1.8 6 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 7v6M15.5 10h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">user-plus</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M12 21s7-5.5 7-11a7 7 0 1 0-14 0c0 5.5 7 11 7 11z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">pin</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M9.5 3.5h5l-.8 5.2 2.8 3.6H7.5l2.8-3.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.3V20.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">pin-on</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M9.5 3.5h5l-.8 5.2 2.8 3.6H7.5l2.8-3.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12.3V20.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 4.5l15 15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">pin-off</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">moon</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor" stroke="none"/></svg><div class="nm">square</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="9" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 16l-5-5L4 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">image</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="9" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 16l-5-5L4 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">image-up</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="9" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 16l-5-5L4 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">picture</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 8a2 2 0 0 1 2-2h3l1.5-2h5L16 6h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">camera</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8h4M3 12h4M3 16h4M17 8h4M17 12h4M17 16h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">film</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="2" y="5" width="20" height="13" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 22h10M12 18v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">tv</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="9" y="3" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">mic</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 13v-1a8 8 0 0 1 16 0v1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="13" width="4" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="17" y="13" width="4" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">headphones</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M7 18a4 4 0 0 1-.5-7.97A5 5 0 0 1 16 9.5a3.5 3.5 0 0 1 1 6.86" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 18h10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">cloud</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="7" y="2" width="10" height="20" rx="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><line x1="10.5" y1="18.5" x2="13.5" y2="18.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">phone</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="6" y="3" width="12" height="18" rx="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="7" x2="15" y2="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="10" x2="15" y2="10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><line x1="9" y1="13" x2="13" y2="13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="18" r="0.6" fill="currentColor" stroke="none"/></svg><div class="nm">tablet</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="5" y="5" width="14" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19h18l-1.5-2H4.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">laptop</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M6 21V4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 4h11l-2 4 2 4H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">flag</div></div><div class="kcell"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="nm">piggy</div></div></div></div></div>
+    <div class="rule">Las marcas de terceros &mdash;Google, Microsoft&mdash; <strong>no son &iacute;conos del sistema</strong>: se dibujan como vienen, no toman el trazo ni el color, y viven s&oacute;lo en el bot&oacute;n que las nombra.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Qu&eacute; personaliza el usuario</div>
+      <div class="use">El color de sus &aacute;reas y el glifo de lo que &eacute;l crea. Nada m&aacute;s.</div>
+    </div>
+    <div class="g2">
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <div class="spec">El color de un &aacute;rea</div>
+        <div class="row" style="gap: var(--kb-sp-4)"><div class="pastilla" style="--c: var(--area-vigor)"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Vigor</div><div class="pastilla" style="--c: var(--area-wisdom)"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><path d="M4 5h7a3 3 0 0 1 3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5h-7a3 3 0 0 0-3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Sabiduría</div><div class="pastilla" style="--c: var(--area-wealth)"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Riqueza</div><div class="pastilla" style="--c: var(--area-community)"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 14.2c2.5 0 6 1.4 6 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Comunidad</div><div class="pastilla" style="--c: var(--area-will)"><svg class="kg" width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style=""><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8l-2 4h2.5l-1.5 4 4-5h-2.5l1.5-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Voluntad</div></div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">El usuario elige el matiz; el sistema deriva su lavado y su tinta con las dos recetas. La silueta del glifo no cambia nunca.</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <div class="spec">El glifo de lo que &eacute;l crea</div>
+        <div class="g3" style="gap: var(--kb-sp-5)"><div class="tile on"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 9l1.5-5h15L21 9M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M3 9h18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 13a4 4 0 0 0 8 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lb">Compra</div></div><div class="tile "><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8h4M3 12h4M3 16h4M17 8h4M17 12h4M17 16h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lb">Cine</div></div><div class="tile "><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 13v-1a8 8 0 0 1 16 0v1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="13" width="4" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="17" y="13" width="4" height="6" rx="1.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lb">Música</div></div><div class="tile "><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2V5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18a2 2 0 0 1 2-2h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lb">Libro</div></div><div class="tile "><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M3 8a2 2 0 0 1 2-2h3l1.5-2h5L16 6h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lb">Foto</div></div><div class="tile "><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="lb">Ahorro</div></div></div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.5">Una recompensa, una secci&oacute;n o un acceso eligen su glifo <strong>del set</strong>. El dominio <code>state</code> queda fuera del selector: es vocabulario, no decoraci&oacute;n.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El glifo dentro de una pieza</div>
+      <div class="use">Solo, acompa&ntilde;ando, o sobre color.</div>
+    </div>
+    <div class="row" style="gap: var(--kb-sp-9); align-items: flex-start">
+      <div class="col" style="gap: var(--kb-sp-4); align-items: flex-start">
+        <div class="row" style="gap: var(--kb-sp-5)">
+          <button class="iconbtn sm" aria-label="Buscar"><svg class="kg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style=""><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="iconbtn" aria-label="Buscar"><svg class="kg" width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="iconbtn lg" aria-label="Buscar"><svg class="kg" width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style=""><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+        <div class="tok">36 &middot; 46 &middot; 54</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4)">
+        <div style="display:inline-flex;align-items:center;gap:var(--kb-sp-4);height:36px;padding:0 var(--kb-sp-6);border-radius:var(--kb-r-pill);border:1.5px solid var(--kb-primary);background:var(--kb-primary-soft);color:var(--kb-primary-ink);font-size:var(--kb-fs-md);font-weight:600;align-self:flex-start"><svg class="kg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style=""><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9h18M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Esta semana</div>
+        <div class="tok">Chip &middot; glifo 16 con texto 13</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4)">
+        <div style="display:inline-flex;align-items:center;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-6);border-radius:var(--kb-r-md);background:color-mix(in oklab, var(--kb-hp) 12%, var(--kb-canvas));color:var(--kb-hp-ink);font-size:var(--kb-fs-sm);font-weight:600;align-self:flex-start"><svg class="kg" width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style=""><path d="M12 20.5C7 16.5 3.5 13.4 3.5 9.6A4.4 4.4 0 0 1 12 7.8a4.4 4.4 0 0 1 8.5 1.8c0 3.8-3.5 6.9-8.5 10.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Te quedan 12 de vida</div>
+        <div class="tok">Sobre lavado &middot; el glifo va en la tinta</div>
+      </div>
+    </div>
+    <div class="rule">El glifo hereda <code>currentColor</code>: sobre un lavado toma la <strong>tinta</strong>, nunca el matiz plano. Un bot&oacute;n de solo &iacute;cono es cuadrado al alto de su tama&ntilde;o y <strong>siempre</strong> lleva etiqueta accesible. Nunca dos glifos en un mismo control.</div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":0}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

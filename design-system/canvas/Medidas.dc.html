@@ -356,6 +356,8 @@
 
     .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
     .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    /* El cajon es un escalon real de la escala: entre el popover y el modal. */
+    .ab { --kb-sh-4: 0 6px 14px rgba(20,30,50,.08), 0 20px 44px rgba(20,30,50,.12); }
     .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
 
     .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
@@ -552,7 +554,7 @@
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1539}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1641}}'>
 class Component extends DCLogic {
   renderVals() {
     const T = 'var(--kb-primary)', G = 'var(--kb-border-strong)';
@@ -580,6 +582,7 @@ class Component extends DCLogic {
         { tok: '--kb-sh-1',   name: '1', use: 'Tarjeta en reposo' },
         { tok: '--kb-sh-2',   name: '2', use: 'Tarjeta levantada' },
         { tok: '--kb-sh-3',   name: '3', use: 'Menú y popover' },
+        { tok: '--kb-sh-4',   name: '4', use: 'Cajón y panel lateral' },
         { tok: '--kb-sh-pop', name: 'pop', use: 'Modal y hoja' },
       ],
       motion: [

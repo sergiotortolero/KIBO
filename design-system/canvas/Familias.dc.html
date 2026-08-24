@@ -1,0 +1,737 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    /* La familia de aviso, completa: lavado al 12 %, borde al 32 %, tinta al 74 %.
+       Los tres se derivan de --kb-warn con las mismas recetas que todo lo demas. */
+    .ab {
+      --kb-warn-soft:   color-mix(in oklab, var(--kb-warn) 12%, var(--kb-canvas));
+      --kb-warn-border: color-mix(in oklab, var(--kb-warn) 32%, var(--kb-canvas));
+      --kb-warn-ink:    color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2));
+    }
+
+    /* ── Encabezado de seccion — .kbv-section-head ─────────────────── */
+    .kbv-section-head { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap;
+                        row-gap: var(--kb-sp-3); padding-bottom: var(--kb-sp-4);
+                        border-bottom: 1px solid var(--kb-border); }
+    .kbv-section-head.tight { border-bottom: 0; padding-bottom: 0; }
+    .kbv-section-head .sh-id { display: flex; flex-direction: column; gap: var(--kb-sp-2); flex: 1 1 auto; min-width: 0; }
+    .kbv-section-head .kbv-h3 { font-family: var(--kb-f-display); font-weight: 700;
+                                font-size: var(--kb-fs-2xl-fluid); line-height: var(--kb-lh-snug);
+                                letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-section-head .kbv-h4 { font-family: var(--kb-f-display); font-weight: 600;
+                                font-size: var(--kb-fs-xl); line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-section-head .sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-section-head .sh-act { flex: none; display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    .kbv-page-head { display: flex; align-items: flex-end; justify-content: space-between;
+                     gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .kbv-page-head .kbv-h1 { font-family: var(--kb-f-display); font-weight: 800;
+                             font-size: var(--kb-fs-3xl-fluid); line-height: var(--kb-lh-tight);
+                             letter-spacing: -.015em; color: var(--kb-text); }
+
+    /* ── Barra de herramientas — .kbv-filter-bar ───────────────────── */
+    .kbv-filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kb-sp-4);
+                      padding: var(--kb-sp-6) var(--kb-sp-7); background: var(--kb-card);
+                      border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); }
+    .kbv-filter-bar .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                           letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2);
+                           margin-right: var(--kb-sp-2); }
+    .kbv-filter-bar .grow { flex: 1 1 auto; min-width: 0; }
+
+    /* ── Pestanas y segmentado — .kbv-seg ──────────────────────────── */
+    .kbv-seg { display: inline-flex; gap: var(--kb-sp-2); padding: var(--kb-sp-2);
+               background: var(--kb-surface-2); border-radius: var(--kb-r-pill); max-width: 100%; }
+    .kbv-seg > button { display: inline-flex; align-items: center; gap: var(--kb-sp-4);
+                        height: 36px; padding: 0 var(--kb-sp-6); border: 0; background: transparent;
+                        border-radius: var(--kb-r-pill); cursor: pointer; white-space: nowrap;
+                        font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600;
+                        color: var(--kb-text-2); position: relative; }
+    .kbv-seg > button:hover { color: var(--kb-text); }
+    .kbv-seg > button.on { background: var(--kb-card); color: var(--kb-text); font-weight: 700; box-shadow: var(--kb-sh-1); }
+    /* Dibuja 36, toca 44: la zona crece hacia afuera, el dibujo no. */
+    .kbv-seg > button::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                               transform: translateY(-50%); height: 44px; }
+    .kbv-seg.full { display: flex; width: 100%; }
+    .kbv-seg.full > button { flex: 1 1 0; justify-content: center; min-width: 0; }
+    .kbv-seg .kbv-badge { min-width: 20px; height: 20px; border-radius: var(--kb-r-pill);
+                          padding: 0 var(--kb-sp-3); background: var(--kb-surface-2); color: var(--kb-text);
+                          font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xs);
+                          display: inline-flex; align-items: center; justify-content: center;
+                          font-variant-numeric: tabular-nums; }
+    .kbv-seg > button.on .kbv-badge { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    /* En telefono la tira se DESLIZA: una pestana fuera de la pantalla se
+       alcanza con el pulgar, no se recorta. */
+    .seg-scroll { max-width: 300px; overflow-x: auto; scrollbar-width: none; }
+    .seg-scroll::-webkit-scrollbar { display: none; }
+    .seg-scroll > .kbv-seg { flex-wrap: nowrap; }
+    .seg-scroll .kbv-seg > button { flex: none; }
+
+    /* ── Escenario — .kbv-stage ────────────────────────────────────── */
+    .kbv-stage { display: grid; place-items: center; width: 100%; padding: var(--kb-sp-7);
+                 background: var(--kb-surface); border-radius: var(--kb-r-lg);
+                 min-height: 260px; overflow: visible; }
+    .kbv-stage.sm { min-height: 180px; }
+    .kbv-stage.lg { min-height: 360px; }
+    .stage-piece { width: 96px; height: 96px; border-radius: var(--kb-r-pill);
+                   background: color-mix(in oklab, var(--kb-primary) 55%, var(--kb-canvas));
+                   box-shadow: var(--kb-sh-2); }
+
+    /* ── Estado vacio — .kbv-empty-state ───────────────────────────── */
+    .kbv-empty-state { display: flex; flex-direction: column; align-items: center; text-align: center;
+                       gap: var(--kb-sp-5); padding: var(--kb-sp-9);
+                       background: var(--kb-surface-2); border: 1px dashed var(--kb-border-strong);
+                       border-radius: var(--kb-r-lg); }
+    .kbv-empty-state .es-ico { width: 56px; height: 56px; border-radius: var(--kb-r-pill); flex: none;
+                               background: var(--kb-canvas); color: var(--kb-text-2);
+                               display: flex; align-items: center; justify-content: center; }
+    .kbv-empty-state .es-title { font-family: var(--kb-f-display); font-weight: 700;
+                                 font-size: var(--kb-fs-lg); color: var(--kb-text); }
+    .kbv-empty-state .es-desc { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body);
+                                color: var(--kb-text-2); max-width: 42ch; }
+    .kbv-empty-state .es-act { margin-top: var(--kb-sp-3); }
+    .kbv-empty-state.compact { padding: var(--kb-sp-7); gap: var(--kb-sp-4); }
+    .kbv-empty-state.compact .es-ico { width: 40px; height: 40px; }
+    .kbv-empty-state.compact .es-title { font-size: var(--kb-fs-md); }
+
+    /* ── Piezas prestadas de sus familias ──────────────────────────── */
+    .kbv-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+               height: var(--kb-ctl-h); padding: 0 var(--kb-sp-8); border-radius: var(--kb-r-md);
+               border: 1.5px solid transparent; cursor: pointer; line-height: 1;
+               font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-lg); }
+    .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-md); }
+    .kbv-btn-primary { background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                       box-shadow: 0 2px 0 color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-sh-1); }
+    .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
+                         border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
+    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); }
+    .kbv-chip { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill);
+                border: 1.5px solid var(--kb-border); background: var(--kb-card);
+                font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text-2); cursor: pointer; }
+    .kbv-chip.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-input { display: flex; align-items: center; gap: var(--kb-sp-5); height: 36px;
+                 padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-sm);
+                 background: var(--kb-card); border: 1.5px solid var(--kb-border);
+                 color: var(--kb-text-2); font-size: var(--kb-fs-md); min-width: 0;
+                 overflow: hidden; white-space: nowrap; }
+
+    /* Aviso: fondo tintado con glifo — el cuarto patron de R-1. */
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5);
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: var(--kb-warn-soft); border: 1px solid var(--kb-warn-border);
+                  color: var(--kb-text); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); }
+    .kbv-notice .gl { color: var(--kb-warn-ink); margin-top: 2px; }
+    .kbv-notice strong { font-weight: 700; }
+
+    /* ── Tablas ────────────────────────────────────────────────────── */
+    .tbl { display: grid; }
+    .tbl > div { padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); min-width: 0;
+                 font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .tbl.c2 > div:nth-last-child(-n+2), .tbl.c3 > div:nth-last-child(-n+3) { border-bottom: 0; }
+    .tbl .th { padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border);
+               font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+               letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .tbl .cd { font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 800;
+               letter-spacing: .02em; color: var(--kb-text); }
+    .tbl strong { color: var(--kb-text); font-weight: 700; }
+
+    .demo { padding: var(--kb-sp-7); background: var(--kb-surface); border-radius: var(--kb-r-md); }
+  </style>
+</helmet>
+<div class="ab">
+
+  <div class="hd">
+    <div class="eyebrow">Componentes &middot; 08</div>
+    <div class="h1">Familias menores</div>
+    <div class="one">Cinco piezas que encuadran el contenido en vez de cargarlo. Ninguna inventa valores: todas se arman con el alto de control, el radio y el espaciado que ya existen.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Encabezado de secci&oacute;n &middot; <code>.kbv-section-head</code></div>
+      <div class="use">Una fila: identidad a la izquierda, acci&oacute;n a la derecha, l&iacute;nea debajo.</div>
+    </div>
+    <div class="demo col" style="gap: var(--kb-sp-9)">
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-h3">Tu semana</div>
+          <div class="sub">Del 18 al 24 de agosto</div>
+        </div>
+        <div class="sh-act"><button class="kbv-btn kbv-btn-secondary sm"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9h18M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Cambiar rango</button></div>
+      </div>
+      <div class="kbv-section-head tight">
+        <div class="sh-id"><div class="kbv-h4">H&aacute;bitos de hoy</div></div>
+        <div class="sh-act"><button class="kbv-btn kbv-btn-ghost sm">Ver todos</button></div>
+      </div>
+      <div class="kbv-page-head">
+        <div class="kbv-h1">Panel</div>
+        <div class="sh-act"><button class="kbv-btn kbv-btn-primary sm"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Nueva tarea</button></div>
+      </div>
+    </div>
+    <div class="tbl c2" style="grid-template-columns: 168px 1fr">
+      <div class="cd">Base</div><div>Fila con <code>--kb-sp-6</code> de hueco, <code>padding-bottom --kb-sp-4</code> y l&iacute;nea de <code>--kb-border</code>. Envuelve antes que estrangularse.</div>
+      <div class="cd">T&iacute;tulo</div><div><code>.kbv-h3</code> por defecto; <code>.kbv-h4</code> cuando la secci&oacute;n vive dentro de otra. El subt&iacute;tulo va a <code>--kb-fs-sm</code> en secundario.</div>
+      <div class="cd">Acci&oacute;n</div><div>Controles <strong>sm</strong>. Nunca un primario: el primario de la vista vive en el encabezado de pantalla.</div>
+      <div class="cd">tight</div><div>Sin l&iacute;nea ni relleno inferior, para cuando ya hay una tarjeta que separa.</div>
+    </div>
+    <div class="rule"><code>.kbv-page-head</code> es <strong>otro nivel</strong>, no una variante: lleva el <code>.kbv-h1</code> de la pantalla y su acci&oacute;n primaria, y nunca dibuja l&iacute;nea. Una pantalla tiene un encabezado de p&aacute;gina y tantos de secci&oacute;n como haga falta.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Barra de herramientas &middot; <code>.kbv-filter-bar</code></div>
+      <div class="use">Lo que filtra y ordena lo que hay debajo. Nunca lo que crea.</div>
+    </div>
+    <div class="kbv-filter-bar">
+      <div class="lbl">Filtrar</div>
+      <div class="kbv-input grow" style="max-width: 220px"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Buscar en tareas</div>
+      <div class="kbv-seg">
+        <button class="on">Todas <span class="kbv-badge">24</span></button>
+        <button>Hoy <span class="kbv-badge">7</span></button>
+        <button>Vencidas <span class="kbv-badge">3</span></button>
+      </div>
+      <button class="kbv-chip on"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg> Vigor</button>
+      <button class="kbv-chip">Prioridad</button>
+    </div>
+    <div class="tbl c2" style="grid-template-columns: 168px 1fr">
+      <div class="cd">Base</div><div>Envoltorio flexible que <strong>envuelve</strong>: <code>--kb-sp-4</code> de hueco, relleno <code>--kb-sp-6 --kb-sp-7</code>, fondo <code>--kb-card</code>, radio <code>--kb-r-md</code>.</div>
+      <div class="cd">Contenido</div><div>Todo lo que entra es <strong>sm</strong> &mdash; 36 px. Campo, segmentado y chip comparten alto, as&iacute; que la fila no se escalona.</div>
+      <div class="cd">En m&oacute;vil</div><div>Los grupos internos envuelven tambi&eacute;n: envolver s&oacute;lo el contenedor deja filas r&iacute;gidas que se salen del ancho.</div>
+    </div>
+    <div class="rule">La barra <strong>no crea nada</strong>. El bot&oacute;n de a&ntilde;adir vive en el encabezado de pantalla; mezclarlos es lo que convierte una barra de filtros en una segunda cabecera.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Pesta&ntilde;as y segmentado &middot; <code>.kbv-seg</code></div>
+      <div class="use">Una sola pieza para las dos cosas: lo que cambia es cu&aacute;ntas caben.</div>
+    </div>
+    <div class="col" style="gap: var(--kb-sp-8)">
+      <div class="row" style="gap: var(--kb-sp-8)">
+        <div class="col" style="gap: var(--kb-sp-4)">
+          <div class="kbv-seg">
+            <button class="on">Semana</button><button>Mes</button><button>A&ntilde;o</button>
+          </div>
+          <div class="tok">Por defecto &middot; al ancho de su contenido</div>
+        </div>
+        <div class="col" style="gap: var(--kb-sp-4)">
+          <div class="kbv-seg">
+            <button class="on"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Activos <span class="kbv-badge">4</span></button>
+            <button>Cumplidos <span class="kbv-badge">18</span></button>
+          </div>
+          <div class="tok">Con glifo y contador</div>
+        </div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4)">
+        <div class="kbv-seg full">
+          <button class="on">Resumen</button><button>Detalle</button><button>Historial</button>
+        </div>
+        <div class="tok">full &middot; pistas iguales, al ancho del contenedor</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4)">
+        <div class="seg-scroll">
+          <div class="kbv-seg">
+            <button class="on">Todo</button><button>Cosm&eacute;ticos</button><button>Divisas</button>
+            <button>Interfaz</button><button>M&oacute;dulos</button><button>Ofertas</button>
+          </div>
+        </div>
+        <div class="tok">En pantalla angosta la tira se desliza &mdash; nunca envuelve ni se recorta</div>
+      </div>
+    </div>
+    <div class="tbl c2" style="grid-template-columns: 168px 1fr">
+      <div class="cd">Base</div><div>P&iacute;ldora de <code>--kb-surface-2</code> con relleno <code>--kb-sp-2</code>. Cada pesta&ntilde;a es un control <strong>sm</strong>: 36 px, radio <code>--kb-r-pill</code>, texto 13 en peso 600.</div>
+      <div class="cd">Activa</div><div>Fondo <code>--kb-card</code>, texto <code>--kb-text</code> en peso 700 y <code>--kb-sh-1</code>. La p&iacute;ldora que sube es la se&ntilde;al; el color no.</div>
+      <div class="cd">Contador</div><div>Un contador de la familia de chips, en su forma <code>quiet</code>. En la activa toma el lavado y la tinta de marca.</div>
+      <div class="cd">Toque</div><div>Dibuja 36 y <strong>toca 44</strong>: la zona crece con un &aacute;rea transparente centrada, no engordando el control.</div>
+    </div>
+    <div class="rule">Una sola clase para toda tira horizontal de selecci&oacute;n. Si una tira necesita deslizarse y nadie la nombr&oacute;, la regla no puede alcanzarla &mdash; por eso el nombre es parte de la pieza, no un detalle.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Escenario &middot; <code>.kbv-stage</code></div>
+      <div class="use">El sitio donde algo se act&uacute;a: KIBO, una ceremonia, una rueda.</div>
+    </div>
+    <div class="g3" style="align-items: start">
+      <div class="cell">
+        <div class="spec">sm &middot; 180</div>
+        <div class="tok">Dentro de una tarjeta</div>
+        <div class="kbv-stage sm"><div class="stage-piece" style="width:56px;height:56px"></div></div>
+      </div>
+      <div class="cell">
+        <div class="spec">md &middot; 260</div>
+        <div class="tok">Por defecto</div>
+        <div class="kbv-stage"><div class="stage-piece"></div></div>
+      </div>
+      <div class="cell">
+        <div class="spec">lg &middot; 360</div>
+        <div class="tok">Ceremonia y recompensa</div>
+        <div class="kbv-stage lg"><div class="stage-piece" style="width:132px;height:132px"></div></div>
+      </div>
+    </div>
+    <div class="tbl c2" style="grid-template-columns: 168px 1fr">
+      <div class="cd">Base</div><div>Rejilla de una celda centrada, fondo <code>--kb-surface</code>, radio <code>--kb-r-lg</code>, relleno <code>--kb-sp-7</code>. Tres alturas m&iacute;nimas y nada m&aacute;s.</div>
+      <div class="cd">Desborde</div><div><code>overflow: visible</code>. Un aura o una part&iacute;cula puede rebasar la silueta: el escenario no recorta a su actor.</div>
+      <div class="cd">En estrecho</div><div>La pieza <strong>se reduce entera</strong> por escalones, nunca se recorta. El escal&oacute;n es un n&uacute;mero, no un c&aacute;lculo.</div>
+    </div>
+    <div class="rule">El escenario es un envoltorio: no dibuja borde, no dibuja sombra y no lleva t&iacute;tulo. Si necesita cabecera, va dentro de una <strong>tarjeta</strong>, y el escenario es su cuerpo.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Estado vac&iacute;o &middot; <code>.kbv-empty-state</code></div>
+      <div class="use">Cuatro partes en orden: glifo, t&iacute;tulo, explicaci&oacute;n y una salida.</div>
+    </div>
+    <div class="g2">
+      <div class="col" style="gap: var(--kb-sp-4)">
+        <div class="kbv-empty-state">
+          <div class="es-ico"><svg width="32" height="32" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 5h16v14H4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 13h4l2 3h4l2-3h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="es-title">A&uacute;n no hay h&aacute;bitos</div>
+          <div class="es-desc">Un h&aacute;bito es algo que repites a prop&oacute;sito. Empieza con uno solo: la racha se construye sola.</div>
+          <div class="es-act"><button class="kbv-btn kbv-btn-primary sm"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Crear el primero</button></div>
+        </div>
+        <div class="tok">Por defecto &middot; glifo 32 en disco de 56</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-4)">
+        <div class="kbv-empty-state compact">
+          <div class="es-ico"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="es-title">Sin resultados</div>
+          <div class="es-desc">Prueba con menos filtros.</div>
+        </div>
+        <div class="tok">compact &middot; glifo 22 en disco de 40, sin salida</div>
+        <div class="kbv-notice">
+          <span class="gl"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v6M12 17v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Un vac&iacute;o no es un aviso.</strong> Cuando lo que falta es una advertencia y no una ausencia, la pieza es un fondo tintado con glifo &mdash; aqu&iacute; en la familia de <code>--kb-warn</code>.</span>
+        </div>
+      </div>
+    </div>
+    <div class="tbl c3" style="grid-template-columns: 168px 1fr">
+      <div class="cd">Contenedor</div><div><code>--kb-surface-2</code>, borde discontinuo de <code>--kb-border-strong</code>, radio <code>--kb-r-lg</code>, relleno <code>--kb-sp-9</code>. <strong>Sin sombra</strong>: nada que elevar cuando no hay nada dentro.</div>
+      <div class="cd">T&iacute;tulo</div><div><code>--kb-fs-lg</code> en display 700 y en <code>--kb-text</code>. Un t&iacute;tulo en gris secundario hace que el vac&iacute;o se lea como una falla.</div>
+      <div class="cd">Explicaci&oacute;n</div><div><code>--kb-fs-sm</code> en secundario, m&aacute;ximo 42 caracteres de ancho. Dice <strong>qu&eacute; es</strong> lo que falta, no que est&aacute; vac&iacute;o.</div>
+      <div class="cd">Salida</div><div>Un control <strong>sm</strong>, y s&oacute;lo uno. En la forma compacta se retira: dentro de un filtro la salida es cambiar el filtro.</div>
+      <div class="cd">La familia de aviso</div><div><code>--kb-warn-soft</code> al 12 %, <code>--kb-warn-border</code> al 32 % y la tinta al 74 % &mdash; las mismas recetas que cualquier otro matiz.</div>
+    </div>
+    <div class="rule">El vac&iacute;o de una <strong>tarjeta</strong> es otra cosa: ah&iacute; s&oacute;lo hay una raya ocupando el sitio del dato. Esta pieza aparece cuando la ausencia es de la <strong>vista entera</strong> y hay algo que el usuario puede hacer.</div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":3078}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

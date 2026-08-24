@@ -522,20 +522,17 @@ This document describes the destination. `colors_and_type.css` and `kbv-componen
 | `colors_and_type.css:75` | `--kb-gem` is deprecated in text but live in 3 derived tokens, 9 cards and the public API | The rare currency is **Elemento**, `--kb-dark-*` (§2.4) |
 | Control height | `preview/formulario-campos.html:19` says and does 42 px | `--kb-ctl-h` = 46 px (§4.4) |
 | State tokens | None exist; `disabled` is `opacity: 0.45`, `error` is a raw `rgba` | Real states per family (§6.1, §6.2) |
+| New tokens | `--kb-sh-4`, `--kb-warn-soft`, `--kb-warn-border`, `--kb-warn-ink`, `--kb-w-page`, `--kb-w-prose` are **not declared** | Declared and rendered on the canvas. `--kb-sh-4` is the step between popover and modal; the alert inks (HP, reto, warning) mix at **74 %**, not the 54 % every other ink uses; page width is 1200 px and prose width 72 ch |
 
 ---
 
 ## 9 · Not yet covered by this recipe
 
-Named so nobody builds these from memory. Each needs a specimen on the canvas before it can be written here — describing one from memory is exactly what Art. 5 calls "the document is wrong".
+Iconography, KIBO, the shell, the five minor families, the KPI data states and the undeclared tokens were all closed on the canvas 2026-08-23. What is left is content, not system:
 
-- **Iconography and KIBO.** The system has icon rules (the `dominio/nombre/variante` convention, 2 px stroke at 22 px and up, 2.4 px at 16 px and below, the glyph sized at 1.15× its text) and the mascot is brand identity on both platforms (`ARCHITECTURE.md` AD-20). **There is no icon artboard and no KIBO artboard**, so only the fragment used by the documented pieces is here. This is the largest remaining hole.
-- **The five families of §6.8.** Their canonical form and what they absorb are settled; their **values** — heights, paddings, text sizes — are not rendered anywhere yet.
-- **Container widths and page grid.** The canvas renders pieces, not screens. Maximum content width, the column grid, and the shell's behaviour (sidebar + header) across the three responsive modes are undocumented and block 21 screens (`ANALYSIS.md` finding 14).
-- **The KPI data states** — loading, error, empty, no-permission. New design work, not adoption.
-- **`--kb-sh-4`, `--kb-warn-soft`, `--kb-warn-border`.** `ANALYSIS.md` says declare, do not retire — but no value is declared anywhere, so none is invented here.
-
----
+- **The 18 real menu destinations and their sections**, and **the five phone tab-bar destinations** — the shell renders six and five as samples. Which ones they are is product.
+- **KIBO's wardrobe catalogue** — which skins, marks, auras and personalities exist, their prices and their currency. The composition matrix uses a generic purchased skin painted with a system token so no catalogue colour enters the canvas.
+- **KIBO's travesura repertoire and the lines it says.**
 
 ## 10 · Open questions
 

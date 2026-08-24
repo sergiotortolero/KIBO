@@ -407,6 +407,18 @@
     .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
     .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
     .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+
+    /* La familia de aviso, completa: lavado 12 %, borde 32 %, tinta 74 %. */
+    .ab {
+      --kb-warn-soft:   color-mix(in oklab, var(--kb-warn) 12%, var(--kb-canvas));
+      --kb-warn-border: color-mix(in oklab, var(--kb-warn) 32%, var(--kb-canvas));
+      --kb-warn-ink:    color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2));
+    }
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5);
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: var(--kb-warn-soft); border: 1px solid var(--kb-warn-border);
+                  color: var(--kb-text); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); }
+    .kbv-notice .gl { color: var(--kb-warn-ink); margin-top: 2px; }
   </style>
 </helmet>
 <div class="ab">
@@ -619,10 +631,55 @@
     <div class="rule">Los matices —marca, gamificación, áreas, prioridades— <strong>no cambian de valor</strong> entre temas. Lo que cambia son las superficies, el texto y las dos recetas.</div>
   </div>
 
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Sem&aacute;nticas de apoyo</div>
+      <div class="use">Tres papeles que no son ni marca ni juego ni &aacute;rea.</div>
+    </div>
+    <div class="g3 specs">
+      <div class="cell">
+        <div class="sw"><div class="chip" style="background: var(--kb-good)"></div></div>
+        <div class="spec">--kb-good</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">Lo que va bien: ahorro, rendimiento, saldo a favor. <strong>Rellena</strong>; no escribe.</div>
+      </div>
+      <div class="cell">
+        <div class="sw"><div class="chip" style="background: var(--kb-medal)"></div></div>
+        <div class="spec">--kb-medal</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">El dorado del logro. Sexta ranura de la capa de juego.</div>
+      </div>
+      <div class="cell">
+        <div class="sw"><div class="chip" style="background: var(--kb-warn)"></div></div>
+        <div class="spec">--kb-warn</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">&Aacute;mbar de advertencia: algo pide atenci&oacute;n y <strong>nada est&aacute; roto</strong>.</div>
+      </div>
+    </div>
+    <div class="g3" style="gap: var(--kb-sp-6)">
+      <div class="col" style="gap: var(--kb-sp-3)">
+        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-warn-soft)"></div>
+        <div class="tok">--kb-warn-soft &middot; 12 %</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-3)">
+        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-canvas); border: 2px solid var(--kb-warn-border)"></div>
+        <div class="tok">--kb-warn-border &middot; 32 %</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-3)">
+        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-warn-soft); color: var(--kb-warn-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: var(--kb-fs-md)">Revisa esto</div>
+        <div class="tok">--kb-warn-ink &middot; 74 %</div>
+      </div>
+    </div>
+    <div class="kbv-notice">
+      <span class="gl"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v6M12 17v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>El aviso se dibuja con el <strong>cuarto patr&oacute;n</strong> de R&#8209;1: fondo tintado con glifo. Nunca sin glifo &mdash; el color solo no es un mensaje.</span>
+    </div>
+    <div class="rule">Las tintas de <strong>alerta</strong> &mdash; HP, reto y aviso &mdash; se mezclan al <strong>74 %</strong>, no al 54 %: a un matiz ya oscuro el 54 % le quita el tono y lo deja en negro. El aviso al 74 % pasa AA sobre el lienzo y sobre su propio lavado.</div>
+    <div class="rule">No existe una <strong>tinta de &laquo;bien&raquo;</strong>: un delta positivo va en <code>--kb-primary-ink</code> y uno negativo en <code>--kb-hp-ink</code>. El teal <em>es</em> el progreso, y sostener dos verdes en el sistema es lo que hace que ninguno signifique nada.</div>
+  </div>
+
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":2253}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":2738}}'>
 class Component extends DCLogic {
   renderVals() {
     return {

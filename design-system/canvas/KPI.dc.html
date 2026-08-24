@@ -444,6 +444,26 @@
     .kbv-progress .fill { height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary)); }
 
     .cell { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+
+    /* Los cuatro estados del dato. La banda y el alto del cuerpo no cambian:
+       la tarjeta no se mueve cuando el dato llega, falla o no se puede ver. */
+    .kbv-kpi .body { min-height: 74px; justify-content: center; }
+    .kbv-kpi .skl { border-radius: var(--kb-r-pill); background: var(--kb-surface-2); }
+    .kbv-kpi .skl.fig { height: 26px; width: 84px; }
+    .kbv-kpi .skl.sub { height: 12px; width: 132px; }
+    .kbv-kpi .state { display: flex; align-items: center; gap: var(--kb-sp-4);
+                      font-size: var(--kb-fs-md); font-weight: 700; line-height: var(--kb-lh-snug); }
+    .kbv-kpi .state.err  { color: var(--kb-hp-ink); }
+    .kbv-kpi .state.warn { color: var(--kb-warn-ink); }
+    .kbv-kpi .val.mute { color: var(--kb-text-2); }
+    .kbv-kpi .fix { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+                    height: 28px; padding: 0 var(--kb-sp-5); border: 0; background: transparent;
+                    border-radius: var(--kb-r-sm); cursor: pointer;
+                    font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                    color: var(--kb-primary-ink); }
+  </style>
+  <style>
+    .ab { --kb-warn-ink: color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2)); }
   </style>
 </helmet>
 <div class="ab">
@@ -610,10 +630,65 @@
     <div class="rule">La cifra va a <code>--kb-fs-3xl</code> en display 800 con cifras tabulares, y su unidad a <code>--kb-fs-lg</code> en secundario: la unidad <strong>no compite</strong> con el número.</div>
   </div>
 
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Los cuatro estados del dato</div>
+      <div class="use">La banda sobrevive a los cuatro: el papel se sabe antes que la cifra.</div>
+    </div>
+    <div class="g4 specs">
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band">Constancia</div>
+          <div class="body">
+            <div class="skl fig"></div>
+            <div class="skl sub"></div>
+          </div>
+        </div>
+        <div class="spec">Cargando</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">Dos bloques del tama&ntilde;o de lo que viene. Sin texto y sin giro.</div>
+      </div>
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band">Constancia</div>
+          <div class="body">
+            <div class="state err"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v6M12 17v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> No se pudo leer</div>
+            <button class="fix"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Reintentar</button>
+          </div>
+        </div>
+        <div class="spec">Error</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">Tinta de HP, y una salida. Nunca un cero: cero es un dato.</div>
+      </div>
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band">Constancia</div>
+          <div class="body">
+            <div class="val mute">&mdash;</div>
+            <div class="delta">Empieza a registrar</div>
+          </div>
+        </div>
+        <div class="spec">Vac&iacute;o</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">La raya ocupa el sitio de la cifra y dice c&oacute;mo aparece.</div>
+      </div>
+      <div class="cell">
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band">Constancia</div>
+          <div class="body">
+            <div class="state warn"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M3 3l18 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.6 6.2A9.7 9.7 0 0 1 12 6c6.5 0 10 6 10 6a17 17 0 0 1-3.2 4M6.6 6.6C3.7 8.4 2 12 2 12s3.5 6 10 6c1.7 0 3.2-.4 4.5-1" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Sin acceso</div>
+            <div class="delta">Lo comparte qui&eacute;n lo registra</div>
+          </div>
+        </div>
+        <div class="spec">Sin permiso</div>
+        <div style="font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: 1.45">Familia de aviso, no de error: nada est&aacute; roto.</div>
+      </div>
+    </div>
+    <div class="rule">Los cuatro <strong>miden lo mismo</strong>: el cuerpo tiene un alto m&iacute;nimo y la banda no se toca. Una rejilla de KPIs no puede escalonarse porque uno tarde, otro falle y el tercero llegue.</div>
+  </div>
+
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":1114}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1540}}'>
 class Component extends DCLogic {
   renderVals() {
     return {

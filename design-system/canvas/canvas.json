@@ -1,21 +1,27 @@
 {
   "pages": [
     { "id": "fundamentos", "name": "Fundamentos" },
-    { "id": "componentes", "name": "Componentes" }
+    { "id": "componentes", "name": "Componentes" },
+    { "id": "aplicacion",  "name": "La aplicación" }
   ],
   "artboards": [
-    { "file": "Color.dc.html",       "page": "fundamentos", "x": 0,    "y": 0, "w": 940, "h": 2253, "title": "01 · Color" },
+    { "file": "Color.dc.html",       "page": "fundamentos", "x": 0,    "y": 0, "w": 940, "h": 2738, "title": "01 · Color" },
     { "file": "Tipografia.dc.html",  "page": "fundamentos", "x": 1000, "y": 0, "w": 940, "h": 1710, "title": "02 · Tipografía" },
-    { "file": "Medidas.dc.html",     "page": "fundamentos", "x": 2000, "y": 0, "w": 940, "h": 1539, "title": "03 · Medida y movimiento" },
-    { "file": "Plataformas.dc.html", "page": "fundamentos", "x": 3000, "y": 0, "w": 940, "h": 1215, "title": "04 · Un sistema, dos plataformas" },
+    { "file": "Medidas.dc.html",     "page": "fundamentos", "x": 2000, "y": 0, "w": 940, "h": 1641, "title": "03 · Medida y movimiento" },
+    { "file": "Iconos.dc.html",      "page": "fundamentos", "x": 3000, "y": 0, "w": 940, "h": 2420, "title": "04 · Íconos" },
+    { "file": "Plataformas.dc.html", "page": "fundamentos", "x": 4000, "y": 0, "w": 940, "h": 1215, "title": "05 · Un sistema, dos plataformas" },
 
     { "file": "Boton.dc.html",       "page": "componentes", "x": 0,    "y": 0, "w": 940, "h": 1336, "title": "01 · Botón" },
     { "file": "Campo.dc.html",       "page": "componentes", "x": 1000, "y": 0, "w": 940, "h": 1235, "title": "02 · Campo" },
     { "file": "Chips.dc.html",       "page": "componentes", "x": 2000, "y": 0, "w": 940, "h": 866,  "title": "03 · Chip, etiqueta y contador" },
     { "file": "Barras.dc.html",      "page": "componentes", "x": 3000, "y": 0, "w": 940, "h": 1161, "title": "04 · Barra de progreso" },
     { "file": "Tarjeta.dc.html",     "page": "componentes", "x": 4000, "y": 0, "w": 940, "h": 1352, "title": "05 · Tarjeta" },
-    { "file": "KPI.dc.html",         "page": "componentes", "x": 5000, "y": 0, "w": 940, "h": 1114, "title": "06 · KPI" },
-    { "file": "Modal.dc.html",       "page": "componentes", "x": 6000, "y": 0, "w": 940, "h": 1596, "title": "07 · Modal" }
+    { "file": "KPI.dc.html",         "page": "componentes", "x": 5000, "y": 0, "w": 940, "h": 1540, "title": "06 · KPI" },
+    { "file": "Modal.dc.html",       "page": "componentes", "x": 6000, "y": 0, "w": 940, "h": 1596, "title": "07 · Modal" },
+    { "file": "Familias.dc.html",    "page": "componentes", "x": 7000, "y": 0, "w": 940, "h": 3078, "title": "08 · Familias menores" },
+
+    { "file": "Armazon.dc.html",     "page": "aplicacion",  "x": 0,    "y": 0, "w": 940, "h": 3940, "title": "01 · Armazón" },
+    { "file": "KIBO.dc.html",        "page": "aplicacion",  "x": 1000, "y": 0, "w": 940, "h": 3257, "title": "02 · KIBO" }
   ],
   "annotations": [
     {
@@ -24,7 +30,7 @@
       "x": 0,
       "y": -170,
       "w": 660,
-      "text": "Fundamentos — la capa de valores que web y Android comparten.\n\nColor, tipografía, medida y movimiento se escriben una sola vez y se compilan a las dos plataformas. Cada artboard carga colors_and_type.css y se dibuja con var(--kb-*): lo que se ve aquí es el valor, no una copia del valor.\n\nEl tema oscuro vive dentro del tablero de Color, como segunda tabla para los mismos tokens."
+      "text": "Fundamentos — la capa de valores que web y Android comparten.\n\nColor, tipografía, medida, movimiento e íconos se escriben una sola vez y se compilan a las dos plataformas. Cada artboard carga colors_and_type.css y se dibuja con var(--kb-*): lo que se ve aquí es el valor, no una copia del valor.\n\nEl tema oscuro vive dentro del tablero de Color, como segunda tabla para los mismos tokens."
     },
     {
       "id": "nota-componentes",
@@ -32,7 +38,15 @@
       "x": 0,
       "y": -170,
       "w": 660,
-      "text": "Componentes — la forma canónica de cada pieza.\n\nEl orden va de átomo a organismo: botón y campo, luego las tres piezas que se confunden entre sí, luego barra, tarjeta, KPI y modal.\n\nCada pieza se compone de su clase .kbv-*, con sus variantes, sus tamaños y sus estados. Lo que se rinde es el estándar: así se construye de aquí en adelante."
+      "text": "Componentes — la forma canónica de cada pieza.\n\nEl orden va de átomo a organismo: botón y campo, luego las tres piezas que se confunden entre sí, luego barra, tarjeta, KPI y modal. Cierra con las cinco familias que encuadran el contenido en vez de cargarlo.\n\nCada pieza se compone de su clase .kbv-*, con sus variantes, sus tamaños y sus estados. Lo que se rinde es el estándar: así se construye de aquí en adelante."
+    },
+    {
+      "id": "nota-aplicacion",
+      "page": "aplicacion",
+      "x": 0,
+      "y": -170,
+      "w": 660,
+      "text": "La aplicación — donde los valores y las piezas se vuelven producto.\n\nEl armazón es la rejilla que sostiene las 21 pantallas: menú, cabecera y contenido, con los mismos cuatro cortes en las tres anchuras. La cabecera es su mejor examen, porque lee cinco fuentes y cada una pertenece a otra familia.\n\nKIBO es la identidad de marca, presente en todo el producto y en las dos plataformas. Se especifica como máquina de estados —entradas, estados, capas y composición—, no como una animación."
     }
   ],
   "launch": { "view": "canvas", "page": "fundamentos" }

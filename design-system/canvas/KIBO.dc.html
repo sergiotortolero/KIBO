@@ -1,0 +1,750 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    /* ── KIBO ──────────────────────────────────────────────────────────
+       Cuerpo nativo de 140 x 150; el anfitrion fija --s = tamano / 140 y
+       todo lo demas se escala con el. La tinta de la cara es un token
+       (--kb-ink-kibo) y la piel por defecto es el animo. */
+    .kbb-host { position: relative; display: inline-block; flex: none; line-height: 0; }
+    .kbb {
+      position: absolute; left: 0; top: 0; width: 140px; height: 150px;
+      transform: scale(var(--s, 1)); transform-origin: 0 0;
+      --ink: var(--kb-ink-kibo);
+      --skin: var(--kb-primary);
+    }
+    .kbb[data-mood="calma"]    { --skin: var(--kb-mood-calma); }
+    .kbb[data-mood="feliz"]    { --skin: var(--kb-mood-feliz); }
+    .kbb[data-mood="celebra"]  { --skin: var(--kb-mood-celebra); }
+    .kbb[data-mood="travieso"] { --skin: var(--kb-mood-travieso); }
+    .kbb[data-mood="enfocado"] { --skin: var(--kb-mood-enfocado); }
+    .kbb[data-mood="sorpresa"] { --skin: var(--kb-mood-sorpresa); }
+    .kbb[data-mood="cansado"]  { --skin: var(--kb-mood-cansado); }
+    .kbb[data-mood="triste"]   { --skin: var(--kb-mood-triste); }
+
+    .kbb-float { position: absolute; inset: 0 0 18px 4px; }
+    .kbb-ground {
+      position: absolute; left: 50%; bottom: 0; width: 96px; height: 16px;
+      transform: translateX(-50%); border-radius: 50%;
+      background: radial-gradient(closest-side, color-mix(in srgb, var(--skin) 50%, transparent), transparent 72%);
+      filter: blur(5px);
+    }
+    .kbb-body {
+      position: absolute; inset: 0; overflow: hidden;
+      border-radius: 47% 45% 46% 46%/48% 47% 45% 46%;
+    }
+    .kbb-tint { position: absolute; inset: 0; background-color: var(--skin); opacity: .55; }
+    .kbb-faceclip {
+      position: absolute; inset: 0; overflow: hidden;
+      border-radius: 47% 45% 46% 46%/48% 47% 45% 46%;
+    }
+    .kbb-face { position: absolute; inset: 0; }
+
+    .kbb-eyes { position: absolute; top: 33%; left: 0; right: 0; display: flex; justify-content: center; gap: 22px; }
+    .kbb-eye {
+      position: relative; width: 46px; height: 56px; background: var(--ink);
+      border-radius: 46%/52%; overflow: hidden; rotate: -10deg; transform-origin: center 60%;
+    }
+    .kbb-eyes .kbb-eye:last-child { rotate: 10deg; }
+    /* La pupila es quien expresa: se mueve con el animo (--px / --py). */
+    .kbb-eye::before {
+      content: ""; position: absolute; left: 50%; top: 50%; width: 19px; height: 19px;
+      border-radius: 50%; translate: -50% -50%; background: var(--kb-text-inverse);
+      transform: translate(calc(var(--px, 0) * 8px - 1px), calc(var(--py, 0) * 8px - 5px));
+    }
+    .kbb-cheeks { position: absolute; top: 62%; left: 0; right: 0; display: flex; justify-content: center; gap: 68px; opacity: 0; }
+    .kbb-cheek { width: 11px; height: 5px; border-radius: 50%; background: var(--kb-text-inverse); opacity: .22; filter: blur(2px); }
+    .kbb[data-mood="feliz"] .kbb-cheeks, .kbb[data-mood="celebra"] .kbb-cheeks { opacity: 1; }
+
+    .kbb-mouth { position: absolute; top: 64%; left: 50%; transform: translateX(-50%); width: 38px; height: 28px; overflow: visible; }
+    .kbb-mouth path { stroke: var(--ink); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+
+    /* Manopies: gel translucido, ocultas en reposo — solo el gesto las saca. */
+    .kbb-bub { position: absolute; width: 28px; height: 34px; z-index: 3; transform: scale(0); }
+    .kbb.hands .kbb-bub { transform: scale(1); }
+    .kbb-bub i {
+      position: absolute; inset: 0;
+      border-radius: 48% 52% 54% 46%/78% 76% 22% 24%;
+      background: color-mix(in srgb, var(--skin) 58%, transparent);
+    }
+    .kbb-bub.r { right: -48px; top: 70px; }
+    .kbb-bub.l { left: -48px; top: 72px; }
+
+    /* Ojos por animo: el alto y la pupila cambian, la silueta no. */
+    .kbb[data-mood="feliz"] .kbb-eye { height: 54px; }
+    .kbb[data-mood="celebra"] .kbb-eye { height: 56px; }
+    .kbb[data-mood="enfocado"] .kbb-eye { height: 52px; border-radius: 46%/44%; }
+    .kbb[data-mood="enfocado"] .kbb-eye::before { width: 16px; height: 16px; }
+    .kbb[data-mood="sorpresa"] .kbb-eye { height: 58px; }
+    .kbb[data-mood="sorpresa"] .kbb-eye::before { width: 21px; height: 21px; }
+    .kbb[data-mood="cansado"] .kbb-eye { height: 52px; border-radius: 46%/30% 30% 60% 60%; }
+    .kbb[data-mood="cansado"] .kbb-eye::before { width: 13px; height: 13px; }
+    .kbb[data-mood="triste"] .kbb-eye { height: 53px; border-radius: 46%/34% 34% 58% 58%; }
+    .kbb[data-mood="triste"] .kbb-eye::before { width: 13px; height: 13px; top: auto; bottom: 20%; left: 34%; }
+    .kbb[data-mood="travieso"] .kbb-eye { height: 53px; border-radius: 46%/38% 38% 56% 56%; }
+    .kbb[data-mood="travieso"] .kbb-eye::before { width: 14px; height: 14px; left: auto; right: 24%; top: 26%; }
+    .kbb[data-mood="cansado"] .kbb-body, .kbb[data-mood="triste"] .kbb-body { filter: saturate(.72); }
+
+    /* El ciclo base, en cuatro pistas que corren a la vez. */
+    .kbb.live .kbb-float { animation: kbFloat 4.6s ease-in-out infinite; }
+    .kbb.live .kbb-ground { animation: kbGround 4.6s ease-in-out infinite; }
+    .kbb.live .kbb-body, .kbb.live .kbb-faceclip { animation: kbBlob 6.5s var(--kb-ease-standard) infinite; }
+    .kbb.live .kbb-eyes { animation: kbBlink 5.2s infinite; transform-origin: center 62%; }
+    .kbb.live .kbb-mouth { animation: kbMouth 5s var(--kb-ease-standard) infinite; }
+    @keyframes kbFloat { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-7px) rotate(-1.2deg); } 70% { transform: translateY(-3px) rotate(1deg); } }
+    @keyframes kbGround { 0%, 100% { transform: translateX(-50%) scale(1); opacity: .85; } 30% { transform: translateX(-50%) scale(.86); opacity: .6; } 70% { transform: translateX(-50%) scale(.94); opacity: .75; } }
+    @keyframes kbBlob {
+      0%, 100% { border-radius: 47% 45% 46% 46%/48% 47% 45% 46%; transform: scale(1, 1); }
+      25% { border-radius: 45% 48% 44% 48%/46% 45% 49% 46%; transform: scale(1.02, .98); }
+      50% { border-radius: 48% 44% 48% 44%/44% 49% 44% 49%; transform: scale(.98, 1.025); }
+      75% { border-radius: 44% 48% 45% 48%/49% 44% 48% 45%; transform: scale(1.012, .988); }
+    }
+    @keyframes kbBlink { 0%, 90.5%, 93.5%, 100% { transform: scaleY(1); } 92% { transform: scaleY(.08); } }
+    @keyframes kbMouth { 0%, 100% { transform: translateX(-50%) scale(1); } 30% { transform: translateX(-50%) scale(1.07, .93); } 60% { transform: translateX(-50%) scale(.94, 1.08); } }
+
+    /* El movimiento reducido apaga la interfaz y CONSERVA a KIBO: la mascota
+       es contenido, no una transicion. */
+    @media (prefers-reduced-motion: reduce) {
+      .kbb.live .kbb-float, .kbb.live .kbb-ground { animation-duration: 4.6s !important; }
+      .kbb.live .kbb-body, .kbb.live .kbb-faceclip { animation-duration: 6.5s !important; }
+      .kbb.live .kbb-eyes { animation-duration: 5.2s !important; }
+      .kbb.live .kbb-mouth { animation-duration: 5s !important; }
+    }
+
+    /* ── Piezas del tablero ─────────────────────────────────────────── */
+    .kcell { display: flex; flex-direction: column; align-items: center; gap: var(--kb-sp-4); }
+    .kcell .nm { font-family: var(--kb-f-display); font-size: var(--kb-fs-md); font-weight: 700; color: var(--kb-text); }
+    .kcell .rg { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                 letter-spacing: .06em; color: var(--kb-text-2); font-variant-numeric: tabular-nums; }
+
+    .tbl { display: grid; gap: 0; }
+    .tbl > div { padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); min-width: 0; }
+    .tbl.c3 > div:nth-last-child(-n+3), .tbl.c4 > div:nth-last-child(-n+4) { border-bottom: 0; }
+    .tbl .th { padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border);
+               font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+               letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .tbl .cd { font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 800;
+               letter-spacing: .02em; color: var(--kb-text); }
+    .tbl .tx { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .tbl .tx strong { color: var(--kb-text); font-weight: 700; }
+
+    /* El estado: una caja con su nombre y lo que corre dentro. */
+    .st { display: flex; flex-direction: column; gap: var(--kb-sp-3); padding: var(--kb-sp-6) var(--kb-sp-7);
+          border-radius: var(--kb-r-md); border: 1.5px solid var(--kb-border-strong); background: var(--kb-card); min-width: 0; }
+    .st.base { border-color: var(--kb-primary); background: var(--kb-primary-soft); }
+    .st .sn { font-family: var(--kb-f-display); font-size: var(--kb-fs-lg); font-weight: 700; color: var(--kb-text); }
+    .st.base .sn { color: var(--kb-primary-ink); }
+    .st .sd { font-size: var(--kb-fs-xs); line-height: 1.45; color: var(--kb-text-2); }
+    .arrow { display: flex; flex-direction: column; align-items: center; gap: var(--kb-sp-2); flex: none; color: var(--kb-text-2); }
+    .arrow .lb { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .04em; white-space: nowrap; }
+
+    /* La composicion: grupos que se ensamblan, no combinaciones exportadas. */
+    .grp { display: flex; flex-direction: column; gap: var(--kb-sp-4); padding: var(--kb-sp-6);
+           border-radius: var(--kb-r-sm); background: var(--kb-surface-2); }
+    .grp .gn { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+               letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .grp .gv { font-size: var(--kb-fs-sm); line-height: 1.45; color: var(--kb-text); }
+
+    .two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-9); }
+    .lst { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+    .lst > div { display: flex; gap: var(--kb-sp-5); font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .lst > div > b { flex: none; width: 6px; height: 6px; border-radius: var(--kb-r-pill); background: var(--c); margin-top: 7px; }
+    .lst strong { color: var(--kb-text); font-weight: 700; }
+
+    .anat { position: relative; display: flex; align-items: flex-end; gap: var(--kb-sp-9); }
+    .anat .leg { flex: 1 1 0; min-width: 0; }
+    .anat .leg { display: grid; grid-template-columns: auto 1fr; gap: var(--kb-sp-3) var(--kb-sp-5); align-items: baseline; }
+    .anat .leg .k { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                    letter-spacing: .06em; text-transform: uppercase; color: var(--kb-primary-ink); white-space: nowrap; }
+    .anat .leg .v { font-size: var(--kb-fs-sm); line-height: 1.45; color: var(--kb-text-2); }
+    .anat .leg .v strong { color: var(--kb-text); font-weight: 600; }
+
+    .szrow { display: flex; align-items: flex-end; gap: var(--kb-sp-9); flex-wrap: wrap; }
+    .szcell { display: flex; flex-direction: column; align-items: center; gap: var(--kb-sp-4); }
+  </style>
+</helmet>
+<div class="ab">
+
+  <div class="hd">
+    <div class="eyebrow">La aplicación · 02</div>
+    <div class="h1">KIBO</div>
+    <div class="one">La marca, presente en todo el producto y en las dos plataformas. No es una animación larga: es una máquina de estados que la aplicación gobierna con cuatro entradas.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El personaje</div>
+      <div class="use">Un solo cuerpo de gel, sin contorno. La cara vive recortada a la silueta.</div>
+    </div>
+    <div class="anat">
+      <div class="col" style="gap: var(--kb-sp-6); align-items: center; flex: none">
+        <span class="kbb-host" style="width:176px;height:189px;--s:1.2571" aria-hidden="true"><span class="kbb live" data-mood="calma" style="--px:0;--py:-0.18"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
+        <div class="tok">Reposo</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-6); align-items: center; flex: none">
+        <span class="kbb-host" style="width:116px;height:124px;--s:0.8286" aria-hidden="true"><span class="kbb hands" data-mood="feliz" style="--px:0;--py:-0.24"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-bub l"><i></i></span><span class="kbb-bub r"><i></i></span><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
+        <div class="tok">Con gesto</div>
+      </div>
+      <div class="leg">
+        <div class="k">Cuerpo</div><div class="v">Caja nativa de <strong>140 &times; 150</strong>. El contorno es un radio de cuatro esquinas que se deforma; nunca un círculo.</div>
+        <div class="k">Tinte</div><div class="v">La piel al <strong>55 %</strong> sobre la superficie: el gel es translúcido y toma algo de lo que tiene detrás.</div>
+        <div class="k">Ojos</div><div class="v">Óvalos de <strong>46 &times; 56</strong>, inclinados hacia afuera. La pupila blanca de 19 px es <strong>quien expresa</strong>: no hay cejas.</div>
+        <div class="k">Boca</div><div class="v">Un festón de dos bombas, trazo de <strong>1,9</strong> en la tinta. Matiza; no carga la expresión.</div>
+        <div class="k">Manopies</div><div class="v">Gotas de <strong>28 &times; 34</strong> a la misma piel al 58 %. <strong>Ocultas en reposo</strong>: solo un gesto las saca.</div>
+        <div class="k">Sombra</div><div class="v">Elipse de <strong>96 &times; 16</strong> con el color transmitido: es lo que lo apoya en el suelo.</div>
+      </div>
+    </div>
+    <div class="rule"><strong>HP es la fuente de verdad del ánimo.</strong> KIBO no siempre sonríe: su cara sale de tu salud. Ningún módulo elige el ánimo — lo deriva.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Las entradas</div>
+      <div class="use">Lo que la aplicación manda. Cuatro, y ninguna es una clase.</div>
+    </div>
+    <div class="tbl c3" style="grid-template-columns: 132px 148px 1fr">
+      <div class="th">Entrada</div><div class="th">Tipo</div><div class="th">Qué mueve</div>
+      <div class="cd">hp</div><div class="tx">Número, 0 – 100</div><div class="tx">El <strong>ánimo</strong>, por tramos. Cambia de tramo y la cara y el color van con él.</div>
+      <div class="cd">trick</div><div class="tx">Disparo</div><div class="tx">Una <strong>travesura</strong>: entra, se actúa y <strong>caduca</strong>. Nunca se queda.</div>
+      <div class="cd">skin · mark · aura</div><div class="tx">Intercambio de pieza</div><div class="tx">El <strong>aspecto</strong>. Cambia qué se dibuja, jamás qué estados existen.</div>
+      <div class="cd">say</div><div class="tx">Texto y disparo</div><div class="tx">El <strong>habla</strong>: la boca y el bocadillo. Corre encima de cualquier estado.</div>
+    </div>
+    <div class="rule">Las entradas son <strong>datos</strong>, no órdenes de animación. La aplicación dice <em>cuánta vida hay</em>; nunca <em>pon esta cara</em>.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">De la vida al ánimo</div>
+      <div class="use">Seis tramos, sin huecos y sin solapes.</div>
+    </div>
+    <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="celebra" style="--px:0;--py:-0.3"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Celebra</div><div class="rg">HP 90 – 100</div></div><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--px:0;--py:-0.24"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Feliz</div><div class="rg">HP 72 – 89</div></div><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="calma" style="--px:0;--py:-0.18"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Tranquilo</div><div class="rg">HP 55 – 71</div></div><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="enfocado" style="--px:0;--py:0.1"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1.6 q 2.1 1.5 4.2 0 q 2.1 1.5 4.2 0"/></svg></span></span></span></span></span><div class="nm">Enfocado</div><div class="rg">HP 38 – 54</div></div><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="cansado" style="--px:-0.2;--py:0.34"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2 q 2.1 1.4 4.2 0 q 2.1 1.4 4.2 -0.3"/></svg></span></span></span></span></span><div class="nm">Cansado</div><div class="rg">HP 20 – 37</div></div><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="triste" style="--px:0;--py:0.4"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="nm">Triste</div><div class="rg">HP 0 – 19</div></div></div>
+    <div class="row" style="gap: var(--kb-sp-9); padding-top: var(--kb-sp-6); border-top: 1px solid var(--kb-border-soft)">
+      <div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="travieso" style="--px:0.34;--py:-0.24"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -1.6 -1.4 L 2.4 1.4 L -1.6 4.2"/></svg></span></span></span></span></span><div class="nm">Travieso</div><div class="rg">Por reacción</div></div><div class="kcell"><span class="kbb-host" style="width:92px;height:99px;--s:0.6571" aria-hidden="true"><span class="kbb" data-mood="sorpresa" style="--px:0;--py:-0.34"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 0.4 q 2.1 3 4.2 0 q 2.1 3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Sorpresa</div><div class="rg">Por reacción</div></div>
+      <div style="font-size: var(--kb-fs-sm); line-height: 1.55; color: var(--kb-text-2); max-width: 460px">Dos ánimos más <strong style="color: var(--kb-text)">no salen del HP</strong>: llegan por una reacción, duran lo que dura y devuelven al ánimo que le tocaba a la vida. Un ánimo derivado no caduca; uno de reacción sí.</div>
+    </div>
+    <div class="rule">El ánimo pinta el cuerpo <strong>mientras la piel sea la de fábrica</strong>. Con una piel comprada, el cuerpo se queda con la piel y el ánimo se lee solo en la cara: el contenido nunca borra el sistema, solo le cede una capa.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Los estados</div>
+      <div class="use">Tres, y solo uno es terminal.</div>
+    </div>
+    <div class="row" style="gap: var(--kb-sp-5); align-items: stretch; flex-wrap: nowrap">
+      <div class="st base" style="flex: 1 1 0">
+        <div class="sn">Reposo</div>
+        <div class="sd">El ciclo base. Respira, parpadea y mira. Corre siempre y no termina nunca por sí solo.</div>
+      </div>
+      <div class="arrow" style="justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15"/><path d="M14 7l5 5-5 5"/></svg><div class="lb">disparo</div></div>
+      <div class="st" style="flex: 1 1 0">
+        <div class="sn">Reacción</div>
+        <div class="sd">Un gesto o una travesura. Tiene principio y fin; si entra otra, la reemplaza.</div>
+      </div>
+      <div class="arrow" style="justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H5"/><path d="M10 7l-5 5 5 5"/></svg><div class="lb">al terminar</div></div>
+      <div class="st base" style="flex: 1 1 0">
+        <div class="sn">Reposo</div>
+        <div class="sd">El retorno es obligatorio. Ninguna transición deja a KIBO congelado en un gesto.</div>
+      </div>
+    </div>
+    <div class="row" style="gap: var(--kb-sp-5); align-items: stretch; flex-wrap: nowrap">
+      <div class="st" style="flex: 1 1 0; border-style: dashed">
+        <div class="sn">Habla</div>
+        <div class="sd">No es un tercer estado en la misma pista: es una <strong>pista paralela</strong>. Se enciende sobre reposo o sobre reacción, y se apaga sin tocar a ninguno.</div>
+      </div>
+      <div class="st" style="flex: 2 1 0; border-style: dashed">
+        <div class="sn">Cambio de ánimo</div>
+        <div class="sd">No es una transición entre estados: es un <strong>parámetro del ciclo base</strong>. El HP cruza un tramo, el ánimo se mezcla en el sitio, y reposo sigue corriendo sin cortarse.</div>
+      </div>
+    </div>
+    <div class="rule">Una sola regla de salida: <strong>todo vuelve a reposo</strong>. Es lo que hace que el personaje no dependa del orden en que le lleguen los eventos.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Las capas</div>
+      <div class="use">Cuatro pistas que corren a la vez sin pisarse.</div>
+    </div>
+    <div class="tbl c4" style="grid-template-columns: 128px 1fr 116px 200px">
+      <div class="th">Capa</div><div class="th">Qué corre</div><div class="th">Ritmo</div><div class="th">Quién la interrumpe</div>
+      <div class="cd">Cuerpo</div><div class="tx">Respira: el contorno del gel se deforma y vuelve.</div><div class="tx">6,5 s en bucle</div><div class="tx">Una travesura la sustituye y la devuelve.</div>
+      <div class="cd">Ojos</div><div class="tx">Parpadea con los dos a la vez, y la mirada se desplaza.</div><div class="tx">5,2 s · 9 s</div><div class="tx">Un guiño o un mareo.</div>
+      <div class="cd">Boca</div><div class="tx">El festón del ánimo, latiendo despacio.</div><div class="tx">5 s en bucle</div><div class="tx">Una mueca, un beso o el habla.</div>
+      <div class="cd">Manopies</div><div class="tx">Orbitan y se deforman. Ocultas mientras no haya gesto.</div><div class="tx">9 s en bucle</div><div class="tx">El gesto de la reacción.</div>
+    </div>
+    <div class="rule">Las cuatro corren <strong>a la vez y en pistas distintas</strong>: el cuerpo respira mientras los ojos parpadean mientras una manopie saluda. Ninguna capa se apaga para que otra actúe — y por eso una reacción nueva no obliga a redibujar el reposo.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Qué se compone y qué se anima</div>
+      <div class="use">Ocho ánimos por catorce travesuras por el guardarropa no son mil animaciones.</div>
+    </div>
+    <div class="g4">
+      <div class="grp"><div class="gn">Cuerpo</div><div class="gv">Contorno, tinte y piel. Una piel nueva es un relleno más.</div></div>
+      <div class="grp"><div class="gn">Cara</div><div class="gv">Ojos y boca, recortados a la silueta. Un ánimo nuevo son dos piezas.</div></div>
+      <div class="grp"><div class="gn">Manopies</div><div class="gv">Dos gotas independientes. Un gesto nuevo mueve solo este grupo.</div></div>
+      <div class="grp"><div class="gn">Adorno</div><div class="gv">Aura, marca y sombra. Se enciende y se apaga sin tocar lo demás.</div></div>
+    </div>
+    <div class="g6" style="gap: var(--kb-sp-6); padding-top: var(--kb-sp-4)">
+      <div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--px:0;--py:-0.24"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">feliz · teal</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="enfocado" style="--px:0;--py:0.1"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1.6 q 2.1 1.5 4.2 0 q 2.1 1.5 4.2 0"/></svg></span></span></span></span></span><div class="rg">enfocado · teal</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--px:0;--py:0.4"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">triste · teal</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--px:0;--py:-0.24;--skin:var(--kb-media)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">feliz · piel comprada</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="enfocado" style="--px:0;--py:0.1;--skin:var(--kb-media)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1.6 q 2.1 1.5 4.2 0 q 2.1 1.5 4.2 0"/></svg></span></span></span></span></span><div class="rg">enfocado · piel comprada</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--px:0;--py:0.4;--skin:var(--kb-media)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">triste · piel comprada</div></div>
+    </div>
+    <div class="rule">Se anima <strong>el grupo, no la combinación</strong>. Tres bocas y tres pieles dan nueve KIBOs con seis piezas dibujadas — no con nueve. Es la única forma de que el guardarropa crezca sin que el personaje se vuelva imposible de mantener.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Tamaños y sitio</div>
+      <div class="use">Cuatro tamaños. Uno fuera de estos cuatro no existe.</div>
+    </div>
+    <div class="szrow"><div class="szcell"><span class="kbb-host" style="width:32px;height:34px;--s:0.2286" aria-hidden="true"><span class="kbb" data-mood="calma" style="--px:0;--py:-0.18"><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">32 px</div><div class="tok" style="text-align:center;max-width:130px">Marca</div></div><div class="szcell"><span class="kbb-host" style="width:56px;height:60px;--s:0.4" aria-hidden="true"><span class="kbb" data-mood="calma" style="--px:0;--py:-0.18"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">56 px</div><div class="tok" style="text-align:center;max-width:130px">Acompañante</div></div><div class="szcell"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="calma" style="--px:0;--py:-0.18"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">72 px</div><div class="tok" style="text-align:center;max-width:130px">Esquina de acción rápida</div></div><div class="szcell"><span class="kbb-host" style="width:160px;height:171px;--s:1.1429" aria-hidden="true"><span class="kbb" data-mood="calma" style="--px:0;--py:-0.18"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">160 px</div><div class="tok" style="text-align:center;max-width:130px">Escenario</div></div></div>
+    <div class="rule">A 72 px el <strong>cuerpo</strong> mide 72, pero su <strong>huella</strong> llega a unos 126: el aura y las manopies sangran a los lados. Por eso la esquina de acción rápida vive en el relleno del contenido y nunca en su caja de texto — la decoración puede invadir; el cuerpo, no.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Sistema y contenido</div>
+      <div class="use">Lo primero se construye una vez; lo segundo se añade sin tocarlo.</div>
+    </div>
+    <div class="two">
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <div class="spec">Sistema · el comportamiento</div>
+        <div class="lst" style="--c: var(--kb-primary)">
+          <div><b></b><span>El <strong>cuerpo</strong> y su contorno, y las cuatro capas con sus ritmos.</span></div>
+          <div><b></b><span>Los <strong>ocho ánimos</strong> y la derivación desde HP por tramos.</span></div>
+          <div><b></b><span>La <strong>máquina</strong>: reposo, reacción, habla, y el retorno obligatorio.</span></div>
+          <div><b></b><span>Los <strong>cuatro tamaños</strong> y el sitio en la pantalla.</span></div>
+          <div><b></b><span>Que el <strong>movimiento reducido conserva a KIBO</strong> y apaga la interfaz.</span></div>
+        </div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <div class="spec">Contenido · el guardarropa</div>
+        <div class="lst" style="--c: var(--kb-coin)">
+          <div><b></b><span><strong>Pieles, marcas y auras</strong>: piezas que entran a un grupo que ya existe.</span></div>
+          <div><b></b><span><strong>Personalidades</strong>: cada cuánto se mueve, no cómo se mueve.</span></div>
+          <div><b></b><span>El <strong>repertorio</strong> de travesuras disponibles.</span></div>
+          <div><b></b><span>Lo que <strong>dice</strong> en cada reacción.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="rule">Una piel comprada es <strong>una pieza más en el mismo grupo</strong>, nunca un estado más en la máquina. Ese es el corte: si algo obliga a añadir un estado, no es contenido.</div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":3257}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
