@@ -1,0 +1,635 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    .ab { --kb-warn-ink: color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2)); }
+
+    /* Tarjeta — .kbv-card */
+    .kbv-card { background: var(--kb-card); border: 1px solid var(--kb-border);
+                border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+                display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .kbv-card .cbody { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+    .kbv-card.compact .cbody { padding: var(--kb-sp-6); gap: var(--kb-sp-4); }
+    .kbv-card .chead { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--kb-sp-5); }
+    .kbv-card .ctitle { font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl);
+                        line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-card .csub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-card .cfoot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-4);
+                       padding: var(--kb-sp-5) var(--kb-sp-7); border-top: 1px solid var(--kb-border-soft); }
+
+    /* Banda de encabezado (R-1, tarjeta grande) */
+    .banda { display: flex; align-items: center; gap: var(--kb-sp-3); padding: var(--kb-sp-4) var(--kb-sp-6);
+             background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+             border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas));
+             color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+             font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+             letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
+    .banda .amt { margin-left: auto; }
+
+    /* Pastilla de area (R-1, compacto) */
+    .pastilla { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
+                padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill); align-self: flex-start;
+                background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+                font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+
+    /* Chip · etiqueta · contador */
+    .kbv-chip { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill); border: 1.5px solid var(--kb-border);
+                background: var(--kb-card); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text-2); }
+    .kbv-chip.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-tag { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
+               padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
+               font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+    .kbv-tag.neutral { background: var(--kb-surface-2); color: var(--kb-text); }
+    .kbv-tag.tint { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
+    .kbv-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
+                 padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
+                 background: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); color: var(--kb-text-inverse);
+                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xs); font-variant-numeric: tabular-nums; }
+    .kbv-badge.quiet { background: var(--kb-surface-2); color: var(--kb-text); }
+
+    /* Barra de progreso — .kbv-progress */
+    .kbv-progress { height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
+                    background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+                    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) 24%, var(--kb-canvas)); }
+    .kbv-progress.sm { height: 6px; } .kbv-progress.xs { height: 4px; } .kbv-progress.lg { height: 12px; }
+    .kbv-progress .fill { height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary)); }
+    .kbv-progress.seg { display: flex; gap: var(--kb-sp-2); background: none; box-shadow: none; overflow: visible; }
+    .kbv-progress.seg > i { flex: 1; height: 100%; border-radius: var(--kb-r-pill);
+                            background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
+                            box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 26%, var(--kb-canvas)); }
+    .kbv-progress.seg > i.on { background: var(--c); box-shadow: none; }
+    .barfig { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+              font-variant-numeric: tabular-nums; color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+
+    /* KPI — .kbv-kpi */
+    .kbv-kpi { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg);
+               box-shadow: var(--kb-sh-1); display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .kbv-kpi .kbody { padding: var(--kb-sp-6); display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-kpi .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800;
+                    line-height: 1; letter-spacing: -.02em; color: var(--kb-text); font-variant-numeric: tabular-nums;
+                    display: flex; align-items: baseline; gap: var(--kb-sp-2); }
+    .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
+    .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-kpi .delta.up { color: var(--kb-primary-ink); font-weight: 700; }
+    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+
+    /* Boton — .kbv-btn */
+    .kbv-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+               height: var(--kb-ctl-h); padding: 0 var(--kb-sp-8); border-radius: var(--kb-r-md);
+               border: 1.5px solid transparent; cursor: pointer; line-height: 1;
+               font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-lg); }
+    .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-md); }
+    .kbv-btn-primary { background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                       box-shadow: 0 2px 0 color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-sh-1); }
+    .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text); border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
+    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); }
+
+    /* Medidor de esfuerzo (RateRow 1-5) */
+    .rate { display: inline-flex; align-items: center; gap: 3px; }
+    .rate > i { width: 12px; height: 6px; border-radius: var(--kb-r-pill);
+                background: color-mix(in oklab, var(--c) 16%, var(--kb-canvas));
+                box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 28%, var(--kb-canvas)); }
+    .rate > i.on { background: var(--c); box-shadow: none; }
+
+    /* Metadato de campo (par etiqueta/valor) */
+    .kv { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .kv .k { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+             letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kv .v { font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+    .kv .v.num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* Contadores de recurso (HUD) */
+    .stat-pill { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                 padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                 font-variant-numeric: tabular-nums; }
+    .stat-pill.coin { background: var(--kb-coin-soft); border: 1px solid var(--kb-coin-border); color: var(--kb-coin-ink); }
+    .stat-pill.elem { background: var(--kb-void-1); border: 1px solid var(--kb-dark-facet); color: var(--kb-dark-glint);
+                      box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-dark-halo) 22%, transparent); }
+    .gem { width: 14px; height: 14px; flex: none; border-radius: 3px; transform: rotate(45deg);
+           background: var(--kb-dark-core); box-shadow: inset 0 0 0 1px var(--kb-dark-glint); }
+
+    /* Tablas de lectura */
+    .tbl { display: grid; }
+    .tbl > div { padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); min-width: 0;
+                 font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .tbl.c2 > div:nth-last-child(-n+2), .tbl.c3 > div:nth-last-child(-n+3), .tbl.c4 > div:nth-last-child(-n+4) { border-bottom: 0; }
+    .tbl .th { padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border);
+               font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+               letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .tbl .cd { font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 800; letter-spacing: .02em; color: var(--kb-text); }
+    .tbl strong { color: var(--kb-text); font-weight: 700; }
+
+    .demo { padding: var(--kb-sp-8); background: var(--kb-surface); border-radius: var(--kb-r-md); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3d { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+
+    .metaline { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kb-sp-4) var(--kb-sp-6); }
+    .flame { display: inline-flex; align-items: center; gap: var(--kb-sp-3); color: var(--kb-streak-ink);
+             font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md); font-variant-numeric: tabular-nums; }
+    .dmg { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 24px; padding: 0 var(--kb-sp-5);
+           border-radius: var(--kb-r-pill); background: color-mix(in oklab, var(--kb-hp) 12%, var(--kb-canvas));
+           color: var(--kb-hp-ink); font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-sm);
+           font-variant-numeric: tabular-nums; }
+    .primark { width: 12px; height: 12px; border-radius: 3px; flex: none; background: var(--c);
+               box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent); }
+    /* Kanban en miniatura */
+    .kan { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--kb-sp-5); }
+    .kan .colh { display: flex; align-items: center; gap: var(--kb-sp-3); padding-bottom: var(--kb-sp-4);
+                 border-bottom: 2px solid var(--c); margin-bottom: var(--kb-sp-4);
+                 font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                 letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text); }
+    .kan .colh .kbv-badge { margin-left: auto; }
+    .kan .kcol { background: var(--kb-surface); border-radius: var(--kb-r-md); padding: var(--kb-sp-5); min-width: 0; }
+    .minicard { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-sm);
+                padding: var(--kb-sp-5); display: flex; flex-direction: column; gap: var(--kb-sp-3); margin-bottom: var(--kb-sp-4); }
+    .minicard:last-child { margin-bottom: 0; }
+    .minicard .mt { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); line-height: 1.35; }
+    .minicard .mm { display: flex; align-items: center; gap: var(--kb-sp-3); }
+    /* Cronograma */
+    .tl { display: grid; grid-template-columns: 150px 1fr; gap: var(--kb-sp-4) var(--kb-sp-5); align-items: center; }
+    .tl .tln { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tl .track { position: relative; height: 22px; background: var(--kb-surface); border-radius: var(--kb-r-pill); }
+    .tl .bar { position: absolute; top: 3px; height: 16px; border-radius: var(--kb-r-pill);
+               background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .check { display: flex; align-items: center; gap: var(--kb-sp-4); padding: var(--kb-sp-3) 0; }
+    .check .box { width: 20px; height: 20px; border-radius: var(--kb-r-xs); flex: none;
+                  border: 1.5px solid var(--kb-border-strong); display: flex; align-items: center; justify-content: center; color: var(--kb-text-inverse); }
+    .check.on .box { background: var(--kb-primary-fill); border-color: var(--kb-primary-fill); }
+    .check .ct { font-size: var(--kb-fs-md); color: var(--kb-text); }
+    .check.on .ct { color: var(--kb-text-2); text-decoration: line-through; }
+  </style>
+</helmet>
+<div class="ab">
+
+  <div class="hd">
+    <div class="eyebrow">Dominio &middot; 02</div>
+    <div class="h1">Hábito, reto, tarea y proyecto</div>
+    <div class="one">Los conceptos del núcleo, dichos con el vocabulario que ya existe: tarjeta, chip, barra, botón y campo. Ninguna pieza nueva &mdash; sólo el sobre puesto a trabajar.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Hábito y reto</div>
+      <div class="use">Dos conceptos, no dos nombres del mismo. El reto apuesta HP y tiene fecha límite; el hábito, no.</div>
+    </div>
+    <div class="g2" style="align-items: start"><div class="kbv-card"><div class="banda" style="--c: var(--area-vigor)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Vigor</div><div class="cbody"><div class="chead"><div class="ctitle">Estiramientos AM</div><span class="flame"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> 8<span style="font-weight:600;color:var(--kb-text-2)">d</span></span></div><div class="metaline"><span class="kbv-chip on">Diario</span><span class="csub">07:00 — 09:00</span></div><div class="metaline" style="gap:var(--kb-sp-7)"><div class="kv"><span class="k">Esfuerzo</span><span class="rate" style="--c:var(--area-vigor)"><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i><i class=""></i></span></div><div class="kv"><span class="k">Energía</span><span class="rate" style="--c:var(--area-vigor)"><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i><i class=""></i></span></div></div><div class="metaline"><span class="kbv-tag tint" style="--c: var(--kb-coin)"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> +3 Divisa</span><span class="kbv-tag tint" style="--c: var(--kb-xp)">+14 XP</span><span class="kbv-tag tint" style="--c: var(--kb-hp)">+3 HP</span></div></div><div class="cfoot"><span class="csub">Recompensa = esfuerzo &times; energía</span><button class="kbv-btn kbv-btn-primary sm"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Cumplir</button></div></div><div class="kbv-card"><div class="banda" style="--c: var(--kb-coin)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M14 4l6 0 0 6-9 9-3-3 9-9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16l-4 4M5 16l3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Exigente · dif. 3<span class="amt dmg"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 20.5C7 16.5 3.5 13.4 3.5 9.6A4.4 4.4 0 0 1 12 7.8a4.4 4.4 0 0 1 8.5 1.8c0 3.8-3.5 6.9-8.5 10.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> −22 HP / fallo</span></div><div class="cbody"><div class="chead"><div class="ctitle">Procrastinación nocturna</div></div><div class="metaline"><span class="metaline" style="gap:var(--kb-sp-3)"><span class="primark" style="--c: var(--pri-high)"></span><span class="kbv-tag neutral">Alta</span></span><span class="kbv-tag neutral"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M14 4l6 0 0 6-9 9-3-3 9-9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16l-4 4M5 16l3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Cortar mal hábito</span></div><div class="col" style="gap:var(--kb-sp-3)"><div class="metaline" style="justify-content:space-between"><span class="csub">Día 21 de 30</span><span class="barfig" style="--c: var(--kb-coin)">70%</span></div><div class="kbv-progress lg" style="--c: var(--kb-coin)"><div class="fill" style="width:70%"></div></div></div><div class="metaline" style="gap:var(--kb-sp-7)"><div class="kv"><span class="k">Fallos</span><span class="v num">1 / 2 tolerados</span></div><div class="kv"><span class="k">Fecha límite</span><span class="v num">15 sep</span></div></div><div class="metaline"><span class="kbv-tag tint" style="--c: var(--kb-xp)">+450 XP al cerrar</span><span class="kbv-tag solid" style="--c: var(--kb-dark-facet)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> +80 Elemento</span></div></div></div></div>
+    <div class="tbl c3" style="grid-template-columns: 120px 1fr 1fr; margin-top: var(--kb-sp-6)">
+      <div class="th"></div><div class="th">Hábito</div><div class="th">Reto</div>
+      <div class="cd">Ritmo</div><div>Se repite &mdash; diario o semanal, sin final.</div><div>Tiene <strong>fecha límite</strong> y un contador de días.</div>
+      <div class="cd">Al fallar</div><div>Corta la racha. No hay castigo.</div><div><strong>Apuesta HP</strong>: −8 a −50 por fallo según dificultad.</div>
+      <div class="cd">Tolerancia</div><div>&mdash;</div><div>Hasta <strong>20 %</strong> de los días fallados.</div>
+      <div class="cd">Al cerrar</div><div>Recompensa por cumplimiento diario (Divisa).</div><div>Recompensa fuerte: XP + <strong>Elemento</strong>, y va a Logros.</div>
+    </div>
+    <div class="rule">Los dos se rinden con la misma <strong>tarjeta con banda de encabezado</strong>: el área o la dificultad pinta la banda, y la prioridad marca. Lo que los separa no es el componente &mdash; es que el reto lleva HP en juego y una fecha.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Tarea, proyecto y subtarea</div>
+      <div class="use">La tarea produce; el proyecto agrupa con avance derivado; la subtarea es una parte.</div>
+    </div>
+    <div class="g3d" style="align-items: start"><div class="kbv-card compact"><div class="cbody"><div class="chead"><div class="metaline" style="gap:var(--kb-sp-4)"><span class="primark" style="--c: var(--pri-urgent)"></span><div class="ctitle" style="font-size:var(--kb-fs-lg)">Cerrar propuesta · cliente Aurora</div></div></div><div class="metaline"><span class="pastilla" style="--c: var(--area-wealth)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Riqueza</span><span class="kbv-tag neutral"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M5 19a9 9 0 1 1 14 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14l4-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="14" r="1.4" fill="currentColor" stroke="none"/></svg> En curso</span></div><div class="metaline" style="gap:var(--kb-sp-7)"><div class="kv"><span class="k">Prioridad</span><span class="v">Urgente</span></div><div class="kv"><span class="k">Energía</span><span class="rate" style="--c:var(--kb-primary)"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class=""></i></span></div><div class="kv"><span class="k">Tiempo</span><span class="v num">2 h</span></div></div></div></div><div class="kbv-card compact"><div class="cbody"><div class="chead"><div class="ctitle" style="font-size:var(--kb-fs-lg)">Cliente Aurora</div><span class="kbv-tag neutral"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Complejidad 4</span></div><div class="metaline"><span class="pastilla" style="--c: var(--area-wealth)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Riqueza</span><span class="csub">5 tareas · 3 hechas</span></div><div class="col" style="gap:var(--kb-sp-3)"><div class="metaline" style="justify-content:space-between"><span class="csub">Avance derivado</span><span class="barfig" style="--c: var(--area-wealth)">62%</span></div><div class="kbv-progress" style="--c: var(--area-wealth)"><div class="fill" style="width:62%"></div></div></div></div></div><div class="kbv-card compact"><div class="cbody"><div class="csub" style="font-family:var(--kb-f-label);font-weight:800;letter-spacing:.06em;text-transform:uppercase">Subtareas · partes de la tarea</div><div><div class="check on"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ct">Reunir requisitos del cliente</span></div><div class="check on"><span class="box"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="ct">Borrador de alcance y precio</span></div><div class="check"><span class="box"></span><span class="ct">Revisar con finanzas</span></div><div class="check"><span class="box"></span><span class="ct">Enviar propuesta final</span></div></div></div></div></div>
+    <div class="rule">El avance del proyecto <strong>no se escribe</strong>: se deriva de sus tareas &mdash; hecha 100, en curso 55, por hacer 0. La subtarea no es otra tarjeta: es una fila de verificación <em>dentro</em> de la tarea que la contiene.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Dos vistas de una cosa</div>
+      <div class="use">Kanban y cronograma no son dos módulos: son dos lecturas del mismo conjunto de tareas.</div>
+    </div>
+    <div class="col" style="gap: var(--kb-sp-8)">
+      <div class="col" style="gap: var(--kb-sp-5)">
+        <div class="csub" style="font-family:var(--kb-f-label);font-weight:800;letter-spacing:.06em;text-transform:uppercase">Kanban &middot; por estado</div>
+        <div class="kan"><div class="kcol"><div class="colh" style="--c: var(--pri-vlow)">Por hacer<span class="kbv-badge quiet">5</span></div><div class="minicard"><div class="mt">Llamar a finanzas</div><div class="mm"><span class="pastilla" style="--c: var(--area-wealth)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Riqueza</span><span class="primark" style="--c: var(--pri-high); width:10px; height:10px; box-shadow:none"></span></div></div><div class="minicard"><div class="mt">Setup curso</div><div class="mm"><span class="pastilla" style="--c: var(--area-wisdom)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 5h7a3 3 0 0 1 3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5h-7a3 3 0 0 0-3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Sabiduría</span><span class="primark" style="--c: var(--pri-urgent); width:10px; height:10px; box-shadow:none"></span></div></div></div><div class="kcol"><div class="colh" style="--c: var(--kb-coin)">En curso<span class="kbv-badge quiet">3</span></div><div class="minicard"><div class="mt">Cerrar propuesta Aurora</div><div class="mm"><span class="pastilla" style="--c: var(--area-wealth)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Riqueza</span><span class="primark" style="--c: var(--pri-urgent); width:10px; height:10px; box-shadow:none"></span></div></div><div class="minicard"><div class="mt">Leer cap. 3</div><div class="mm"><span class="pastilla" style="--c: var(--area-wisdom)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 5h7a3 3 0 0 1 3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5h-7a3 3 0 0 0-3 3v12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 5v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Sabiduría</span><span class="primark" style="--c: var(--pri-high); width:10px; height:10px; box-shadow:none"></span></div></div></div><div class="kcol"><div class="colh" style="--c: var(--kb-hp)">Bloqueado<span class="kbv-badge quiet">1</span></div><div class="minicard"><div class="mt">Esperar cliente Beta</div><div class="mm"><span class="pastilla" style="--c: var(--area-wealth)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Riqueza</span><span class="primark" style="--c: var(--pri-medium); width:10px; height:10px; box-shadow:none"></span></div></div></div><div class="kcol"><div class="colh" style="--c: var(--kb-primary)">Hecho<span class="kbv-badge quiet">8</span></div><div class="minicard"><div class="mt">Meditar 10 min</div><div class="mm"><span class="pastilla" style="--c: var(--area-will)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8l-2 4h2.5l-1.5 4 4-5h-2.5l1.5-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Voluntad</span><span class="primark" style="--c: var(--pri-medium); width:10px; height:10px; box-shadow:none"></span></div></div><div class="minicard"><div class="mt">Regalo para Andrés</div><div class="mm"><span class="pastilla" style="--c: var(--area-community)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 14.2c2.5 0 6 1.4 6 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Comunidad</span><span class="primark" style="--c: var(--pri-low); width:10px; height:10px; box-shadow:none"></span></div></div></div></div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-5)">
+        <div class="csub" style="font-family:var(--kb-f-label);font-weight:800;letter-spacing:.06em;text-transform:uppercase">Cronograma &middot; por tiempo</div>
+        <div class="tl"><div class="tln">Cliente Aurora</div><div class="track"><div class="bar" style="--c: var(--area-wealth); left:6%; width:62%"></div></div><div class="tln">Maratón otoño</div><div class="track"><div class="bar" style="--c: var(--area-vigor); left:20%; width:45%"></div></div><div class="tln">System Design</div><div class="track"><div class="bar" style="--c: var(--area-wisdom); left:34%; width:30%"></div></div></div>
+      </div>
+    </div>
+    <div class="rule">Las columnas <strong>Por hacer</strong> y <strong>Hecho</strong> están fijas en los extremos; las de en medio se editan. El mismo dato que en el kanban es una columna, en el cronograma es una barra en el tiempo &mdash; una tarea, dos maneras de mirarla.</div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":1678}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

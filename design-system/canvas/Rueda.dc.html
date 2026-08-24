@@ -1,0 +1,711 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+/* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
+   sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
+/* ============================================================================
+   KIBO — Design Tokens (source of truth)
+   Personal OS gamificado · RPG de productividad
+   ----------------------------------------------------------------------------
+   This file encodes the CANONICAL Kibo design system — teal primary, TWO type
+   families (Plus Jakarta Sans display+label / Inter body), soft radii, the full
+   gamification token layer (HP/XP/coin/dark-matter/streak, life areas,
+   priorities, rank & prestige materials, flame tiers).
+
+   The live Next.js codebase (apps/web) still carries un-reconciled shadcn
+   defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
+   Those are DEPRECATED — build against the tokens below. See README "reconcile".
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ---- Type families. TWO families: display+label share Jakarta ---------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Etiquetas, cejillas e índices. En MAYÚSCULAS con tracking amplio.
+     La familia es Plus Jakarta Sans: la mono se retiró del sistema. */
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; /* @kind font */
+  /* Back-compat alias so existing `--kb-f-mono` call sites keep working. */
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
+  --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;   /* base UI text */
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  /* Fluid display steps */
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px); /* @kind font */
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px); /* @kind font */
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px); /* @kind font */
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px); /* @kind font */
+
+  --kb-lh-tight: 1.15; /* @kind other */
+  --kb-lh-snug:  1.3; /* @kind other */
+  --kb-lh-body:  1.55; /* @kind other */
+
+  /* ---- Surfaces / borders / text ---------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;   /* ink, primary text */
+  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
+  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Brand: Teal · progreso sereno ------------------------------------ */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+
+  /* ---- Gamification ----------------------------------------------------- */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
+  --kb-coin:      #F4B740;
+  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
+  --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
+
+  /* ---- Materia oscura · la segunda divisa (sustituye a «gema») ----------- */
+  /* Fragmento facetado casi negro que no refleja la luz sino que la dobla. */
+  --kb-dark-core:  #171A2E;   /* núcleo */
+  --kb-dark-edge:  #2E48A6;   /* contorno */
+  --kb-dark-halo:  #8FA9FF;   /* halo de lente gravitacional */
+  --kb-dark-facet: #4F63C4;   /* faceta */
+  --kb-dark-glint: #B9C8FF;   /* destello único del borde */
+  --kb-void-1:     #1C2748;   /* fondo profundo de ceremonia */
+  --kb-void-2:     #0B1022;
+
+  /* ---- Ánimos de KIBO · el ánimo (derivado del HP) le cambia el color ---- */
+  --kb-mood-calma:    var(--kb-primary);
+  --kb-mood-feliz:    #10B981;
+  --kb-mood-celebra:  var(--area-will);
+  --kb-mood-travieso: #8B5CF6;
+  --kb-mood-enfocado: var(--area-wisdom);
+  --kb-mood-sorpresa: #F59E0B;
+  --kb-mood-cansado:  #94A3B8;
+  --kb-mood-triste:   #7C8DB5;
+  --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
+
+  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       var(--kb-gem);
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+  --kb-rarity-secreto:    #8A5CF0;
+  --kb-rarity-oculto:     #E0561B;
+
+  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semánticos de apoyo --------------------------------------------- */
+  --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;   /* dorado de logro */
+  --kb-warn:      #B26A00;   /* ámbar de advertencia */
+  --kb-coin-wash: #FBF1D8;   /* lavado de moneda */
+
+  /* ---- Chispas de ceremonia -------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Life areas (user-recolorable defaults) --------------------------- */
+  --area-vigor:     #EF4444;   /* Vigor */
+  --area-wisdom:    #3B82F6;   /* Sabiduría */
+  --area-wealth:    #EAB308;   /* Riqueza */
+  --area-community: #A855F7;   /* Comunidad */
+  --area-will:      #06B6D4;   /* Voluntad */
+
+  /* ---- Priorities (fixed order) ----------------------------------------- */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radii (soft) ----------------------------------------------------- */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Shadows / elevation ---------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  /* "Hard" Duolingo-style elevation for the primary button — outside scale */
+  --kb-elev-hard: 0 2px 0; /* @kind shadow */
+
+  /* ---- Spacing (2px grid) ----------------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;   /* default gap / density: estándar */
+  --kb-sp-7: clamp(14px, 2vw, 16px); /* @kind spacing */
+  --kb-sp-8: clamp(18px, 3vw, 20px); /* @kind spacing */
+  --kb-sp-9: clamp(20px, 4vw, 24px); /* @kind spacing */
+
+  /* ---- Z-index (named) -------------------------------------------------- */
+  --kb-z-base:     1; /* @kind other */
+  --kb-z-raised:   10; /* @kind other */
+  --kb-z-sticky:   30; /* @kind other */
+  --kb-z-dropdown: 50; /* @kind other */
+  --kb-z-overlay:  100; /* @kind other */
+  --kb-z-modal:    200; /* @kind other */
+  --kb-z-popover:  400; /* @kind other */
+  --kb-z-toast:    600; /* @kind other */
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kb-dur-fast:   120ms; /* @kind other */
+  --kb-dur-base:   200ms; /* @kind other */
+  --kb-dur-slow:   300ms; /* @kind other */
+  --kb-dur-slower: 400ms; /* @kind other */
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1); /* @kind other */
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1); /* @kind other */
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1); /* @kind other */
+
+  /* ---- Contrato de alto de controles ------------------------------------
+     46px es el alto canónico de todo control de captura: campos, steppers,
+     input[type=date] y montos. El proyecto v2 usa 46px desde la migración de
+     agosto 2026 (antes 42). Un control suelto a otra medida rompe su fila. */
+  --kb-ctl-h:     46px; /* @kind other */
+  --kb-touch-min: 44px; /* piso táctil en móvil — el control de 46 ya lo cumple */
+}
+
+/* ============================================================================
+   Tintas derivadas · texto legible sobre cada lavado de color
+   No repetir un hex a mano: cada tinta se deriva de su propio color.
+   ========================================================================== */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+
+  /* Tinta de las 5 áreas · texto y relleno legibles.
+     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
+     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
+     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
+     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
+     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
+     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+
+  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
+     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
+     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
+     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
+     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
+     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
+  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+
+  /* Lavados y bordes derivados */
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
+  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* Breakpoints (constants — @media can't read var()):
+   bp-sm 640 · bp-md 768 · bp-lg 1024 · bp-xl 1280 */
+
+/* ============================================================================
+   Base + semantic type classes
+   ========================================================================== */
+
+.kb-root {
+  font-family: var(--kb-f-body);
+  color: var(--kb-text);
+  background: var(--kb-surface);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.kbv-eyebrow {
+  font-family: var(--kb-f-label);
+  font-size: var(--kb-fs-xs);
+  font-weight: 800;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--kb-text-3);
+}
+.kbv-h1 {
+  font-family: var(--kb-f-display);
+  font-weight: 800;
+  font-size: var(--kb-fs-4xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.02em;
+  color: var(--kb-text);
+}
+.kbv-h2 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-3xl-fluid);
+  line-height: var(--kb-lh-tight);
+  letter-spacing: -.015em;
+  color: var(--kb-text);
+}
+.kbv-h3 {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  font-size: var(--kb-fs-2xl-fluid);
+  line-height: var(--kb-lh-snug);
+  letter-spacing: -.01em;
+  color: var(--kb-text);
+}
+.kbv-h4 {
+  font-family: var(--kb-f-display);
+  font-weight: 600;
+  font-size: var(--kb-fs-xl);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text);
+}
+.kbv-body {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-md);
+  line-height: var(--kb-lh-body);
+  color: var(--kb-text);
+}
+.kbv-meta {
+  font-family: var(--kb-f-body);
+  font-size: var(--kb-fs-sm);
+  line-height: var(--kb-lh-snug);
+  color: var(--kb-text-2);
+}
+.kbv-num {
+  font-family: var(--kb-f-display);
+  font-weight: 700;
+  letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums;
+  color: var(--kb-text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+}
+
+</style>
+  <style>
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+
+    /* El texto secundario se deriva del principal: el 64 % pasa AA sobre el
+       lienzo, sobre superficie y sobre superficie 2. */
+    .ab {
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
+      gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
+    }
+
+    .eyebrow { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .h1 { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800; letter-spacing: -.015em; line-height: var(--kb-lh-tight); color: var(--kb-text); }
+    .h2 { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .one { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text-2); max-width: 680px; }
+
+    .hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .pane { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .head { display: flex; align-items: baseline; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .use { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .rule { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text); padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .rule strong { font-weight: 700; }
+
+    .spec { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .tok { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; letter-spacing: .02em; color: var(--kb-text-2); }
+    .num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+    .row { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .col { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g5 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g6 { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .g7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+
+    /* Especimenes en columnas: pieza, nombre y uso alineados entre si. */
+    .specs { grid-template-rows: auto auto auto; align-items: start; }
+    .specs > .cell { grid-row: span 3; display: grid; grid-template-rows: subgrid; gap: var(--kb-sp-4); }
+
+    .sw { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .sw .chip { height: 46px; border-radius: var(--kb-r-md); border: 1px solid var(--kb-border); }
+    .sw .nm { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+
+    code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 700; color: var(--kb-text); }
+
+    /* Segunda tabla de valores. El ancestro deriva; el descendiente asigna. */
+    .theme-src {
+      --d-canvas:        var(--kb-void-2);
+      --d-surface:       color-mix(in oklab, var(--kb-void-2) 35%, var(--kb-void-1));
+      --d-card:          color-mix(in oklab, var(--kb-void-1) 94%, var(--kb-text-inverse));
+      --d-surface-2:     color-mix(in oklab, var(--kb-void-1) 78%, var(--kb-text-inverse));
+      --d-border:        color-mix(in oklab, var(--kb-void-1) 58%, var(--kb-text-inverse));
+      --d-border-strong: color-mix(in oklab, var(--kb-void-1) 44%, var(--kb-text-inverse));
+      --d-border-soft:   color-mix(in oklab, var(--kb-void-1) 72%, var(--kb-text-inverse));
+      --d-text:          var(--kb-text-inverse);
+      --d-text-2:        color-mix(in oklab, var(--kb-text-inverse) 74%, var(--kb-void-1));
+      --d-primary:       color-mix(in oklab, var(--kb-primary) 66%, var(--kb-text-inverse));
+      --d-primary-hover: color-mix(in oklab, var(--kb-primary) 80%, var(--kb-text-inverse));
+      --d-primary-soft:  color-mix(in oklab, var(--kb-primary) 22%, var(--kb-void-1));
+      --d-primary-ink:   color-mix(in oklab, var(--kb-primary) 42%, var(--kb-text-inverse));
+    }
+    .theme-dark {
+      --kb-canvas: var(--d-canvas); --kb-surface: var(--d-surface); --kb-card: var(--d-card);
+      --kb-surface-2: var(--d-surface-2); --kb-border: var(--d-border);
+      --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
+      --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
+      --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
+      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      background: var(--kb-canvas); color: var(--kb-text);
+    }
+    /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
+    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
+    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+  </style>
+  <style>
+    .ab { --kb-warn-ink: color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2)); }
+
+    /* Tarjeta — .kbv-card */
+    .kbv-card { background: var(--kb-card); border: 1px solid var(--kb-border);
+                border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+                display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .kbv-card .cbody { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+    .kbv-card.compact .cbody { padding: var(--kb-sp-6); gap: var(--kb-sp-4); }
+    .kbv-card .chead { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--kb-sp-5); }
+    .kbv-card .ctitle { font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl);
+                        line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-card .csub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-card .cfoot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-4);
+                       padding: var(--kb-sp-5) var(--kb-sp-7); border-top: 1px solid var(--kb-border-soft); }
+
+    /* Banda de encabezado (R-1, tarjeta grande) */
+    .banda { display: flex; align-items: center; gap: var(--kb-sp-3); padding: var(--kb-sp-4) var(--kb-sp-6);
+             background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+             border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas));
+             color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+             font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+             letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
+    .banda .amt { margin-left: auto; }
+
+    /* Pastilla de area (R-1, compacto) */
+    .pastilla { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
+                padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill); align-self: flex-start;
+                background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+                font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+
+    /* Chip · etiqueta · contador */
+    .kbv-chip { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill); border: 1.5px solid var(--kb-border);
+                background: var(--kb-card); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text-2); }
+    .kbv-chip.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-tag { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
+               padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
+               font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+    .kbv-tag.neutral { background: var(--kb-surface-2); color: var(--kb-text); }
+    .kbv-tag.tint { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
+    .kbv-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
+                 padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
+                 background: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); color: var(--kb-text-inverse);
+                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xs); font-variant-numeric: tabular-nums; }
+    .kbv-badge.quiet { background: var(--kb-surface-2); color: var(--kb-text); }
+
+    /* Barra de progreso — .kbv-progress */
+    .kbv-progress { height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
+                    background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+                    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) 24%, var(--kb-canvas)); }
+    .kbv-progress.sm { height: 6px; } .kbv-progress.xs { height: 4px; } .kbv-progress.lg { height: 12px; }
+    .kbv-progress .fill { height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary)); }
+    .kbv-progress.seg { display: flex; gap: var(--kb-sp-2); background: none; box-shadow: none; overflow: visible; }
+    .kbv-progress.seg > i { flex: 1; height: 100%; border-radius: var(--kb-r-pill);
+                            background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
+                            box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 26%, var(--kb-canvas)); }
+    .kbv-progress.seg > i.on { background: var(--c); box-shadow: none; }
+    .barfig { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+              font-variant-numeric: tabular-nums; color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+
+    /* KPI — .kbv-kpi */
+    .kbv-kpi { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg);
+               box-shadow: var(--kb-sh-1); display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+    .kbv-kpi .kbody { padding: var(--kb-sp-6); display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-kpi .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800;
+                    line-height: 1; letter-spacing: -.02em; color: var(--kb-text); font-variant-numeric: tabular-nums;
+                    display: flex; align-items: baseline; gap: var(--kb-sp-2); }
+    .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
+    .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-kpi .delta.up { color: var(--kb-primary-ink); font-weight: 700; }
+    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+
+    /* Boton — .kbv-btn */
+    .kbv-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+               height: var(--kb-ctl-h); padding: 0 var(--kb-sp-8); border-radius: var(--kb-r-md);
+               border: 1.5px solid transparent; cursor: pointer; line-height: 1;
+               font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-lg); }
+    .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-md); }
+    .kbv-btn-primary { background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                       box-shadow: 0 2px 0 color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-sh-1); }
+    .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text); border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
+    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); }
+
+    /* Medidor de esfuerzo (RateRow 1-5) */
+    .rate { display: inline-flex; align-items: center; gap: 3px; }
+    .rate > i { width: 12px; height: 6px; border-radius: var(--kb-r-pill);
+                background: color-mix(in oklab, var(--c) 16%, var(--kb-canvas));
+                box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 28%, var(--kb-canvas)); }
+    .rate > i.on { background: var(--c); box-shadow: none; }
+
+    /* Metadato de campo (par etiqueta/valor) */
+    .kv { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .kv .k { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+             letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kv .v { font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+    .kv .v.num { font-family: var(--kb-f-display); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* Contadores de recurso (HUD) */
+    .stat-pill { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                 padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                 font-variant-numeric: tabular-nums; }
+    .stat-pill.coin { background: var(--kb-coin-soft); border: 1px solid var(--kb-coin-border); color: var(--kb-coin-ink); }
+    .stat-pill.elem { background: var(--kb-void-1); border: 1px solid var(--kb-dark-facet); color: var(--kb-dark-glint);
+                      box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-dark-halo) 22%, transparent); }
+    .gem { width: 14px; height: 14px; flex: none; border-radius: 3px; transform: rotate(45deg);
+           background: var(--kb-dark-core); box-shadow: inset 0 0 0 1px var(--kb-dark-glint); }
+
+    /* Tablas de lectura */
+    .tbl { display: grid; }
+    .tbl > div { padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); min-width: 0;
+                 font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .tbl.c2 > div:nth-last-child(-n+2), .tbl.c3 > div:nth-last-child(-n+3), .tbl.c4 > div:nth-last-child(-n+4) { border-bottom: 0; }
+    .tbl .th { padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border);
+               font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+               letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .tbl .cd { font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 800; letter-spacing: .02em; color: var(--kb-text); }
+    .tbl strong { color: var(--kb-text); font-weight: 700; }
+
+    .demo { padding: var(--kb-sp-8); background: var(--kb-surface); border-radius: var(--kb-r-md); }
+    .g2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-8); }
+    .g3d { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+
+    .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
+    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
+                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
+    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
+            letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
+    .wglyph { fill: none; }
+    .whub { fill: var(--kb-card); stroke: var(--kb-border); stroke-width: 1.5; }
+    .kbody { fill: color-mix(in oklab, var(--kb-primary) 30%, var(--kb-canvas)); }
+    .keye { fill: var(--kb-ink-kibo); } .kpu { fill: var(--kb-text-inverse); }
+    .kmo { fill: none; stroke: var(--kb-ink-kibo); stroke-width: 3; stroke-linecap: round; }
+    .wback { color: var(--kb-text-2); }
+    .wbacklab { fill: var(--kb-text-2); font-family: var(--kb-f-label); font-size: 12px; font-weight: 800;
+                letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
+
+    .namepill { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px; padding: 0 var(--kb-sp-6);
+                border-radius: var(--kb-r-pill); background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md); }
+
+    .legend { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+    .legend .lr { display: flex; gap: var(--kb-sp-5); align-items: flex-start; }
+    .legend .n { flex: none; width: 24px; height: 24px; border-radius: var(--kb-r-pill); background: var(--kb-surface-2);
+                 display: flex; align-items: center; justify-content: center; font-family: var(--kb-f-display);
+                 font-weight: 800; font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
+    .legend .lt { font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .legend .lt strong { color: var(--kb-text); font-weight: 700; }
+
+    .tbl { display: grid; }
+    .tbl > div { padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); min-width: 0;
+                 font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text-2); }
+    .tbl.c2 > div:nth-last-child(-n+2), .tbl.c3 > div:nth-last-child(-n+3) { border-bottom: 0; }
+    .tbl .th { padding-bottom: var(--kb-sp-4); border-bottom: 1px solid var(--kb-border);
+               font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+               letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .tbl .cd { font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 800; letter-spacing: .02em; color: var(--kb-text); }
+    .tbl strong { color: var(--kb-text); font-weight: 700; }
+
+    .g2c { display: grid; grid-template-columns: 400px 1fr; gap: var(--kb-sp-9); align-items: center; }
+    .demo { padding: var(--kb-sp-8); background: var(--kb-surface); border-radius: var(--kb-r-md); }
+
+    /* Formulario de captura inline (real, reusado) */
+    .qa-form { display: flex; flex-direction: column; gap: var(--kb-sp-5); max-width: 340px; }
+    .amount { display: flex; align-items: center; height: var(--kb-ctl-h); border-radius: var(--kb-r-md);
+              border: 1.5px solid var(--kb-border); background: var(--kb-card); padding: 0 var(--kb-sp-6); gap: var(--kb-sp-4); }
+    .amount .pre { color: var(--kb-text-2); font-weight: 700; }
+    .amount .amt { flex: 1; font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl);
+                   color: var(--kb-text); font-variant-numeric: tabular-nums; }
+    .amount .suf { color: var(--kb-text-2); font-size: var(--kb-fs-sm); font-weight: 600; }
+    .chiprow { display: flex; flex-wrap: wrap; gap: var(--kb-sp-3); }
+    .qc { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+          border: 1.5px solid var(--kb-border); background: var(--kb-card); font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text-2); }
+    .qc.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .qlabel { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+              letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text-2); }
+    .bubble { position: relative; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg);
+              box-shadow: var(--kb-sh-3); padding: var(--kb-sp-7); }
+    .bubble .bhd { display: flex; align-items: center; gap: var(--kb-sp-4); margin-bottom: var(--kb-sp-6); }
+    .bubble .bt { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-lg); color: var(--kb-text); }
+  </style>
+</helmet>
+<div class="ab">
+
+  <div class="hd">
+    <div class="eyebrow">La aplicación &middot; 03</div>
+    <div class="h1">Rueda de acción</div>
+    <div class="one">El organismo de captura de KIBO. Abre desde el FAB de 72 px y aparece en todo el producto: un disco de sectores para registrar cualquier cosa sin cambiar de pantalla.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El disco de sectores</div>
+      <div class="use">Un disco completo partido en sectores, no botones flotando en un arco. El blanco de clic es el sector entero.</div>
+    </div>
+    <div class="g2c">
+      <div class="col" style="align-items: center; gap: var(--kb-sp-6)">
+        <svg class="wheel" viewBox="-232 -232 464 464" width="392" height="392"><g class="wsec aim hero" style="--c: var(--kb-primary)"><path class="wfill" d="M -93.61 -187.98 A 210 210 0 0 1 93.61 -187.98 A 10 10 0 0 1 97.57 -174.58 L 55.62 -99.51 A 10 10 0 0 1 41.79 -95.24 A 104 104 0 0 0 -41.79 -95.24 A 10 10 0 0 1 -55.62 -99.51 L -97.57 -174.58 A 10 10 0 0 1 -93.61 -187.98 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-12.0,-150.0) scale(1.000)" stroke-width="2.20"><rect x="9" y="3" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="0.0" y="-176.0">Platicar</text></g><g class="wsec" style="--c: var(--area-wisdom)"><path class="wfill" d="M 115.99 -175.06 A 210 210 0 0 1 175.06 -115.99 A 10 10 0 0 1 171.79 -102.41 L 97.92 -58.37 A 10 10 0 0 1 83.81 -61.58 A 104 104 0 0 0 61.58 -83.81 A 10 10 0 0 1 58.37 -97.92 L 102.41 -171.79 A 10 10 0 0 1 115.99 -175.06 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(87.1,-108.1) scale(0.875)" stroke-width="2.51"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="124.5" y="-124.5">Buscar</text></g><g class="wsec" style="--c: var(--kb-coin)"><path class="wfill" d="M 187.98 -93.61 A 210 210 0 0 1 209.6 -12.92 A 10 10 0 0 1 199.98 -2.79 L 113.99 -1.59 A 10 10 0 0 1 103.37 -11.43 A 104 104 0 0 0 95.24 -41.79 A 10 10 0 0 1 99.51 -55.62 L 174.58 -97.57 A 10 10 0 0 1 187.98 -93.61 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(122.8,-46.2) scale(0.875)" stroke-width="2.51"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="170.0" y="-45.6">Finanzas</text></g><g class="wsec" style="--c: var(--kb-streak)"><path class="wfill" d="M 209.6 12.92 A 210 210 0 0 1 187.98 93.61 A 10 10 0 0 1 174.58 97.57 L 99.51 55.62 A 10 10 0 0 1 95.24 41.79 A 104 104 0 0 0 103.37 11.43 A 10 10 0 0 1 113.99 1.59 L 199.98 2.79 A 10 10 0 0 1 209.6 12.92 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(122.8,25.2) scale(0.875)" stroke-width="2.51"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="170.0" y="45.6">Hábitos</text></g><g class="wsec" style="--c: var(--kb-primary)"><path class="wfill" d="M 175.06 115.99 A 210 210 0 0 1 115.99 175.06 A 10 10 0 0 1 102.41 171.79 L 58.37 97.92 A 10 10 0 0 1 61.58 83.81 A 104 104 0 0 0 83.81 61.58 A 10 10 0 0 1 97.92 58.37 L 171.79 102.41 A 10 10 0 0 1 175.06 115.99 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(87.1,87.1) scale(0.875)" stroke-width="2.51"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></g><text class="wlab" x="124.5" y="124.5">Tareas</text></g><g class="wsec" style="--c: var(--area-community)"><path class="wfill" d="M 93.61 187.98 A 210 210 0 0 1 12.92 209.6 A 10 10 0 0 1 2.79 199.98 L 1.59 113.99 A 10 10 0 0 1 11.43 103.37 A 104 104 0 0 0 41.79 95.24 A 10 10 0 0 1 55.62 99.51 L 97.57 174.58 A 10 10 0 0 1 93.61 187.98 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(25.2,122.8) scale(0.875)" stroke-width="2.51"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="45.6" y="170.0">Diario</text></g><g class="wsec" style="--c: var(--area-will)"><path class="wfill" d="M -12.92 209.6 A 210 210 0 0 1 -93.61 187.98 A 10 10 0 0 1 -97.57 174.58 L -55.62 99.51 A 10 10 0 0 1 -41.79 95.24 A 104 104 0 0 0 -11.43 103.37 A 10 10 0 0 1 -1.59 113.99 L -2.79 199.98 A 10 10 0 0 1 -12.92 209.6 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-46.2,122.8) scale(0.875)" stroke-width="2.51"><path d="M12 5c-2-2-5-2-8-1v15c3-1 6-1 8 1m0-15c2-2 5-2 8-1v15c-3-1-6-1-8 1m0-15v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-45.6" y="170.0">Lectura</text></g><g class="wsec" style="--c: var(--kb-hp)"><path class="wfill" d="M -115.99 175.06 A 210 210 0 0 1 -175.06 115.99 A 10 10 0 0 1 -171.79 102.41 L -97.92 58.37 A 10 10 0 0 1 -83.81 61.58 A 104 104 0 0 0 -61.58 83.81 A 10 10 0 0 1 -58.37 97.92 L -102.41 171.79 A 10 10 0 0 1 -115.99 175.06 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-108.1,87.1) scale(0.875)" stroke-width="2.51"><path d="M14 4l6 0 0 6-9 9-3-3 9-9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16l-4 4M5 16l3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-124.5" y="124.5">Retos</text></g><g class="wsec" style="--c: var(--area-vigor)"><path class="wfill" d="M -187.98 93.61 A 210 210 0 0 1 -209.6 12.92 A 10 10 0 0 1 -199.98 2.79 L -113.99 1.59 A 10 10 0 0 1 -103.37 11.43 A 104 104 0 0 0 -95.24 41.79 A 10 10 0 0 1 -99.51 55.62 L -174.58 97.57 A 10 10 0 0 1 -187.98 93.61 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-143.8,25.2) scale(0.875)" stroke-width="2.51"><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-170.0" y="45.6">Salud</text></g><g class="wsec" style="--c: var(--area-wisdom)"><path class="wfill" d="M -209.6 -12.92 A 210 210 0 0 1 -187.98 -93.61 A 10 10 0 0 1 -174.58 -97.57 L -99.51 -55.62 A 10 10 0 0 1 -95.24 -41.79 A 104 104 0 0 0 -103.37 -11.43 A 10 10 0 0 1 -113.99 -1.59 L -199.98 -2.79 A 10 10 0 0 1 -209.6 -12.92 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-143.8,-46.2) scale(0.875)" stroke-width="2.51"><path d="M2 9l10-4 10 4-10 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><line x1="22" y1="9" x2="22" y2="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-170.0" y="-45.6">Estudio</text></g><g class="wsec" style="--c: var(--kb-streak)"><path class="wfill" d="M -175.06 -115.99 A 210 210 0 0 1 -115.99 -175.06 A 10 10 0 0 1 -102.41 -171.79 L -58.37 -97.92 A 10 10 0 0 1 -61.58 -83.81 A 104 104 0 0 0 -83.81 -61.58 A 10 10 0 0 1 -97.92 -58.37 L -171.79 -102.41 A 10 10 0 0 1 -175.06 -115.99 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-108.1,-108.1) scale(0.875)" stroke-width="2.51"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-124.5" y="-124.5">Travesura</text></g><circle class="whub" r="96"/><g transform="translate(0,-8)"><ellipse cx="0" cy="2" rx="46" ry="49" class="kbody"/><ellipse class="keye" cx="-16" cy="-6" rx="9" ry="11"/><ellipse class="keye" cx="16" cy="-6" rx="9" ry="11"/><circle class="kpu" cx="-15" cy="-9" r="4"/><circle class="kpu" cx="17" cy="-9" r="4"/><path class="kmo" d="M -11 16 Q 0 24 11 16"/></g></svg>
+        <div class="namepill"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><rect x="9" y="3" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Apuntas: Platicar con KIBO</div>
+      </div>
+      <div class="legend">
+        <div class="lr"><span class="n">1</span><div class="lt"><strong>La zona muerta central.</strong> Dentro del cubo no hay sector: es la que deja <em>no elegir nada</em> al alcance. KIBO la ocupa y dice el nombre de lo que apuntas.</div></div>
+        <div class="lr"><span class="n">2</span><div class="lt"><strong>Se apunta con la dirección</strong> del cursor desde el centro, no persiguiendo un botón: a media pulgada del centro ya sabes qué vas a escoger.</div></div>
+        <div class="lr"><span class="n">3</span><div class="lt"><strong>El sector estelar ocupa el doble</strong> y queda centrado arriba &mdash; Platicar con KIBO, la razón de abrir la rueda.</div></div>
+        <div class="lr"><span class="n">4</span><div class="lt"><strong>El área pinta el sector.</strong> Cada rubro toma su color en lavado y su glifo del set real; la tinta del rótulo sale del mismo matiz.</div></div>
+      </div>
+    </div>
+    <div class="rule">Apuntar es <strong>dirección</strong>, no puntería: el objetivo es el sector completo, del cubo al borde. La zona muerta del centro es el gesto de cancelar &mdash; sueltas ahí y no eliges nada.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">El segundo nivel</div>
+      <div class="use">Elegir un rubro reemplaza el disco por sus acciones. El centro deja de ser KIBO y pasa a ser «volver».</div>
+    </div>
+    <div class="g2c">
+      <div class="col" style="align-items: center; gap: var(--kb-sp-6)">
+        <svg class="wheel" viewBox="-232 -232 464 464" width="392" height="392"><g class="wsec aim" style="--c: var(--kb-coin)"><path class="wfill" d="M -175.06 -115.99 A 210 210 0 0 1 175.06 -115.99 A 10 10 0 0 1 171.79 -102.41 L 97.92 -58.37 A 10 10 0 0 1 83.81 -61.58 A 104 104 0 0 0 -83.81 -61.58 A 10 10 0 0 1 -97.92 -58.37 L -171.79 -102.41 A 10 10 0 0 1 -175.06 -115.99 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-10.5,-148.5) scale(0.875)" stroke-width="2.51"><path d="M4 8l5 5 4-4 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16h4v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="0.0" y="-176.0">Gasto</text></g><g class="wsec" style="--c: var(--kb-coin)"><path class="wfill" d="M 187.98 -93.61 A 210 210 0 0 1 12.92 209.6 A 10 10 0 0 1 2.79 199.98 L 1.59 113.99 A 10 10 0 0 1 11.43 103.37 A 104 104 0 0 0 95.24 -41.79 A 10 10 0 0 1 99.51 -55.62 L 174.58 -97.57 A 10 10 0 0 1 187.98 -93.61 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(109.0,58.5) scale(0.875)" stroke-width="2.51"><path d="M4 16l5-5 4 4 7-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8h4v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="152.4" y="88.0">Ingreso</text></g><g class="wsec" style="--c: var(--kb-coin)"><path class="wfill" d="M -12.92 209.6 A 210 210 0 0 1 -187.98 -93.61 A 10 10 0 0 1 -174.58 -97.57 L -99.51 -55.62 A 10 10 0 0 1 -95.24 -41.79 A 104 104 0 0 0 -11.43 103.37 A 10 10 0 0 1 -1.59 113.99 L -2.79 199.98 A 10 10 0 0 1 -12.92 209.6 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-130.0,58.5) scale(0.875)" stroke-width="2.51"><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-152.4" y="88.0">Abono</text></g><circle class="whub" r="96"/><g class="wback"><g class="wglyph" style="color:var(--kb-text-2)" transform="translate(-13.0,-21.0) scale(1.083)" stroke-width="2.03"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wbacklab" x="0" y="30">Volver</text></g></svg>
+        <div class="namepill" style="background: var(--kb-coin-soft); color: var(--kb-coin-ink)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Finanzas</div>
+      </div>
+      <div class="col" style="gap: var(--kb-sp-6)">
+        <div class="tbl c2" style="grid-template-columns: 132px 1fr">
+          <div class="cd">Nivel 1</div><div>Los <strong>rubros</strong> alrededor de KIBO, más las anclas fijas: Platicar, Buscar y Travesura.</div>
+          <div class="cd">Nivel 2</div><div>Las <strong>acciones del rubro</strong> apuntado. El disco es otro; el sector que apuntabas no se conserva entre niveles.</div>
+          <div class="cd">El centro</div><div>En nivel 2 el cubo es el botón <strong>volver</strong>: apuntar al centro sube un nivel, no cancela.</div>
+        </div>
+        <div class="demo" style="padding: var(--kb-sp-6)">
+          <div class="csub" style="line-height:1.55">Dos niveles bastan: rubro y acción. Nunca un tercero &mdash; si una acción necesita más, se abre su <strong style="color:var(--kb-text)">formulario completo</strong>, no otro anillo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">Paginación de 8 en 8</div>
+      <div class="use">Por legibilidad, no por falta de sitio. En 360° caben veinte sectores; el rótulo no.</div>
+    </div>
+    <div class="tbl c3" style="grid-template-columns: 150px 1fr">
+      <div class="cd">El límite</div><div>En 360° caben veinte sectores, pero el nombre se encoge con cada uno y <strong>pasando de doce ya no cabe</strong>. Por eso el disco pagina de <strong>ocho en ocho</strong>: ocho rubros por hoja mantienen el rótulo legible.</div>
+      <div class="cd">Las anclas persisten</div><div>Platicar, Buscar y Travesura viven en <strong>todas las páginas</strong>: son la razón de abrir la rueda, no pueden quedar «en la otra hoja». Sólo los rubros paginan.</div>
+      <div class="cd">El orden</div><div>Lo pendiente de hoy primero: si tienes tres hábitos sin marcar, ese rubro no puede estar en la segunda hoja. Empata por uso.</div>
+      <div class="cd">Cuando aún no caben</div><div>Pasando de doce sectores el disco se queda en <strong>íconos</strong> y el nombre completo lo dice el letrero del centro &mdash; el cubo ya lo muestra.</div>
+    </div>
+    <div class="rule">La paginación es una respuesta a la <strong>legibilidad del rótulo</strong>, no al espacio. El corte en ocho es el punto donde el nombre del rubro todavía cabe dentro de su sector sin encimarse con el vecino.</div>
+  </div>
+
+  <div class="pane">
+    <div class="head">
+      <div class="eyebrow">La captura ocurre ahí mismo</div>
+      <div class="use">Elegir una acción abre su formulario junto al anillo. No navega: pediste registrar algo, no cambiar de sitio.</div>
+    </div>
+    <div class="row" style="gap: var(--kb-sp-9); align-items: flex-start">
+      <div class="bubble" style="flex: none; width: 380px">
+        <div class="bhd"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 8l5 5 4-4 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16h4v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="bt">Registrar gasto</span></div>
+        <div class="qa-form" style="max-width: none">
+          <div class="amount"><span class="pre">$</span><span class="amt">185.00</span><span class="suf">MXN</span></div>
+          <div class="col" style="gap: var(--kb-sp-3)">
+            <span class="qlabel">Categoría</span>
+            <div class="chiprow"><span class="qc on">Comida</span><span class="qc">Transporte</span><span class="qc">Casa</span><span class="qc">Gustos</span></div>
+          </div>
+          <div class="col" style="gap: var(--kb-sp-3)">
+            <span class="qlabel">Cuenta</span>
+            <div class="chiprow"><span class="qc on">Débito</span><span class="qc">Efectivo</span><span class="qc">Crédito</span></div>
+          </div>
+          <div class="row" style="gap: var(--kb-sp-4); margin-top: var(--kb-sp-3)">
+            <button class="kbv-btn kbv-btn-primary" style="flex:1"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 12l5 5L20 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Registrar</button>
+            <button class="kbv-btn kbv-btn-ghost">Más opciones</button>
+          </div>
+        </div>
+      </div>
+      <div class="col" style="flex: 1 1 0; min-width: 0; gap: var(--kb-sp-6)">
+        <div class="tbl c2" style="grid-template-columns: 150px 1fr">
+          <div class="cd">Formularios reales</div><div>El formulario compacto es el <strong>de verdad</strong>, no una miniatura: campo de monto, chips de categoría y de cuenta, botón primario. Los mismos componentes del sistema.</div>
+          <div class="cd">Nunca navega</div><div>Se abre <strong>encima</strong> de la pantalla actual, junto al anillo. Al guardar, KIBO confirma y la rueda se cierra &mdash; sin sacarte de donde estabas.</div>
+          <div class="cd">Más opciones</div><div>Entrega al <strong>modal completo</strong> de la plataforma <em>lo que ya escribiste</em>: no se pierde el monto ni la categoría. Un solo formulario que mantener, no dos.</div>
+          <div class="cd">Instantáneo</div><div>Algunas acciones no piden formulario &mdash; «vaso de agua», «pomodoro» &mdash; y registran de una, con un mensaje de KIBO.</div>
+        </div>
+      </div>
+    </div>
+    <div class="rule">La captura vive <strong>dentro de la rueda</strong>: el anillo abre el formulario, el formulario es el real, y «Más opciones» pasa lo escrito al modal completo. Es lo que evita mantener dos versiones de cada captura y lo que hace que registrar algo nunca cueste una pantalla.</div>
+  </div>
+
+</div>
+
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":2275}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

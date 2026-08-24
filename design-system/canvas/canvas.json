@@ -2,6 +2,7 @@
   "pages": [
     { "id": "fundamentos", "name": "Fundamentos" },
     { "id": "componentes", "name": "Componentes" },
+    { "id": "dominio",     "name": "Dominio" },
     { "id": "aplicacion",  "name": "La aplicación" }
   ],
   "artboards": [
@@ -20,8 +21,13 @@
     { "file": "Modal.dc.html",       "page": "componentes", "x": 6000, "y": 0, "w": 940, "h": 1596, "title": "07 · Modal" },
     { "file": "Familias.dc.html",    "page": "componentes", "x": 7000, "y": 0, "w": 940, "h": 3078, "title": "08 · Familias menores" },
 
+    { "file": "Sobre.dc.html",       "page": "dominio",     "x": 0,    "y": 0, "w": 940, "h": 1367, "title": "01 · El registro de hechos" },
+    { "file": "Conceptos.dc.html",   "page": "dominio",     "x": 1000, "y": 0, "w": 940, "h": 1678, "title": "02 · Hábito, reto, tarea y proyecto" },
+    { "file": "Economia.dc.html",    "page": "dominio",     "x": 2000, "y": 0, "w": 940, "h": 1108, "title": "03 · Progresión y economía" },
+
     { "file": "Armazon.dc.html",     "page": "aplicacion",  "x": 0,    "y": 0, "w": 940, "h": 3940, "title": "01 · Armazón" },
-    { "file": "KIBO.dc.html",        "page": "aplicacion",  "x": 1000, "y": 0, "w": 940, "h": 3257, "title": "02 · KIBO" }
+    { "file": "KIBO.dc.html",        "page": "aplicacion",  "x": 1000, "y": 0, "w": 940, "h": 3672, "title": "02 · KIBO" },
+    { "file": "Rueda.dc.html",       "page": "aplicacion",  "x": 2000, "y": 0, "w": 940, "h": 2275, "title": "03 · Rueda de acción" }
   ],
   "annotations": [
     {
@@ -41,12 +47,20 @@
       "text": "Componentes — la forma canónica de cada pieza.\n\nEl orden va de átomo a organismo: botón y campo, luego las tres piezas que se confunden entre sí, luego barra, tarjeta, KPI y modal. Cierra con las cinco familias que encuadran el contenido en vez de cargarlo.\n\nCada pieza se compone de su clase .kbv-*, con sus variantes, sus tamaños y sus estados. Lo que se rinde es el estándar: así se construye de aquí en adelante."
     },
     {
+      "id": "nota-dominio",
+      "page": "dominio",
+      "x": 0,
+      "y": -170,
+      "w": 660,
+      "text": "Dominio — el núcleo dicho con el vocabulario que ya existe.\n\nNo hay componentes nuevos aquí: los conceptos del producto se rinden con tarjeta, chip, barra, KPI, botón y campo. Si falta una pieza, falta en Componentes, no aquí.\n\nEl hallazgo que ordena todo: el registro de hechos es el sustrato. Seis dominios que parecían fundaciones son seis tipos del mismo sobre. El área es una propiedad del hecho; la progresión y la economía son lo que los hechos producen."
+    },
+    {
       "id": "nota-aplicacion",
       "page": "aplicacion",
       "x": 0,
       "y": -170,
       "w": 660,
-      "text": "La aplicación — donde los valores y las piezas se vuelven producto.\n\nEl armazón es la rejilla que sostiene las 21 pantallas: menú, cabecera y contenido, con los mismos cuatro cortes en las tres anchuras. La cabecera es su mejor examen, porque lee cinco fuentes y cada una pertenece a otra familia.\n\nKIBO es la identidad de marca, presente en todo el producto y en las dos plataformas. Se especifica como máquina de estados —entradas, estados, capas y composición—, no como una animación."
+      "text": "La aplicación — donde los valores y las piezas se vuelven producto.\n\nEl armazón es la rejilla que sostiene las 21 pantallas: menú, cabecera y contenido, con los mismos cuatro cortes en las tres anchuras.\n\nKIBO es la identidad de marca. Dos entradas ortogonales lo gobiernan: la salud pinta la cara (la expresión), el usuario elige el color (la piel). No se tocan.\n\nLa rueda de acción es su organismo de captura: un disco de sectores que abre desde el FAB y registra cualquier cosa sin cambiar de pantalla."
     }
   ],
   "launch": { "view": "canvas", "page": "fundamentos" }

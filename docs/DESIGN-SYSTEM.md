@@ -1,7 +1,8 @@
-# Kibo Design System — The Recipe · v1.1
+# Kibo Design System — The Recipe · v1.2
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
+| v1.2 | 2026-08-24 | KIBO's mood retired as a body colour (AD-23); the domain page, the fact envelope and the action wheel joined the canvas | Sergio ruled the mood must change only the face so skins can be user-customisable, and the domain cards rebuild the kernel in the component vocabulary |
 | v1.1 | 2026-08-23 | Four open questions ruled and moved to §11; the card set is rebuilt around the kernel | Sergio ruled the button face, the recoloured-área behaviour, the rarity ladder and the fate of the 71 cards. Only the name of `--kb-medal` stays open |
 | v1.0 | 2026-08-23 | Initial recipe: value layer, the two colour recipes, both theme tables, the seven canonical component families, the non-negotiable rules, the platform split, and the gap between this document and `colors_and_type.css` | The canvas renders the standard but cannot be read while building. This document is what a building agent reads to produce interface in brand without re-deriving it, and without the canvas open beside it |
 
@@ -521,6 +522,7 @@ This document describes the destination. `colors_and_type.css` and `kbv-componen
 | `kbv-components.css:1160`, `:2189` | Two edge colour stripes survive | R-1: four patterns, no stripe (§5) |
 | `colors_and_type.css:75` | `--kb-gem` is deprecated in text but live in 3 derived tokens, 9 cards and the public API | The rare currency is **Elemento**, `--kb-dark-*` (§2.4) |
 | Control height | `preview/formulario-campos.html:19` says and does 42 px | `--kb-ctl-h` = 46 px (§4.4) |
+| `--kb-mood-*` (`:91-98`) | Eight mood **colours** — mood mapped to a body hue | Retired as body colour (AD-23). Mood is carried by the **face** (eyes, pupils, mouth, brow); the body colour is `--skin`, a user-customisable dimension independent of mood. A per-mood accent, if ever wanted, is the **aura** — a wardrobe layer, never the skin |
 | State tokens | None exist; `disabled` is `opacity: 0.45`, `error` is a raw `rgba` | Real states per family (§6.1, §6.2) |
 | New tokens | `--kb-sh-4`, `--kb-warn-soft`, `--kb-warn-border`, `--kb-warn-ink`, `--kb-w-page`, `--kb-w-prose` are **not declared** | Declared and rendered on the canvas. `--kb-sh-4` is the step between popover and modal; the alert inks (HP, reto, warning) mix at **74 %**, not the 54 % every other ink uses; page width is 1200 px and prose width 72 ch |
 
@@ -554,4 +556,4 @@ Only one is left. The rest were ruled on 2026-08-23 and are recorded in §11.
 
 ---
 
-*End of DESIGN-SYSTEM.md · v1.1*
+*End of DESIGN-SYSTEM.md · v1.2*
