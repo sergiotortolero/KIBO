@@ -287,7 +287,7 @@ parpadea, flota y **se transforma según la actividad**.
   la UI. Ojos grandes ovalados con un solo reflejo redondo; cejas de arco suave del ancho de los
   ojos, presentes solo cuando aportan; boca de arco con extremos redondeados, sin puntas. La cara se
   recorta con la silueta del cuerpo, así que nada se desborda cuando se aplasta.
-- **El ánimo cambia el color; la actividad cambia la forma.** **Ocho ánimos** derivados del **HP** —
+- **El ánimo cambia la EXPRESIÓN (ojos, pupila, boca, ceja); la actividad cambia la forma. El color del cuerpo es una piel personalizable, independiente del ánimo (ARCHITECTURE.md AD-23).** **Ocho ánimos** derivados del **HP** —
   no se eligen a mano (`preview/kibo-moods.html`): *Tranquilo* teal `--kb-primary` · *Feliz* verde
   `#10B981` · *Celebra* cyan `--area-will` · *Travieso* morado `#8B5CF6` · *Enfocado* azul
   `--area-wisdom` · *Sorpresa* ámbar `#F59E0B` · *Cansado* gris `#94A3B8` · *Triste* azul-gris
