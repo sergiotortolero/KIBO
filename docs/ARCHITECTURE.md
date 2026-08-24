@@ -1,7 +1,8 @@
-# Kibo — Architecture
+# Kibo — Architecture · v1.1
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
+| v1.1 | 2026-08-23 | Closed Q2 (token authoring format, AD-21) and recorded that KIBO is present throughout the product on both platforms (AD-20) | Sergio ruled the mascot is brand identity, not decoration, and delegated the token format. Both change the critical path: the mascot spike moves into the foundations phase, and `packages/tokens` now has a shape to be built against |
 | v1.0 | 2026-08-23 | First consolidated architecture of record. Absorbs every live decision from `docs/adr/0001-obsidian-integration.md`, `docs/adr/0002-kibo-platform-architecture.md` and `docs/product/PRD-kibo.md`; resolves the contradictions between them; records Sergio's 2026-08-23 rulings; states what was discarded and why | Art. 5: one living architecture document per solution, decisions dated inside it, no per-decision ADRs and no per-feature PRDs. The three source files become deletable without losing a live decision |
 
 > **How to use this document.** This is the architecture of record and the input to every build
@@ -663,9 +664,12 @@ is architectural:
   or add anything.* Usage in the v1 scope is the only test a class has to pass. Retirements are
   presented grouped by family, never piece by piece, because every retirement is a product decision.
 - **Audit before code** (AD-18). The audit pass completes before source is touched.
-- **Tokens are authored platform-neutral** and generate two outputs: CSS custom properties for web
-  and a style object for React Native. **Values only — not one line of style implementation.** The
-  authoring format is open (§13, Q2).
+- **Tokens are authored as plain TypeScript storing inputs, not outputs** (AD-21), and generate two
+  outputs: CSS custom properties for web and a style object for React Native. **Values only — not
+  one line of style implementation.** Fluid tokens resolve to their minimum on mobile, which is the
+  correct phone value rather than an approximation.
+- **KIBO is present throughout the product, on both platforms** (AD-20). It is the brand identity,
+  so the mascot's survival on Reanimated/Skia is a foundations-phase question, not a later one.
 - **Components are never shared between web and mobile.** Tokens are. This is the same boundary as
   §2.4 and the reason the old `packages/ui` was deleted.
 
@@ -756,6 +760,8 @@ date, the alternatives, and the consequence accepted.
 | **AD-16** | 2026-08-23 | **The two currencies are Divisa (everyday) and Elemento (rare)** | Keeping "gemas" · "materia oscura" · "fragmentos" | The name is the unit and the skin is only the look, so Materia oscura, Magia, Esencia and Núcleo become skins of an Elemento instead of competing with the category — which is exactly what broke the previous name |
 | **AD-17** | 2026-08-23 | **Retirement criterion: if it is not used in the app version, it does not serve or add anything** | Case-by-case aesthetic judgement · retiring nothing until a component library exists | Usage in the v1 scope is the only test. Retirements are presented grouped by family |
 | **AD-18** | 2026-08-23 | **The audit completes before source is touched** | Building and auditing in parallel | Front-loads weeks with no visible product, and avoids standardising a vocabulary that is about to be retired |
+| **AD-20** | 2026-08-23 | **KIBO the mascot is present throughout the product on both platforms. It is the brand identity, not a decoration** | Treating the mascot as a web-only flourish · a static mascot on mobile · a "light KIBO" v1 | The animated mascot moves from a nice-to-have to the **critical path of the platform change**: if it does not survive Reanimated/Skia, the brand does not survive the port. `KIBO-019` (the spike) is promoted accordingly and runs in the foundations phase, before any module commits to it |
+| **AD-21** | 2026-08-23 | **Tokens are authored as plain TypeScript, storing INPUTS rather than outputs; two generators emit CSS custom properties and a React Native style object.** Closes Q2 | W3C DTCG JSON (buys a schema and interoperability with design tools Kibo does not use, and costs a toolchain) · literal values per theme (loses the fluid steps and turns fourteen derived inks into fourteen hand-kept values — exactly `ANALYSIS.md` finding 24) · two parallel platform sets (reintroduces by design the divergence the package exists to prevent) | A token is a literal or a **declared derivation as data** — `{mix: '--kb-coin', amount: 0.42, with: '#3D2A00', space: 'oklab'}`, `{min: 14, max: 16, vw: 2}`. Web emits the live CSS function; React Native emits the resolved value. **Fluid tokens resolve to their minimum on mobile**, which is not a shortcut: every fluid token in the system crosses its floor above 500 px, and phones are 360–430 dp, so the minimum *is* the correct phone value. The caveat is written down — a tablet or unfolded-foldable layout needs the computed value, not the floor. The generator needs one colour library (oklab mixing) and a snapshot test so the two platforms cannot drift by rounding |
 | **AD-19** | 2026-08-23 | **`docs/ARCHITECTURE.md` is the single decision surface.** ADR-0001, ADR-0002 and the PRD are void and deletable | Keeping per-decision ADRs · keeping the PRD as the product spec | Detail concentrates where builders look. §14 is the record of what must not come back |
 
 ---
@@ -778,24 +784,7 @@ the first screen to be rebuilt on the standardized DS.
 
 Constrained by Q4 (a cut module cannot be first).
 
-**Q2 · What is the platform-neutral token authoring format, and what generates the two outputs?**
-(`KIBO-016`, `KIBO-008`)
-The hard constraint is measurable in the current token file: **three spacing steps are `clamp()`**
-(`--kb-sp-7/8/9`), four type steps are fluid `clamp()`, and **fourteen inks are
-`color-mix(in oklab, …)`**. **React Native has neither function.** A format that only stores literals
-loses the fluidity and the derivation; a format that only stores CSS loses the phone.
-- *(a) Author raw inputs plus a declared derivation, and resolve at build time per platform* — web
-  emits the live CSS function, React Native emits the computed value per theme and per breakpoint
-  bucket. Consequence: the generator must implement oklab mixing and clamp resolution; the two
-  platforms can drift by rounding, so a snapshot test is mandatory.
-- *(b) Author literal values only, one per theme* — trivial generator, exact parity. Consequence:
-  fluid spacing and type are lost on web, and the fourteen derived inks become fourteen hand-kept
-  values, which is the failure `ANALYSIS.md` finding 24 already documents.
-- *(c) Author two parallel sets, one per platform* — full expressive power on each. Consequence: the
-  divergence failure mode the whole tokens package exists to prevent, reintroduced by design.
-
-Sub-question inside this one: **W3C DTCG JSON vs plain TypeScript** — DTCG buys interoperability and
-a schema; plain TS buys zero tooling and type-checking at the call site.
+*(Q2, the token authoring format, is closed — see AD-21.)*
 
 **Q3 · How is accessibility solved once Radix goes?** (`KIBO-017`)
 - *(a) Headless a11y primitives under 100 %-Kibo components* — the behaviour, not one line of foreign
@@ -951,4 +940,4 @@ Recorded so nothing on this list comes back through a stale document.
 
 ---
 
-End of ARCHITECTURE.md · v1.0
+End of ARCHITECTURE.md · v1.1
