@@ -19,8 +19,9 @@ Datos clave que debes interiorizar:
 
 - **Marca:** teal `#1CA4A0` («progreso sereno»); **DOS familias**: Plus Jakarta Sans (display,
   números *y* etiquetas) e Inter (cuerpo y metadatos). La mono se retiró. Las etiquetas van en
-  **minúscula, 11px, peso 700** — nunca MAYÚSCULAS con tracking amplio. Claro, amable, gamificado. Voz cercana y motivadora, español primero (es-MX) más
-  inglés, de «tú», con la frase *«el fracaso reencauza»*.
+  **MAYÚSCULAS, 11px, peso 800, tracking `.09em`** (`.kbv-eyebrow`). Claro, amable, gamificado.
+  Voz cercana y motivadora, español primero (es-MX) más inglés, de «tú», con la frase
+  *«el fracaso reencauza»*.
 - **La gamificación es la marca:** colores de HP/XP/moneda/gema/racha, 5 áreas de vida, 5
   prioridades, 9 materiales de rango, 16 grados de prestigio, 9 tiers de llama, la economía de la
   Vitrina. Ver *Fundamentos visuales* en el README y las tarjetas de `preview/`.
