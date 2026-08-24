@@ -433,36 +433,129 @@
     }
     /* El color NO cambia con el animo: es la piel, y punto. */
     .kbb-tint { position: absolute; inset: 0; background-color: var(--skin); opacity: .55; }
-    .kbb-faceclip { position: absolute; inset: 0; overflow: visible; }
-    .kbb-svgface { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    /* La cara canónica, recortada a la silueta del gel. Estructura inamovible:
+       ojos grandes con PUPILA BLANCA y una boca-w pequeña y redonda. El ánimo
+       solo la DEFORMA — nunca la reemplaza. */
+    .kbb-faceclip { position: absolute; inset: 0; z-index: 2; overflow: hidden;
+                    border-radius: 47% 45% 46% 46%/48% 47% 45% 46%; }
+    .kbb-face { position: absolute; inset: 0; }
 
-    /* La cara hereda la tinta de KIBO. Es lo unico que se mueve entre animos. */
-    .kbb-svgface .ey { fill: var(--ink); }
-    .kbb-svgface .pu { fill: var(--kb-text-inverse); }
-    .kbb-svgface .hl { fill: var(--kb-text-inverse); opacity: .9; }
-    .kbb-svgface .ea, .kbb-svgface .li, .kbb-svgface .br, .kbb-svgface .mo {
-      fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round;
+    /* Ojos: óvalo alto y grande, caído hacia afuera. La tinta de KIBO. */
+    .kbb-eyes { position: absolute; top: 33%; left: 0; right: 0; display: flex;
+                justify-content: center; gap: 22px; transform-origin: center 62%; }
+    .kbb-eye { position: relative; width: 46px; height: 56px; background: var(--ink);
+               border-radius: 46%/52%; overflow: hidden; rotate: -10deg; transform-origin: center 60%;
+               transition: height .24s var(--kb-ease-standard), border-radius .24s; }
+    .kbb-eyes .kbb-eye:last-child { rotate: 10deg; }
+    /* LA PUPILA BLANCA carga la expresión: --px/--py la mueven por ánimo. */
+    .kbb-eye::before {
+      content: ""; position: absolute; left: 50%; top: 50%; width: 19px; height: 19px;
+      border-radius: 50%; margin: 0; translate: -50% -50%;
+      transform: translate(calc(var(--px, 0) * 8px - 1px), calc(var(--py, 0) * 8px - 5px));
+      background: var(--kb-text-inverse);
     }
-    .kbb-svgface .ea { stroke-width: 4.5; }
-    .kbb-svgface .li { stroke-width: 3.5; }
-    .kbb-svgface .br { stroke-width: 4; }
-    .kbb-svgface .mo { stroke-width: 3.2; }
-    .kbb-svgface .mf { fill: var(--ink); }
-    .kbb-svgface .ch { fill: color-mix(in srgb, var(--kb-hp) 42%, transparent); }
 
-    /* Manopies: gel translucido a la misma piel, ocultas en reposo. */
-    .kbb-bub { position: absolute; width: 28px; height: 34px; z-index: 3; transform: scale(0); }
+    /* Cachetes: rubor de HP, solo en feliz y celebra. */
+    .kbb-cheeks { position: absolute; top: 62%; left: 0; right: 0; display: flex;
+                  justify-content: center; gap: 68px; opacity: 0; }
+    .kbb-cheek { width: 11px; height: 5px; border-radius: 50%; filter: blur(1px);
+                 background: color-mix(in srgb, var(--kb-hp) 42%, transparent); }
+    .kbb[data-mood="feliz"] .kbb-cheeks, .kbb[data-mood="celebra"] .kbb-cheeks { opacity: 1; }
+
+    /* Boca-w: festón pequeño de 2-3 bombas, un hilo de la tinta de KIBO. */
+    .kbb-mouth { position: absolute; top: 64%; left: 50%; transform: translateX(-50%);
+                 width: 38px; height: 28px; overflow: visible; transform-origin: center; }
+    .kbb-mouth path { stroke: var(--ink); stroke-width: 1.9; stroke-linecap: round;
+                      stroke-linejoin: round; fill: none; }
+    .kbb-mouth path.fill { fill: var(--ink); stroke: none; }
+
+    /* Ceja: arco de la tinta que aporta la mitad de la expresión donde el ánimo
+       la pide. Oculta por defecto; cada ánimo la coloca e inclina. */
+    .kbb-brows { position: absolute; top: 21%; left: 0; right: 0; display: none;
+                 justify-content: center; gap: 22px; }
+    .kbb-brow { width: 34px; height: 12px; }
+    .kbb-brow svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .kbb-brow path { fill: none; stroke: var(--ink); stroke-width: 4;
+                     stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ── El ánimo deforma la MISMA cara ─────────────────────────────── */
+    .kbb[data-mood="feliz"] .kbb-eye { height: 54px; }
+    .kbb[data-mood="feliz"] .kbb-mouth { transform: translateX(-50%) scale(1.05); }
+
+    .kbb[data-mood="celebra"] .kbb-eye { height: 56px; }
+    .kbb[data-mood="celebra"] .kbb-mouth { top: 63%; transform: translateX(-50%) scale(1.14); }
+    .kbb[data-mood="celebra"] .kbb-brows { display: flex; top: 20%; }
+    .kbb[data-mood="celebra"] .kbb-brow:first-child { transform: rotate(-8deg) translateY(-1px); }
+    .kbb[data-mood="celebra"] .kbb-brow:last-child { transform: rotate(8deg) translateY(-1px); }
+
+    .kbb[data-mood="enfocado"] .kbb-eye { height: 52px; border-radius: 46%/44%; }
+    .kbb[data-mood="enfocado"] .kbb-eye::before { width: 16px; height: 16px; }
+    .kbb[data-mood="enfocado"] .kbb-mouth { top: 66%; transform: translateX(-50%) scale(.86); }
+    .kbb[data-mood="enfocado"] .kbb-brows { display: flex; top: 23%; }
+    .kbb[data-mood="enfocado"] .kbb-brow:first-child { transform: rotate(14deg) translateY(1px); }
+    .kbb[data-mood="enfocado"] .kbb-brow:last-child { transform: rotate(-14deg) translateY(1px); }
+
+    .kbb[data-mood="cansado"] .kbb-eye { height: 52px; border-radius: 46%/30% 30% 60% 60%; }
+    .kbb[data-mood="cansado"] .kbb-eye::before { width: 13px; height: 13px; }
+    .kbb[data-mood="cansado"] .kbb-mouth { top: 68%; left: 47%; transform: translateX(-50%) scale(.9) rotate(2deg); }
+    .kbb[data-mood="cansado"] .kbb-brows { display: flex; top: 22%; }
+    .kbb[data-mood="cansado"] .kbb-brow:first-child { transform: rotate(-9deg) translateY(2px); }
+    .kbb[data-mood="cansado"] .kbb-brow:last-child { transform: rotate(9deg) translateY(2px); }
+
+    .kbb[data-mood="triste"] .kbb-eye { height: 53px; border-radius: 46%/34% 34% 58% 58%; }
+    .kbb[data-mood="triste"] .kbb-eye::before { width: 13px; height: 13px; top: auto; bottom: 20%; left: 34%; }
+    .kbb[data-mood="triste"] .kbb-mouth { top: 70%; transform: translateX(-50%) scale(.9); }
+    .kbb[data-mood="triste"] .kbb-brows { display: flex; top: 24%; }
+    .kbb[data-mood="triste"] .kbb-brow:first-child { transform: rotate(-12deg); }
+    .kbb[data-mood="triste"] .kbb-brow:last-child { transform: rotate(12deg); }
+
+    .kbb[data-mood="sorpresa"] .kbb-eye { height: 58px; width: 46px; }
+    .kbb[data-mood="sorpresa"] .kbb-eye::before { width: 21px; height: 21px; }
+    .kbb[data-mood="sorpresa"] .kbb-mouth { transform: translateX(-50%) scale(1.16); }
+    .kbb[data-mood="sorpresa"] .kbb-brows { display: flex; top: 18%; }
+
+    .kbb[data-mood="travieso"] .kbb-eye { height: 53px; border-radius: 46%/38% 38% 56% 56%; }
+    .kbb[data-mood="travieso"] .kbb-eye::before { width: 14px; height: 14px; left: auto; right: 24%; top: 26%; }
+    .kbb[data-mood="travieso"] .kbb-eye:last-child { height: 52px; border-radius: 46%/26% 26% 62% 62%; }
+    .kbb[data-mood="travieso"] .kbb-mouth { left: 57%; transform: translateX(-50%) rotate(-5deg) scale(1.04); }
+    .kbb[data-mood="travieso"] .kbb-brows { display: flex; top: 22%; }
+    .kbb[data-mood="travieso"] .kbb-brow:first-child { transform: rotate(-18deg) translateY(-2px); }
+    .kbb[data-mood="travieso"] .kbb-brow:last-child { transform: rotate(8deg) translateY(2px); }
+
+    /* Vida baja: el gel entero se apaga un poco. */
+    .kbb[data-mood="cansado"] .kbb-body, .kbb[data-mood="triste"] .kbb-body { filter: saturate(.72); }
+
+    /* Manopies: dos gotas de gel translúcido a la MISMA piel. Orbitan separadas
+       del cuerpo, cuelgan con la punta angosta arriba y se deforman con el gel;
+       ocultas en reposo, entran con transición. */
+    .kbb-bub { position: absolute; width: 28px; height: 34px; z-index: 3; transform: scale(0);
+               transition: transform .3s var(--kb-ease-standard); }
     .kbb.hands .kbb-bub { transform: scale(1); }
-    .kbb-bub i { position: absolute; inset: 0; border-radius: 48% 52% 54% 46%/78% 76% 22% 24%;
+    .kbb-bub i { position: absolute; inset: 0; transform-origin: 50% 22%;
+                 border-radius: 48% 52% 54% 46%/78% 76% 22% 24%;
                  background: color-mix(in srgb, var(--skin) 58%, transparent); }
     .kbb-bub.r { right: -48px; top: 70px; }
     .kbb-bub.l { left: -48px; top: 72px; }
+    .kbb.live.hands .kbb-bub.r { animation: kbOrbitR 9s var(--kb-ease-standard) infinite; }
+    .kbb.live.hands .kbb-bub.l { animation: kbOrbitL 9s var(--kb-ease-standard) infinite; }
+    .kbb.live.hands .kbb-bub i { animation: kbBubMorph 6.5s var(--kb-ease-standard) infinite; }
+    @keyframes kbOrbitR { 0%, 100% { translate: 0 0; } 25% { translate: -5px -12px; } 50% { translate: -9px 3px; } 75% { translate: -3px 11px; } }
+    @keyframes kbOrbitL { 0%, 100% { translate: 0 0; } 25% { translate: 4px 10px; } 50% { translate: 9px -4px; } 75% { translate: 3px -12px; } }
+    @keyframes kbBubMorph {
+      0%, 100% { border-radius: 48% 52% 54% 46%/78% 76% 22% 24%; transform: rotate(-3deg) scale(1, 1.06); }
+      25% { border-radius: 54% 46% 50% 50%/82% 74% 26% 18%; transform: rotate(4deg) scale(.94, 1.12); }
+      50% { border-radius: 42% 58% 58% 42%/76% 82% 18% 24%; transform: rotate(-5deg) scale(1.05, 1.02); }
+      75% { border-radius: 52% 48% 46% 54%/80% 78% 22% 20%; transform: rotate(2deg) scale(.97, 1.09); }
+    }
 
     /* El ciclo base: cuatro pistas a la vez. El movimiento reducido lo conserva. */
     .kbb.live .kbb-float { animation: kbFloat 4.6s ease-in-out infinite; }
     .kbb.live .kbb-ground { animation: kbGround 4.6s ease-in-out infinite; }
     .kbb.live .kbb-body { animation: kbBlob 6.5s var(--kb-ease-standard) infinite; }
-    .kbb.live .kbb-svgface .eyes { animation: kbBlink 5.2s infinite; transform-origin: center; transform-box: fill-box; }
+    .kbb.live .kbb-faceclip { animation: kbBlob 6.5s var(--kb-ease-standard) infinite; }
+    .kbb.live .kbb-face { animation: kbFaceIdle 6.5s var(--kb-ease-standard) infinite; }
+    .kbb.live .kbb-eyes { animation: kbBlink 5.2s infinite; }
+    @keyframes kbFaceIdle { 0%, 100% { transform: translate(0, 0); } 35% { transform: translate(-1.5px, 1.5px); } 70% { transform: translate(1.5px, .5px); } }
     @keyframes kbFloat { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-7px) rotate(-1.2deg); } 70% { transform: translateY(-3px) rotate(1deg); } }
     @keyframes kbGround { 0%, 100% { transform: translateX(-50%) scale(1); opacity: .85; } 30% { transform: translateX(-50%) scale(.86); opacity: .6; } 70% { transform: translateX(-50%) scale(.94); opacity: .75; } }
     @keyframes kbBlob {
@@ -473,7 +566,8 @@
     }
     @keyframes kbBlink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.08); } }
     @media (prefers-reduced-motion: reduce) {
-      .kbb.live .kbb-float, .kbb.live .kbb-ground, .kbb.live .kbb-body, .kbb.live .kbb-svgface .eyes {
+      .kbb.live .kbb-float, .kbb.live .kbb-ground, .kbb.live .kbb-body,
+      .kbb.live .kbb-faceclip, .kbb.live .kbb-face, .kbb.live .kbb-eyes {
         animation-duration: 6.5s !important;
       }
     }
@@ -552,19 +646,17 @@
     </div>
     <div class="anat">
       <div class="col" style="gap: var(--kb-sp-6); align-items: center; flex: none">
-        <span class="kbb-host" style="width:176px;height:189px;--s:1.2571" aria-hidden="true"><span class="kbb live" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <ellipse class="ey" cx="37" cy="44" rx="9" ry="11"/><ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/>
-        <circle class="pu" cx="38" cy="42" r="4"/><circle class="pu" cx="64" cy="42" r="4"/>
-        <path class="mo" d="M41 66 Q50 71 59 66"/></g></svg></span></span></span></span>
-        <div class="tok">Reposo &middot; teal por defecto</div>
+        <span class="kbb-host" style="width:176px;height:189px;--s:1.2571" aria-hidden="true"><span class="kbb live hands" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-bub l"><i></i></span><span class="kbb-bub r"><i></i></span><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
+        <div class="tok">Con manopies &middot; teal por defecto</div>
       </div>
       <div class="leg">
         <div class="k body">Cuerpo</div><div class="v">Caja nativa de <strong>140 &times; 150</strong>. El contorno es un radio de cuatro esquinas que respira; nunca un círculo.</div>
         <div class="k body">Piel</div><div class="v">El color, al <strong>55 %</strong> sobre la superficie. Es una <strong>entrada del usuario</strong> &mdash; no la toca el ánimo.</div>
-        <div class="k face">Ojos</div><div class="v">Cambian de <strong>forma y apertura</strong> con el ánimo: abiertos, entornados, arcos felices, párpado caído.</div>
-        <div class="k face">Pupila</div><div class="v">Su tamaño y su posición dicen a dónde mira y cuánta energía hay.</div>
-        <div class="k face">Boca</div><div class="v">De un hilo a una sonrisa abierta a un mohín. Trazo de la tinta de KIBO.</div>
-        <div class="k face">Ceja</div><div class="v">Vuelve al repertorio: fruncida, caída o alzada &mdash; es la mitad de la expresión.</div>
+        <div class="k face">Ojos</div><div class="v"><strong>Grandes, muy grandes.</strong> El mismo óvalo alto cambia de apertura y forma con el ánimo: abiertos, entornados o con el párpado caído.</div>
+        <div class="k face">Pupila</div><div class="v"><strong>Blanca</strong>, la que carga la expresión. Su tamaño y su posición dicen a dónde mira y cuánta energía hay.</div>
+        <div class="k face">Boca</div><div class="v">Festón pequeño en <strong>w redonda</strong>, un hilo de la tinta de KIBO. El ánimo la curva y la ladea; nunca la reemplaza.</div>
+        <div class="k face">Ceja</div><div class="v">Aporta donde el ánimo la pide: fruncida, caída o alzada. La pupila lleva el resto.</div>
+        <div class="k body">Manopies</div><div class="v">Dos gotas de gel a la <strong>misma piel</strong>. Orbitan separadas del cuerpo y se ocultan en reposo &mdash; salen con un gesto.</div>
       </div>
     </div>
     <div class="rule"><strong>HP es la fuente de verdad del ánimo, y el ánimo es la cara.</strong> KIBO no siempre sonríe: su expresión sale de tu salud. El <strong>color</strong> es otra cosa &mdash; una piel del guardarropa, libre.</div>
@@ -579,37 +671,9 @@
       <div></div>
       <div class="hdr">Teal</div><div class="hdr">Cielo</div><div class="hdr">Uva</div><div class="hdr">Fuego</div>
       <div class="hdr" style="align-self:center;text-align:right;padding-right:var(--kb-sp-5)">Feliz</div>
-      <div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span></div>
+      <div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span></div>
       <div class="hdr" style="align-self:center;text-align:right;padding-right:var(--kb-sp-5)">Triste</div>
-      <div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span></div>
+      <div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span></div><div class="kwrap"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span></div>
     </div>
     <div class="rule">Baja por una columna y el <strong>color no cambia</strong> aunque el ánimo se derrumbe: una piel azul comprada sigue azul con KIBO triste. Cruza una fila y la <strong>cara es idéntica</strong> sobre cualquier color. Ese cruce independiente es la decisión.</div>
   </div>
@@ -619,42 +683,9 @@
       <div class="eyebrow">De la vida a la expresión</div>
       <div class="use">Seis tramos de HP, seis caras. Todas sobre el mismo color, para que se lea que la cara sola basta.</div>
     </div>
-    <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="celebra"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 30 Q37 24 46 30" /><path class="br" d="M54 30 Q63 24 72 30" />
-        <ellipse class="ey" cx="37" cy="43" rx="10" ry="13"/><ellipse class="ey" cx="63" cy="43" rx="10" ry="13"/>
-        <circle class="pu" cx="37" cy="40" r="5"/><circle class="pu" cx="63" cy="40" r="5"/>
-        <circle class="hl" cx="39.4" cy="37.6" r="1.7"/><circle class="hl" cx="65.4" cy="37.6" r="1.7"/>
-        <ellipse class="ch" cx="26" cy="56" rx="6" ry="3.4"/><ellipse class="ch" cx="74" cy="56" rx="6" ry="3.4"/>
-        <path class="mf" d="M40 66 Q50 70 60 66 Q50 82 40 66 Z"/></g></svg></span></span></span></span><div class="nm">Celebra</div><div class="rg">HP 90 – 100</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="nm">Feliz</div><div class="rg">HP 72 – 89</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <ellipse class="ey" cx="37" cy="44" rx="9" ry="11"/><ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/>
-        <circle class="pu" cx="38" cy="42" r="4"/><circle class="pu" cx="64" cy="42" r="4"/>
-        <path class="mo" d="M41 66 Q50 71 59 66"/></g></svg></span></span></span></span><div class="nm">Tranquilo</div><div class="rg">HP 55 – 71</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="enfocado"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M29 33 L45 40"/><path class="br" d="M71 33 L55 40"/>
-        <ellipse class="ey" cx="37" cy="46" rx="9" ry="6"/><ellipse class="ey" cx="63" cy="46" rx="9" ry="6"/>
-        <circle class="pu" cx="37" cy="46" r="3.5"/><circle class="pu" cx="63" cy="46" r="3.5"/>
-        <path class="mo" d="M43 68 Q50 66 57 68"/></g></svg></span></span></span></span><div class="nm">Enfocado</div><div class="rg">HP 38 – 54</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="cansado"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 34 Q37 35 46 37"/><path class="br" d="M72 34 Q63 35 54 37"/>
-        <ellipse class="ey" cx="37" cy="47" rx="9" ry="5"/><ellipse class="ey" cx="63" cy="47" rx="9" ry="5"/>
-        <path class="li" d="M27 41 Q37 45 47 41"/><path class="li" d="M53 41 Q63 45 73 41"/>
-        <circle class="pu" cx="37" cy="48" r="3"/><circle class="pu" cx="63" cy="48" r="3"/>
-        <ellipse class="mf" cx="50" cy="70" rx="4" ry="5"/></g></svg></span></span></span></span><div class="nm">Cansado</div><div class="rg">HP 20 – 37</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="triste"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="nm">Triste</div><div class="rg">HP 0 – 19</div></div></div>
+    <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="celebra"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.3"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Celebra</div><div class="rg">HP 90 – 100</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Feliz</div><div class="rg">HP 72 – 89</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Tranquilo</div><div class="rg">HP 55 – 71</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="enfocado"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.1"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1.6 q 2.1 1.5 4.2 0 q 2.1 1.5 4.2 0"/></svg></span></span></span></span></span><div class="nm">Enfocado</div><div class="rg">HP 38 – 54</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="cansado"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:-0.2;--py:0.34"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2 q 2.1 1.4 4.2 0 q 2.1 1.4 4.2 -0.3"/></svg></span></span></span></span></span><div class="nm">Cansado</div><div class="rg">HP 20 – 37</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="triste"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="nm">Triste</div><div class="rg">HP 0 – 19</div></div></div>
     <div class="row" style="gap: var(--kb-sp-9); padding-top: var(--kb-sp-6); border-top: 1px solid var(--kb-border-soft)">
-      <div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="sorpresa"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M27 27 Q37 21 47 27"/><path class="br" d="M53 27 Q63 21 73 27"/>
-        <circle class="ey" cx="37" cy="43" r="11"/><circle class="ey" cx="63" cy="43" r="11"/>
-        <circle class="pu" cx="37" cy="43" r="5"/><circle class="pu" cx="63" cy="43" r="5"/>
-        <ellipse class="mf" cx="50" cy="70" rx="4.5" ry="6"/></g></svg></span></span></span></span><div class="nm">Sorpresa</div><div class="rg">Por reacción</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="travieso"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M29 36 L45 37"/><path class="br" d="M54 33 Q63 28 72 33"/>
-        <path class="ea" d="M29 45 Q37 49 45 45"/>
-        <ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/><circle class="pu" cx="66" cy="43" r="4"/>
-        <path class="mo" d="M39 68 Q49 74 62 63"/></g></svg></span></span></span></span><div class="nm">Travieso</div><div class="rg">Por reacción</div></div>
+      <div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="sorpresa"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.34"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 0.4 q 2.1 3 4.2 0 q 2.1 3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Sorpresa</div><div class="rg">Por reacción</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="travieso"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0.34;--py:-0.24"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -1.6 -1.4 L 2.4 1.4 L -1.6 4.2"/></svg></span></span></span></span></span><div class="nm">Travieso</div><div class="rg">Por reacción</div></div>
       <div style="font-size: var(--kb-fs-sm); line-height: 1.55; color: var(--kb-text-2); max-width: 440px">Dos expresiones más <strong style="color: var(--kb-text)">no salen del HP</strong>: llegan por una reacción, duran lo que dura el gesto y devuelven la cara al ánimo que le tocaba a la vida.</div>
     </div>
     <div class="rule">Cada ánimo es una cara <strong>claramente distinta</strong>: forma del ojo, apertura, pupila, boca y ceja trabajando juntas. Con un mismo color de cuerpo, los ocho se distinguen sin dudar.</div>
@@ -668,53 +699,11 @@
     <div class="col" style="gap: var(--kb-sp-7)">
       <div class="col" style="gap: var(--kb-sp-4)">
         <div class="chipc" style="align-self:flex-start; background: var(--kb-primary-soft); color: var(--kb-primary-ink)">Feliz &middot; seis pieles</div>
-        <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="rg">Teal</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="rg">Cielo</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="rg">Uva</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="rg">Fuego</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-coin)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="rg">Oro</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-vigor)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="ea" d="M29 46 Q37 38 45 46"/><path class="ea" d="M55 46 Q63 38 71 46"/>
-        <ellipse class="ch" cx="27" cy="57" rx="6" ry="3.4"/><ellipse class="ch" cx="73" cy="57" rx="6" ry="3.4"/>
-        <path class="mo" d="M39 65 Q50 74 61 65"/></g></svg></span></span></span></span><div class="rg">Fresa</div></div></div>
+        <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">Teal</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">Cielo</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">Uva</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">Fuego</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--kb-coin)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">Oro</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz" style="--skin:var(--area-vigor)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="rg">Fresa</div></div></div>
       </div>
       <div class="col" style="gap: var(--kb-sp-4)">
         <div class="chipc" style="align-self:flex-start; background: var(--kb-hp-soft); color: var(--kb-hp-ink)">Triste &middot; las mismas seis</div>
-        <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="rg">Teal</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="rg">Cielo</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="rg">Uva</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="rg">Fuego</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-coin)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="rg">Oro</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-vigor)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <path class="br" d="M28 37 Q39 31 47 35"/><path class="br" d="M72 37 Q61 31 53 35"/>
-        <ellipse class="ey" cx="37" cy="45" rx="9" ry="10"/><ellipse class="ey" cx="63" cy="45" rx="9" ry="10"/>
-        <circle class="pu" cx="39" cy="48" r="4"/><circle class="pu" cx="61" cy="48" r="4"/>
-        <path class="mo" d="M40 70 Q50 63 60 70"/></g></svg></span></span></span></span><div class="rg">Fresa</div></div></div>
+        <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-primary)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">Teal</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-wisdom)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">Cielo</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-community)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">Uva</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-streak)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">Fuego</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--kb-coin)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">Oro</div></div><div class="kcell"><span class="kbb-host" style="width:84px;height:90px;--s:0.6" aria-hidden="true"><span class="kbb" data-mood="triste" style="--skin:var(--area-vigor)"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="rg">Fresa</div></div></div>
       </div>
     </div>
     <div class="rule">Los tokens <code>--kb-mood-*</code> quedan <strong>retirados</strong> como color de cuerpo: el ánimo ya no mapea a un matiz. La cara lleva el ánimo, la piel lleva el color, y ningún token los vuelve a juntar. Si algún día se quiere un acento ambiental por ánimo, ése es el <strong>aura</strong> &mdash; una capa aparte del guardarropa, nunca la piel.</div>
@@ -803,26 +792,14 @@
       <div class="eyebrow">Tamaños y sitio</div>
       <div class="use">Cuatro tamaños. Uno fuera de estos cuatro no existe.</div>
     </div>
-    <div class="swrow"><div class="szcell"><span class="kbb-host" style="width:32px;height:34px;--s:0.2286" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <ellipse class="ey" cx="37" cy="44" rx="9" ry="11"/><ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/>
-        <circle class="pu" cx="38" cy="42" r="4"/><circle class="pu" cx="64" cy="42" r="4"/>
-        <path class="mo" d="M41 66 Q50 71 59 66"/></g></svg></span></span></span></span><div class="spec">32 px</div><div class="tok" style="text-align:center;max-width:130px">Marca</div></div><div class="szcell"><span class="kbb-host" style="width:56px;height:60px;--s:0.4" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <ellipse class="ey" cx="37" cy="44" rx="9" ry="11"/><ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/>
-        <circle class="pu" cx="38" cy="42" r="4"/><circle class="pu" cx="64" cy="42" r="4"/>
-        <path class="mo" d="M41 66 Q50 71 59 66"/></g></svg></span></span></span></span><div class="spec">56 px</div><div class="tok" style="text-align:center;max-width:130px">Acompañante</div></div><div class="szcell"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <ellipse class="ey" cx="37" cy="44" rx="9" ry="11"/><ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/>
-        <circle class="pu" cx="38" cy="42" r="4"/><circle class="pu" cx="64" cy="42" r="4"/>
-        <path class="mo" d="M41 66 Q50 71 59 66"/></g></svg></span></span></span></span><div class="spec">72 px</div><div class="tok" style="text-align:center;max-width:130px">Esquina de acción rápida</div></div><div class="szcell"><span class="kbb-host" style="width:160px;height:171px;--s:1.1429" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip"><svg class="kbb-svgface" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet"><g class="eyes">
-        <ellipse class="ey" cx="37" cy="44" rx="9" ry="11"/><ellipse class="ey" cx="63" cy="44" rx="9" ry="11"/>
-        <circle class="pu" cx="38" cy="42" r="4"/><circle class="pu" cx="64" cy="42" r="4"/>
-        <path class="mo" d="M41 66 Q50 71 59 66"/></g></svg></span></span></span></span><div class="spec">160 px</div><div class="tok" style="text-align:center;max-width:130px">Escenario</div></div></div>
+    <div class="swrow"><div class="szcell"><span class="kbb-host" style="width:32px;height:34px;--s:0.2286" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">32 px</div><div class="tok" style="text-align:center;max-width:130px">Marca</div></div><div class="szcell"><span class="kbb-host" style="width:56px;height:60px;--s:0.4" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">56 px</div><div class="tok" style="text-align:center;max-width:130px">Acompañante</div></div><div class="szcell"><span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">72 px</div><div class="tok" style="text-align:center;max-width:130px">Esquina de acción rápida</div></div><div class="szcell"><span class="kbb-host" style="width:160px;height:171px;--s:1.1429" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="spec">160 px</div><div class="tok" style="text-align:center;max-width:130px">Escenario</div></div></div>
     <div class="rule">A 72 px el <strong>cuerpo</strong> mide 72, pero su <strong>huella</strong> llega a unos 126: el aura y las manopies sangran a los lados. Por eso la esquina de acción rápida vive en el relleno del contenido y nunca en su caja de texto &mdash; la decoración puede invadir; el cuerpo, no.</div>
   </div>
 
 </div>
 
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":940,"height":3672}}'>
+<script data-dc-script data-props='{"$preview":{"width":940,"height":3700}}'>
 class Component extends DCLogic {
   renderVals() {
     return {};

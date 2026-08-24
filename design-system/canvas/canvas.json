@@ -1,33 +1,176 @@
 {
   "pages": [
-    { "id": "fundamentos", "name": "Fundamentos" },
-    { "id": "componentes", "name": "Componentes" },
-    { "id": "dominio",     "name": "Dominio" },
-    { "id": "aplicacion",  "name": "La aplicación" }
+    {
+      "id": "fundamentos",
+      "name": "Fundamentos"
+    },
+    {
+      "id": "componentes",
+      "name": "Componentes"
+    },
+    {
+      "id": "dominio",
+      "name": "Núcleo"
+    },
+    {
+      "id": "aplicacion",
+      "name": "La aplicación"
+    }
   ],
   "artboards": [
-    { "file": "Color.dc.html",       "page": "fundamentos", "x": 0,    "y": 0, "w": 940, "h": 2738, "title": "01 · Color" },
-    { "file": "Tipografia.dc.html",  "page": "fundamentos", "x": 1000, "y": 0, "w": 940, "h": 1710, "title": "02 · Tipografía" },
-    { "file": "Medidas.dc.html",     "page": "fundamentos", "x": 2000, "y": 0, "w": 940, "h": 1641, "title": "03 · Medida y movimiento" },
-    { "file": "Iconos.dc.html",      "page": "fundamentos", "x": 3000, "y": 0, "w": 940, "h": 2420, "title": "04 · Íconos" },
-    { "file": "Plataformas.dc.html", "page": "fundamentos", "x": 4000, "y": 0, "w": 940, "h": 1215, "title": "05 · Un sistema, dos plataformas" },
-
-    { "file": "Boton.dc.html",       "page": "componentes", "x": 0,    "y": 0, "w": 940, "h": 1336, "title": "01 · Botón" },
-    { "file": "Campo.dc.html",       "page": "componentes", "x": 1000, "y": 0, "w": 940, "h": 1235, "title": "02 · Campo" },
-    { "file": "Chips.dc.html",       "page": "componentes", "x": 2000, "y": 0, "w": 940, "h": 866,  "title": "03 · Chip, etiqueta y contador" },
-    { "file": "Barras.dc.html",      "page": "componentes", "x": 3000, "y": 0, "w": 940, "h": 1161, "title": "04 · Barra de progreso" },
-    { "file": "Tarjeta.dc.html",     "page": "componentes", "x": 4000, "y": 0, "w": 940, "h": 1352, "title": "05 · Tarjeta" },
-    { "file": "KPI.dc.html",         "page": "componentes", "x": 5000, "y": 0, "w": 940, "h": 1540, "title": "06 · KPI" },
-    { "file": "Modal.dc.html",       "page": "componentes", "x": 6000, "y": 0, "w": 940, "h": 1596, "title": "07 · Modal" },
-    { "file": "Familias.dc.html",    "page": "componentes", "x": 7000, "y": 0, "w": 940, "h": 3078, "title": "08 · Familias menores" },
-
-    { "file": "Sobre.dc.html",       "page": "dominio",     "x": 0,    "y": 0, "w": 940, "h": 1367, "title": "01 · El registro de hechos" },
-    { "file": "Conceptos.dc.html",   "page": "dominio",     "x": 1000, "y": 0, "w": 940, "h": 1678, "title": "02 · Hábito, reto, tarea y proyecto" },
-    { "file": "Economia.dc.html",    "page": "dominio",     "x": 2000, "y": 0, "w": 940, "h": 1108, "title": "03 · Progresión y economía" },
-
-    { "file": "Armazon.dc.html",     "page": "aplicacion",  "x": 0,    "y": 0, "w": 940, "h": 3940, "title": "01 · Armazón" },
-    { "file": "KIBO.dc.html",        "page": "aplicacion",  "x": 1000, "y": 0, "w": 940, "h": 3672, "title": "02 · KIBO" },
-    { "file": "Rueda.dc.html",       "page": "aplicacion",  "x": 2000, "y": 0, "w": 940, "h": 2275, "title": "03 · Rueda de acción" }
+    {
+      "file": "Color.dc.html",
+      "page": "fundamentos",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 2738,
+      "title": "01 · Color"
+    },
+    {
+      "file": "Tipografia.dc.html",
+      "page": "fundamentos",
+      "x": 1000,
+      "y": 0,
+      "w": 940,
+      "h": 1710,
+      "title": "02 · Tipografía"
+    },
+    {
+      "file": "Medidas.dc.html",
+      "page": "fundamentos",
+      "x": 2000,
+      "y": 0,
+      "w": 940,
+      "h": 1641,
+      "title": "03 · Medida y movimiento"
+    },
+    {
+      "file": "Iconos.dc.html",
+      "page": "fundamentos",
+      "x": 3000,
+      "y": 0,
+      "w": 940,
+      "h": 2420,
+      "title": "04 · Íconos"
+    },
+    {
+      "file": "Plataformas.dc.html",
+      "page": "fundamentos",
+      "x": 4000,
+      "y": 0,
+      "w": 940,
+      "h": 1215,
+      "title": "05 · Un sistema, dos plataformas"
+    },
+    {
+      "file": "Boton.dc.html",
+      "page": "componentes",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 1336,
+      "title": "01 · Botón"
+    },
+    {
+      "file": "Campo.dc.html",
+      "page": "componentes",
+      "x": 1000,
+      "y": 0,
+      "w": 940,
+      "h": 1235,
+      "title": "02 · Campo"
+    },
+    {
+      "file": "Chips.dc.html",
+      "page": "componentes",
+      "x": 2000,
+      "y": 0,
+      "w": 940,
+      "h": 866,
+      "title": "03 · Chip, etiqueta y contador"
+    },
+    {
+      "file": "Barras.dc.html",
+      "page": "componentes",
+      "x": 3000,
+      "y": 0,
+      "w": 940,
+      "h": 1161,
+      "title": "04 · Barra de progreso"
+    },
+    {
+      "file": "Tarjeta.dc.html",
+      "page": "componentes",
+      "x": 4000,
+      "y": 0,
+      "w": 940,
+      "h": 1352,
+      "title": "05 · Tarjeta"
+    },
+    {
+      "file": "KPI.dc.html",
+      "page": "componentes",
+      "x": 5000,
+      "y": 0,
+      "w": 940,
+      "h": 1540,
+      "title": "06 · KPI"
+    },
+    {
+      "file": "Modal.dc.html",
+      "page": "componentes",
+      "x": 6000,
+      "y": 0,
+      "w": 940,
+      "h": 1596,
+      "title": "07 · Modal"
+    },
+    {
+      "file": "Familias.dc.html",
+      "page": "componentes",
+      "x": 7000,
+      "y": 0,
+      "w": 940,
+      "h": 3078,
+      "title": "08 · Familias menores"
+    },
+    {
+      "file": "Sobre.dc.html",
+      "page": "dominio",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 1367,
+      "title": "01 · El registro de hechos"
+    },
+    {
+      "file": "Armazon.dc.html",
+      "page": "aplicacion",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 3940,
+      "title": "01 · Armazón"
+    },
+    {
+      "file": "KIBO.dc.html",
+      "page": "aplicacion",
+      "x": 1000,
+      "y": 0,
+      "w": 940,
+      "h": 3700,
+      "title": "02 · KIBO"
+    },
+    {
+      "file": "Rueda.dc.html",
+      "page": "aplicacion",
+      "x": 2000,
+      "y": 0,
+      "w": 940,
+      "h": 2275,
+      "title": "03 · Rueda de acción"
+    }
   ],
   "annotations": [
     {
@@ -63,5 +206,8 @@
       "text": "La aplicación — donde los valores y las piezas se vuelven producto.\n\nEl armazón es la rejilla que sostiene las 21 pantallas: menú, cabecera y contenido, con los mismos cuatro cortes en las tres anchuras.\n\nKIBO es la identidad de marca. Dos entradas ortogonales lo gobiernan: la salud pinta la cara (la expresión), el usuario elige el color (la piel). No se tocan.\n\nLa rueda de acción es su organismo de captura: un disco de sectores que abre desde el FAB y registra cualquier cosa sin cambiar de pantalla."
     }
   ],
-  "launch": { "view": "canvas", "page": "fundamentos" }
+  "launch": {
+    "view": "canvas",
+    "page": "fundamentos"
+  }
 }
