@@ -1,7 +1,8 @@
-# Kibo Design System — The Recipe · v1.3
+# Kibo Design System — The Recipe · v1.4
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
+| v1.4 | 2026-09-05 | KIBO's expression system enters the recipe (§6.10): the brow-follows-eye technique with its composed transform, the blush-on-body per-mood rule, and the per-mood eye-shape table for the eight moods | The specimen carries the mascot's eight expressions; the recipe now states them so a building agent reproduces the face — brow, blush and eye shape — without re-deriving it from the card |
 | v1.3 | 2026-08-24 | Data visualization (§6.9) and gamification (§6.10) close the vocabulary; the system is complete. Records the two recipe findings and the new token families | The last two families the old DS covered are re-expressed in the new standard, themeable by channel. What remains is content, not system |
 | v1.2 | 2026-08-24 | KIBO's mood retired as a body colour (AD-23); the domain page, the fact envelope and the action wheel joined the canvas | Sergio ruled the mood must change only the face so skins can be user-customisable, and the domain cards rebuild the kernel in the component vocabulary |
 | v1.1 | 2026-08-23 | Four open questions ruled and moved to §11; the card set is rebuilt around the kernel | Sergio ruled the button face, the recoloured-área behaviour, the rarity ladder and the fate of the 71 cards. Only the name of `--kb-medal` stays open |
@@ -495,8 +496,41 @@ The recurring **visual pieces**, never the catalogue (which ranks, which achieve
 - **Llama** — its own ramp `--kb-flame-1..9` (it stops borrowing streak/hp/coin), with a dark outline to edge the warm tones. Warmth is expressive, so **themeable**. `streak-system.jsx:5-15,30-64`.
 - **Divisa** — the pill and glyph of **Divisa** (`--kb-coin`) and **Elemento** (`--kb-dark-*`). Elemento is never a flat fill; its **halo** separates it. `streak-system.jsx:189-222`, `KbStatPill.jsx`.
 - **Tarjeta de logro** — states (ganado · en progreso · bloqueado) with the four rarities; and the **milestone line** for levels and prestige (a form, not a catalogue). `achievements.jsx:68-131`, `prestige-system.jsx:16-51`.
+- **KIBO — la mascota** — the gel character: the **expression** (eyes, pupil, mouth, brow) carries the mood from HP; the body carries **`--skin`**, a user/wardrobe colour. Two orthogonal channels that never share a layer. Full expression spec below. `mascot.jsx`, canvas `KIBO.dc.html`.
 
-**Channel per piece:** the *colour / material / rarity* as value is **token** (themeable); the *artwork* — the shield die, the faceted Elemento glyph, the frame ornament — is **asset** (the wardrobe channel, AD-16/22). Each piece states which.
+**Channel per piece:** the *colour / material / rarity* as value is **token** (themeable); the *artwork* — the shield die, the faceted Elemento glyph, the frame ornament — is **asset** (the wardrobe channel, AD-16/22). Each piece states which. KIBO splits the same way: **`--skin` is the wardrobe token**, the **expression is structural** (driven by HP, in the ink).
+
+#### KIBO — the mascot's expression system
+
+KIBO is the gel mascot: a native **140 × 150** box, the face clipped to the gel silhouette, drawn at four sizes only — **32** (marca) · **56** (acompañante) · **72** (esquina de acción) · **160** (escenario). Two inputs govern it and never share a layer.
+
+**The invariant — mood drives the face, `--skin` drives the body.** The **expression** (eyes, pupil, mouth, brow) carries the whole mood signal and is driven by HP; the body is a single-colour gel painted by **`--skin`** (default `var(--kb-primary)`, at opacity .55 over the surface), an independent channel the user recolours from the wardrobe. Mood never reaches `--skin` and skin never reaches the face — so a skin bought blue stays blue with KIBO at any mood, and one face reads identically over any colour. This is why the per-state expression is richer than pupil-plus-mouth: the face is the only place the mood lives. The face ink is **`--ink`** (= `--kb-ink-kibo`); the pupil is white (`--kb-text-inverse`). The base eye is a tall outward-tilted oval, **46 × 56** at rest, rotated **−10° / +10°**; each mood deforms this same oval, never replaces it.
+
+**Brow-follows-eye.** Each eyebrow is the eye's own arc, re-used as a discreet cap over the eye's upper rim — a thin stroke (2.6) at reduced opacity (.7) in the ink, hidden by default and shown only where a mood asks for it. The brow shares the eye's orientation by construction: its base tilt **`--tilt` equals the eye's own rotation** (−10° left eye, +10° right eye), and each mood adds two deltas — **`--rot`** (the emotion angle) and **`--lift`** (raise or lower) — composed on top of the tilt:
+
+```
+transform: rotate(calc(var(--tilt) + var(--rot))) translateY(var(--lift));
+transform-origin: center bottom;
+```
+
+`--rot` and `--lift` default to `0deg` / `0px`, so an unmodified brow sits exactly on the eye's line. The curve and its belonging to the eye never change; the mood only bends it from there.
+
+**Blush lives on the body, not the eye.** The cheeks (`.kbb-cheeks`) are two soft `--kb-hp` spots at low alpha on the gel body, **below the eyes and flanking the mouth** — seated at 74 % of the box with a 60 px gap, clear of the eye bounding box, never over the eye. They are a per-mood switch, **on only for feliz, celebra and travieso** (celebra at the stronger alpha); every other mood keeps them off. Blush is warmth accompanying the three warm expressions, never a mood signal on its own.
+
+**Per-mood eye-shape.** The eight canonical moods are legibly distinct: eye height, curvature, pupil and brow move together so tired, sad and celebrating never read as neutral. Eye height is the eye oval's measured `height` (base 56):
+
+| Mood | Eye height | Shape |
+|---|---|---|
+| `calma` | 56 | Neutral tall oval at the outward tilt; brow hidden, pupil centred-high — the resting face |
+| `feliz` | 48 | Shortened with a lifted lower rim; brow hidden; blush on |
+| `celebra` | 36 | Upward-arched joyful squint; brows raised as a set (`--lift −3`); blush at full strength |
+| `travieso` | 50 / 44 | Asymmetric half-wink — one eye open, one lidded; one brow raised, one dropped; blush on |
+| `enfocado` | 44 | Narrowed lid; brows furrowed inward-down (`--rot +22 / −22`) |
+| `sorpresa` | 60 | Wide and round, pupil enlarged; brows raised as a set (`--lift −4`) |
+| `cansado` | 40 | Heavy half-lidded droop, flat top lid; brows lowered (`--lift 3`); gel desaturated |
+| `triste` | 42 | Drooped outward with extra tilt (−16° / +16°), pupil dropped; inner-up affliction brows (`--rot −8 / +8`); gel desaturated |
+
+**Six of the eight come from HP by tramo** (celebra · feliz · calma · enfocado · cansado · triste, high to low); **sorpresa and travieso are reaction-only** — they enter on a trigger, last the gesture, and return the face to the mood HP called for. Every mood animates as *the group, not the combination*.
 
 ---
 
@@ -586,4 +620,4 @@ Only one is left. The rest were ruled on 2026-08-23 and are recorded in §11.
 
 ---
 
-*End of DESIGN-SYSTEM.md · v1.3*
+*End of DESIGN-SYSTEM.md · v1.4*
