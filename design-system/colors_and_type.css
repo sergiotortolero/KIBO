@@ -58,8 +58,8 @@
   --kb-border-soft:   #F0F2F6;
 
   --kb-text:         #1A1A2E;   /* ink, primary text */
-  --kb-text-2:       #6B7280;   /* secondary (AA 4.83:1 on white) */
-  --kb-text-3:       #6B7280;   /* tertiary — canonical AA value */
+  /* Secondary = 64% derivation of the primary. AA on canvas 5.89, surface 5.55, surface-2 5.20. */
+  --kb-text-2:       color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
   --kb-text-inverse: #FFFFFF;
 
   /* ---- Brand: Teal · progreso sereno ------------------------------------ */
@@ -72,7 +72,6 @@
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
   --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */
   --kb-coin:      #F4B740;
-  --kb-gem:       #6E8CF2;   /* DEPRECADO: la divisa es materia oscura (--kb-dark-*) */
   --kb-streak:    #FF7A45;
   --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;   /* = --kb-hp */
   --kb-media:     #8B5CF6;   /* acento de Entretenimiento */
@@ -98,18 +97,29 @@
   --kb-mood-triste:   #7C8DB5;
   --kb-ink-kibo:      #08302E;   /* tinta de ojos y boca */
 
-  /* ---- Rareza de logros (6 grados) -------------------------------------- */
+  /* ---- Rareza de logros · 4 grados. La visibilidad es un eje aparte ------ */
   --kb-rarity-comun:      #5FA98A;
-  --kb-rarity-raro:       var(--kb-gem);
-  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-raro:       #2E7DD1;
+  --kb-rarity-epico:      #9A4DFF;
   --kb-rarity-legendario: #E0A82B;
-  --kb-rarity-secreto:    #8A5CF0;
-  --kb-rarity-oculto:     #E0561B;
 
-  /* ---- Materiales de cofre y emblema · sólidos, sin degradado ----------- */
-  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
-  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
-  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+  /* ---- Materiales de emblema · escalera ordinal de 9 tiers -------------- */
+  /* El tinte es token (viaja por temas); tiers 1-3 = madera/hierro/oro. */
+  --kb-mat-1: #A9754A;   --kb-mat-2: #8E97A3;   --kb-mat-3: #E8B53C;
+  --kb-mat-4: #AAB6C4;   --kb-mat-5: #3B3450;   --kb-mat-6: #46C7DE;
+  --kb-mat-7: #1E9E63;   --kb-mat-8: #C8102E;   --kb-mat-9: #6E7280;
+  /* Tinta anclada por luminancia (20% hacia negro o blanco), no la receta única
+     al 54%: la escalera va de oro claro a obsidiana. La cifra es display grande
+     (piso 3:1); medido sobre el propio tinte: 3.67:1 el más ceñido, 7.88:1 el más holgado. */
+  --kb-mat-1-ink: color-mix(in oklab, var(--kb-mat-1) 20%, var(--kb-void-2));
+  --kb-mat-2-ink: color-mix(in oklab, var(--kb-mat-2) 20%, var(--kb-void-2));
+  --kb-mat-3-ink: color-mix(in oklab, var(--kb-mat-3) 20%, var(--kb-void-2));
+  --kb-mat-4-ink: color-mix(in oklab, var(--kb-mat-4) 20%, var(--kb-void-2));
+  --kb-mat-5-ink: color-mix(in oklab, var(--kb-mat-5) 20%, var(--kb-text-inverse));
+  --kb-mat-6-ink: color-mix(in oklab, var(--kb-mat-6) 20%, var(--kb-void-2));
+  --kb-mat-7-ink: color-mix(in oklab, var(--kb-mat-7) 20%, var(--kb-void-2));
+  --kb-mat-8-ink: color-mix(in oklab, var(--kb-mat-8) 20%, var(--kb-text-inverse));
+  --kb-mat-9-ink: color-mix(in oklab, var(--kb-mat-9) 20%, var(--kb-text-inverse));
 
   /* ---- Semánticos de apoyo --------------------------------------------- */
   --kb-good:      #10B981;   /* lo que va bien: ahorro, rendimiento, saldo a favor */
@@ -150,6 +160,7 @@
   --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
   --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
   --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-4:   0 6px 14px rgba(20,30,50,.08), 0 20px 44px rgba(20,30,50,.12);  /* between popover and modal */
   --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
   /* "Hard" Duolingo-style elevation for the primary button — outside scale */
   --kb-elev-hard: 0 2px 0; /* @kind shadow */
@@ -201,8 +212,7 @@
   --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
   --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
   --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
-  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
-  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
+  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 54%, var(--kb-void-2));  /* AA: 6.92:1 on canvas */
   --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
 
   /* Tinta de las 5 áreas · texto y relleno legibles.
@@ -219,22 +229,63 @@
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
   --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
 
-  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
-     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
-     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
-     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
-     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
-     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
-  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+  /* Generic ink over a tint is NOT a :root token: on :root the piece's --c is
+     absent, so var(--c) freezes to the fallback and every descendant inherits
+     teal. The 54% recipe is applied at the point of use — see .kbv-ink-on-tint
+     below, or the per-hue inks above. */
 
   /* Lavados y bordes derivados */
   --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
   --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
-  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
-  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
   --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
   --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
   --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+}
+
+/* ============================================================================
+   Data-viz, gamification & layout families (DESIGN-SYSTEM §6.9–6.10)
+   Charts stop borrowing área/priority hues; each ramp is its own themeable set.
+   ========================================================================== */
+:root {
+  /* Categórica — cualitativa, distinguible bajo daltonismo. Cap duro = 8; más
+     series piden etiquetado directo, no un 9º color. min ΔE del set = 8.6. */
+  --kb-cat-1: #0072B2;   --kb-cat-2: #E69F00;   --kb-cat-3: #B24810;   --kb-cat-4: #7FB2F0;
+  --kb-cat-5: #9A4DFF;   --kb-cat-6: #495057;   --kb-cat-7: #F06595;   --kb-cat-8: #F0C64B;
+
+  /* Secuencial — un matiz claro→oscuro (intensidad, heatmap). Deriva de la marca. */
+  --kb-seq-1: color-mix(in oklab, var(--kb-primary) 14%, var(--kb-canvas));
+  --kb-seq-2: color-mix(in oklab, var(--kb-primary) 34%, var(--kb-canvas));
+  --kb-seq-3: color-mix(in oklab, var(--kb-primary) 56%, var(--kb-canvas));
+  --kb-seq-4: color-mix(in oklab, var(--kb-primary) 78%, var(--kb-canvas));
+  --kb-seq-5: var(--kb-primary);
+
+  /* Divergente — dos matices, punto medio neutro. Anclada: negativo=pérdida (hp),
+     positivo=ganancia (good); el signo viaja también por posición y glifo. */
+  --kb-div-neg-2: color-mix(in oklab, var(--kb-hp) 80%, var(--kb-void-2));
+  --kb-div-neg-1: color-mix(in oklab, var(--kb-hp) 42%, var(--kb-canvas));
+  --kb-div-mid:   var(--kb-surface-2);
+  --kb-div-pos-1: color-mix(in oklab, var(--kb-good) 42%, var(--kb-canvas));
+  --kb-div-pos-2: color-mix(in oklab, var(--kb-good) 78%, var(--kb-void-2));
+
+  /* Anclas semánticas de datos (duras): nunca se cruzan. */
+  --kb-gain:     var(--kb-good);
+  --kb-loss:     var(--kb-hp);
+  --kb-gain-ink: var(--kb-good-ink);   /* good 54% void-2 — 6.92:1 on canvas */
+  --kb-loss-ink: var(--kb-hp-ink);
+
+  /* Llama de racha — rampa propia (deja de pedir prestado streak/hp/coin). Temable. */
+  --kb-flame-1: #FF7A45;   --kb-flame-2: #FF5A3C;   --kb-flame-3: #E64545;
+  --kb-flame-4: #F4B740;   --kb-flame-5: #12B886;   --kb-flame-6: #3BC9DB;
+  --kb-flame-7: #845EF7;   --kb-flame-8: #E8B93C;   --kb-flame-9: #495057;
+
+  /* Aviso — lavado 12 %, borde 32 %, tinta 74 % (los inks de alerta usan 74). */
+  --kb-warn-soft:   color-mix(in oklab, var(--kb-warn) 12%, var(--kb-canvas));
+  --kb-warn-border: color-mix(in oklab, var(--kb-warn) 32%, var(--kb-canvas));
+  --kb-warn-ink:    color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2));  /* 5.72:1 on warn-soft */
+
+  /* Anchos de contenedor. La ventana crece; la columna de contenido no. */
+  --kb-w-page:  1200px;
+  --kb-w-prose: 72ch;
 }
 
 /* Breakpoints (constants — @media can't read var()):
@@ -260,7 +311,7 @@
   font-weight: 800;
   letter-spacing: .09em;
   text-transform: uppercase;
-  color: var(--kb-text-3);
+  color: var(--kb-text-2);
 }
 .kbv-h1 {
   font-family: var(--kb-f-display);
@@ -313,6 +364,22 @@
   color: var(--kb-text);
 }
 
+/* Generic ink over a tinted surface — applied on the piece, where its --c resolves. */
+.kbv-ink-on-tint { color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+
+/* Focus (§4.5): one brand halo at 10% on every focusable piece. Components that
+   carry their own box-shadow (button lip, card) compose the halo into it. */
+:where(a[href], button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--kb-focus-halo);
+}
+
+/* Interface motion stops; KIBO is content, not a transition, and keeps animating
+   (calmed to 6.5s). Higher specificity than * wins under reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .kbb.live .kbb-float, .kbb.live .kbb-ground, .kbb.live .kbb-body,
+  .kbb.live .kbb-faceclip, .kbb.live .kbb-face, .kbb.live .kbb-eyes {
+    animation-duration: 6.5s !important;
+  }
 }
