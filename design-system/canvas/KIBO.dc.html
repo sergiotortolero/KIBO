@@ -455,12 +455,16 @@
       background: var(--kb-text-inverse);
     }
 
-    /* Cachetes: rubor de HP, solo en feliz y celebra. */
-    .kbb-cheeks { position: absolute; top: 62%; left: 0; right: 0; display: flex;
-                  justify-content: center; gap: 68px; opacity: 0; }
-    .kbb-cheek { width: 11px; height: 5px; border-radius: 50%; filter: blur(1px);
-                 background: color-mix(in srgb, var(--kb-hp) 42%, transparent); }
-    .kbb[data-mood="feliz"] .kbb-cheeks, .kbb[data-mood="celebra"] .kbb-cheeks { opacity: 1; }
+    /* Rubor: dos manchas sobre el CUERPO, bajo los ojos y a los lados de la boca
+       — nunca sobre el ojo. Solo enciende en los ánimos cálidos. */
+    .kbb-cheeks { position: absolute; top: 74%; left: 0; right: 0; display: flex;
+                  justify-content: center; gap: 60px; opacity: 0; }
+    .kbb-cheek { width: 16px; height: 7px; border-radius: 50%; filter: blur(1.5px);
+                 background: color-mix(in srgb, var(--kb-hp) 40%, transparent); }
+    .kbb[data-mood="feliz"] .kbb-cheeks,
+    .kbb[data-mood="celebra"] .kbb-cheeks,
+    .kbb[data-mood="travieso"] .kbb-cheeks { opacity: 1; }
+    .kbb[data-mood="celebra"] .kbb-cheek { background: color-mix(in srgb, var(--kb-hp) 52%, transparent); }
 
     /* Boca-w: festón pequeño de 2-3 bombas, un hilo de la tinta de KIBO. */
     .kbb-mouth { position: absolute; top: 64%; left: 50%; transform: translateX(-50%);
@@ -469,58 +473,70 @@
                       stroke-linejoin: round; fill: none; }
     .kbb-mouth path.fill { fill: var(--ink); stroke: none; }
 
-    /* Ceja: arco de la tinta que aporta la mitad de la expresión donde el ánimo
-       la pide. Oculta por defecto; cada ánimo la coloca e inclina. */
-    .kbb-brows { position: absolute; top: 21%; left: 0; right: 0; display: none;
+    /* Ceja: un arco fino que CALCA la curva del ojo — misma anchura y misma
+       inclinación base (--tilt) que el ojo que corona, hundida en su borde
+       superior. El ánimo solo le suma giro (--rot) y subida (--lift): la curva
+       y la pertenencia al ojo no cambian. Oculta por defecto; trazo discreto. */
+    .kbb-brows { position: absolute; top: 26%; left: 0; right: 0; display: none;
                  justify-content: center; gap: 22px; }
-    .kbb-brow { width: 34px; height: 12px; }
+    .kbb-brow { width: 40px; height: 14px; --tilt: -10deg;
+                transform: rotate(calc(var(--tilt) + var(--rot, 0deg))) translateY(var(--lift, 0px));
+                transform-origin: center bottom; }
+    .kbb-brows .kbb-brow:last-child { --tilt: 10deg; }
     .kbb-brow svg { display: block; width: 100%; height: 100%; overflow: visible; }
-    .kbb-brow path { fill: none; stroke: var(--ink); stroke-width: 4;
-                     stroke-linecap: round; stroke-linejoin: round; }
+    .kbb-brow path { fill: none; stroke: var(--ink); stroke-width: 2.6;
+                     stroke-linecap: round; stroke-linejoin: round; opacity: .7; }
 
     /* ── El ánimo deforma la MISMA cara ─────────────────────────────── */
-    .kbb[data-mood="feliz"] .kbb-eye { height: 54px; }
+    /* Cada ánimo mueve ojo + pupila + ceja + boca + rubor a la vez, para que
+       los ocho se lean sin dudar. La ceja compone su giro sobre la inclinación
+       del ojo (--rot/--lift); el rubor solo enciende en los cálidos. */
+    .kbb[data-mood="feliz"] .kbb-eye { height: 48px; border-radius: 46%/60% 60% 44% 44%; }
     .kbb[data-mood="feliz"] .kbb-mouth { transform: translateX(-50%) scale(1.05); }
 
-    .kbb[data-mood="celebra"] .kbb-eye { height: 56px; }
-    .kbb[data-mood="celebra"] .kbb-mouth { top: 63%; transform: translateX(-50%) scale(1.14); }
-    .kbb[data-mood="celebra"] .kbb-brows { display: flex; top: 20%; }
-    .kbb[data-mood="celebra"] .kbb-brow:first-child { transform: rotate(-8deg) translateY(-1px); }
-    .kbb[data-mood="celebra"] .kbb-brow:last-child { transform: rotate(8deg) translateY(-1px); }
+    /* Celebra: ojo en arco cerrado hacia arriba, boca grande, ceja alta, rubor fuerte. */
+    .kbb[data-mood="celebra"] .kbb-eye { height: 36px; border-radius: 48%/74% 74% 26% 26%; }
+    .kbb[data-mood="celebra"] .kbb-eye::before { width: 15px; height: 15px; }
+    .kbb[data-mood="celebra"] .kbb-mouth { top: 62%; transform: translateX(-50%) scale(1.22); }
+    .kbb[data-mood="celebra"] .kbb-brows { display: flex; --lift: -3px; }
 
-    .kbb[data-mood="enfocado"] .kbb-eye { height: 52px; border-radius: 46%/44%; }
-    .kbb[data-mood="enfocado"] .kbb-eye::before { width: 16px; height: 16px; }
+    /* Enfocado: ojo entornado y ceja fruncida hacia adentro. */
+    .kbb[data-mood="enfocado"] .kbb-eye { height: 44px; border-radius: 46%/40% 40% 50% 50%; }
+    .kbb[data-mood="enfocado"] .kbb-eye::before { width: 15px; height: 15px; }
     .kbb[data-mood="enfocado"] .kbb-mouth { top: 66%; transform: translateX(-50%) scale(.86); }
-    .kbb[data-mood="enfocado"] .kbb-brows { display: flex; top: 23%; }
-    .kbb[data-mood="enfocado"] .kbb-brow:first-child { transform: rotate(14deg) translateY(1px); }
-    .kbb[data-mood="enfocado"] .kbb-brow:last-child { transform: rotate(-14deg) translateY(1px); }
+    .kbb[data-mood="enfocado"] .kbb-brows { display: flex; --lift: 2px; }
+    .kbb[data-mood="enfocado"] .kbb-brow:first-child { --rot: 22deg; }
+    .kbb[data-mood="enfocado"] .kbb-brow:last-child { --rot: -22deg; }
 
-    .kbb[data-mood="cansado"] .kbb-eye { height: 52px; border-radius: 46%/30% 30% 60% 60%; }
+    /* Cansado: párpado pesado — ojo bajo y de tapa plana, ceja caída. */
+    .kbb[data-mood="cansado"] .kbb-eye { height: 40px; border-radius: 46%/20% 20% 64% 64%; }
     .kbb[data-mood="cansado"] .kbb-eye::before { width: 13px; height: 13px; }
     .kbb[data-mood="cansado"] .kbb-mouth { top: 68%; left: 47%; transform: translateX(-50%) scale(.9) rotate(2deg); }
-    .kbb[data-mood="cansado"] .kbb-brows { display: flex; top: 22%; }
-    .kbb[data-mood="cansado"] .kbb-brow:first-child { transform: rotate(-9deg) translateY(2px); }
-    .kbb[data-mood="cansado"] .kbb-brow:last-child { transform: rotate(9deg) translateY(2px); }
+    .kbb[data-mood="cansado"] .kbb-brows { display: flex; --lift: 3px; }
 
-    .kbb[data-mood="triste"] .kbb-eye { height: 53px; border-radius: 46%/34% 34% 58% 58%; }
+    /* Triste: ojo caído hacia afuera (giro extra), pupila abajo, ceja de aflicción. */
+    .kbb[data-mood="triste"] .kbb-eye { height: 42px; border-radius: 46%/30% 30% 64% 64%; rotate: -16deg; }
+    .kbb[data-mood="triste"] .kbb-eye:last-child { rotate: 16deg; }
     .kbb[data-mood="triste"] .kbb-eye::before { width: 13px; height: 13px; top: auto; bottom: 20%; left: 34%; }
     .kbb[data-mood="triste"] .kbb-mouth { top: 70%; transform: translateX(-50%) scale(.9); }
-    .kbb[data-mood="triste"] .kbb-brows { display: flex; top: 24%; }
-    .kbb[data-mood="triste"] .kbb-brow:first-child { transform: rotate(-12deg); }
-    .kbb[data-mood="triste"] .kbb-brow:last-child { transform: rotate(12deg); }
+    .kbb[data-mood="triste"] .kbb-brows { display: flex; --lift: -1px; }
+    .kbb[data-mood="triste"] .kbb-brow:first-child { --rot: -8deg; }
+    .kbb[data-mood="triste"] .kbb-brow:last-child { --rot: 8deg; }
 
-    .kbb[data-mood="sorpresa"] .kbb-eye { height: 58px; width: 46px; }
+    /* Sorpresa: ojo muy abierto, pupila grande, ceja alzada. */
+    .kbb[data-mood="sorpresa"] .kbb-eye { height: 60px; width: 46px; border-radius: 46%/54%; }
     .kbb[data-mood="sorpresa"] .kbb-eye::before { width: 21px; height: 21px; }
     .kbb[data-mood="sorpresa"] .kbb-mouth { transform: translateX(-50%) scale(1.16); }
-    .kbb[data-mood="sorpresa"] .kbb-brows { display: flex; top: 18%; }
+    .kbb[data-mood="sorpresa"] .kbb-brows { display: flex; --lift: -4px; }
 
-    .kbb[data-mood="travieso"] .kbb-eye { height: 53px; border-radius: 46%/38% 38% 56% 56%; }
+    /* Travieso: ojos asimétricos (medio guiño), una ceja alzada, rubor pícaro. */
+    .kbb[data-mood="travieso"] .kbb-eye { height: 50px; border-radius: 46%/40% 40% 56% 56%; }
     .kbb[data-mood="travieso"] .kbb-eye::before { width: 14px; height: 14px; left: auto; right: 24%; top: 26%; }
-    .kbb[data-mood="travieso"] .kbb-eye:last-child { height: 52px; border-radius: 46%/26% 26% 62% 62%; }
+    .kbb[data-mood="travieso"] .kbb-eye:last-child { height: 44px; border-radius: 46%/26% 26% 64% 64%; }
     .kbb[data-mood="travieso"] .kbb-mouth { left: 57%; transform: translateX(-50%) rotate(-5deg) scale(1.04); }
-    .kbb[data-mood="travieso"] .kbb-brows { display: flex; top: 22%; }
-    .kbb[data-mood="travieso"] .kbb-brow:first-child { transform: rotate(-18deg) translateY(-2px); }
-    .kbb[data-mood="travieso"] .kbb-brow:last-child { transform: rotate(8deg) translateY(2px); }
+    .kbb[data-mood="travieso"] .kbb-brows { display: flex; }
+    .kbb[data-mood="travieso"] .kbb-brow:first-child { --rot: -8deg; --lift: -3px; }
+    .kbb[data-mood="travieso"] .kbb-brow:last-child { --rot: 0deg; --lift: 2px; }
 
     /* Vida baja: el gel entero se apaga un poco. */
     .kbb[data-mood="cansado"] .kbb-body, .kbb[data-mood="triste"] .kbb-body { filter: saturate(.72); }
@@ -685,7 +701,7 @@
     </div>
     <div class="g6" style="gap: var(--kb-sp-6)"><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="celebra"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.3"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Celebra</div><div class="rg">HP 90 – 100</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Feliz</div><div class="rg">HP 72 – 89</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="calma"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.18"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Tranquilo</div><div class="rg">HP 55 – 71</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="enfocado"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.1"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1.6 q 2.1 1.5 4.2 0 q 2.1 1.5 4.2 0"/></svg></span></span></span></span></span><div class="nm">Enfocado</div><div class="rg">HP 38 – 54</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="cansado"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:-0.2;--py:0.34"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2 q 2.1 1.4 4.2 0 q 2.1 1.4 4.2 -0.3"/></svg></span></span></span></span></span><div class="nm">Cansado</div><div class="rg">HP 20 – 37</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="triste"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:0.4"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 2.8 q 2.1 -1.9 4.2 0 q 2.1 -1.9 4.2 0"/></svg></span></span></span></span></span><div class="nm">Triste</div><div class="rg">HP 0 – 19</div></div></div>
     <div class="row" style="gap: var(--kb-sp-9); padding-top: var(--kb-sp-6); border-top: 1px solid var(--kb-border-soft)">
-      <div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="sorpresa"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.34"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 0.4 q 2.1 3 4.2 0 q 2.1 3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Sorpresa</div><div class="rg">Por reacción</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="travieso"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0.34;--py:-0.24"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -1.6 -1.4 L 2.4 1.4 L -1.6 4.2"/></svg></span></span></span></span></span><div class="nm">Travieso</div><div class="rg">Por reacción</div></div>
+      <div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="sorpresa"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.34"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 0.4 q 2.1 3 4.2 0 q 2.1 3 4.2 0"/></svg></span></span></span></span></span><div class="nm">Sorpresa</div><div class="rg">Por reacción</div></div><div class="kcell"><span class="kbb-host" style="width:96px;height:103px;--s:0.6857" aria-hidden="true"><span class="kbb" data-mood="travieso"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0.34;--py:-0.24"><span class="kbb-face"><span class="kbb-brows"><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span><span class="kbb-brow"><svg viewBox="-11 -6 22 12"><path d="M -8 2.6 Q 0 -3.4 8 2.6"/></svg></span></span><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -1.6 -1.4 L 2.4 1.4 L -1.6 4.2"/></svg></span></span></span></span></span><div class="nm">Travieso</div><div class="rg">Por reacción</div></div>
       <div style="font-size: var(--kb-fs-sm); line-height: 1.55; color: var(--kb-text-2); max-width: 440px">Dos expresiones más <strong style="color: var(--kb-text)">no salen del HP</strong>: llegan por una reacción, duran lo que dura el gesto y devuelven la cara al ánimo que le tocaba a la vida.</div>
     </div>
     <div class="rule">Cada ánimo es una cara <strong>claramente distinta</strong>: forma del ojo, apertura, pupila, boca y ceja trabajando juntas. Con un mismo color de cuerpo, los ocho se distinguen sin dudar.</div>
