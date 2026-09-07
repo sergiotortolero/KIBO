@@ -1,0 +1,116 @@
+[
+ {
+  "artboard": "EstudioScreenV2",
+  "nombre": "Estudio (centro académico, 5 pestañas)",
+  "archivo": "estudio-screen.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "EstudioFoco",
+  "nombre": "Pestaña Foco — Pomodoro con confirmación anti-abandono",
+  "archivo": "estudio-screen.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "EstudioCursos",
+  "nombre": "Pestaña Cursos — catálogo + backlog/plan de carrera",
+  "archivo": "estudio-screen.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "EstudioEscuelaV2",
+  "nombre": "Pestaña Escuela — semestre, materias y profesores (v2)",
+  "archivo": "estudio-escuela.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "SubjectDetail",
+  "nombre": "Detalle de materia (6 pestañas)",
+  "archivo": "estudio-escuela.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "EstudioAgendaV2",
+  "nombre": "Pestaña Agenda — línea del tiempo semanal + entregas",
+  "archivo": "estudio-escuela.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "EstudioTrayectoriaV2",
+  "nombre": "Pestaña Trayectoria — indicadores y gráficos de evolución",
+  "archivo": "estudio-escuela.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "CourseDetail",
+  "nombre": "Detalle de curso (homologado con Proyectos)",
+  "archivo": "estudio-cursos.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "BovedaScreen",
+  "nombre": "Bóveda — el archivo de tu vida en Markdown plano",
+  "archivo": "recursos-screen.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "SaludScreen",
+  "nombre": "Salud — expediente médico",
+  "archivo": "salud-screen.jsx",
+  "modales": 3
+ },
+ {
+  "artboard": "FinanzasScreen",
+  "nombre": "Finanzas — shell multi-pestaña",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 5
+ },
+ {
+  "artboard": "OverviewTab",
+  "nombre": "Finanzas · Resumen",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "AccountsTab",
+  "nombre": "Finanzas · Cuentas",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "CreditsTab",
+  "nombre": "Finanzas · Créditos",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "SavingsTab",
+  "nombre": "Finanzas · Ahorro (proyectos)",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "ImportTab",
+  "nombre": "Finanzas · Importar",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AccountDetailScreen",
+  "nombre": "Detalle de cuenta",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "CreditDetailScreen",
+  "nombre": "Detalle de crédito",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ProjectDetailScreen",
+  "nombre": "Detalle de proyecto de ahorro",
+  "archivo": "finanzas-screens.jsx",
+  "modales": 0
+ }
+]

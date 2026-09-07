@@ -1,0 +1,104 @@
+[
+ {
+  "artboard": "ProgressPanel",
+  "nombre": "Progresión — Rango y Prestigio (\"Rango y progresión\" / \"Prestigio y emblemas\")",
+  "archivo": "prestige-system.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "AchievementsPanel",
+  "nombre": "Logros y trofeos (vitrina, estandartes y catálogo)",
+  "archivo": "achievements.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "AreasScreenV3",
+  "nombre": "Áreas · Centro de análisis (orquestador)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreasGeneralV3",
+  "nombre": "Áreas · Vista general (balance, patrones, prioridades)",
+  "archivo": "areas-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "AreaDetailV3",
+  "nombre": "Detalle de área (Progreso · Proyectos · Configuración)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaProjectsV3",
+  "nombre": "Pestaña Proyectos del área (jerarquía hacia abajo)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaWillTab",
+  "nombre": "Pestaña Voluntad · Retos y hábitos (homologada 1:1)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaConfigV3",
+  "nombre": "Pestaña Configuración del área",
+  "archivo": "areas-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "StoreScreen",
+  "nombre": "Tienda",
+  "archivo": "tienda-screen.jsx",
+  "modales": 4
+ },
+ {
+  "artboard": "WishlistTab",
+  "nombre": "Lista de deseos",
+  "archivo": "tienda-screen.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "KiboStyleTab",
+  "nombre": "Guardarropa de KIBO",
+  "archivo": "tienda-screen.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "VitrinaStoreTab",
+  "nombre": "Tienda de la carta (Vitrina)",
+  "archivo": "tienda-screen.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "PersonalizacionScreen",
+  "nombre": "Personalizacion",
+  "archivo": "personalizacion.jsx",
+  "modales": 6
+ },
+ {
+  "artboard": "PersPrestigio",
+  "nombre": "Personalizacion · Prestigio",
+  "archivo": "personalizacion.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "PersDivisas",
+  "nombre": "Personalizacion · Divisas",
+  "archivo": "personalizacion.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "PersInterfaz",
+  "nombre": "Personalizacion · Interfaz",
+  "archivo": "personalizacion.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "CharacterScreen",
+  "nombre": "Mi progreso",
+  "archivo": "character-screen.jsx",
+  "modales": 1
+ }
+]

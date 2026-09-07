@@ -1,0 +1,74 @@
+[
+ {
+  "artboard": "DashboardScreenV2",
+  "nombre": "Shell principal / router de la app",
+  "archivo": "dashboard-v2.jsx",
+  "modales": 4
+ },
+ {
+  "artboard": "TodayDashboard",
+  "nombre": "Hoy — tablero de widgets",
+  "archivo": "dashboard-v2.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "TutorialOverlay",
+  "nombre": "Tutorial guiado sobre el dashboard",
+  "archivo": "dashboard-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ModuleLocked",
+  "nombre": "Módulo premium bloqueado (compuerta freemium)",
+  "archivo": "dashboard-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ComingSoon",
+  "nombre": "Sección en construcción (stub)",
+  "archivo": "dashboard-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "HabitsScreen",
+  "nombre": "Hábitos",
+  "archivo": "personal-screens.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "RetosScreen",
+  "nombre": "Retos",
+  "archivo": "personal-screens.jsx",
+  "modales": 3
+ },
+ {
+  "artboard": "EntretenimientoScreen",
+  "nombre": "Entretenimiento",
+  "archivo": "personal-screens.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ShowDetail",
+  "nombre": "Detalle de peli / serie",
+  "archivo": "personal-screens.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "TaskDetailScreen",
+  "nombre": "Detalle de tarea",
+  "archivo": "tarea-detalle.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "KiboQuickWheel",
+  "nombre": "Acción rápida — rueda radial de KIBO",
+  "archivo": "kibo-quick.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "KiboChat",
+  "nombre": "Chat inmersivo con KIBO",
+  "archivo": "kibo-quick.jsx",
+  "modales": 0
+ }
+]

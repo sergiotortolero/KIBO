@@ -1,0 +1,98 @@
+[
+ {
+  "artboard": "LoginScreenV2",
+  "nombre": "Inicio de sesión",
+  "archivo": "auth-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "RegisterScreenV2",
+  "nombre": "Crear cuenta / Forja un nuevo Hero",
+  "archivo": "auth-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "WelcomeScreenV2",
+  "nombre": "Bienvenida — 'Hola, soy Kibo'",
+  "archivo": "onboarding-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "IdentityScreenV2",
+  "nombre": "Identidad — nombre, foto y bio",
+  "archivo": "onboarding-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "IntentScreenV2",
+  "nombre": "Prioridades / Intención — '¿Qué es lo más importante para ti ahora?'",
+  "archivo": "onboarding-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "SocialScreen",
+  "nombre": "Amigos — Social / Tu círculo",
+  "archivo": "social-screen.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "FamiliaScreen",
+  "nombre": "Familia — Kibo para padres",
+  "archivo": "social-screen.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "CuentaScreen",
+  "nombre": "Cuenta — identidad, acceso, plan y datos",
+  "archivo": "cuenta-config.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ConfigScreen",
+  "nombre": "Configuración — preferencias, notificaciones, juego, IA e integraciones",
+  "archivo": "cuenta-config.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "TareasScreen",
+  "nombre": "Tareas (backlog general)",
+  "archivo": "screens-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "ProjectsScreen",
+  "nombre": "Proyectos (tablero + roadmap)",
+  "archivo": "screens-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "ProjectDetail",
+  "nombre": "Detalle de proyecto",
+  "archivo": "screens-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ProjectConfig",
+  "nombre": "Configuración del proyecto (tab)",
+  "archivo": "screens-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "LecturaScreen",
+  "nombre": "Lectura (registro de libros)",
+  "archivo": "screens-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "BookDetail",
+  "nombre": "Detalle de libro",
+  "archivo": "screens-v2.jsx",
+  "modales": 4
+ },
+ {
+  "artboard": "DiarioScreen",
+  "nombre": "Diario",
+  "archivo": "screens-v2.jsx",
+  "modales": 1
+ }
+]

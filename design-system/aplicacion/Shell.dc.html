@@ -1,0 +1,1092 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap">
+  <style>
+/* ============================================================================
+   KIBO — Design Tokens · copia literal de colors_and_type.css
+   El artboard publicado corre sin red: los valores viven aqui dentro.
+   ========================================================================== */
+:root {
+  /* ---- Familias. DOS familias: display+label comparten Jakarta ----------- */
+  --kb-f-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --kb-f-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --kb-f-label:   'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --kb-f-mono:    var(--kb-f-label);
+
+  /* ---- Halo de foco: aro solido de marca + difuso al 10 % ----------------
+     El 10 % solo mide 1.11:1 sobre el lienzo. El aro interior es el que
+     cumple el 3:1 de WCAG 1.4.11: medido 3.93 sobre lienzo, 3.70 sobre
+     superficie, 3.47 sobre superficie-2 y 4.80 sobre el void del Elemento. */
+  --kb-focus-halo: 0 0 0 2px var(--kb-primary-hover),
+                   0 0 0 5px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+
+  /* ---- Escala tipografica (9 pasos). Piso duro de legibilidad = 10px ----- */
+  --kb-fs-2xs: 10px;
+  --kb-fs-xs:  11px;
+  --kb-fs-sm:  12px;
+  --kb-fs-md:  13px;
+  --kb-fs-lg:  15px;
+  --kb-fs-xl:  18px;
+  --kb-fs-2xl: 22px;
+  --kb-fs-3xl: 26px;
+  --kb-fs-4xl: 34px;
+  --kb-fs-4xl-fluid: clamp(26px, 5vw,   34px);
+  --kb-fs-3xl-fluid: clamp(22px, 4vw,   26px);
+  --kb-fs-2xl-fluid: clamp(20px, 3vw,   22px);
+  --kb-fs-xl-fluid:  clamp(16px, 2.4vw, 18px);
+
+  --kb-lh-tight: 1.15;
+  --kb-lh-snug:  1.3;
+  --kb-lh-body:  1.55;
+
+  /* ---- Superficies / bordes / texto -------------------------------------- */
+  --kb-canvas:      #FFFFFF;
+  --kb-surface:     #F7F8FA;
+  --kb-surface-2:   #EEF1F5;
+  --kb-card:        #FFFFFF;
+
+  --kb-border:        #E8ECF0;
+  --kb-border-strong: #D6DCE3;
+  --kb-border-soft:   #F0F2F6;
+
+  --kb-text:         #1A1A2E;
+  --kb-text-2:       #6B7280;
+  --kb-text-3:       #6B7280;
+  --kb-text-inverse: #FFFFFF;
+
+  /* ---- Marca: Teal ------------------------------------------------------- */
+  --kb-primary:       #1CA4A0;
+  --kb-primary-hover: #178F8B;
+  --kb-primary-soft:  #E4F4F3;
+  --kb-primary-ink:   #0F6E6B;
+
+  /* ---- Gamificacion ------------------------------------------------------ */
+  --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
+  --kb-xp:        #1CA4A0;
+  --kb-coin:      #F4B740;
+  --kb-streak:    #FF7A45;
+  --kb-boss:      #E64545;   --kb-boss-soft: #FFF1F1;
+  --kb-media:     #8B5CF6;
+
+  /* ---- Elemento · la divisa rara ----------------------------------------- */
+  --kb-dark-core:  #171A2E;
+  --kb-dark-edge:  #2E48A6;
+  --kb-dark-halo:  #8FA9FF;
+  --kb-dark-facet: #4F63C4;
+  --kb-dark-glint: #B9C8FF;
+  --kb-void-1:     #1C2748;
+  --kb-void-2:     #0B1022;
+
+  /* ---- Tinta de la cara de KIBO ------------------------------------------ */
+  --kb-ink-kibo:      #08302E;
+
+  /* ---- Rareza ------------------------------------------------------------ */
+  --kb-rarity-comun:      #5FA98A;
+  --kb-rarity-raro:       #3B82F6;
+  --kb-rarity-epico:      var(--area-community);
+  --kb-rarity-legendario: #E0A82B;
+
+  /* ---- Materiales de cofre y emblema ------------------------------------- */
+  --kb-mat-madera: #A9754A;   --kb-mat-madera-ink: #6B4526;
+  --kb-mat-hierro: #8E97A3;   --kb-mat-hierro-ink: #4A525E;
+  --kb-mat-oro:    #E8B53C;   --kb-mat-oro-ink:    #96690F;
+
+  /* ---- Semanticos de apoyo ---------------------------------------------- */
+  --kb-good:      #10B981;
+  --kb-good-soft: #88C9A8;
+  --kb-medal:     #D0A02E;
+  --kb-warn:      #B26A00;
+  --kb-coin-wash: #FBF1D8;
+
+  /* ---- Chispas de ceremonia --------------------------------------------- */
+  --kb-spark-red:    #FF5D5D;
+  --kb-spark-amber:  #FFB13D;
+  --kb-spark-yellow: #FFE94D;
+  --kb-spark-green:  #62E08A;
+
+  /* ---- Areas de vida (recoloreables por el usuario) ---------------------- */
+  --area-vigor:     #EF4444;
+  --area-wisdom:    #3B82F6;
+  --area-wealth:    #EAB308;
+  --area-community: #A855F7;
+  --area-will:      #06B6D4;
+
+  /* ---- Prioridades (orden fijo) ------------------------------------------ */
+  --pri-urgent: #E64545;
+  --pri-high:   #F4811F;
+  --pri-medium: #F4B740;
+  --pri-low:    #6E8CF2;
+  --pri-vlow:   #9CA3AF;
+
+  /* ---- Radios ------------------------------------------------------------ */
+  --kb-r-xs:   8px;
+  --kb-r-sm:   10px;
+  --kb-r-md:   14px;
+  --kb-r-lg:   18px;
+  --kb-r-xl:   24px;
+  --kb-r-pill: 999px;
+
+  /* ---- Sombras ----------------------------------------------------------- */
+  --kb-sh-1:   0 1px 2px rgba(20,30,50,.04), 0 1px 0 rgba(20,30,50,.02);
+  --kb-sh-2:   0 1px 3px rgba(20,30,50,.06), 0 4px 10px rgba(20,30,50,.04);
+  --kb-sh-3:   0 4px 8px rgba(20,30,50,.06), 0 12px 24px rgba(20,30,50,.06);
+  --kb-sh-4:   0 6px 14px rgba(20,30,50,.08), 0 20px 44px rgba(20,30,50,.12);
+  --kb-sh-pop: 0 8px 24px rgba(20,30,50,.12), 0 32px 64px rgba(20,30,50,.10);
+  --kb-elev-hard: 0 2px 0;
+
+  /* ---- Espaciado (rejilla de 2px) ---------------------------------------- */
+  --kb-sp-1: 2px;
+  --kb-sp-2: 4px;
+  --kb-sp-3: 6px;
+  --kb-sp-4: 8px;
+  --kb-sp-5: 10px;
+  --kb-sp-6: 12px;
+  --kb-sp-7: clamp(14px, 2vw, 16px);
+  --kb-sp-8: clamp(18px, 3vw, 20px);
+  --kb-sp-9: clamp(20px, 4vw, 24px);
+
+  /* ---- Z-index nombrado --------------------------------------------------- */
+  --kb-z-base:     1;
+  --kb-z-raised:   10;
+  --kb-z-sticky:   30;
+  --kb-z-dropdown: 50;
+  --kb-z-overlay:  100;
+  --kb-z-modal:    200;
+  --kb-z-popover:  400;
+  --kb-z-toast:    600;
+
+  /* ---- Movimiento -------------------------------------------------------- */
+  --kb-dur-fast:   120ms;
+  --kb-dur-base:   200ms;
+  --kb-dur-slow:   300ms;
+  --kb-dur-slower: 400ms;
+  --kb-ease-standard: cubic-bezier(.4, 0, .2, 1);
+  --kb-ease-out:      cubic-bezier(0, 0, .2, 1);
+  --kb-ease-in:       cubic-bezier(.4, 0, 1, 1);
+
+  /* ---- Contrato de alto de controles ------------------------------------- */
+  --kb-ctl-h:     46px;
+  --kb-touch-min: 44px;
+
+  /* ---- Anchos de contenedor ---------------------------------------------- */
+  --kb-w-page:  1200px;
+  --kb-w-prose: 72ch;
+}
+
+/* Tintas y lavados derivados. UNA sola ancla de tinta, --kb-void-2, y el
+   lienzo como ancla de lavado: asi el tema oscuro puede revaluar los dos.
+   Medido tras reanclar (tinta sobre su propio lavado): racha 6.26 · divisa
+   7.15 · HP 5.41 · comunidad 7.27 · aviso 5.72 · Riqueza 5.35 (la mas
+   ajustada de las areas) · relleno de marca 6.85. Ninguna baja de AA. */
+:root {
+  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, var(--kb-void-2));
+  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, var(--kb-void-2));
+  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, var(--kb-void-2));
+  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, var(--kb-void-2));
+  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, var(--kb-void-2));
+  --kb-warn-ink:     color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2));
+
+  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, var(--kb-void-2));
+  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, var(--kb-void-2));
+  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, var(--kb-void-2));
+  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, var(--kb-void-2));
+  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, var(--kb-void-2));
+  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+
+  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, var(--kb-canvas));
+  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, var(--kb-canvas));
+  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, var(--kb-canvas));
+  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, var(--kb-canvas));
+  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, var(--kb-canvas));
+}
+
+/* ============================================================================
+   Clases tipograficas semanticas
+   ========================================================================== */
+.kbv-eyebrow {
+  font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 800;
+  letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2);
+}
+.kbv-h1 { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-4xl-fluid);
+          line-height: var(--kb-lh-tight); letter-spacing: -.02em; color: var(--kb-text); }
+.kbv-h2 { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-3xl-fluid);
+          line-height: var(--kb-lh-tight); letter-spacing: -.015em; color: var(--kb-text); }
+.kbv-h3 { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xl-fluid);
+          line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+.kbv-h4 { font-family: var(--kb-f-display); font-weight: 600; font-size: var(--kb-fs-xl);
+          line-height: var(--kb-lh-snug); color: var(--kb-text); }
+.kbv-body { font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
+            line-height: var(--kb-lh-body); color: var(--kb-text); }
+.kbv-meta { font-family: var(--kb-f-body); font-size: var(--kb-fs-sm);
+            line-height: var(--kb-lh-snug); color: var(--kb-text-2); }
+.kbv-num  { font-family: var(--kb-f-display); font-weight: 700; letter-spacing: -.01em;
+            font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+/* Movimiento reducido: se apaga la interfaz y KIBO se queda A SU TEMPO.
+   El reset excluye a la mascota, asi sus 4.6s / 6.5s / 5.2s siguen en pie. */
+@media (prefers-reduced-motion: reduce) {
+  .kbv-shell *:not(.kbb, .kbb *) {
+    animation-duration: .001ms !important; transition-duration: .001ms !important;
+  }
+}
+  </style>
+
+  <style>
+    /* ==========================================================================
+       Familias del sistema que el armazon compone. CSS levantado de las laminas
+       del canvas: boton, chip/etiqueta/contador, barra, tarjeta, KPI, seccion.
+       ========================================================================== */
+    body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
+           line-height: var(--kb-lh-body); color: var(--kb-text); }
+    a { color: var(--kb-primary-ink); text-decoration: none; }
+    a:hover { color: var(--kb-primary); text-decoration: underline; text-underline-offset: 3px; }
+    /* Nombre accesible sin dibujo: un title no nombra un span. */
+    .kbv-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+                   overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+    /* ── Boton ────────────────────────────────────────────────────────── */
+    .kbv-btn {
+      -webkit-appearance: none; appearance: none; border: 1.5px solid transparent;
+      font-family: var(--kb-f-display); font-weight: 700; letter-spacing: .005em; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+      white-space: nowrap; text-decoration: none; cursor: pointer; box-sizing: border-box;
+      height: var(--kb-ctl-h); padding: 0 var(--kb-sp-8);
+      font-size: var(--kb-fs-lg); border-radius: var(--kb-r-md);
+      transition: background var(--kb-dur-fast) var(--kb-ease-standard),
+                  box-shadow var(--kb-dur-fast) var(--kb-ease-standard),
+                  transform var(--kb-dur-fast) var(--kb-ease-standard);
+    }
+    .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
+    .kbv-btn.lg { height: 54px; padding: 0 var(--kb-sp-9); font-size: var(--kb-fs-xl); border-radius: var(--kb-r-lg); }
+    .kbv-btn-primary, .kbv-btn-danger {
+      --face: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      --lip:  color-mix(in oklab, var(--c) 30%, var(--kb-void-2));
+      background: var(--face); color: var(--kb-text-inverse);
+      box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
+    }
+    .kbv-btn-primary { --c: var(--kb-primary); }
+    .kbv-btn-danger  { --c: var(--kb-hp); }
+    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 78%, var(--c)); }
+    .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
+                         border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
+    .kbv-btn-secondary:hover { background: var(--kb-surface); }
+    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); box-shadow: none; }
+    .kbv-btn-ghost:hover { background: var(--kb-primary-soft); }
+    .kbv-btn:focus-visible { outline: none; box-shadow: var(--kb-elev-hard) var(--lip, transparent), var(--kb-focus-halo); }
+    /* Presionado: el gesto es la altura que pierde — el labio se colapsa. */
+    .kbv-btn:active { transform: translateY(2px); box-shadow: var(--kb-sh-1); }
+    /* Deshabilitado: superficie-2 y texto-2, sin labio y sin sombra. Nunca opacidad. */
+    .kbv-btn[disabled], .kbv-btn:disabled,
+    .kbv-chip[disabled], .kbv-chip:disabled,
+    .kbv-side-link[disabled], .kbv-side-link:disabled {
+      background: var(--kb-surface-2); color: var(--kb-text-2); border-color: transparent;
+      box-shadow: none; cursor: default; transform: none;
+    }
+    /* Cargando (§6.1) la define la primera pantalla que la necesite: el rotulo
+       se vuelve transparente, gira un disco de 16 y el boton conserva su ancho. */
+
+    /* ── Chip · etiqueta · contador ───────────────────────────────────── */
+    .kbv-chip {
+      position: relative; box-sizing: border-box;
+      display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+      height: 36px; padding: 0 var(--kb-sp-6);
+      border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-pill);
+      background: var(--kb-card); color: var(--kb-text-2);
+      font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: border-color var(--kb-dur-fast), background var(--kb-dur-fast), color var(--kb-dur-fast);
+    }
+    .kbv-chip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                       height: var(--kb-touch-min); transform: translateY(-50%); }
+    .kbv-chip:hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
+    .kbv-chip.active { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-chip:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-chip .dot { width: 8px; height: 8px; border-radius: var(--kb-r-pill); flex-shrink: 0; }
+
+    .kbv-tag {
+      display: inline-flex; align-items: center; gap: var(--kb-sp-2); box-sizing: border-box;
+      height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
+      background: var(--kb-surface-2); color: var(--kb-text);
+      font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700;
+      letter-spacing: .02em; white-space: nowrap;
+    }
+    .kbv-tag.tint  { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                     color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
+
+    .kbv-badge {
+      display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+      min-width: 20px; height: 20px; gap: var(--kb-sp-2); padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
+      background: color-mix(in oklab, var(--c, var(--kb-hp)) 54%, var(--kb-void-2)); color: var(--kb-text-inverse);
+      font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .kbv-badge.quiet { background: var(--kb-surface-2); color: var(--kb-text); }
+    .kbv-badge.dot { min-width: 10px; width: 10px; height: 10px; padding: 0; }
+
+    /* ── Barra de progreso ────────────────────────────────────────────── */
+    .tone-hp       { --c: var(--kb-hp); }
+    .tone-xp       { --c: var(--kb-xp); }
+    .tone-goal     { --c: var(--kb-good); }
+    .tone-streak   { --c: var(--kb-streak); }
+    .tone-progress { --c: var(--kb-text-2); }
+    .kbv-progress {
+      display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) 24%, var(--kb-canvas));
+    }
+    .kbv-progress.xs { height: 4px; }
+    .kbv-progress.sm { height: 6px; }
+    .kbv-progress.lg { height: 12px; }
+    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary));
+                          transition: width var(--kb-dur-slow) var(--kb-ease-out); }
+    .kbv-progress-meta { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-progress-meta .top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--kb-sp-5); }
+    .kbv-progress-meta .name { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
+    .kbv-progress-meta .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
+                      font-variant-numeric: tabular-nums;
+                      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+
+    /* ── Tarjeta ──────────────────────────────────────────────────────── */
+    .kbv-card {
+      background: var(--kb-card); border: 1px solid var(--kb-border);
+      border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+      display: flex; flex-direction: column; gap: var(--kb-sp-5);
+      padding: var(--kb-sp-7); box-sizing: border-box; overflow: hidden;
+    }
+    .kbv-card.flush   { padding: 0; gap: 0; }
+    .kbv-card.compact { padding: var(--kb-sp-6); gap: var(--kb-sp-4); }
+    .kbv-card.roomy   { padding: var(--kb-sp-8); gap: var(--kb-sp-6); }
+    .kbv-card-head  { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--kb-sp-5); }
+    .kbv-card-title { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 600;
+                      line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-card-sub   { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-card-foot  { display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5);
+                      padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    .kbv-areapill {
+      display: inline-flex; align-items: center; gap: var(--kb-sp-2); align-self: flex-start;
+      height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
+      background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      font-size: var(--kb-fs-xs); font-weight: 700; white-space: nowrap;
+    }
+
+    /* ── KPI ──────────────────────────────────────────────────────────── */
+    .kbv-kpi {
+      background: var(--kb-card); border: 1px solid var(--kb-border);
+      border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+      display: flex; flex-direction: column; overflow: hidden; box-sizing: border-box;
+    }
+    .kbv-kpi .band {
+      display: flex; align-items: center; gap: var(--kb-sp-3);
+      padding: var(--kb-sp-4) var(--kb-sp-6);
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
+      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+      letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
+    }
+    .kbv-kpi .body { padding: var(--kb-sp-6); display: flex; flex-direction: column;
+                     gap: var(--kb-sp-3); min-height: 74px; justify-content: center; }
+    .kbv-kpi .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800;
+                    line-height: 1; letter-spacing: -.02em; color: var(--kb-text);
+                    font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: var(--kb-sp-2); }
+    .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
+    .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-kpi .delta.up   { color: var(--kb-primary-ink); font-weight: 700; }
+    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+
+    /* ── Encabezado de seccion y de pagina ────────────────────────────── */
+    .kbv-section-head { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap;
+                        row-gap: var(--kb-sp-3); padding-bottom: var(--kb-sp-4);
+                        border-bottom: 1px solid var(--kb-border); }
+    .kbv-section-head .sh-id { display: flex; flex-direction: column; gap: var(--kb-sp-2); flex: 1 1 auto; min-width: 0; }
+    .kbv-section-head .sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-section-head .sh-act { flex: none; display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Barra de herramientas ────────────────────────────────────────── */
+    .kbv-filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kb-sp-4);
+                      padding: var(--kb-sp-6) var(--kb-sp-7); background: var(--kb-card);
+                      border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); }
+    .kbv-filter-bar .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                           letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-filter-bar .grow { flex: 1 1 auto; min-width: 0; }
+
+    /* ── Segmentado ───────────────────────────────────────────────────── */
+    .kbv-seg { display: inline-flex; gap: var(--kb-sp-2); padding: var(--kb-sp-2);
+               background: var(--kb-surface-2); border-radius: var(--kb-r-pill); max-width: 100%; }
+    .kbv-seg > button { display: inline-flex; align-items: center; gap: var(--kb-sp-4);
+                        height: 36px; padding: 0 var(--kb-sp-6); border: 0; background: transparent;
+                        border-radius: var(--kb-r-pill); cursor: pointer; white-space: nowrap;
+                        font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600;
+                        color: var(--kb-text-2); position: relative; }
+    .kbv-seg > button:hover { color: var(--kb-text); }
+    .kbv-seg > button.on { background: var(--kb-card); color: var(--kb-text); font-weight: 700; box-shadow: var(--kb-sh-1); }
+    .kbv-seg > button::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                               transform: translateY(-50%); height: var(--kb-touch-min); }
+    .kbv-seg > button:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    /* ── Casilla ──────────────────────────────────────────────────────── */
+    .kbv-check { position: relative; width: 22px; height: 22px; flex: none; box-sizing: border-box;
+                 border: 1.5px solid var(--kb-border-strong); border-radius: var(--kb-r-xs);
+                 background: var(--kb-card); display: flex; align-items: center; justify-content: center;
+                 color: transparent; cursor: pointer; }
+    .kbv-check::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
+                        height: var(--kb-touch-min); transform: translate(-50%, -50%); }
+    .kbv-check.on { background: var(--kb-primary-fill); border-color: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+    .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  </style>
+
+  <style>
+    /* ==========================================================================
+       EL ARMAZON — menu, cabecera/HUD, region de contenido y el FAB de KIBO.
+       Todo lo que una pantalla de Kibo hereda sin volver a escribirlo.
+       ========================================================================== */
+    .kb-app {
+      /* El texto secundario se DERIVA del principal: el 64 % pasa AA sobre el
+         lienzo, sobre superficie y sobre superficie 2. */
+      --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+      --kb-text-3: var(--kb-text-2);
+      --side-w: 232px;
+      font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
+      line-height: var(--kb-lh-body); color: var(--kb-text);
+      -webkit-font-smoothing: antialiased;
+      width: 100%; height: 100%; box-sizing: border-box;
+    }
+    .kb-app h1, .kb-app h2, .kb-app h3, .kb-app h4, .kb-app p { margin: 0; }
+    .kbv-shell { display: grid; grid-template-columns: var(--side-w) minmax(0, 1fr);
+                 background: var(--kb-surface); min-width: 0; height: 100%; }
+
+    /* ── El menu ──────────────────────────────────────────────────────── */
+    .kbv-sidebar { grid-column: 1; min-width: 0; display: flex; flex-direction: column;
+                   gap: var(--kb-sp-7); padding: var(--kb-sp-7) var(--kb-sp-6);
+                   background: var(--kb-canvas); border-right: 1px solid var(--kb-border);
+                   box-sizing: border-box; overflow: hidden; }
+    .kbv-logo { display: flex; align-items: center; gap: var(--kb-sp-5); padding: 0 var(--kb-sp-4); height: 36px; flex: none; }
+    .kbv-logo .mark { width: 28px; height: 28px; border-radius: var(--kb-r-xs); flex: none;
+                      background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                      display: flex; align-items: center; justify-content: center;
+                      font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md); }
+    .kbv-logo .word { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-xl);
+                      letter-spacing: -.01em; color: var(--kb-text); flex: 1 1 auto; }
+    /* Dibuja 28, toca 44: la zona crece hacia afuera, el dibujo no. */
+    .kbv-icon-btn { position: relative; width: 28px; height: 28px; flex: none; border: 0; padding: 0;
+                    border-radius: var(--kb-r-xs); background: transparent; color: var(--kb-text-2);
+                    display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .kbv-icon-btn::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
+                           height: var(--kb-touch-min); transform: translate(-50%, -50%); }
+    .kbv-icon-btn:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-icon-btn:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    .kbv-side-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
+                    display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+    .kbv-side-section { display: flex; flex-direction: column; gap: var(--kb-sp-1); }
+    .kbv-side-section > .kbv-eyebrow { padding: var(--kb-sp-2) var(--kb-sp-6);
+                                       font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
+    /* El acceso del menu es un control sm: 36 de alto, radio sm, glifo 18, texto 13. */
+    .kbv-side-link { position: relative; display: flex; align-items: center; gap: var(--kb-sp-5);
+                     height: 36px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-sm); border: 0;
+                     background: transparent; color: var(--kb-text-2); cursor: pointer;
+                     font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 500;
+                     width: 100%; text-align: left; min-width: 0; box-sizing: border-box; }
+    .kbv-side-link > .lbl { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-side-link:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-side-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-side-link.active { background: var(--kb-primary-soft); color: var(--kb-primary-ink); font-weight: 700; }
+    .kbv-side-link .kbv-badge { flex: none; }
+    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+    /* La cria: un acceso agrupado bajo su productor. Sangrado, sin glifo propio. */
+    .kbv-side-link.child { padding-left: 40px; font-size: var(--kb-fs-sm); }
+    .kbv-side-link.child::before { content: ""; position: absolute; left: 21px; top: 0; bottom: 0;
+                                   width: 1.5px; background: var(--kb-border); border-radius: var(--kb-r-pill); }
+    /* Candado freemium: el armazon es quien tapa, no el modulo. */
+    .kbv-side-link.locked > .lbl { color: var(--kb-text-2); }
+    .kbv-side-link .lock { flex: none; display: flex; color: var(--kb-text-2); }
+    .kbv-side-link .price { flex: none; }
+    .kbv-side-foot { flex: none; display: flex; align-items: center; gap: var(--kb-sp-2);
+                     padding-top: var(--kb-sp-6); border-top: 1px solid var(--kb-border-soft); }
+    .kbv-side-foot .kbv-side-link { width: auto; flex: 1 1 auto; }
+    .kbv-side-avatar { width: 22px; height: 22px; flex: none; border-radius: var(--kb-r-pill);
+                       background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                       display: flex; align-items: center; justify-content: center;
+                       font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xs); }
+
+    /* El riel: el MISMO menu con el texto retirado. Un ancho, no dos componentes. */
+    .rail { --side-w: 76px; }
+    .rail .kbv-sidebar { padding: var(--kb-sp-7) var(--kb-sp-5); }
+    .rail .kbv-side-link { justify-content: center; padding: 0; gap: 0; }
+    .rail .kbv-side-link.child { height: 36px; padding-left: 0; }
+    .rail .kbv-side-link.child::before { display: none; }
+    .rail .kbv-side-link > .lbl, .rail .kbv-side-link .kbv-badge, .rail .kbv-side-link .price,
+    .rail .kbv-side-section > .kbv-eyebrow, .rail .kbv-logo .word, .rail .kbv-logo .kbv-icon-btn { display: none; }
+    .rail .kbv-logo { justify-content: center; padding: 0; }
+    .rail .kbv-side-foot { flex-direction: column; }
+
+    /* ── La cabecera y el HUD: 72 px, cinco lecturas, ninguna escritura ─ */
+    .kbv-content { grid-column: 2; min-width: 0; display: flex; flex-direction: column;
+                   position: relative; overflow: hidden; }
+    .kbv-header { height: 72px; display: flex; align-items: center; gap: var(--kb-sp-7);
+                  padding: 0 var(--kb-sp-8); background: var(--kb-canvas);
+                  border-bottom: 1px solid var(--kb-border); flex: none; min-width: 0; box-sizing: border-box; }
+    .kbv-header .left   { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 0 1 auto; min-width: 0; }
+    .kbv-header .center { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 1 1 auto; min-width: 0; justify-content: center; }
+    .kbv-header .right  { display: flex; align-items: center; gap: var(--kb-sp-5); flex: 0 0 auto; }
+
+    .kbv-hero-id { display: flex; align-items: center; gap: var(--kb-sp-6); height: 56px;
+                   padding: var(--kb-sp-2) var(--kb-sp-6) var(--kb-sp-2) var(--kb-sp-2);
+                   border-radius: var(--kb-r-pill); background: var(--kb-surface);
+                   border: 1px solid var(--kb-border); min-width: 0; cursor: pointer; }
+    .kbv-hero-id:hover { background: var(--kb-surface-2); }
+    .kbv-hero-avatar { position: relative; width: 48px; height: 48px; border-radius: var(--kb-r-pill); flex: none;
+                       background: var(--kb-primary-soft); box-shadow: 0 0 0 2px var(--kb-mat-oro);
+                       display: flex; align-items: center; justify-content: center;
+                       font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
+                       color: var(--kb-primary-ink); }
+    .kbv-hero-emblem { position: absolute; right: -3px; bottom: -3px; width: 20px; height: 20px;
+                       border-radius: var(--kb-r-pill); background: var(--kb-mat-oro); color: var(--kb-mat-oro-ink);
+                       display: flex; align-items: center; justify-content: center;
+                       box-shadow: 0 0 0 2px var(--kb-surface); }
+    .kbv-hero-meta { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-hero-meta .top { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; }
+    .kbv-hero-meta .name { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
+                           letter-spacing: -.01em; color: var(--kb-text); white-space: nowrap;
+                           overflow: hidden; text-overflow: ellipsis; }
+    .kbv-hero-meta .lvl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                          letter-spacing: .06em; color: var(--kb-primary-ink);
+                          background: var(--kb-primary-soft); border-radius: var(--kb-r-pill);
+                          padding: 2px var(--kb-sp-4); white-space: nowrap; }
+    .kbv-hero-meta .xp { display: flex; align-items: center; gap: var(--kb-sp-4); }
+    .kbv-hero-meta .xp .kbv-progress { width: 92px; flex: none; }
+    .kbv-hero-meta .xp .num { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xs);
+                              font-variant-numeric: tabular-nums; color: var(--kb-text-2); white-space: nowrap; }
+
+    /* La vida: barra md con su cifra en la tinta de HP, y KIBO leyendola. */
+    .kbv-vitals { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; flex: 1 1 auto; max-width: 250px; }
+    .kbv-vitals .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                       letter-spacing: .09em; color: var(--kb-hp-ink); flex: none; }
+    .kbv-vitals .kbv-progress { flex: 1 1 auto; min-width: 0; }
+    .kbv-vitals .num { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                       font-variant-numeric: tabular-nums; color: var(--kb-hp-ink); flex: none; }
+
+    /* Dibujan 36, tocan 44: la zona crece hacia afuera, el dibujo no. */
+    .kbv-searchbar, .kbv-hud-streak, .kbv-stat-pill, .kbv-btn.sm, .kbv-crumb a { position: relative; }
+    .kbv-searchbar::after, .kbv-hud-streak::after, .kbv-stat-pill::after,
+    .kbv-btn.sm::after, .kbv-crumb a::after {
+      content: ""; position: absolute; left: 0; right: 0; top: 50%;
+      height: var(--kb-touch-min); transform: translateY(-50%); pointer-events: none;
+    }
+    .kbv-searchbar { display: flex; align-items: center; gap: var(--kb-sp-5); height: 36px; min-width: 0;
+                     flex: 1 1 auto; max-width: 216px; padding: 0 var(--kb-sp-6);
+                     border-radius: var(--kb-r-pill); background: var(--kb-surface);
+                     border: 1px solid var(--kb-border); color: var(--kb-text-2); font-size: var(--kb-fs-md);
+                     overflow: hidden; white-space: nowrap; cursor: text; }
+    .kbv-searchbar .kbd { margin-left: auto; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                          font-weight: 800; color: var(--kb-text-2); background: var(--kb-surface-2);
+                          border-radius: var(--kb-r-xs); padding: 2px var(--kb-sp-3); }
+
+    .kbv-hud-streak { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                      padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+                      background: color-mix(in oklab, var(--kb-streak) 12%, var(--kb-canvas));
+                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-canvas));
+                      color: var(--kb-streak-ink); cursor: pointer; }
+    .kbv-hud-streak .days { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md);
+                            font-variant-numeric: tabular-nums; }
+    .kbv-hud-streak .shields { display: flex; gap: 2px; }
+
+    .kbv-stat-pill { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
+                     padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+                     background: var(--kb-surface); border: 1px solid var(--kb-border);
+                     font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                     font-variant-numeric: tabular-nums; color: var(--kb-text); cursor: pointer; }
+    .kbv-stat-pill.coin { background: var(--kb-coin-soft); border-color: var(--kb-coin-border); color: var(--kb-coin-ink); }
+    /* Elemento nunca va plano: lo que lo separa es su halo, no su relleno. */
+    .kbv-stat-pill.elemento { background: var(--kb-void-1); border-color: var(--kb-dark-facet);
+                              color: var(--kb-dark-glint);
+                              box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-dark-halo) 22%, transparent); }
+    .kbv-facet { width: 14px; height: 14px; flex: none; border-radius: 3px;
+                 transform: rotate(45deg); background: var(--kb-dark-core);
+                 box-shadow: inset 0 0 0 1px var(--kb-dark-glint); }
+    .kbv-bell { position: relative; }
+    .kbv-bell .kbv-badge.dot { position: absolute; right: 3px; top: 2px; box-shadow: 0 0 0 2px var(--kb-canvas); }
+
+    /* ── La region de contenido ───────────────────────────────────────── */
+    .kbv-main { flex: 1 1 auto; min-height: 0; overflow-y: auto; box-sizing: border-box;
+                padding: var(--kb-sp-9) var(--kb-sp-9) calc(var(--kb-sp-9) + 72px); }
+    .kbv-page { width: 100%; max-width: var(--kb-w-page); margin-inline: auto;
+                display: flex; flex-direction: column; gap: var(--kb-sp-9); min-width: 0; }
+    .kbv-page > * { min-width: 0; max-width: 100%; }
+    .kbv-prose { max-width: var(--kb-w-prose); }
+
+    .kbv-page-head { display: flex; align-items: flex-end; justify-content: space-between;
+                     gap: var(--kb-sp-6); flex-wrap: wrap; }
+    .kbv-page-head .ph-id { display: flex; flex-direction: column; gap: var(--kb-sp-5); min-width: 0; }
+    .kbv-page-head .kbv-h1 { font-size: var(--kb-fs-3xl-fluid); letter-spacing: -.015em; }
+    .kbv-page-head .ph-act { display: flex; align-items: center; gap: var(--kb-sp-4); flex: none; }
+
+    /* La migaja se DERIVA de la taxonomia del menu: grupo, destino, sujeto. */
+    .kbv-crumb { display: flex; align-items: center; gap: var(--kb-sp-3); flex-wrap: wrap; min-height: 20px;
+                 font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                 letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-crumb a { color: var(--kb-text-2); }
+    .kbv-crumb a:hover { color: var(--kb-primary-ink); }
+    .kbv-crumb .sep { display: flex; color: var(--kb-border-strong); }
+    .kbv-crumb .here { color: var(--kb-text); }
+
+    .kbv-canvas-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .kbv-canvas-grid > .w-2 { grid-column: span 2; }
+    .kbv-canvas-grid > .w-3 { grid-column: span 3; }
+    .kbv-canvas-grid > .w-4 { grid-column: span 4; }
+    .kbv-section { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+
+    /* ── El FAB: la superficie de captura de KIBO ─────────────────────── */
+    /* Abre la Rueda de accion. Registra sin navegar: nunca cambia de pantalla. */
+    .kbv-fab { position: absolute; right: var(--kb-sp-9); bottom: var(--kb-sp-9);
+               width: 72px; height: 72px; border-radius: var(--kb-r-pill); padding: 0;
+               border: 2px solid var(--kb-primary); background: var(--kb-primary-soft);
+               box-shadow: var(--kb-sh-3); cursor: pointer; z-index: var(--kb-z-sticky);
+               display: flex; align-items: center; justify-content: center; }
+    .kbv-fab:hover { box-shadow: var(--kb-sh-4); }
+    .kbv-fab:focus-visible { outline: none; box-shadow: var(--kb-sh-3), var(--kb-focus-halo); }
+    .kbv-fab .plus { position: absolute; right: -2px; bottom: -2px; width: 26px; height: 26px;
+                     border-radius: var(--kb-r-pill); background: var(--kb-primary-fill);
+                     color: var(--kb-text-inverse); display: flex; align-items: center; justify-content: center;
+                     box-shadow: 0 0 0 2px var(--kb-surface); }
+    .kbv-fab .kbb-host { pointer-events: none; }
+
+    /* ── KIBO ─────────────────────────────────────────────────────────── */
+    /* El cuerpo es gel de un solo color: la PIEL (--skin). La cara sale del HP.
+       Las dos entradas son ortogonales: no tocan la misma capa. */
+    .kbb-host { position: relative; display: inline-block; flex: none; line-height: 0; }
+    .kbb { position: absolute; left: 0; top: 0; width: 140px; height: 150px;
+           transform: scale(var(--s, 1)); transform-origin: 0 0;
+           --ink: var(--kb-ink-kibo); --skin: var(--kb-primary); }
+    .kbb-float { position: absolute; inset: 0 0 18px 4px; }
+    .kbb-ground { position: absolute; left: 50%; bottom: 0; width: 96px; height: 16px;
+                  transform: translateX(-50%); border-radius: 50%;
+                  background: radial-gradient(closest-side, color-mix(in srgb, var(--skin) 50%, transparent), transparent 72%);
+                  filter: blur(5px); }
+    .kbb-body { position: absolute; inset: 0; overflow: hidden;
+                border-radius: 47% 45% 46% 46%/48% 47% 45% 46%; }
+    .kbb-tint { position: absolute; inset: 0; background-color: var(--skin); opacity: .55; }
+    .kbb-faceclip { position: absolute; inset: 0; z-index: 2; overflow: hidden;
+                    border-radius: 47% 45% 46% 46%/48% 47% 45% 46%; }
+    .kbb-face { position: absolute; inset: 0; }
+    .kbb-eyes { position: absolute; top: 33%; left: 0; right: 0; display: flex;
+                justify-content: center; gap: 22px; transform-origin: center 62%; }
+    .kbb-eye { position: relative; width: 46px; height: 56px; background: var(--ink);
+               border-radius: 46%/52%; overflow: hidden; rotate: -10deg; transform-origin: center 60%; }
+    .kbb-eyes .kbb-eye:last-child { rotate: 10deg; }
+    .kbb-eye::before { content: ""; position: absolute; left: 50%; top: 50%; width: 19px; height: 19px;
+                       border-radius: 50%; translate: -50% -50%;
+                       transform: translate(calc(var(--px, 0) * 8px - 1px), calc(var(--py, 0) * 8px - 5px));
+                       background: var(--kb-text-inverse); }
+    .kbb-cheeks { position: absolute; top: 74%; left: 0; right: 0; display: flex;
+                  justify-content: center; gap: 60px; opacity: 0; }
+    .kbb-cheek { width: 16px; height: 7px; border-radius: 50%; filter: blur(1.5px);
+                 background: color-mix(in srgb, var(--kb-hp) 40%, transparent); }
+    .kbb[data-mood="feliz"] .kbb-cheeks,
+    .kbb[data-mood="celebra"] .kbb-cheeks,
+    .kbb[data-mood="travieso"] .kbb-cheeks { opacity: 1; }
+    .kbb-mouth { position: absolute; top: 64%; left: 50%; transform: translateX(-50%);
+                 width: 38px; height: 28px; overflow: visible; transform-origin: center; }
+    .kbb-mouth path { stroke: var(--ink); stroke-width: 1.9; stroke-linecap: round;
+                      stroke-linejoin: round; fill: none; }
+    .kbb[data-mood="feliz"] .kbb-eye { height: 48px; border-radius: 46%/60% 60% 44% 44%; }
+    .kbb[data-mood="feliz"] .kbb-mouth { transform: translateX(-50%) scale(1.05); }
+    .kbb.live .kbb-float { animation: kbFloat 4.6s ease-in-out infinite; }
+    .kbb.live .kbb-ground { animation: kbGround 4.6s ease-in-out infinite; }
+    .kbb.live .kbb-body { animation: kbBlob 6.5s var(--kb-ease-standard) infinite; }
+    .kbb.live .kbb-faceclip { animation: kbBlob 6.5s var(--kb-ease-standard) infinite; }
+    .kbb.live .kbb-eyes { animation: kbBlink 5.2s infinite; }
+    @keyframes kbFloat { 0%, 100% { transform: translateY(0) rotate(0); } 30% { transform: translateY(-7px) rotate(-1.2deg); } 70% { transform: translateY(-3px) rotate(1deg); } }
+    @keyframes kbGround { 0%, 100% { transform: translateX(-50%) scale(1); opacity: .85; } 30% { transform: translateX(-50%) scale(.86); opacity: .6; } 70% { transform: translateX(-50%) scale(.94); opacity: .75; } }
+    @keyframes kbBlob {
+      0%, 100% { border-radius: 47% 45% 46% 46%/48% 47% 45% 46%; transform: scale(1, 1); }
+      25% { border-radius: 45% 48% 44% 48%/46% 45% 49% 46%; transform: scale(1.02, .98); }
+      50% { border-radius: 48% 44% 48% 44%/44% 49% 44% 49%; transform: scale(.98, 1.025); }
+      75% { border-radius: 44% 48% 45% 48%/49% 44% 48% 45%; transform: scale(1.012, .988); }
+    }
+    @keyframes kbBlink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.08); } }
+
+    /* ── Contenido de muestra ─────────────────────────────────────────── */
+    /* Las clases smp-* son EJEMPLO, no contrato: una pantalla las sustituye. */
+    .smp-list { display: flex; flex-direction: column; }
+    .smp-row { display: flex; align-items: center; gap: var(--kb-sp-6);
+               padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); min-width: 0; }
+    .smp-row:last-child { border-bottom: 0; padding-bottom: 0; }
+    .smp-row .t { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .smp-row .t .n { font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text);
+                     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .smp-row .t .m { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
+    .smp-row .xp { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                   font-variant-numeric: tabular-nums; color: var(--kb-primary-ink); flex: none; }
+    .smp-row.done .t .n { color: var(--kb-text-2); text-decoration: line-through; }
+    .smp-bars { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+    .smp-areas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+  </style>
+</helmet>
+<div style="width:1440px; min-height:900px; background:#F7F9F9;">
+  <div class="kb-app" style="height:900px">
+    <div class="kbv-shell">
+
+      <!-- ── El menu: la taxonomia del producto ──────────────────────── -->
+      <aside class="kbv-sidebar">
+        <div class="kbv-logo">
+          <span class="mark">K</span>
+          <span class="word">Kibo</span>
+          <button type="button" class="kbv-icon-btn" aria-label="Replegar el menú">
+            <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 4v16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <nav class="kbv-side-nav">
+          <div class="kbv-side-section">
+            <div class="kbv-eyebrow">General</div>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Hoy</span>
+            </button>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Mi progreso</span>
+            </button>
+          </div>
+
+          <div class="kbv-side-section">
+            <div class="kbv-eyebrow">Tu plan</div>
+            <button type="button" class="kbv-side-link active" aria-current="page">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+              <span class="lbl">Tareas</span>
+              <span class="kbv-badge quiet">6</span>
+            </button>
+            <button type="button" class="kbv-side-link child">
+              <span class="lbl">Proyectos</span>
+              <span class="kbv-badge quiet">3</span>
+            </button>
+            <button type="button" class="kbv-side-link locked">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Finanzas</span>
+              <span class="lock" aria-label="Módulo bloqueado"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+          </div>
+
+          <div class="kbv-side-section">
+            <div class="kbv-eyebrow">Tu constancia</div>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Hábitos</span>
+              <span class="kbv-badge quiet">4</span>
+            </button>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>
+              <span class="lbl">Retos</span>
+              <span class="kbv-badge" style="--c: var(--kb-hp)">2</span>
+            </button>
+          </div>
+
+          <div class="kbv-side-section">
+            <div class="kbv-eyebrow">Tu bitácora</div>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 20.5S4 15.5 4 10.2A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 8 2.2c0 5.3-8 10.3-8 10.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Salud</span>
+            </button>
+            <button type="button" class="kbv-side-link locked">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Diario</span>
+              <span class="lock" aria-label="Módulo bloqueado"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+            <button type="button" class="kbv-side-link locked">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6.5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Lectura</span>
+              <span class="lock" aria-label="Módulo bloqueado"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+            <!-- Hover sobre un modulo bloqueado: el candado cede su sitio al precio en Elemento. -->
+            <button type="button" class="kbv-side-link locked" style="background: var(--kb-surface); color: var(--kb-text)">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 9v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Estudio</span>
+              <span class="price kbv-tag" title="Se desbloquea con 250 Elemento"><span class="kbv-facet" style="width:9px;height:9px;border-radius:2px"></span>250</span>
+            </button>
+            <button type="button" class="kbv-side-link locked">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Entretenimiento</span>
+              <span class="lock" aria-label="Módulo bloqueado"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+            <button type="button" class="kbv-side-link locked">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M5 5a2 2 0 0 1 2-2h12v18H7a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 17h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Bóveda</span>
+              <span class="lock" aria-label="Módulo bloqueado"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </button>
+          </div>
+
+          <div class="kbv-side-section">
+            <div class="kbv-eyebrow">Tu mundo</div>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c.9-3 3-4.6 6-4.6s5.1 1.6 6 4.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 14c2.3.3 3.8 1.8 4.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Amigos</span>
+              <span class="kbv-badge dot" style="--c: var(--kb-primary)"></span>
+            </button>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 8h16l-1.2 11H5.2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Tienda</span>
+            </button>
+          </div>
+        </nav>
+
+        <div class="kbv-side-foot">
+          <button type="button" class="kbv-side-link">
+            <span class="kbv-side-avatar">ST</span>
+            <span class="lbl">Sergio</span>
+          </button>
+          <button type="button" class="kbv-icon-btn" aria-label="Configuración">
+            <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01A1.65 1.65 0 0 0 20.91 10H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- ── La pista de contenido ───────────────────────────────────── -->
+      <div class="kbv-content">
+
+        <!-- La cabecera lee cinco fuentes y no produce ninguna. -->
+        <header class="kbv-header">
+          <div class="left">
+            <div class="kbv-hero-id" role="button" tabindex="0" title="Ver Mi progreso">
+              <div class="kbv-hero-avatar">ST<span class="kbv-hero-emblem"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M4 18h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 7l4 4 5-6 5 6 4-4-2 11H5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+              <div class="kbv-hero-meta">
+                <div class="top">
+                  <span class="name">Sergio</span>
+                  <span class="lvl">NV. 16</span>
+                  <span class="kbv-tag tint" style="--c: var(--kb-medal)">Prestigio II</span>
+                </div>
+                <div class="xp">
+                  <span class="kbv-progress xs tone-xp"><span class="fill" style="width:64%"></span></span>
+                  <span class="num">6 400 / 10 000 XP</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="center">
+            <div class="kbv-searchbar" role="button" tabindex="0">
+              <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Buscar</span>
+              <span class="kbd">Ctrl K</span>
+            </div>
+            <div class="kbv-vitals">
+              <!-- KIBO lee la vida: el animo sale del HP, la piel es del usuario. -->
+              <span class="kbb-host" style="width:56px;height:60px;--s:0.4" aria-hidden="true"><span class="kbb live" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
+              <span class="lbl">HP</span>
+              <span class="kbv-progress tone-hp"><span class="fill" style="width:82%"></span></span>
+              <span class="num">82 / 100</span>
+            </div>
+          </div>
+
+          <div class="right">
+            <div class="kbv-hud-streak" role="button" tabindex="0" title="Racha de 23 días · 2 protectores">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="days">23</span>
+              <span class="shields">
+                <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <div class="kbv-stat-pill coin" role="button" tabindex="0" title="Divisa · ver últimos movimientos">
+              <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>1 480</span>
+            </div>
+            <div class="kbv-stat-pill elemento" role="button" tabindex="0" title="Elemento · ver últimos movimientos">
+              <span class="kbv-facet"></span>
+              <span>12</span>
+            </div>
+            <button type="button" class="kbv-icon-btn kbv-bell" aria-label="Avisos · 3 sin leer">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3.5a5.5 5.5 0 0 0-5.5 5.5c0 4.5-2 6-2 6h15s-2-1.5-2-6A5.5 5.5 0 0 0 12 3.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.3 20.2a2 2 0 0 0 3.4 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="kbv-badge dot" style="--c: var(--kb-hp)"></span>
+            </button>
+          </div>
+        </header>
+
+        <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
+        <main class="kbv-main">
+          <div class="kbv-page">
+
+            <header class="kbv-page-head">
+              <div class="ph-id">
+                <nav class="kbv-crumb" aria-label="Ruta">
+                  <a href="#">Tu plan</a>
+                  <span class="sep"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="here">Tareas</span>
+                </nav>
+                <h1 class="kbv-h1">Tareas</h1>
+                <p class="kbv-meta">6 pendientes para hoy · 3 proyectos activos · vencen 4 esta semana</p>
+              </div>
+              <div class="ph-act">
+                <button type="button" class="kbv-btn kbv-btn-secondary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 6h16M7 12h13M10 18h10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Filtros
+                </button>
+                <button type="button" class="kbv-btn kbv-btn-primary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Nueva tarea
+                </button>
+              </div>
+            </header>
+
+            <div class="kbv-filter-bar">
+              <div class="kbv-seg">
+                <button type="button" class="on">Bandeja</button>
+                <button type="button">Tablero</button>
+                <button type="button">Cronograma</button>
+              </div>
+              <span class="grow"></span>
+              <span class="lbl">Área</span>
+              <button type="button" class="kbv-chip active">Todas</button>
+              <button type="button" class="kbv-chip"><span class="dot" style="background: var(--area-vigor)"></span>Vigor</button>
+              <button type="button" class="kbv-chip"><span class="dot" style="background: var(--area-wisdom)"></span>Sabiduría</button>
+              <button type="button" class="kbv-chip"><span class="dot" style="background: var(--area-wealth)"></span>Riqueza</button>
+              <button type="button" class="kbv-chip"><span class="dot" style="background: var(--area-community)"></span>Comunidad</button>
+              <button type="button" class="kbv-chip"><span class="dot" style="background: var(--area-will)"></span>Voluntad</button>
+            </div>
+
+            <section class="kbv-section">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <div class="kbv-h3">Hoy, viernes 6</div>
+                  <div class="sub">3 de 9 completadas · 340 XP en juego</div>
+                </div>
+                <div class="sh-act">
+                  <button type="button" class="kbv-btn kbv-btn-ghost sm">Ver la semana</button>
+                </div>
+              </div>
+
+              <div class="kbv-canvas-grid">
+                <div class="kbv-card w-2">
+                  <div class="kbv-card-head">
+                    <div>
+                      <div class="kbv-card-title">Bandeja de hoy</div>
+                      <div class="kbv-card-sub">Ordenadas por prioridad · 3 más sin fecha</div>
+                    </div>
+                    <span class="kbv-badge quiet">6</span>
+                  </div>
+                  <div class="smp-list">
+                    <div class="smp-row">
+                      <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0"></span>
+                      <span class="t">
+                        <span class="n">Cerrar el reporte de consolidación</span>
+                        <span class="m">
+                          <span class="kbv-areapill" style="--c: var(--area-wealth)">Riqueza</span>
+                          <span class="kbv-tag tint" style="--c: var(--pri-urgent)">Urgente</span>
+                          <span class="kbv-meta">Hoy · 18:00</span>
+                        </span>
+                      </span>
+                      <span class="xp">+45 XP</span>
+                    </div>
+                    <div class="smp-row">
+                      <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0"></span>
+                      <span class="t">
+                        <span class="n">Preparar la sesión de diseño del jueves</span>
+                        <span class="m">
+                          <span class="kbv-areapill" style="--c: var(--area-wisdom)">Sabiduría</span>
+                          <span class="kbv-tag tint" style="--c: var(--pri-high)">Alta</span>
+                          <span class="kbv-meta">Proyecto · Kibo v1</span>
+                        </span>
+                      </span>
+                      <span class="xp">+30 XP</span>
+                    </div>
+                    <div class="smp-row done">
+                      <span class="kbv-check on" role="checkbox" aria-checked="true" tabindex="0"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      <span class="t">
+                        <span class="n">Correr 5 km</span>
+                        <span class="m">
+                          <span class="kbv-areapill" style="--c: var(--area-vigor)">Vigor</span>
+                          <span class="kbv-meta">Completada 07:10</span>
+                        </span>
+                      </span>
+                      <span class="xp">+25 XP</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="kbv-card w-2">
+                  <div class="kbv-card-head">
+                    <div>
+                      <div class="kbv-card-title">Proyectos activos</div>
+                      <div class="kbv-card-sub">El avance se deriva de sus tareas</div>
+                    </div>
+                    <span class="kbv-badge quiet">3</span>
+                  </div>
+                  <div class="smp-bars">
+                    <div class="kbv-meter tone-xp">
+                      <div class="top"><span class="name">Kibo v1 · rediseño del armazón</span><span class="val">12 / 18</span></div>
+                      <div class="kbv-progress"><div class="fill" style="width:67%"></div></div>
+                    </div>
+                    <div class="kbv-meter tone-xp">
+                      <div class="top"><span class="name">Mudanza de marzo</span><span class="val">7 / 20</span></div>
+                      <div class="kbv-progress"><div class="fill" style="width:35%"></div></div>
+                    </div>
+                    <div class="kbv-meter tone-xp">
+                      <div class="top"><span class="name">Curso de estadística</span><span class="val">4 / 9</span></div>
+                      <div class="kbv-progress"><div class="fill" style="width:44%"></div></div>
+                    </div>
+                  </div>
+                  <div class="kbv-card-foot">
+                    <span class="kbv-meta">Kanban y cronograma son dos vistas del mismo tablero</span>
+                    <button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir proyectos</button>
+                  </div>
+                </div>
+
+                <div class="kbv-card w-4">
+                  <div class="kbv-card-head">
+                    <div>
+                      <div class="kbv-card-title">Carga por área</div>
+                      <div class="kbv-card-sub">El área es un eje de tus tareas, no un destino aparte</div>
+                    </div>
+                    <button type="button" class="kbv-btn kbv-btn-ghost sm">Reequilibrar</button>
+                  </div>
+                  <div class="smp-areas">
+                    <div class="kbv-meter" style="--c: var(--area-vigor)">
+                      <div class="top"><span class="name">Vigor</span><span class="val">4</span></div>
+                      <div class="kbv-progress sm"><div class="fill" style="width:40%"></div></div>
+                    </div>
+                    <div class="kbv-meter" style="--c: var(--area-wisdom)">
+                      <div class="top"><span class="name">Sabiduría</span><span class="val">7</span></div>
+                      <div class="kbv-progress sm"><div class="fill" style="width:70%"></div></div>
+                    </div>
+                    <div class="kbv-meter" style="--c: var(--area-wealth)">
+                      <div class="top"><span class="name">Riqueza</span><span class="val">5</span></div>
+                      <div class="kbv-progress sm"><div class="fill" style="width:50%"></div></div>
+                    </div>
+                    <div class="kbv-meter" style="--c: var(--area-community)">
+                      <div class="top"><span class="name">Comunidad</span><span class="val">2</span></div>
+                      <div class="kbv-progress sm"><div class="fill" style="width:20%"></div></div>
+                    </div>
+                    <div class="kbv-meter" style="--c: var(--area-will)">
+                      <div class="top"><span class="name">Voluntad</span><span class="val">3</span></div>
+                      <div class="kbv-progress sm"><div class="fill" style="width:30%"></div></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </main>
+
+        <!-- El FAB: KIBO mismo. Abre la Rueda de accion, que registra sin navegar. -->
+        <button type="button" class="kbv-fab" aria-label="Abrir la rueda de acción de KIBO">
+          <span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb live" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
+          <span class="plus" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
