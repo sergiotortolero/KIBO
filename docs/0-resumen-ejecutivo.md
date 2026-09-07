@@ -9,8 +9,7 @@ Un sistema de gestión de vida gamificado: la plataforma que transforma tareas, 
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
-| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del resumen ejecutivo | El portafolio documenta cada solución en cinco documentos numerados |
-| 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de resumen ejecutivo | Migración de ARCHITECTURE.md v1.7 a documentación de cinco piezas (Art. 5) |
+| 1.0-alpha | 2026-09-06 | technical-writer | Primera versión del resumen ejecutivo | El portafolio documenta cada solución en cinco documentos numerados |
 
 ## Contenido
 
@@ -51,7 +50,7 @@ Todo sincroniza automáticamente. El teléfono trabaja sin conexión y se sincro
 
 ## 4. La economía del juego
 
-Dos monedas. **El nombre es la unidad; la skin es solo la apariencia** — las skins nunca compiten con el nombre de la categoría.
+Dos monedas. **El nombre es la unidad; la piel es solo la apariencia** — las pieles nunca compiten con el nombre de la categoría.
 
 | Moneda | Se gana por | Se gasta en | Cómo se ve |
 |---|---|---|---|
@@ -74,7 +73,7 @@ El alcance completo que Kibo puede entregar. La lista de v1 se decide en el back
 | 4 | **Retos** (jefes) | Compromiso con fecha límite, dificultad 1–5. Fallar cuesta HP. 20 % de fallos tolerados. Solo o con amigos |
 | 5 | **Tareas y Proyectos** | Kanban, subtareas, fechas, esfuerzo, prioridad. Línea de tiempo escalable (1 semana a 12 meses) |
 | 6 | **Áreas** | Cinco ejes de vida. Cada una acumula XP y muestra rangos militares (20 tiers × 9 materiales) |
-| 7 | **Logros y Personaje** | Showcase de trofeos mensuales, banners de retos, catálogo (públicos, secretos, escondidos; 4 raridades) |
+| 7 | **Logros y Personaje** | Galería de trofeos mensuales, banners de retos, catálogo (públicos, secretos, escondidos; 4 raridades) |
 | 8 | **Vitrina** | Lo que la comunidad ve: perfil, foto, título honorífico, lema, logros destacados, KIBO companion |
 | 9 | **Amigos** | Sin transferencias de dinero. Regalos de ítems. Contribuciones a listas de deseos. Rachas. Retos compartidos |
 | 10 | **Finanzas** | Cuentas, tarjetas de crédito, deudas, metas de ahorro, presupuestos, importar movimientos, portafolio |

@@ -9,8 +9,7 @@ Cada requerimiento funcional y no-funcional, verificable uno por uno.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
-| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del análisis funcional | El portafolio documenta cada solución en cinco documentos numerados |
-| 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de análisis funcional | Migración de ARCHITECTURE.md v1.7 y ANALYSIS.md v1.1 a documentación de cinco piezas (Art. 5) |
+| 1.0-alpha | 2026-09-06 | technical-writer | Primera versión del análisis funcional | El portafolio documenta cada solución en cinco documentos numerados |
 
 ## Contenido
 
@@ -54,7 +53,7 @@ Cada módulo a continuación es verificable como una colección de requerimiento
 | | Línea de tiempo (KbTimeline): escala 1 semana → 12 meses + rango custom. Scroll horizontal. Columna fija | La línea de tiempo es responsive y las tareas se ven en todas las escalas |
 | **Áreas** | Cinco áreas (Vigor, Sabiduría, Riqueza, Comunidad, Voluntad) | Todas las cinco siempre presentes |
 | | Cada área acumula XP y muestra rango militar (20 tiers × 9 materiales). Prestigio 1–16. Paragon post-máximo | Un usuario en área Sabiduría nivel 5 material Acero (ejemplo) se muestra con ese rango |
-| **Progreso/Personaje y Logros** | Showcase: indicadores, prestigio, paragon. Catálogo de logros (públicos, secretos, escondidos; 4 raridades) | Un logro secreto no aparece hasta cumplirse. Uno público aparece siempre en el catálogo |
+| **Progreso/Personaje y Logros** | Galería: indicadores, prestigio, paragon. Catálogo de logros (públicos, secretos, escondidos; 4 raridades) | Un logro secreto no aparece hasta cumplirse. Uno público aparece siempre en el catálogo |
 | | Trofeos mensuales. Banners de retos completados. Todo agrupado | Ir a Logros muestra trofeos agrupados por mes |
 | **Vitrina** | Lo que la comunidad ve: perfil, foto, título, lema, 3–9 logros destacados (expandible con feature), KIBO companion | Un usuario ve el perfil de otro con sus logros destacados |
 | **Amigos** | Sin transferencias de dinero. Regalos de ítems (cosmético) | Un usuario regala un cosmético a otro |
@@ -80,8 +79,8 @@ Cada módulo a continuación es verificable como una colección de requerimiento
 
 | Requerimiento | Verificación |
 |---|---|
-| **Web y Android entregan en v1. Feature parity, no screen parity** | Una funcionalidad existe en ambas plataformas, expresada en idioma nativo |
-| **Offline-first en web y mobile. El cliente es descartable: si la DB local se corrompe, la aplicación se recupera** | Limpiar la DB local y reiniciar. Cero pérdida de datos |
+| **Web y Android entregan en v1. Paridad de funcionalidad, no de pantallas** | Una funcionalidad existe en ambas plataformas, expresada en idioma nativo |
+| **Sin conexión primero en web y móvil. El cliente es descartable: si la DB local se corrompe, la aplicación se recupera** | Limpiar la DB local y reiniciar. Cero pérdida de datos |
 | **El servidor es el único escritor de datos de dominio. Clientes leen vía API** | Una mutación siempre va por `/api/v1/*`, nunca por acceso directo a Prisma |
 | **Sincronización: dos motores, un log. Mobile-server: replicación. Server-vault: integración** | Un hábito completado en el teléfono aparece en la web en <5 segundos. Aparece en la bóveda Obsidian en la próxima sincronización |
 | **Operaciones idempotentes. Retry automático sin duplicados** | Completar un hábito dos veces con la misma intención gana una sola vez |

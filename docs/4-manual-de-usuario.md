@@ -9,7 +9,7 @@ Cómo entrar, navegar y hacer cada tarea.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
-| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del manual de usuario | El portafolio documenta cada solución en cinco documentos numerados |
+| 1.0-alpha | 2026-09-06 | technical-writer | Primera versión del manual de usuario | El portafolio documenta cada solución en cinco documentos numerados |
 
 ## Contenido
 

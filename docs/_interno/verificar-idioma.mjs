@@ -10,7 +10,7 @@ const FRASES = [
   'source of truth','first-class','never projected','body below','one root','date partition',
   'hubs receive','bff pattern','disposable-client','local state','online-only','offline-first',
   'anything involving','credential boundary','become record notes','intent outbox','global prefix',
-  'uri versioning','cors allowlist','body limit','sharing react dom','se escriben dos veces',
+  'uri versioning','cors allowlist','body limit','sharing react dom',
   'never writes','never emit','without ceiling','user can edit','untouched on sync','by role',
   'column-level','feed cursado','types generadas','client de','server-render','state machine',
   'data binding','authoring role','staffed','no parse','no compute','dumb pipe','continuous route',

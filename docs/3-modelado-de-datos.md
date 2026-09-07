@@ -9,8 +9,7 @@ Todo sobre los datos: dónde viven, cómo se transforman, schemas y objetos.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
-| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del modelado de datos | El portafolio documenta cada solución en cinco documentos numerados |
-| 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de modelado de datos | Migración de ARCHITECTURE.md v1.7 a documentación de cinco piezas (Art. 5) |
+| 1.0-alpha | 2026-09-06 | technical-writer | Primera versión del modelado de datos | El portafolio documenta cada solución en cinco documentos numerados |
 
 ## Contenido
 
@@ -50,9 +49,9 @@ ContextItem {
 
 | Propiedad | Por qué |
 |---|---|
-| **`category` y `sensitivity` son first-class**, no etiquetas agregadas después | Son lo que hace Article 12 ejecutable at runtime instead de in a document |
-| **`links[]` es el mismo graph que la bóveda emite como wikilinks** | Hechos become record notes. Dimensiones become reference notes. Wikilinks perform the join. Un graph, dos representaciones |
-| **`provenance` separa lo que el usuario dijo de lo que la IA inferió** | Sin ella, en meses nadie sabe cuál parte de "contexto personal" es real. Contamination más dura del sistema to reverse |
+| **`category` y `sensitivity` son de primera clase**, no etiquetas agregadas después | Son lo que hace que el Artículo 12 sea ejecutable en tiempo de ejecución, no solo en la documentación |
+| **`links[]` es el mismo graph que la bóveda emite como wikilinks** | Los hechos se convierten en notas de registro. Las dimensiones se convierten en notas de referencia. Los wikilinks realizan la unión. Un graph, dos representaciones |
+| **`provenance` separa lo que el usuario dijo de lo que la IA inferió** | Sin ella, en meses nadie sabe cuál parte de "contexto personal" es real. La contaminación más difícil de revertir en el sistema |
 
 ### 1.3 Query surface
 
@@ -77,8 +76,8 @@ query(
 ```
 
 **Dos reglas en la firma:**
-1. **Category filtering antes de retrieval, no en formatting.** Data el usuario no autorizó nunca entra al proceso.
-2. **Redaction es explícita,** así la IA puede decir "no veo finanzas" instead de inventar.
+1. **Category filtering antes de retrieval, no en formatting.** Datos que el usuario no autorizó nunca entran al proceso.
+2. **Redaction es explícita,** así la IA puede decir "no veo finanzas" en lugar de inventar.
 
 ### 1.4 Auditoría
 
@@ -118,7 +117,7 @@ Operation {
 | Consumer | Qué hace |
 |---|---|
 | **Replication** | Transporta Operation del móvil/web al servidor. Servidor aplica y confirma |
-| **Vault projector** | Consume Operation como feed cursado. Convierte a notas Markdown. Emite `.base` files |
+| **Vault projector** | Consume Operation como flujo de operaciones rastreado. Convierte a notas Markdown. Emite archivos `.base` |
 | **Connectors externos** | Consume el mismo feed. Ej: Slack integration, calendar sync |
 | **Audit trail** | Histórico completo de quién hizo qué, cuándo, desde dónde |
 | **Análisis** | "¿cuándo empezó este hábito?" = buscar Operation `kind: create` para ese hábito |
@@ -157,7 +156,7 @@ Números de cuenta, CLABE, PAN, últimos cuatro, saldos, límites de crédito, n
 | Regla | Quién la enforza |
 |---|---|
 | Category filtering antes de query | Backend: la query surface (§1.3) filtra antes de retrieval |
-| Encriptación column-level para datos especiales | Postgres: credential boundary by role |
+| Encriptación a nivel de columna para datos especiales | Postgres: límite de credencial por rol |
 | Redaction report explícita | Backend: query surface devuelve qué data fue redactada |
 | Auditoría de todas las queries | Backend: audit table con user, timestamp, categories, item ids, purpose |
 | Export cascada a consent | Backend: exportar solo items con consent activo para ese destino |
@@ -183,19 +182,19 @@ kibo-updated: 2026-09-05T14:30:00-06:00   # ISO 8601 with explicit offset
 tags: [kibo/habit]          # stamp tag: user can select "all Kibo-written"
 ```
 
-**Todos los domain keys son unprefixed** (`date`, `doctor`, `dose`, `mood`) así Bases y Dataview los tratan como propiedades ordinarias.
+**Todos los keys de dominio están sin prefijo** (`date`, `doctor`, `dose`, `mood`) para que Bases y Dataview los traten como propiedades ordinarias.
 
-### 4.3 Convention rules (fijas para el contract)
+### 4.3 Reglas de convención (fijas para el contrato)
 
 | Aspecto | Regla | Ejemplo |
 |---|---|---|
-| **Naming** | kebab-case, English, singular excepto collections | `doctor`, `doses`, `attended-date` |
+| **Naming** | `kebab-case`, en inglés, singular excepto colecciones | `doctor`, `doses`, `attended-date` |
 | **Dates** | `YYYY-MM-DD` | `2026-09-05` |
 | **Instants** | ISO 8601 con offset explícito | `2026-09-05T14:30:00-06:00` |
-| **Booleans** | Literal `true`/`false`, nunca `yes`/`no` | YAML 1.1 coerces; Norway problem |
-| **Nulls** | Omit key, nunca `null` o empty string | Omit es el default |
+| **Booleans** | Literal `true`/`false`, nunca `yes`/`no` | YAML 1.1 transforma tipos; problema de Noruega |
+| **Nulls** | Omitir clave, nunca `null` o cadena vacía | Omitir es el default |
 | **Enums** | `snake_case`, cerrado, documentado | `status: completed`, `priority: high` |
-| **Collections** | Siempre YAML list, incluso con un elemento | `tags: [a]` not `tags: a` |
+| **Collections** | Siempre YAML list, incluso con un elemento | `tags: [a]` no `tags: a` |
 
 ### 4.4 Estructura de nota `kibo`
 
@@ -228,59 +227,59 @@ User can edit here.
 - Frontmatter declared keys: Kibo rewrites on regeneration.
 - Undeclared frontmatter keys: User added, preserved verbatim.
 - `<!-- kibo:generated -->` block: Kibo replaces wholesale.
-- Body below: User can edit, untouched on sync.
+- Cuerpo abajo: el usuario puede editar, sin tocar en sincronización.
 - If user deletes generated block: Recorded as `generated_block: removed`. Frontmatter keeps syncing.
 
 ### 4.5 Folder tree
 
 ```
 Kibo/
-  ├─ Diary/          # todos los entries
-  ├─ Health/         # medical visits, vitals
-  │  └─ Private/     # medicines, dosages (user can exclude from git/sync)
+  ├─ Diary/          # todas las entradas
+  ├─ Health/         # visitas médicas, signos vitales
+  │  └─ Private/     # medicinas, dosis (usuario puede excluir de git/sync)
   ├─ Finance/
-  │  └─ Private/     # account structure (not amounts)
-  ├─ Resources/      # user's notes indexed
-  ├─ Areas/          # dimension notes: Vigor, Sabiduría, ...
-  ├─ People/         # dimension notes: doctors, friends
-  │  └─ Private/     # health providers linked to visits
-  ├─ .base/          # generated Bases
-  └─ README.md       # convention guide
+  │  └─ Private/     # estructura de cuentas (no montos)
+  ├─ Resources/      # notas del usuario indexadas
+  ├─ Areas/          # notas de dimensión: Vigor, Sabiduría, ...
+  ├─ People/         # notas de dimensión: doctores, amigos
+  │  └─ Private/     # proveedores de salud vinculados a visitas
+  ├─ .base/          # Bases generadas
+  └─ README.md       # guía de convención
 ```
 
-**Rules:**
-- One root, `Kibo/`. Kibo never writes outside.
-- Folder names describe content, not data model.
-- Date partition only for types that grow without ceiling.
-- **Everything special-category under `Kibo/Private/`** — user can exclude from git, selective sync, backup en una gesture.
-- Hubs receive links, never emit (project links to area, never reverse).
-- Person lives in most restrictive sub-root (provider lives in `Private/People/`).
+**Reglas:**
+- Una raíz: `Kibo/`. Kibo nunca escribe afuera.
+- Los nombres de carpeta describen el contenido, no el modelo de datos.
+- Partición por fecha solo para tipos que crecen sin límite.
+- **Todo lo especial-categoría bajo `Kibo/Private/`** — el usuario puede excluir de git, sincronización selectiva, copia de seguridad en un gesto.
+- Los concentradores reciben enlaces, nunca emiten (el proyecto enlaza a un área, nunca al revés).
+- La persona vive en la sub-raíz más restrictiva (el proveedor vive en `Private/People/`).
 
-### 4.6 Never projected (enforced)
+### 4.6 Nunca se proyectan (obligatorio)
 
 ```
--- Gamification (never) --
-xp, hp, coins, gems, streak counters, protectors, flame tiers,
-achievements, trophies, banners, cosmetics, wardrobe, chests, probabilities
+-- Gamificación (nunca) --
+`xp`, `hp`, `coins`, `gems`, contadores de racha, protectores, niveles de llama,
+logros, trofeos, banners, cosméticos, guardarropa, cofres, probabilidades
 
--- Finance (never) --
-account numbers, CLABE, PAN, last four, balances, credit limits,
-policy numbers, credentials
+-- Finanzas (nunca) --
+números de cuenta, CLABE, PAN, últimos cuatro, saldos, límites de crédito,
+números de póliza, credenciales
 
--- Social (never) --
-third parties' phones, emails, addresses, the social feed
+-- Social (nunca) --
+teléfonos, emails, direcciones de terceros, feed social
 
--- Other (never) --
-raw sensor samples (daily aggregates emitted instead),
-internal identifiers other than kibo-id,
-settings, notifications, sessions, audit logs
+-- Otro (nunca) --
+muestras de sensor sin procesar (se emiten agregados diarios en su lugar),
+identificadores internos que no sean `kibo-id`,
+configuración, notificaciones, sesiones, logs de auditoría
 
--- BUT (facts yes, score no) --
-consistency record (which days you met) — YES
-computed streak — NO
+-- PERO (hechos sí, puntuación no) --
+registro de cumplimiento (qué días cumpliste) — SÍ
+racha calculada — NO
 ```
 
-**Enforced:** Field-level `neverProject` flag + forbidden-vocabulary test (fails if `xp`, `hp`, etc. appears in export) + contract-version bump on new key.
+**Obligatorio:** Flag `neverProject` a nivel de campo + prueba de vocabulario prohibido (falla si `xp`, `hp`, etc. aparece en export) + actualización de versión de contrato en nueva clave.
 
 ### 4.7 Serializer
 
@@ -292,30 +291,30 @@ La serialización vive en `packages/markdown`. **Cero dependencia en Obsidian AP
 
 ### 5.1 Identity
 
-- **`kibo-id` es ULID**, immutable, nunca la ruta.
-- `opId` en operation log es la misma convención ULID, hence idempotent retries.
+- **`kibo-id` es ULID**, inmutable, nunca la ruta.
+- `opId` en operation log es la misma convención ULID, por lo tanto retries idempotentes.
 - UUIDs para user_id, session_id, etc.
 
 ### 5.2 Queries importantes
 
 | Query | Propósito |
 |---|---|
-| `SELECT * FROM contexts WHERE userId = $1 AND category = $2 AND occurredAt BETWEEN $3 AND $4 ORDER BY occurredAt DESC` | Get items in category, date range |
-| `SELECT * FROM operations WHERE userId = $1 ORDER BY deviceClock ASC OFFSET $2 LIMIT $3` | Vault projector: consume operation feed cursado |
-| `INSERT INTO audit_log (userId, purpose, categories, itemIds, timestamp)` | Toda query logged |
-| `SELECT * FROM consent WHERE userId = $1 AND category = $2 AND destination = $3` | Check consent before returning data |
+| `SELECT * FROM contexts WHERE userId = $1 AND category = $2 AND occurredAt BETWEEN $3 AND $4 ORDER BY occurredAt DESC` | Obtener ítems en categoría, rango de fecha |
+| `SELECT * FROM operations WHERE userId = $1 ORDER BY deviceClock ASC OFFSET $2 LIMIT $3` | Vault projector: consume flujo de operaciones rastreado |
+| `INSERT INTO audit_log (userId, purpose, categories, itemIds, timestamp)` | Toda query registrada en log |
+| `SELECT * FROM consent WHERE userId = $1 AND category = $2 AND destination = $3` | Verificar consentimiento antes de devolver datos |
 
 ### 5.3 Migraciones
 
-**Schema lives in `packages/database` (Prisma).** Migrations are source-controlled and versioned.
+**El schema vive en `packages/database` (Prisma).** Las migraciones están bajo control de versiones.
 
-Two patterns:
-- **Deploy time:** Run on application startup (zero admin overhead).
-- **Manual migration:** For large datasets, run separately before deploy.
+Dos patrones:
+- **Tiempo de despliegue:** Ejecutar al iniciar la aplicación (sin sobrecarga de administrador).
+- **Migración manual:** Para conjuntos grandes de datos, ejecutar separadamente antes del despliegue.
 
-**Never deploy code expecting a schema that is not yet migrated.**
+**Nunca despliegues código esperando un schema que aún no ha sido migrado.**
 
-### 5.4 Encriptación column-level
+### 5.4 Encriptación a nivel de columna
 
 Datos especiales (health, finance amounts) viven en columnas encriptadas a nivel Postgres:
 
@@ -332,7 +331,7 @@ GRANT SELECT (id, userId, type, category, occurredAt, recordedAt, title, links, 
 -- Decryption happens at application layer
 ```
 
-**Credential boundary:** Solo la app con la clave puede desencriptar.
+**Límite de credencial:** Solo la app con la clave puede desencriptar.
 
 ---
 
