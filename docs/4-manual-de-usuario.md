@@ -9,7 +9,7 @@ Cómo entrar, navegar y hacer cada tarea.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
-| 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de manual de usuario | Migración de ARCHITECTURE.md v1.7 a documentación de cinco piezas (Art. 5). Contenido de pantallas PENDING por falta de prototipo funcional |
+| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del manual de usuario | El portafolio documenta cada solución en cinco documentos numerados |
 
 ## Contenido
 
@@ -32,24 +32,22 @@ Cómo entrar, navegar y hacer cada tarea.
 
 ### 1.1 Crear tu cuenta*
 
-1. Abre Kibo en el navegador o descargar la app de Android.
+1. Abre Kibo en el navegador o descarga la app de Android.
 2. Toca "Crear cuenta".
 3. Ingresa email y contraseña.
 4. **Crea tu personaje:** Elige tu nombre de juego, área de vida donde quieres enfocarte primero, y si quieres jugar solo o con amigos.
 5. Tu **KIBO** (el gel animado) aparece como bienvenida.
 
-*Pantalla, pasos, y validaciones PENDING.
-
 ### 1.2 Configuración*
 
-Toca el engranaje (⚙️) en la esquina superior derecha.
+Toca el ícono de engranaje en la esquina superior derecha.
 
 | Opción | Qué hace |
 |---|---|
 | **Perfil** | Edita nombre, foto, bio |
 | **Seguridad** | Cambia contraseña, sesiones activas, dispositivos conectados |
-| **Privacidad** | Consentimiento por categoría (salud, finanzas, diario). Granular: salud → Kibo servers SÍ / bóveda Obsidian opción / LLM SÍ con DPA |
-| **Notificaciones** | On/off, sonidos, vibración |
+| **Privacidad** | Consentimiento por categoría (salud, finanzas, diario). Granular: salud → Kibo servers Sí / bóveda Obsidian opción / LLM Sí con DPA |
+| **Notificaciones** | Sí/No, sonidos, vibración |
 | **Juego** | Celebraciones, sonidos, modo reduced-motion, modo hardcore |
 | **Cuenta Premium** | Plan, facturación, factura |
 | **Exportar todo** | Descargar `.zip` con bóveda Obsidian funcional. Incluye todas tus notas, finanzas, diario |
@@ -62,41 +60,35 @@ Toca el engranaje (⚙️) en la esquina superior derecha.
 ### 2.1 Qué ves cuando entras*
 
 La pantalla principal muestra:
-- Tu **racha global** (número en grande, con llamas 🔥).
+- Tu **racha global** (número en grande, con visuales de llamas).
 - **KIBO** en el centro (gel animado). Su expresión cambia según tu HP.
 - **Grilla de widgets** (personalizables).
 - **Barra lateral** (en web, drawer en móvil) con acceso a todos los módulos.
-
-*Capturas PENDING.
 
 ### 2.2 Personaliza tu cuadro*
 
 1. Toca el ícono **+** en la grilla.
 2. Galería de widgets: Hoy, Hábitos, Finanzas, Salud, etc.
 3. Elige cuáles quieres ver.
-4. **Arrastra para reordenar** (web: drag-drop; móvil: long-press → mover).
+4. **Arrastra para reordenar** (web: arrastrar y soltar; móvil: mantener presionado → mover).
 5. Algunos widgets son **gratis**, otros requieren **Elemento**.
-
-*Paso a paso con pantallas PENDING.
 
 ### 2.3 KIBO, tu mascota*
 
 KIBO está vivo. **Interactúa con él:**
 - **Toca:** Juega una travesura (flip, squash, balloon, drip, wave).
-- **Mantén presionado:** Radial menu (acciones rápidas).
+- **Mantén presionado:** Menú radial (acciones rápidas).
 - **Toca y arrastra:** Chipote (deformación gelatinosa interactiva).
 
 **Su expresión cambia con tu salud (HP):**
-- ✨ Feliz/relajado (90–100 HP)
-- 😊 Contento (72–89 HP)
-- 😐 Neutral (55–71 HP)
-- 😟 Preocupado (38–54 HP)
-- 😢 Triste (20–37 HP)
-- 😱 Sorprendido/asustado (<20 HP)
+- Celebra (90–100 HP)
+- Feliz (72–89 HP)
+- Calma (55–71 HP)
+- Enfocado (38–54 HP)
+- Cansado (20–37 HP)
+- Triste (menor a 20 HP)
 
-**Guardarropa:** Skins (colores), accesorios, auras. Todos comprados con Elemento.
-
-*Interacciones y animaciones PENDING.
+**Guardarropa:** Pieles (colores), accesorios, auras. Todos comprados con Elemento.
 
 ---
 
@@ -114,14 +106,12 @@ Desde el módulo **Hábitos** o desde el FAB (Kibo):
 
 **Toca "Crear". El hábito aparece en tu lista.**
 
-*Pantalla de formulario PENDING.
-
 ### 3.2 Completar un hábito*
 
 Abre **Hábitos**. Tu lista muestra:
 ```
-[✓ Hoy] Meditar      ⭐⭐⭐  🔥🔥 (racha 2 días)
-[—] Meditar        ⭐⭐⭐  (mañana no completado aún)
+[Hoy] Meditar      (Prioridad alta)  Llama 2 (racha 2 días)
+[—] Meditar        (Prioridad alta)  (mañana no completado aún)
 ```
 
 **Toca el hábito completado hoy → botón "Marcar como hecho".**
@@ -129,20 +119,19 @@ Abre **Hábitos**. Tu lista muestra:
 Lo que ocurre:
 - Ganas: `esfuerzo × prioridad` Divisa + XP.
 - Tu racha sube 1 día.
-- Las llamas avanzan (🔥 → 🔥🔥 → 🔥🔥🔥).
+- Las llamas avanzan (Llama 1 → Llama 2 → Llama 3).
 - HP se recupera ligeramente si estaba bajo.
 - **KIBO celebra** (animación, confeti respetando reduced-motion).
 
-**Si faltas un día:**
-- Tu racha baja a 1.
-- Si faltas al día siguiente, se pierde.
-- Puedes usar un **protector** (Elemento) para bloquear la caída una vez.
-
-*Validaciones y flujo animado PENDING.
+**Si pausas el hábito:**
+- Dejas de registrar días sin romper tu racha.
+- La puedes reactivar cuando quieras.
+- Puedes usar un **protector** (Elemento) para bloquear la caída una vez si olvidas un día.
+- Reaactivar te pide el check de nuevo.
 
 ### 3.3 Ver tu historia*
 
-Toca un hábito → **"Ver historial"**. Aparece un calendario con los días que lo completaste (verde) y los que faltaste (rojo).
+Toca un hábito → **"Ver historial"**. Aparece un calendario con los días que lo completaste (en color) y los que faltaste (gris).
 
 ---
 
@@ -155,44 +144,30 @@ Desde **Tareas y Proyectos**:
 2. **Complejidad:** 1–5 (escala de trabajo).
 3. **Toca "Nuevo proyecto".**
 
-**El proyecto abre en Kanban.**
-
-*Pantalla PENDING.
+**El proyecto abre en la vista de gestión de tareas.**
 
 ### 4.2 Agregar tareas al proyecto*
 
-El Kanban tiene columnas. Por defecto: **Por hacer | En progreso | Revisión | Hecho**.
-
-1. **Toca una columna vacía** o **toca "+"** en "Por hacer".
-2. Llena: **nombre**, **subtareas** (opcionales), **fecha de vencimiento**, **esfuerzo** (1–5), **prioridad**.
+1. **Toca "+" en la lista de tareas**.
+2. Llena: **nombre**, **fecha de vencimiento**, **esfuerzo** (1–5).
 3. **Toca "Guardar".**
 
-**La tarea aparece como card.**
-
-*Subtareas y validaciones PENDING.
+**La tarea aparece en tu lista y suma hacia el progreso del proyecto.**
 
 ### 4.3 Completar tarea*
 
-Arrastra la card de **"Por hacer"** a **"Hecho"**. (O toca la card → "Marcar como hecho".)
+Toca la tarea → **"Marcar como hecho"**.
 
 Lo que ocurre:
 - Ganas XP.
 - El proyecto avanza (barra de progreso actualiza).
-- Tus tareas contribuyen a tu **eficiencia** (métrica en tu perfil).
 
-*Animación PENDING.
+### 4.4 Ver en cronograma*
 
-### 4.4 Ver en timeline*
-
-Toca el ícono **"Timeline"** en la barra. Ves todos tus proyectos en escala:
-- **1 semana** → cada tarea es un punto.
-- **1 mes** → barras de progreso.
-- **3 meses** → hitos.
-- Custom: elige el rango.
-
-Scroll horizontal. Columna de proyectos fija a la izquierda.
-
-*Timeline interactivo PENDING.
+Toca el ícono **"Cronograma"** en la barra. Ves todos tus proyectos en una línea de tiempo donde puedes:
+- Cambiar la escala de vista (por semana, mes o personalizado).
+- Ver el progreso de cada proyecto.
+- Arrastrar fechas de vencimiento para reprogramar.
 
 ---
 
@@ -202,28 +177,21 @@ Scroll horizontal. Columna de proyectos fija a la izquierda.
 
 Desde **Retos**:
 1. **Nombre:** "Correr 5K sin parar", "Escribir 10K palabras".
-2. **Fecha límite:** Un mes desde hoy, 3 meses, custom.
-3. **Dificultad:** 1–5. Daño por fallo:
-   - 1 = −8 HP
-   - 3 = −22 HP
-   - 5 = −50 HP
-4. **Solo o con amigos?** Si con amigos, invita.
+2. **Fecha límite:** Un mes desde hoy, 3 meses, o elige el rango.
+3. **Dificultad:** 1–5. Cada fallo causa daño HP según la dificultad (más difícil = más daño).
+4. **¿Solo o con amigos?** Si con amigos, invita.
 5. **Toca "Crear".**
-
-*Pantalla de creación PENDING.
 
 ### 5.2 Completar un reto*
 
-Cada día del reto, toca **"Hoy lo cumplí"** o **"Hoy no cumplí"**.
+Cada día del reto, toca **"Hoy lo cumplí"** o **"Hoy faltó"**.
 
 **Mecánica:**
 - Cumples todos los días: reto se cierra con **banner de victoria** (va a Logros).
-- Faltas 1 día en un reto de 10: racha interna baja a 1, pero sigues.
-- Faltas 2 días: el reto se cierra (20 % de fallos tolerados).
+- Tolerancia: 20 % de fallos permitidos (excepto en dificultad extrema).
+- Cada fallo cuesta HP; superar la tolerancia cierra el reto sin recompensa.
 
-**Compartido:** Si invitaste a amigos, ves su scoreboard (quién cumplió hoy, quién falló, quién lidera).
-
-*Scoreboard en tiempo real PENDING.
+**Compartido:** Si invitaste a amigos, ves su estado (quién cumplió hoy, quién falló).
 
 ---
 
@@ -236,35 +204,29 @@ Cada día del reto, toca **"Hoy lo cumplí"** o **"Hoy no cumplí"**.
 Toca cualquiera. Ves:
 - Tu **rango militar actual** (20 tiers × 9 materiales).
 - **XP acumulado** (barra).
-- **Prestigio** (1–16; *Leyenda = Gargantúa* en max).
-- **Post-max paragon** (expansión infinita).
+- **Prestigio** (1–16; máximo desbloquea estatus legendario).
+- **Expansión post-máx** para seguir acumulando.
 - **Qué suma a esta área:** Hábitos, tareas, retos, journal, notas, etc.
 
-*Pantalla de detalle de área PENDING.
-
-### 6.2 Logros: Tu showcase*
+### 6.2 Logros: Tu vitrina*
 
 Toca **Logros**. Ves:
 - **Trofeos mensuales** (enero: top 3; febrero: top 3; …).
 - **Banners de retos** ("Completé 'Correr 5K' en julio").
-- **Catálogo:** 100+ logros (públicos, secretos, escondidos; 5 rarities).
+- **Catálogo:** 100+ logros (públicos, secretos, escondidos; 5 raridades).
 - Un logro **escondido** no aparece hasta cumplirlo.
 - Un logro **secreto** aparece en el catálogo pero sin descripción.
 
 **Toca un logro para ver su descripción.**
 
-*Catálogo y animaciones PENDING.
-
 ### 6.3 Vitrina: Tu perfil público*
 
 Toca tu avatar en la esquina. Tu **vitrina** muestra:
 - Foto, nombre, título honorífico, lema.
-- 3–9 logros destacados que elegiste (expandible a 9 con feature).
-- Tu **KIBO companion** (la mascota, peeking desde una tarjeta).
+- 3–9 logros destacados que elegiste.
+- Tu **KIBO companion** (la mascota, asomada desde una tarjeta).
 
 **Otros usuarios ven tu vitrina igual.**
-
-*Renderizado PENDING.
 
 ---
 
@@ -280,8 +242,6 @@ Toca **Finanzas**.
 3. Saldo inicial.
 4. Toca "Guardar".
 
-*Pantalla de registro PENDING.
-
 ### 7.2 Tarjetas de crédito*
 
 Toca "Agregar tarjeta". Llena:
@@ -294,8 +254,6 @@ La tarjeta muestra:
 - **Interés YTD** (cuánto llevabas pagado este año).
 - **CAT** (costo anual).
 
-*Pantalla de detalle PENDING.
-
 ### 7.3 Presupuestos y metas*
 
 Toca "Presupuesto" o "Metas".
@@ -304,15 +262,11 @@ Toca "Presupuesto" o "Metas".
 
 **Meta:** "Ahorrar $100K en 6 meses". Barra de progreso. XP si cumples.
 
-*Validación y progreso PENDING.
-
 ### 7.4 Importar movimientos*
 
 Toca "Importar". Sube un `.csv` de tu banco. Kibo categoriza automáticamente (débito de "Frutería" → Comida; "Netflix" → Suscripción).
 
 Revisa, ajusta, toca "Guardar".
-
-*Parser y categorización PENDING.
 
 ---
 
@@ -328,8 +282,6 @@ Revisa, ajusta, toca "Guardar".
 
 Kibo acumula y muestra tendencias.
 
-*Gráficos PENDING.
-
 ### 8.2 Cursos y rubrics*
 
 **Estudio → Nuevo curso**:
@@ -337,9 +289,7 @@ Kibo acumula y muestra tendencias.
 2. Materias (cada materia tiene 1–5 rubrics, ej. "Conceptos", "Proyectos", "Examen").
 3. Para cada rúbrica, toca "Progreso" (1–5).
 
-Tu progreso se refleja en barra verde.
-
-*Rubric detail PENDING.
+Tu progreso se refleja en barra de avance.
 
 ### 8.3 Sesiones de lectura*
 
@@ -351,8 +301,6 @@ Cada sesión: **"Hoy leí del capítulo X al Y". Toca "Guardar".**
 
 Kibo suma XP a Sabiduría. Racha de lectura sube.
 
-*Interfaz PENDING.
-
 ---
 
 ## 9. Diario y notas
@@ -360,16 +308,14 @@ Kibo suma XP a Sabiduría. Racha de lectura sube.
 ### 9.1 Escribir en el diario*
 
 **Diario → Entrada nueva**:
-1. Ánimo (😊 😐 😢 😱 etc.).
+1. Ánimo (alegre, neutro, triste, sorprendido, etc.).
 2. Gratitud (3 cosas).
 3. Aprendizaje (qué aprendiste).
 4. Body (narrativa libre).
 5. Fecha (hoy o atrás).
 6. Toca "Guardar".
 
-Kibo suma XP a Sabiduría (ó Voluntad, si reflexión).
-
-*Interfaz emotiva PENDING.
+Kibo suma XP a Sabiduría (o Voluntad, si reflexión).
 
 ### 9.2 Bóveda de notas (Resources)*
 
@@ -381,8 +327,6 @@ Kibo suma XP a Sabiduría (ó Voluntad, si reflexión).
 
 Kibo suma XP a Sabiduría por escribir. **Notas huérfanas** (sin referencias) aparecen como **misiones**: "vincula esta nota a 2 otras".
 
-*Wikilinks y backlinks PENDING.
-
 ---
 
 ## 10. Amigos
@@ -393,36 +337,30 @@ Kibo suma XP a Sabiduría por escribir. **Notas huérfanas** (sin referencias) a
 
 **Ellos la ven en su inbox.** Aceptan, y se conectan.
 
-*Notificaciones PENDING.
-
 ### 10.2 Compartir un reto*
 
 **Retos → Nuevo → "Con amigos"**. Invita a 1 o más.
 
 Ven la invitación. Aceptan. **Reto compartido comienza.**
 
-Scoreboard en tiempo real:
-- Quién cumplió hoy (✓).
-- Quién falló (✗).
+Panel en vivo:
+- Quién cumplió hoy (Sí).
+- Quién falló (No).
 - Racha interna de cada uno.
 - Quién lidera (más días).
-
-*Scoreboard real-time PENDING.
 
 ### 10.3 Feed de actividad*
 
 Toca el ícono de **campana** o **Activity**. Ves el feed de tus amigos (últimos 7 días, agrupado por fecha):
 ```
 Hoy
-  - Tu amiga completó "Correr" (⭐⭐⭐)
+  - Tu amiga completó "Correr" · Racha 3 días
     [Aplaudir]
   - Tu amigo cerró su reto de estudio.
     [Aplaudir]
 ```
 
 **Toca "Aplaudir"** para alentar.
-
-*Feed interactivo PENDING.
 
 ---
 
@@ -433,8 +371,8 @@ Hoy
 **Tienda → Cofres**.
 
 Ves 4 opciones:
-- **Bronce:** 250 Divisa. Divisa pequeño + 30 % Elemento.
-- **Plata:** 800 Divisa. Divisa mediano + 50 % Elemento.
+- **Madera:** 250 Divisa. Divisa pequeño + 30 % Elemento.
+- **Hierro:** 800 Divisa. Divisa mediano + 50 % Elemento.
 - **Oro:** 2,000 Divisa. Divisa grande + 100 % Elemento garantizado + extras.
 - **Mítico:** 5,000 Divisa. Divisa enorme + 100 % Elemento + múltiples extras.
 
@@ -444,12 +382,10 @@ Ves 4 opciones:
 
 Recompensas se muestran, se suman a tu balance.
 
-*Ceremonia animada PENDING.
-
 ### 11.2 Comprar cosméticos (KIBO)*
 
-**Tienda → KIBO Cosmetics**:
-- **Skins:** Azul, rojo, purpurina, invisible, etc. (50–200 Elemento cada una).
+**Tienda → Cosméticos de KIBO**:
+- **Pieles:** Azul, rojo, purpurina, invisible, etc. (50–200 Elemento cada una).
 - **Accesorios:** Sombreros, gafas, alas (20–100 Elemento).
 - **Auras:** Luz, fuego, nieve (50–150 Elemento).
 - **Personalidades:** Travieso, serio, tímido (100 Elemento).
@@ -457,8 +393,6 @@ Recompensas se muestran, se suman a tu balance.
 **Toca "Comprar".**
 
 Descontado de tu Elemento. **KIBO se equipa al instante en tu sidebar.**
-
-*Catálogo con preview PENDING.
 
 ### 11.3 Mis recompensas (autodefinidas)*
 
@@ -469,8 +403,6 @@ Descontado de tu Elemento. **KIBO se equipa al instante en tu sidebar.**
 - Toca "Crear".
 
 Cuando acumules esa Divisa, **"Canjear"**. Tú mismo te pagas a ti mismo. Ganas un logro.
-
-*Interfaz de creación PENDING.
 
 ---
 
@@ -495,8 +427,6 @@ Cuando acumules esa Divisa, **"Canjear"**. Tú mismo te pagas a ti mismo. Ganas 
 
 **Todo funciona sin Kibo. Es tuyo.**
 
-*Export mechanism PENDING.
-
 ### 12.2 Borrar tu cuenta*
 
 **Cuenta → Borrar cuenta.**
@@ -505,8 +435,6 @@ Cuando acumules esa Divisa, **"Canjear"**. Tú mismo te pagas a ti mismo. Ganas 
 2. Confirma tu email.
 3. Cuenta, datos y sesiones **eliminados de inmediato**.
 4. Reacción en cascada: Kibo servers, procesadores externos.
-
-*Confirmación e irreversibilidad PENDING.
 
 ---
 
@@ -529,4 +457,4 @@ Cuando acumules esa Divisa, **"Canjear"**. Tú mismo te pagas a ti mismo. Ganas 
 
 ---
 
-`*` Pendiente: interfaces completas, capturas de pantalla, flujos de usuario integrados, validaciones de formulario. El manual anterior es una secuencia de tareas; la verificación de **user journeys end-to-end** (ej. "nueva → personaje → primer hábito → primer cofre") requiere prototipo funcional.
+`*` Pendiente: las capturas de pantalla, los flujos animados completos, los formularios con sus validaciones y los recorridos de principio a fin (por ejemplo: cuenta nueva, personaje, primer hábito y primer cofre). El manual describe cada tarea; comprobar los recorridos completos exige un prototipo en funcionamiento.
