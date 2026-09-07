@@ -9,6 +9,7 @@ Todo sobre los datos: dónde viven, cómo se transforman, schemas y objetos.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
+| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del modelado de datos | El portafolio documenta cada solución en cinco documentos numerados |
 | 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de modelado de datos | Migración de ARCHITECTURE.md v1.7 a documentación de cinco piezas (Art. 5) |
 
 ## Contenido
@@ -138,14 +139,14 @@ Operation {
 
 | Categoría | Dispositivo | Kibo servers | Bóveda usuario | LLM tercero |
 |---|---|---|---|---|
-| **Health** (`especial`) | ✅ | ✅ | **opción por módulo** | **solo con DPA** |
-| **Finance — amounts** (`especial`) | ✅ | ✅ | **nunca** | **solo con DPA** |
-| Finance — structure | ✅ | ✅ | opción | consent |
-| **Journal** (`especial`) | ✅ | ✅ | ✅ | separate consent |
-| Productivity | ✅ | ✅ | ✅ | consent |
-| Resources | ✅ | ✅ | ✅ | consent |
-| Social | ✅ | ✅ | **nunca** — third-party data | **nunca** |
-| Credentials | Secure store | encrypted | **nunca** | **nunca** |
+| **Health** (`especial`) | Sí | Sí | **opción por módulo** | **solo con DPA** |
+| **Finance — amounts** (`especial`) | Sí | Sí | **nunca** | **solo con DPA** |
+| Finance — structure | Sí | Sí | opción | consentimiento |
+| **Journal** (`especial`) | Sí | Sí | Sí | consentimiento separado |
+| Productivity | Sí | Sí | Sí | consentimiento |
+| Resources | Sí | Sí | Sí | consentimiento |
+| Social | Sí | Sí | **nunca** — datos de terceros | **nunca** |
+| Credentials | Secure store | encriptado | **nunca** | **nunca** |
 
 **Prohibition más fuerte (sin excepciones de consentimiento):**
 

@@ -9,6 +9,7 @@ Un sistema de gestión de vida gamificado: la plataforma que transforma tareas, 
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
+| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del resumen ejecutivo | El portafolio documenta cada solución en cinco documentos numerados |
 | 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de resumen ejecutivo | Migración de ARCHITECTURE.md v1.7 a documentación de cinco piezas (Art. 5) |
 
 ## Contenido
@@ -68,12 +69,12 @@ El alcance completo que Kibo puede entregar. La lista de v1 se decide en el back
 | # | Módulo | Qué hace |
 |---|---|---|
 | 1 | **Hoy** | Cuadro de mando personalizable. Widgets gratis y premium. Galerías. Racha global siempre visible |
-| 2 | **KIBO** | El gel animado que es la identidad de marca. Breathes, blinks, plays. Su expresión cambia según la salud |
+| 2 | **KIBO** | El gel animado que es la identidad de marca. Respira, parpadea, juega. Su expresión cambia según la salud |
 | 3 | **Hábitos** | Esfuerzo (1–5), prioridad, periodicidad. Recompensa = prioridad × esfuerzo. Rachas, protectores, niveles |
 | 4 | **Retos** (jefes) | Compromiso con fecha límite, dificultad 1–5. Fallar cuesta HP. 20 % de fallos tolerados. Solo o con amigos |
 | 5 | **Tareas y Proyectos** | Kanban, subtareas, fechas, esfuerzo, prioridad. Línea de tiempo escalable (1 semana a 12 meses) |
 | 6 | **Áreas** | Cinco ejes de vida. Cada una acumula XP y muestra rangos militares (20 tiers × 9 materiales) |
-| 7 | **Logros y Personaje** | Showcase de trofeos mensuales, banners de retos, catálogo (públicos, secretos, escondidos; 5 raridades) |
+| 7 | **Logros y Personaje** | Showcase de trofeos mensuales, banners de retos, catálogo (públicos, secretos, escondidos; 4 raridades) |
 | 8 | **Vitrina** | Lo que la comunidad ve: perfil, foto, título honorífico, lema, logros destacados, KIBO companion |
 | 9 | **Amigos** | Sin transferencias de dinero. Regalos de ítems. Contribuciones a listas de deseos. Rachas. Retos compartidos |
 | 10 | **Finanzas** | Cuentas, tarjetas de crédito, deudas, metas de ahorro, presupuestos, importar movimientos, portafolio |
@@ -100,7 +101,7 @@ Kibo gana si:
 | **Divisa** | Moneda cotidiana. Se gana por hábitos y tareas. Se gasta en recompensas personales |
 | **Elemento** | Moneda rara. Se gana en cofres o dinero real. Se gasta en cosméticos y funcionalidades |
 | **Gamificación** | Mecánicas de RPG (XP, HP, niveles, retos, cosméticos) envueltas alrededor de la gestión de vida |
-| **KIBO** | El mascota animado. Es la identidad de marca. Su expresión refuerza la retroalimentación del usuario |
+| **KIBO** | La mascota animada. Es la identidad de marca. Su expresión refuerza la retroalimentación del usuario |
 | **Racha** | Contador de días consecutivos cumpliendo un hábito o reto. Se pierde con un fallo |
 | **Reto** | Un compromiso a plazo fijo con dificultad variable. Fallar cuesta HP. Solo o con amigos |
 | **RPG** | Role-Playing Game — un juego donde el jugador controla un personaje que sube de nivel |

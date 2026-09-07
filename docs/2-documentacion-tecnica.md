@@ -9,6 +9,7 @@ Dónde vive cada archivo, qué hace, y qué se puede tocar sin romperlo.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
+| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión de la documentación técnica | El portafolio documenta cada solución en cinco documentos numerados |
 | 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de documentación técnica | Migración de ARCHITECTURE.md v1.7 a documentación de cinco piezas (Art. 5) |
 
 ## Contenido
@@ -407,6 +408,10 @@ Cada decisión es un trade-off. Las alternativas rechazadas y la consecuencia ac
 | **AD-13** | 2026-08-23 | **shadcn completamente retired** | Keep shadcn for web · keep Radix | Radix va también, taking a11y primitives. How a11y solved es open |
 | **AD-14** | 2026-08-23 | **Design system vive en `design-system/` en repo** | Keep only en design tool · separate repo | Versionado con código, diffable. Sync con design tool es explicit step |
 | **AD-15** | 2026-08-23 | **Dark theme IN, como segunda tabla de values para los mismos tokens** | Out of scope · separate dark component layer | `packages/tokens` carries theme dimension from day 1. 75 colores hand-written become blocking |
+| **AD-16** | 2026-08-23 | **Las dos monedas son Divisa (cotidiana) y Elemento (rara)** | Keeping "gemas" · "materia oscura" · "fragmentos" | El nombre es la unidad y la skin es solo la apariencia. Materia oscura, Magia, Esencia y Núcleo se vuelven skins de un Elemento. El nombre de la categoría nunca compite con la skin |
+| **AD-17** | 2026-08-23 | **Criterio de retiro: si no se usa en la versión v1, no sirve y no agrega nada** | Juicio estético caso a caso · no retirar nada hasta que exista biblioteca de componentes | El uso en scope v1 es la única prueba. Los retiros se presentan grouped by family, nunca piece by piece |
+| **AD-18** | 2026-08-23 | **La auditoría de tokens completa antes de tocar código** | Building and auditing en paralelo | Front-loads semanas sin producto visible. Evita estandarizar vocabulario que está a punto de retirarse |
+| **AD-19** | 2026-08-23 | **`docs/ARCHITECTURE.md` es la única decision surface** | ADRs por decisión · PRD como product spec | Detail concentra donde builders miran |
 | **AD-20** | 2026-08-23 | **KIBO present throughout product, both platforms. Brand identity, not decoration** | Web-only flourish · static KIBO mobile · "light KIBO" v1 | Mascota animado moves to critical path. `KIBO-019` spike runs in foundations phase |
 | **AD-21** | 2026-08-23 | **Tokens authored as plain TypeScript, storing INPUTS not outputs. Two generators: CSS web, style object RN** | W3C DTCG JSON · literal values per theme · two parallel platform sets | Fluid tokens resolve a minimum on mobile (which IS correct phone value). Snapshot test so platforms don't drift |
 | **AD-22** | 2026-08-23 | **KIBO authored as state machine en Rive, one asset web & Android** | Keep CSS/DOM + rewrite natively · Lottie · Skia/Reanimated by hand | Combinatorial problem decides it. 8 moods × 14 travesuras × skins × accessories × auras: state machine composes. Authored asset + runtime dependency (cost), not diffable (cost) |

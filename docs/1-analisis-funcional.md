@@ -9,6 +9,7 @@ Cada requerimiento funcional y no-funcional, verificable uno por uno.
 
 | Versión | Fecha | Editó | Qué cambió | Por qué |
 |---|---|---|---|---|
+| 1.0-alpha | 2026-09-05 | technical-writer | Primera versión del análisis funcional | El portafolio documenta cada solución en cinco documentos numerados |
 | 1.0-alpha | 2026-09-05 | technical-writer | Primer documento de análisis funcional | Migración de ARCHITECTURE.md v1.7 y ANALYSIS.md v1.1 a documentación de cinco piezas (Art. 5) |
 
 ## Contenido
@@ -42,7 +43,7 @@ Cada módulo a continuación es verificable como una colección de requerimiento
 | | Recompensa = prioridad × esfuerzo (fórmula visible en tooltip). Se gana al completar | Completar un hábito de prioridad media (3) y esfuerzo 3 gana 9 Divisa |
 | | Racha por hábito y racha global. Ambas bajan si se falla una vez, se pierden si se fallan dos | Fallar en día 5 de una racha la baja a 1. Fallar de nuevo al día siguiente la pierde |
 | | Protectores: evitan la pérdida de racha. Se compran con Elemento | Un protector bloquea la caída de racha una vez |
-| | Niveles de llama por racha: 🔥 🔥🔥 🔥🔥🔥 visuales según días consecutivos | Las llamas suben cada día consecutivo, bajan con fallo |
+| | Niveles de llama por racha: visuales (Llama 1, Llama 2, Llama 3) según días consecutivos | Las llamas suben cada día consecutivo, bajan con fallo |
 | | Archivo de hábitos completados. Cada completado deja un registro | La historia del hábito muestra todos los días completados |
 | **Retos** | Compromiso con fecha límite y dificultad 1–5. El daño es −8 / −14 / −22 / −34 / −50 HP por fallo | Un reto nivel 3 inflige −22 HP al fallar |
 | | Se tolera el 20 % de fallos dentro del plazo | En un reto de 10 días, fallar 2 días no lo cierra. Fallar 3 sí |
@@ -53,7 +54,7 @@ Cada módulo a continuación es verificable como una colección de requerimiento
 | | Línea de tiempo (KbTimeline): escala 1 semana → 12 meses + rango custom. Scroll horizontal. Columna fija | La línea de tiempo es responsive y las tareas se ven en todas las escalas |
 | **Áreas** | Cinco áreas (Vigor, Sabiduría, Riqueza, Comunidad, Voluntad) | Todas las cinco siempre presentes |
 | | Cada área acumula XP y muestra rango militar (20 tiers × 9 materiales). Prestigio 1–16. Paragon post-máximo | Un usuario en área Sabiduría nivel 5 material Acero (ejemplo) se muestra con ese rango |
-| **Progreso/Personaje y Logros** | Showcase: indicadores, prestigio, paragon. Catálogo de logros (públicos, secretos, escondidos; 5 raridades) | Un logro secreto no aparece hasta cumplirse. Uno público aparece siempre en el catálogo |
+| **Progreso/Personaje y Logros** | Showcase: indicadores, prestigio, paragon. Catálogo de logros (públicos, secretos, escondidos; 4 raridades) | Un logro secreto no aparece hasta cumplirse. Uno público aparece siempre en el catálogo |
 | | Trofeos mensuales. Banners de retos completados. Todo agrupado | Ir a Logros muestra trofeos agrupados por mes |
 | **Vitrina** | Lo que la comunidad ve: perfil, foto, título, lema, 3–9 logros destacados (expandible con feature), KIBO companion | Un usuario ve el perfil de otro con sus logros destacados |
 | **Amigos** | Sin transferencias de dinero. Regalos de ítems (cosmético) | Un usuario regala un cosmético a otro |
