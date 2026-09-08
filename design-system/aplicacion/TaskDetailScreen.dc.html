@@ -1111,11 +1111,1394 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<!-- ═══ CONTENIDO DE LA PANTALLA ═══
-     Sustituye ESTE comentario por el contenido completo: la cabecera de pagina
-     (.kbv-page-head con su migaja, su .kbv-h1 y sus acciones), las secciones,
-     los estados y los modales superpuestos. Todo dentro de .kbv-page.
-     No toques nada fuera de este hueco: el armazon es contrato compartido. -->
+
+            <style>
+              /* ==================================================================
+                 FAMILIAS QUE ESTA PANTALLA ESTRENA
+                 El armazon aun no dibuja campo (§6.2), modal (§6.7), estado vacio
+                 (§6.8) ni los estados de dato de §6.6. Se escriben con su nombre
+                 canonico, no con uno local, para que la segunda pantalla que los
+                 necesite los suba al armazon en vez de reinventarlos.
+                 ================================================================== */
+
+              /* ── Campo §6.2 ─────────────────────────────────────────────── */
+              .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+              .kbv-label { font-family: var(--kb-f-body); font-weight: 600;
+                           font-size: var(--kb-fs-md); color: var(--kb-text); }
+              .kbv-input { box-sizing: border-box; width: 100%; height: var(--kb-ctl-h);
+                           background: var(--kb-card); border: 1.5px solid var(--kb-border);
+                           border-radius: var(--kb-r-md); padding: 0 var(--kb-sp-7);
+                           font-family: var(--kb-f-body); font-weight: 500;
+                           font-size: var(--kb-fs-lg); color: var(--kb-text); }
+              .kbv-input::placeholder { color: var(--kb-text-2); }
+              .kbv-input:focus-visible { outline: none; border-color: var(--kb-primary);
+                                         box-shadow: var(--kb-focus-halo); }
+              .kbv-input[disabled] { background: var(--kb-surface-2); color: var(--kb-text-2);
+                                     border-color: transparent; }
+              .kbv-input[aria-invalid="true"] { border-color: var(--kb-hp);
+                box-shadow: 0 0 0 2px var(--kb-hp),
+                            0 0 0 5px color-mix(in srgb, var(--kb-hp) 10%, transparent); }
+              textarea.kbv-input { height: auto; min-height: 108px; resize: vertical;
+                                   padding: var(--kb-sp-6) var(--kb-sp-7);
+                                   line-height: var(--kb-lh-body); font-weight: 400; }
+              .kbv-select { position: relative; display: flex; min-width: 0; }
+              .kbv-select select.kbv-input { -webkit-appearance: none; appearance: none;
+                                             padding-right: 42px; }
+              .kbv-select > .chev { position: absolute; right: var(--kb-sp-7); top: 50%;
+                                    transform: translateY(-50%); display: flex;
+                                    pointer-events: none; color: var(--kb-text-2); }
+              .kbv-help  { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+              .kbv-error { display: flex; align-items: center; gap: var(--kb-sp-3);
+                           font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-hp-ink); }
+
+              /* ── Modal §6.7 · velo, tarjeta, cabeza, cuerpo y pie ───────── */
+              .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal);
+                                display: flex; align-items: center; justify-content: center;
+                                padding: var(--kb-sp-9);
+                                background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                                backdrop-filter: blur(2px); }
+              .kbv-modal-card { display: flex; flex-direction: column; overflow: hidden;
+                                width: 100%; max-width: 580px; max-height: 100%;
+                                background: var(--kb-card); border-radius: var(--kb-r-xl);
+                                box-shadow: var(--kb-sh-pop); }
+              .kbv-modal-card.sm   { max-width: 420px; }
+              .kbv-modal-card.lg   { max-width: 720px; }
+              .kbv-modal-card.full { max-width: 1040px; }
+              .kbv-modal-head { flex: none; display: flex; align-items: flex-start; gap: var(--kb-sp-6);
+                                padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                                border-bottom: 1px solid var(--kb-border-soft); }
+              .kbv-modal-head .mh-id { flex: 1 1 auto; min-width: 0; display: flex;
+                                       flex-direction: column; gap: var(--kb-sp-2); }
+              .kbv-modal-title { font-family: var(--kb-f-display); font-weight: 800;
+                                 font-size: var(--kb-fs-2xl); line-height: var(--kb-lh-snug);
+                                 color: var(--kb-text); }
+              .kbv-modal-sub   { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 46ch; }
+              .kbv-modal-close { flex: none; width: var(--kb-touch-min); height: var(--kb-touch-min);
+                                 display: flex; align-items: center; justify-content: center;
+                                 border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-pill);
+                                 background: var(--kb-card); color: var(--kb-text-2); cursor: pointer; }
+              .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+              .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+              .kbv-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto;
+                                display: flex; flex-direction: column; gap: var(--kb-sp-7);
+                                padding: var(--kb-sp-8) var(--kb-sp-9); }
+              .kbv-modal-foot { flex: none; display: flex; align-items: center; flex-wrap: wrap;
+                                gap: var(--kb-sp-4); padding: var(--kb-sp-7) var(--kb-sp-9);
+                                background: var(--kb-surface);
+                                border-top: 1px solid var(--kb-border-soft); }
+              .kbv-modal-foot .mf-end { margin-left: auto; display: flex; align-items: center;
+                                        gap: var(--kb-sp-4); }
+
+              /* ── Estado vacio §6.8 · glifo, titulo, cuerpo y una accion ─── */
+              .kbv-empty { display: flex; flex-direction: column; align-items: center;
+                           text-align: center; gap: var(--kb-sp-6); padding: var(--kb-sp-9);
+                           background: var(--kb-surface-2); border-radius: var(--kb-r-lg);
+                           border: 1.5px dashed var(--kb-border-strong); }
+              .kbv-empty .glyph { width: 56px; height: 56px; flex: none; display: flex;
+                                  align-items: center; justify-content: center;
+                                  border-radius: var(--kb-r-pill); background: var(--kb-card);
+                                  border: 1px solid var(--kb-border); color: var(--kb-text-2); }
+              .kbv-empty .ttl { font-family: var(--kb-f-display); font-weight: 700;
+                                font-size: var(--kb-fs-xl); color: var(--kb-text); }
+              .kbv-empty .bod { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 46ch; }
+
+              /* ── Aviso efimero · vive 2.2 s y no pide accion ────────────── */
+              .kbv-toast { position: absolute; left: 50%; bottom: var(--kb-sp-9);
+                           transform: translateX(-50%); z-index: var(--kb-z-toast);
+                           display: inline-flex; align-items: center; gap: var(--kb-sp-5);
+                           max-width: calc(100% - var(--kb-sp-9) * 2);
+                           padding: var(--kb-sp-6) var(--kb-sp-8); border-radius: var(--kb-r-pill);
+                           background: color-mix(in oklab, var(--kb-text) 88%, var(--kb-void-2));
+                           color: var(--kb-text-inverse); box-shadow: var(--kb-sh-4);
+                           font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; }
+              .kbv-toast .glyph { flex: none; display: flex; }
+              .kbv-toast.inline { position: static; transform: none; }
+
+              /* ── Cargando §6.6 · el hueco conserva la forma del dato ────── */
+              .kbv-skeleton { display: block; color: transparent; position: relative;
+                              overflow: hidden; border-radius: var(--kb-r-sm);
+                              background: var(--kb-surface-2); }
+              .kbv-skeleton::after { content: ""; position: absolute; inset: 0;
+                background: linear-gradient(90deg, transparent,
+                            color-mix(in srgb, var(--kb-canvas) 72%, transparent), transparent);
+                animation: kbvShimmer 1.4s var(--kb-ease-standard) infinite; }
+              @keyframes kbvShimmer { from { transform: translateX(-100%); }
+                                        to { transform: translateX(100%); } }
+
+              /* ==================================================================
+                 COMPOSICION DE ESTA PANTALLA
+                 ================================================================== */
+
+              /* La banda de encabezado de R-1: el area pinta por arriba, con
+                 glifo, y todo el texto que se apoya en ella toma --kb-text. */
+              .kbv-td-band { display: flex; align-items: center; flex-wrap: wrap;
+                             gap: var(--kb-sp-5); padding: var(--kb-sp-6) var(--kb-sp-8);
+                             background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                             border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas)); }
+              .kbv-td-band > .glyph { width: 40px; height: 40px; flex: none; display: flex;
+                                      align-items: center; justify-content: center;
+                                      border-radius: var(--kb-r-md); background: var(--kb-canvas);
+                                      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+              .kbv-td-band .sep { display: flex; color: color-mix(in oklab, var(--c) 40%, var(--kb-canvas)); }
+              .kbv-td-band .flat { display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+                                   height: 36px; padding: 0 var(--kb-sp-5);
+                                   font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+              .kbv-td-lk { position: relative; box-sizing: border-box; cursor: pointer;
+                           display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+                           height: 36px; padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
+                           background: var(--kb-canvas);
+                           border: 1px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas));
+                           font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
+                           font-weight: 700; color: var(--kb-text); white-space: nowrap; }
+              .kbv-td-lk::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                                  transform: translateY(-50%); height: var(--kb-touch-min); }
+              .kbv-td-lk:hover { border-color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+              .kbv-td-lk:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+              .kbv-td-lk > .go { color: var(--kb-text-2); }
+
+              .kbv-td-reward { margin-left: auto; display: flex; align-items: center;
+                               gap: var(--kb-sp-4); flex: none; }
+              .kbv-td-reward .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                                    font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                                    color: var(--kb-text); }
+              .kbv-td-rwd { display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+                            height: 32px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill);
+                            background: var(--kb-canvas); border: 1px solid var(--kb-primary-border);
+                            font-family: var(--kb-f-display); font-weight: 800;
+                            font-size: var(--kb-fs-md); font-variant-numeric: tabular-nums;
+                            color: var(--kb-primary-ink); white-space: nowrap; }
+              .kbv-td-rwd.coin { border-color: var(--kb-coin-border); color: var(--kb-coin-ink); }
+              .kbv-td-rwd.spent { border-color: var(--kb-border-strong); color: var(--kb-text-2); }
+
+              .kbv-td-body { padding: var(--kb-sp-7) var(--kb-sp-8); display: flex;
+                             flex-direction: column; gap: var(--kb-sp-5); }
+              .kbv-td-body .quiet { color: var(--kb-text-2); }
+
+              /* El pulso: cinco celdas que se leen de un vistazo, y debajo el
+                 conmutador de estado. Las acciones viven en la cabecera. */
+              .kbv-td-pulse { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+                              gap: var(--kb-sp-6); }
+              .kbv-td-cell { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                             min-width: 0; padding: var(--kb-sp-6); border-radius: var(--kb-r-md);
+                             background: var(--kb-surface); border: 1px solid var(--kb-border); }
+              .kbv-td-cell .v { display: flex; align-items: center; gap: var(--kb-sp-3);
+                                font-family: var(--kb-f-display); font-weight: 800;
+                                font-size: var(--kb-fs-xl); line-height: 1; letter-spacing: -.01em;
+                                color: var(--kb-text); font-variant-numeric: tabular-nums; min-width: 0; }
+              .kbv-td-cell .v .txt { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+              .kbv-td-cell .l { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                                font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                                color: var(--kb-text-2); }
+              .kbv-td-dot { width: 10px; height: 10px; flex: none; border-radius: var(--kb-r-pill);
+                            background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+
+              /* Barra por tramos §6.4: la energia es una escala cerrada de 5. */
+              .kbv-td-seg { display: flex; gap: var(--kb-sp-2); flex: 1 1 auto; min-width: 0; }
+              .kbv-td-seg > i { flex: 1 1 auto; height: 8px; border-radius: var(--kb-r-pill);
+                                background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                                box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 24%, var(--kb-canvas)); }
+              /* El tramo lleno va en la TINTA, no en el tono: una escala cerrada
+                 es un contador, y el tono plano mide 2.88 sobre la tarjeta. */
+              .kbv-td-seg > i.on { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+                                   box-shadow: none; }
+
+              .kbv-td-switch { display: flex; align-items: center; flex-wrap: wrap;
+                               gap: var(--kb-sp-5); padding-top: var(--kb-sp-5);
+                               border-top: 1px solid var(--kb-border-soft); }
+              .kbv-td-switch .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                                    font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                                    color: var(--kb-text-2); }
+
+              /* Ficha: etiqueta a la izquierda, valor a la derecha, una por fila. */
+              .kbv-td-rows { display: flex; flex-direction: column; }
+              .kbv-td-row  { display: flex; align-items: center; justify-content: space-between;
+                             gap: var(--kb-sp-6); min-height: 44px; padding: var(--kb-sp-3) 0;
+                             border-bottom: 1px solid var(--kb-border-soft); }
+              .kbv-td-row:last-child { border-bottom: 0; }
+              .kbv-td-row .l { flex: none; font-size: var(--kb-fs-md); color: var(--kb-text-2); }
+              .kbv-td-row .v { display: flex; align-items: center; gap: var(--kb-sp-4);
+                               min-width: 0; font-size: var(--kb-fs-md); font-weight: 600;
+                               color: var(--kb-text); }
+              .kbv-td-row .v .kbv-td-seg { width: 96px; flex: none; }
+
+              /* Enlace de texto §6.1 (variante enlace), con su zona de 44. */
+              .kbv-btn-link { position: relative; height: auto; padding: 0;
+                              background: transparent; border-color: transparent; box-shadow: none;
+                              font-size: var(--kb-fs-md); color: var(--kb-primary-ink);
+                              text-decoration: underline; text-underline-offset: 3px; }
+              .kbv-btn-link::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                                     transform: translateY(-50%); height: var(--kb-touch-min); }
+              .kbv-btn-link:hover { color: var(--kb-primary); }
+              .kbv-btn-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+              .kbv-td-rewards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+                                gap: var(--kb-sp-6); }
+              .kbv-td-rw { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                           padding: var(--kb-sp-7); border-radius: var(--kb-r-md);
+                           background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                           border: 1px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas)); }
+              .kbv-td-rw .k { display: flex; align-items: center; gap: var(--kb-sp-3);
+                              font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                              font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                              color: var(--kb-text); }
+              .kbv-td-rw .n { display: flex; align-items: baseline; gap: var(--kb-sp-3);
+                              font-family: var(--kb-f-display); font-weight: 800;
+                              font-size: var(--kb-fs-3xl); line-height: 1; letter-spacing: -.02em;
+                              color: var(--kb-text); font-variant-numeric: tabular-nums; }
+              .kbv-td-rw .n .u { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text); }
+
+              /* Pasos y subtareas: la fila entera marca, y el tachado acompana
+                 a la casilla — el color nunca lleva solo el mensaje. */
+              .kbv-td-checks { display: flex; flex-direction: column; }
+              .kbv-td-check { display: flex; align-items: center; gap: var(--kb-sp-6);
+                              width: 100%; min-height: 44px; padding: var(--kb-sp-4) var(--kb-sp-3);
+                              border: 0; border-bottom: 1px solid var(--kb-border-soft);
+                              border-radius: var(--kb-r-sm); background: transparent;
+                              text-align: left; cursor: pointer; }
+              .kbv-td-check:last-child { border-bottom: 0; }
+              .kbv-td-check:hover { background: var(--kb-surface); }
+              .kbv-td-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+              .kbv-td-check .txt { flex: 1 1 auto; min-width: 0; font-family: var(--kb-f-body);
+                                   font-size: var(--kb-fs-md); font-weight: 500; color: var(--kb-text); }
+              .kbv-td-check.on .txt { color: var(--kb-text-2); text-decoration: line-through; }
+
+              /* Historico: una linea de tiempo con filtro por tipo de evento. */
+              .kbv-td-filters { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kb-sp-4); }
+              .kbv-td-list { list-style: none; margin: 0; padding: 0;
+                             display: flex; flex-direction: column; }
+              .kbv-td-ev { position: relative; display: flex; align-items: flex-start;
+                           gap: var(--kb-sp-6); padding: var(--kb-sp-5) 0; }
+              .kbv-td-ev::before { content: ""; position: absolute; left: 13px; top: 0; bottom: 0;
+                                   width: 2px; background: var(--kb-border); }
+              .kbv-td-ev:first-child::before { top: var(--kb-sp-5); }
+              .kbv-td-ev:last-child::before  { bottom: calc(100% - var(--kb-sp-5) - 28px); }
+              .kbv-td-ev > .dot { position: relative; z-index: 1; width: 28px; height: 28px;
+                                  flex: none; display: flex; align-items: center; justify-content: center;
+                                  border-radius: var(--kb-r-pill);
+                                  background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                                  box-shadow: 0 0 0 3px var(--kb-card);
+                                  color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+              .kbv-td-ev > .bod { flex: 1 1 auto; min-width: 0; display: flex;
+                                  flex-direction: column; gap: var(--kb-sp-2); }
+              .kbv-td-ev .line { font-size: var(--kb-fs-md); font-weight: 700; color: var(--kb-text); }
+              .kbv-td-ev .who  { font-weight: 500; font-style: normal; color: var(--kb-text-2); }
+              .kbv-td-ev .what { font-size: var(--kb-fs-md); color: var(--kb-text-2); }
+              .kbv-td-ev > .when { flex: none; font-family: var(--kb-f-label);
+                                   font-size: var(--kb-fs-xs); font-weight: 700;
+                                   color: var(--kb-text-2); white-space: nowrap; padding-top: var(--kb-sp-2); }
+              .kbv-td-note { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+              .kbv-td-note .acts { display: flex; align-items: center; justify-content: space-between;
+                                   gap: var(--kb-sp-5); flex-wrap: wrap; }
+
+              /* Rotulo de lamina: separa un estado del siguiente sin competir
+                 con la pantalla que rotula. */
+              .kbv-td-label { display: flex; align-items: baseline; flex-wrap: wrap;
+                              gap: var(--kb-sp-3) var(--kb-sp-5); padding-top: var(--kb-sp-7);
+                              border-top: 1px dashed var(--kb-border-strong); }
+              .kbv-td-label .k { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                                 font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                                 color: var(--kb-text-2); }
+              .kbv-td-label .t { font-family: var(--kb-f-display); font-size: var(--kb-fs-lg);
+                                 font-weight: 700; color: var(--kb-text); }
+              .kbv-td-label .n { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+
+              /* Escena: la pantalla debajo y la superposicion encima, recortadas
+                 a una caja — un modal se dibuja SOBRE su pantalla, no aparte. */
+              .kbv-td-scene { position: relative; overflow: hidden; display: flex;
+                              flex-direction: column; gap: var(--kb-sp-7);
+                              padding: var(--kb-sp-9); background: var(--kb-surface);
+                              border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg); }
+
+              /* Rejilla del formulario del modal. */
+              .kbv-td-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+                             gap: var(--kb-sp-6); }
+              .kbv-td-grid > .span2 { grid-column: 1 / -1; }
+              .kbv-td-pris { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+                             gap: var(--kb-sp-4); }
+              .kbv-td-pri { display: flex; flex-direction: column; align-items: center;
+                            gap: var(--kb-sp-3); min-height: 44px; padding: var(--kb-sp-5) var(--kb-sp-2);
+                            border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-md);
+                            background: var(--kb-card); cursor: pointer;
+                            font-family: var(--kb-f-body); font-size: var(--kb-fs-sm);
+                            font-weight: 600; color: var(--kb-text-2); }
+              .kbv-td-pri > svg { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+              .kbv-td-pri.on { border-color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+                               background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
+                               color: var(--kb-text); font-weight: 700; }
+              .kbv-td-pri:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+              .kbv-td-rate { display: flex; gap: var(--kb-sp-4); }
+              .kbv-td-rate > button { flex: 1 1 auto; min-height: 44px; cursor: pointer;
+                                      border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-sm);
+                                      background: var(--kb-card); color: var(--kb-text-2);
+                                      font-family: var(--kb-f-display); font-weight: 700;
+                                      font-size: var(--kb-fs-lg); }
+              .kbv-td-rate > button.on { border-color: var(--kb-primary);
+                                         background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+              .kbv-td-rate > button:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+              .kbv-td-add { display: flex; align-items: center; gap: var(--kb-sp-4); }
+              .kbv-td-editrow { display: flex; align-items: center; gap: var(--kb-sp-5);
+                                min-height: 44px; padding: var(--kb-sp-3) 0;
+                                border-bottom: 1px solid var(--kb-border-soft); }
+              .kbv-td-editrow:last-of-type { border-bottom: 0; }
+              .kbv-td-editrow .txt { flex: 1 1 auto; min-width: 0; font-size: var(--kb-fs-md);
+                                     color: var(--kb-text); }
+              .kbv-td-editrow.on .txt { color: var(--kb-text-2); text-decoration: line-through; }
+              .kbv-td-pillrw { display: inline-flex; align-items: center; gap: var(--kb-sp-4);
+                               height: 36px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill);
+                               background: var(--kb-coin-soft); border: 1px solid var(--kb-coin-border);
+                               font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+
+              /* El bloque de cierre: una linea por comportamiento no obvio. */
+              .kbv-td-beh { list-style: none; margin: 0; padding: 0; display: flex;
+                            flex-direction: column; gap: var(--kb-sp-5); }
+              .kbv-td-beh > li { display: flex; align-items: flex-start; gap: var(--kb-sp-6);
+                                 font-size: var(--kb-fs-md); color: var(--kb-text); }
+              .kbv-td-beh > li > .k { flex: none; width: 208px; font-weight: 700; color: var(--kb-text); }
+              .kbv-td-beh > li > .d { flex: 1 1 auto; min-width: 0; color: var(--kb-text-2); }
+
+              @container kbwin (max-width: 1024px) {
+                .kbv-td-pulse { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+              }
+              @container kbwin (max-width: 640px) {
+                .kbv-td-pulse, .kbv-td-rewards, .kbv-td-grid { grid-template-columns: minmax(0, 1fr); }
+                .kbv-td-reward { margin-left: 0; }
+                .kbv-td-beh > li { flex-direction: column; gap: var(--kb-sp-2); }
+                .kbv-td-beh > li > .k { width: auto; }
+              }
+            </style>
+
+            <!-- ── LA PANTALLA ─────────────────────────────────────────────
+                 El prototipo volvia con un boton «Todas las tareas» sobre el
+                 titulo. Aqui vuelve la migaja: el detalle no tiene entrada
+                 propia en el menu, asi que grupo › destino › sujeto es su
+                 unico camino de regreso, y es el mismo en toda pantalla de
+                 detalle del producto. -->
+            <header class="kbv-page-head">
+              <div class="ph-id">
+                <nav class="kbv-crumb" aria-label="Ruta">
+                  <a href="#">Tu plan</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <a href="#">Tareas</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="here">Cerrar propuesta para cliente Aurora</span>
+                </nav>
+                <h1 class="kbv-h1">Cerrar propuesta para cliente Aurora</h1>
+                <p class="kbv-meta">En curso · Urgente · 2 h estimadas · fin objetivo en 3 días</p>
+              </div>
+              <div class="ph-act">
+                <button type="button" class="kbv-btn kbv-btn-secondary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Editar
+                </button>
+                <button type="button" class="kbv-btn kbv-btn-primary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Marcar hecha
+                </button>
+              </div>
+            </header>
+
+            <!-- Identidad: la banda tintada de R-1 lleva el area, y el titulo
+                 no se repite — ya lo dice el H1 diez pixeles arriba. -->
+            <section class="kbv-card flush" style="--c: var(--area-wealth)">
+              <div class="kbv-td-band">
+                <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><ellipse cx="12" cy="6.5" rx="7.5" ry="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 6.5v5c0 1.93 3.36 3.5 7.5 3.5s7.5-1.57 7.5-3.5v-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 11.5v5c0 1.93 3.36 3.5 7.5 3.5s7.5-1.57 7.5-3.5v-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <button type="button" class="kbv-td-lk" title="Ir a Riqueza · Proyectos">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><ellipse cx="12" cy="6.5" rx="7.5" ry="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 6.5v10c0 1.93 3.36 3.5 7.5 3.5s7.5-1.57 7.5-3.5v-10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Riqueza
+                  <span class="go" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <button type="button" class="kbv-td-lk" title="Ir al proyecto Cliente Aurora">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Cliente Aurora
+                  <span class="go" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <div class="kbv-td-reward">
+                  <span class="lbl">Al cerrar</span>
+                  <span class="kbv-td-rwd">+100 XP</span>
+                  <span class="kbv-td-rwd coin">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    60<span class="kbv-sr-only"> de Divisa</span>
+                  </span>
+                </div>
+              </div>
+              <div class="kbv-td-body">
+                <p class="kbv-body kbv-prose">Reunir alcance, tiempos y precio en un solo documento, revisarlo con el equipo y enviarlo antes del viernes. Si el cliente pide cambios de fondo, se abre una tarea nueva en vez de estirar esta.</p>
+              </div>
+            </section>
+
+            <!-- El pulso: lo que se consulta de un vistazo, y el conmutador de
+                 estado. Las dos acciones de la tarea viven en la cabecera de
+                 pagina: un solo primario por vista. -->
+            <section class="kbv-card">
+              <div class="kbv-td-pulse">
+                <div class="kbv-td-cell">
+                  <span class="v"><span class="kbv-td-dot" style="--c: var(--kb-primary)" aria-hidden="true"></span><span class="txt">En curso</span></span>
+                  <span class="l">Estado</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none;color:var(--kb-hp-ink)"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="txt">Urgente</span>
+                  </span>
+                  <span class="l">Prioridad</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v" style="--c: var(--kb-primary)">
+                    <span class="kbv-td-seg" role="img" aria-label="Energía 4 de 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+                    <span class="txt">4/5</span>
+                  </span>
+                  <span class="l">Energía</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v"><span class="txt">2 h</span></span>
+                  <span class="l">Tiempo</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v"><span class="txt">2/6</span></span>
+                  <span class="l">Pasos</span>
+                </div>
+              </div>
+              <div class="kbv-td-switch">
+                <span class="lbl">Estado</span>
+                <div class="kbv-seg" role="tablist" aria-label="Estado de la tarea">
+                  <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-text-2)" aria-hidden="true"></span>Por hacer</button>
+                  <button type="button" class="on" role="tab" aria-selected="true"><span class="kbv-td-dot" style="--c: var(--kb-primary)" aria-hidden="true"></span>En curso</button>
+                  <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-hp)" aria-hidden="true"></span>Bloqueado</button>
+                  <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-good)" aria-hidden="true"></span>Hecho</button>
+                </div>
+                <span class="kbv-meta">Mover a «Hecho» acredita XP y Divisa; el motor de progresión es quien los suma.</span>
+              </div>
+            </section>
+
+            <div class="kbv-seg" role="tablist" aria-label="Secciones de la tarea">
+              <button type="button" class="on" role="tab" aria-selected="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+                Detalle
+              </button>
+              <button type="button" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Pasos
+                <span class="kbv-badge quiet">2/6</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Histórico
+                <span class="kbv-badge quiet">7</span>
+              </button>
+            </div>
+
+            <div class="kbv-canvas-grid">
+              <section class="kbv-card w-2">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Ficha</div>
+                    <div class="kbv-card-sub">Lo que define la tarea</div>
+                  </div>
+                </div>
+                <div class="kbv-td-rows">
+                  <div class="kbv-td-row">
+                    <span class="l">Estado</span>
+                    <span class="v"><span class="kbv-td-dot" style="--c: var(--kb-primary)" aria-hidden="true"></span>En curso</span>
+                  </div>
+                  <div class="kbv-td-row">
+                    <span class="l">Prioridad</span>
+                    <span class="v">
+                      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none;color:var(--kb-hp-ink)"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Urgente
+                    </span>
+                  </div>
+                  <div class="kbv-td-row">
+                    <span class="l">Energía</span>
+                    <span class="v" style="--c: var(--kb-primary)">
+                      <span class="kbv-td-seg" role="img" aria-label="Energía 4 de 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+                      4/5
+                    </span>
+                  </div>
+                  <div class="kbv-td-row">
+                    <span class="l">Tiempo estimado</span>
+                    <span class="v">2 h</span>
+                  </div>
+                  <div class="kbv-td-row">
+                    <span class="l">Fin objetivo</span>
+                    <span class="v">10 sep · en 3 días</span>
+                  </div>
+                  <div class="kbv-td-row">
+                    <span class="l">Área</span>
+                    <span class="v">
+                      <button type="button" class="kbv-td-lk" style="--c: var(--area-wealth)" title="Ir a Riqueza · Proyectos">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><ellipse cx="12" cy="6.5" rx="7.5" ry="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 6.5v10c0 1.93 3.36 3.5 7.5 3.5s7.5-1.57 7.5-3.5v-10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Riqueza
+                        <span class="go" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      </button>
+                    </span>
+                  </div>
+                  <div class="kbv-td-row">
+                    <span class="l">Proyecto</span>
+                    <span class="v">
+                      <button type="button" class="kbv-btn kbv-btn-link">Cliente Aurora</button>
+                      <span aria-hidden="true" style="display:flex;color:var(--kb-text-2)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+              <section class="kbv-card w-2">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Lo que mueve</div>
+                    <div class="kbv-card-sub">Al cerrarla</div>
+                  </div>
+                </div>
+                <div class="kbv-td-rewards">
+                  <div class="kbv-td-rw" style="--c: var(--kb-xp)">
+                    <span class="k">
+                      <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l2.2 5.3L20 9.5l-4 3.9.9 5.6L12 16.4 7.1 19l.9-5.6-4-3.9 5.8-1.2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Experiencia
+                    </span>
+                    <span class="n">+100 <span class="u">XP</span></span>
+                    <span class="kbv-body">Se acredita al área Riqueza</span>
+                  </div>
+                  <div class="kbv-td-rw" style="--c: var(--kb-coin)">
+                    <span class="k">
+                      <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Divisa
+                    </span>
+                    <span class="n">60 <span class="u">Divisa</span></span>
+                    <span class="kbv-body">La moneda del día a día, no el Elemento</span>
+                  </div>
+                </div>
+                <p class="kbv-meta">Sale de la prioridad por la energía: lo difícil paga más. La cifra la calcula el motor de progresión, la tarea no la guarda.</p>
+              </section>
+            </div>
+
+            <!-- ── PESTAÑA PASOS ──────────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Pestaña</span>
+              <span class="t">Pasos</span>
+              <span class="n">La misma pantalla con la segunda pestaña activa. Un paso no puede vivir solo; una subtarea sí.</span>
+            </div>
+
+            <div class="kbv-seg" role="tablist" aria-label="Secciones de la tarea · Pasos">
+              <button type="button" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+                Detalle
+              </button>
+              <button type="button" class="on" role="tab" aria-selected="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Pasos
+                <span class="kbv-badge quiet">2/6</span>
+              </button>
+              <button type="button" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Histórico
+                <span class="kbv-badge quiet">7</span>
+              </button>
+            </div>
+
+            <div class="kbv-canvas-grid">
+              <section class="kbv-card w-2">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Pasos</div>
+                    <div class="kbv-card-sub">2 de 4 · marcar uno queda en el histórico</div>
+                  </div>
+                  <span class="kbv-badge quiet">4</span>
+                </div>
+                <div class="kbv-progress-meta tone-xp">
+                  <div class="top"><span class="name">Avance de la lista</span><span class="val">2 / 4</span></div>
+                  <div class="kbv-progress sm"><div class="fill" style="width:50%"></div></div>
+                </div>
+                <div class="kbv-td-checks">
+                  <button type="button" class="kbv-td-check on" role="checkbox" aria-checked="true">
+                    <span class="kbv-check on" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="txt">Revisar contexto del proyecto</span>
+                  </button>
+                  <button type="button" class="kbv-td-check on" role="checkbox" aria-checked="true">
+                    <span class="kbv-check on" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="txt">Borrador inicial del documento</span>
+                  </button>
+                  <button type="button" class="kbv-td-check" role="checkbox" aria-checked="false">
+                    <span class="kbv-check" aria-hidden="true"></span>
+                    <span class="txt">Pasar por revisión interna</span>
+                  </button>
+                  <button type="button" class="kbv-td-check" role="checkbox" aria-checked="false">
+                    <span class="kbv-check" aria-hidden="true"></span>
+                    <span class="txt">Enviar versión final al cliente</span>
+                  </button>
+                </div>
+                <div class="kbv-card-foot">
+                  <span class="kbv-meta">Los pasos se agregan y se borran desde el modal de edición.</span>
+                  <button type="button" class="kbv-btn kbv-btn-ghost sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Añadir paso
+                  </button>
+                </div>
+              </section>
+
+              <section class="kbv-card w-2">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Subtareas</div>
+                    <div class="kbv-card-sub">0 de 2 · cada una puede volverse tarea propia</div>
+                  </div>
+                  <span class="kbv-badge quiet">2</span>
+                </div>
+                <div class="kbv-progress-meta tone-progress">
+                  <div class="top"><span class="name">Avance de la lista</span><span class="val">0 / 2</span></div>
+                  <div class="kbv-progress sm"><div class="fill" style="width:0%"></div></div>
+                </div>
+                <div class="kbv-td-checks">
+                  <button type="button" class="kbv-td-check" role="checkbox" aria-checked="false">
+                    <span class="kbv-check" aria-hidden="true"></span>
+                    <span class="txt">Lanzar reunión de arranque</span>
+                  </button>
+                  <button type="button" class="kbv-td-check" role="checkbox" aria-checked="false">
+                    <span class="kbv-check" aria-hidden="true"></span>
+                    <span class="txt">Compartir el documento con el equipo</span>
+                  </button>
+                </div>
+                <div class="kbv-card-foot">
+                  <span class="kbv-meta">Una subtarea es trabajo que podría vivir solo; un paso, no.</span>
+                  <button type="button" class="kbv-btn kbv-btn-ghost sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Añadir subtarea
+                  </button>
+                </div>
+              </section>
+            </div>
+
+            <!-- ── PESTAÑA HISTÓRICO ─────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Pestaña</span>
+              <span class="t">Histórico</span>
+              <span class="n">Cada movimiento dice quién, qué y cuándo. El tipo de evento decide el glifo y el color, y filtra la lista.</span>
+            </div>
+
+            <div class="kbv-seg" role="tablist" aria-label="Secciones de la tarea · Histórico">
+              <button type="button" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+                Detalle
+              </button>
+              <button type="button" role="tab" aria-selected="false">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Pasos
+                <span class="kbv-badge quiet">2/6</span>
+              </button>
+              <button type="button" class="on" role="tab" aria-selected="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Histórico
+                <span class="kbv-badge quiet">7</span>
+              </button>
+            </div>
+
+            <section class="kbv-card">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <div class="kbv-h3">Histórico de cambios</div>
+                  <div class="sub">7 movimientos · del más reciente al más antiguo</div>
+                </div>
+              </div>
+              <div class="kbv-td-filters" role="group" aria-label="Filtrar por tipo de evento">
+                <button type="button" class="kbv-chip active" aria-pressed="true">Todo<span class="kbv-badge quiet">7</span></button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--kb-primary)"></span>Creación</button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--kb-coin)"></span>Proyecto</button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--kb-streak)"></span>Prioridad</button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--area-will)"></span>Fechas</button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--area-wisdom)"></span>Columna</button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--kb-good)"></span>Pasos</button>
+                <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background: var(--area-community)"></span>Notas</button>
+              </div>
+              <ol class="kbv-td-list">
+                <li class="kbv-td-ev" style="--c: var(--area-community)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Nota escrita <em class="who">· Tú</em></span>
+                    <span class="what">Pendiente confirmar alcance con el cliente antes de cerrar.</span>
+                  </span>
+                  <span class="when">Hace 2 días · 18:40</span>
+                </li>
+                <li class="kbv-td-ev" style="--c: var(--kb-good)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.8" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Paso marcado <em class="who">· Tú</em></span>
+                    <span class="what">Borrador inicial del documento</span>
+                  </span>
+                  <span class="when">Hace 3 días · 09:12</span>
+                </li>
+                <li class="kbv-td-ev" style="--c: var(--area-wisdom)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M4 17l6-6 4 4 6-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8h5v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Movida de columna <em class="who">· Tú</em></span>
+                    <span class="what">Por hacer → En curso</span>
+                  </span>
+                  <span class="when">Hace 4 días · 11:05</span>
+                </li>
+                <li class="kbv-td-ev" style="--c: var(--area-will)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Fechas ajustadas <em class="who">· Tú</em></span>
+                    <span class="what">Fin objetivo en 3 días</span>
+                  </span>
+                  <span class="when">Hace 6 días · 08:30</span>
+                </li>
+                <li class="kbv-td-ev" style="--c: var(--kb-streak)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Prioridad cambiada <em class="who">· Tú</em></span>
+                    <span class="what">Media → Urgente</span>
+                  </span>
+                  <span class="when">Hace 7 días · 16:22</span>
+                </li>
+                <li class="kbv-td-ev" style="--c: var(--kb-coin)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Ligada a un proyecto <em class="who">· Tú</em></span>
+                    <span class="what">Cliente Aurora</span>
+                  </span>
+                  <span class="when">29 ago · 10:04</span>
+                </li>
+                <li class="kbv-td-ev" style="--c: var(--kb-primary)">
+                  <span class="dot" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="bod">
+                    <span class="line">Tarea creada <em class="who">· Tú</em></span>
+                    <span class="what">Cerrar propuesta para cliente Aurora</span>
+                  </span>
+                  <span class="when">29 ago · 10:02</span>
+                </li>
+              </ol>
+            </section>
+
+            <section class="kbv-card">
+              <div class="kbv-card-head">
+                <div>
+                  <div class="kbv-card-title">Añadir una nota</div>
+                  <div class="kbv-card-sub">Queda en el histórico, firmada por ti</div>
+                </div>
+              </div>
+              <div class="kbv-td-note">
+                <div class="kbv-field">
+                  <label class="kbv-label" for="td-nota">Nota</label>
+                  <textarea class="kbv-input" id="td-nota" rows="2" placeholder="Qué pasó, qué falta, qué decidiste…"></textarea>
+                  <span class="kbv-help">Se antepone al histórico como evento de tipo «Notas». No se puede borrar: el histórico es un registro de hechos.</span>
+                </div>
+                <div class="acts">
+                  <span class="kbv-meta">El botón se habilita cuando la nota tiene texto.</span>
+                  <button type="button" class="kbv-btn kbv-btn-primary" disabled>
+                    <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Añadir
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ── ESTADO · TAREA HECHA ──────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Estado</span>
+              <span class="t">Tarea hecha</span>
+              <span class="n">Cerrada: desaparece «Marcar hecha» —ya no hay nada que cerrar— y la recompensa se muestra cobrada, no prometida.</span>
+            </div>
+
+            <header class="kbv-page-head">
+              <div class="ph-id">
+                <nav class="kbv-crumb" aria-label="Ruta">
+                  <a href="#">Tu plan</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <a href="#">Tareas</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="here">Meditar 10 min sin pantalla</span>
+                </nav>
+                <h1 class="kbv-h1">Meditar 10 min sin pantalla</h1>
+                <p class="kbv-meta">Hecha · Media · 10 m · cerrada ayer 07:20</p>
+              </div>
+              <div class="ph-act">
+                <span class="kbv-tag tint" style="--c: var(--kb-good)">Cerrada</span>
+                <button type="button" class="kbv-btn kbv-btn-secondary">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Editar
+                </button>
+              </div>
+            </header>
+
+            <section class="kbv-card flush" style="--c: var(--area-will)">
+              <div class="kbv-td-band">
+                <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <button type="button" class="kbv-td-lk" title="Ir a Voluntad · Proyectos">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Voluntad
+                  <span class="go" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M5 12h13M13 6.5l5.5 5.5L13 17.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                </button>
+                <span class="flat">Sin proyecto</span>
+                <div class="kbv-td-reward">
+                  <span class="lbl">Cobrado</span>
+                  <span class="kbv-td-rwd spent">+15 XP</span>
+                  <span class="kbv-td-rwd spent">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    9<span class="kbv-sr-only"> de Divisa</span>
+                  </span>
+                </div>
+              </div>
+              <div class="kbv-td-body">
+                <p class="kbv-body kbv-prose">Diez minutos sentado, sin teléfono cerca. Cuenta para la racha del día aunque el hábito se registre aparte.</p>
+              </div>
+            </section>
+
+            <section class="kbv-card">
+              <div class="kbv-td-pulse">
+                <div class="kbv-td-cell">
+                  <span class="v"><span class="kbv-td-dot" style="--c: var(--kb-good)" aria-hidden="true"></span><span class="txt">Hecho</span></span>
+                  <span class="l">Estado</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none;color:var(--kb-coin-ink)"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <span class="txt">Media</span>
+                  </span>
+                  <span class="l">Prioridad</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v" style="--c: var(--kb-primary)">
+                    <span class="kbv-td-seg" role="img" aria-label="Energía 1 de 5"><i class="on"></i><i></i><i></i><i></i><i></i></span>
+                    <span class="txt">1/5</span>
+                  </span>
+                  <span class="l">Energía</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v"><span class="txt">10 m</span></span>
+                  <span class="l">Tiempo</span>
+                </div>
+                <div class="kbv-td-cell">
+                  <span class="v"><span class="txt">—</span></span>
+                  <span class="l">Pasos</span>
+                </div>
+              </div>
+              <div class="kbv-td-switch">
+                <span class="lbl">Estado</span>
+                <div class="kbv-seg" role="tablist" aria-label="Estado de la tarea">
+                  <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-text-2)" aria-hidden="true"></span>Por hacer</button>
+                  <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-primary)" aria-hidden="true"></span>En curso</button>
+                  <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-hp)" aria-hidden="true"></span>Bloqueado</button>
+                  <button type="button" class="on" role="tab" aria-selected="true"><span class="kbv-td-dot" style="--c: var(--kb-good)" aria-hidden="true"></span>Hecho</button>
+                </div>
+                <span class="kbv-meta">Regresarla a otra columna no descuenta lo cobrado: el motor de progresión no revierte un abono.</span>
+              </div>
+            </section>
+
+            <!-- ── ESTADO · TAREA RECIÉN CREADA ──────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Estado</span>
+              <span class="t">Recién creada</span>
+              <span class="n">Los cuatro respaldos a la vez: sin descripción, sin área, sin proyecto y sin listas. El área ausente deja la banda en neutro, nunca en el color de otra.</span>
+            </div>
+
+            <section class="kbv-card flush" style="--c: var(--kb-text-2)">
+              <div class="kbv-td-band">
+                <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+                <span class="flat">Sin área</span>
+                <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                <span class="flat">Sin proyecto</span>
+                <div class="kbv-td-reward">
+                  <span class="lbl">Al cerrar</span>
+                  <span class="kbv-td-rwd">+30 XP</span>
+                  <span class="kbv-td-rwd coin">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    18<span class="kbv-sr-only"> de Divisa</span>
+                  </span>
+                </div>
+              </div>
+              <div class="kbv-td-body">
+                <p class="kbv-body kbv-prose quiet">Sin descripción todavía — edítala para dejar el contexto que necesitas al retomarla.</p>
+                <div>
+                  <button type="button" class="kbv-btn kbv-btn-secondary sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Completar la ficha
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <div class="kbv-canvas-grid">
+              <section class="kbv-card w-2">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Pasos</div>
+                    <div class="kbv-card-sub">Sin pasos</div>
+                  </div>
+                </div>
+                <div class="kbv-empty">
+                  <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="ttl">Todavía no hay pasos</span>
+                  <span class="bod">Divide la tarea en pasos para no perder el hilo al retomarla.</span>
+                  <button type="button" class="kbv-btn kbv-btn-secondary sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Añadir el primer paso
+                  </button>
+                </div>
+              </section>
+
+              <section class="kbv-card w-2">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Subtareas</div>
+                    <div class="kbv-card-sub">Sin subtareas</div>
+                  </div>
+                </div>
+                <div class="kbv-empty">
+                  <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M5 5v9a3 3 0 0 0 3 3h11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.5 13.5L19 17l-3.5 3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="ttl">Todavía no hay subtareas</span>
+                  <span class="bod">Una subtarea es trabajo que podría vivir solo; un paso, no.</span>
+                  <button type="button" class="kbv-btn kbv-btn-secondary sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Añadir la primera subtarea
+                  </button>
+                </div>
+              </section>
+            </div>
+
+            <!-- ── ESTADO · CARGANDO ─────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Estado</span>
+              <span class="t">Cargando</span>
+              <span class="n">El hueco conserva la forma y la altura del dato que llega, para que nada salte cuando llegue. El texto es transparente: ningún lector de pantalla lo anuncia.</span>
+            </div>
+
+            <section class="kbv-card flush" aria-busy="true">
+              <div class="kbv-td-band" style="--c: var(--kb-text-2)">
+                <span class="kbv-skeleton" style="width:40px;height:40px;border-radius:var(--kb-r-md)">.</span>
+                <span class="kbv-skeleton" style="width:120px;height:20px">.</span>
+                <span class="kbv-skeleton" style="width:160px;height:20px">.</span>
+                <span class="kbv-td-reward"><span class="kbv-skeleton" style="width:180px;height:32px;border-radius:var(--kb-r-pill)">.</span></span>
+              </div>
+              <div class="kbv-td-body">
+                <span class="kbv-skeleton" style="width:100%;height:14px">.</span>
+                <span class="kbv-skeleton" style="width:72%;height:14px">.</span>
+              </div>
+            </section>
+
+            <section class="kbv-card" aria-busy="true">
+              <div class="kbv-td-pulse">
+                <div class="kbv-td-cell"><span class="kbv-skeleton" style="width:70%;height:18px">.</span><span class="kbv-skeleton" style="width:46%;height:10px">.</span></div>
+                <div class="kbv-td-cell"><span class="kbv-skeleton" style="width:70%;height:18px">.</span><span class="kbv-skeleton" style="width:46%;height:10px">.</span></div>
+                <div class="kbv-td-cell"><span class="kbv-skeleton" style="width:70%;height:18px">.</span><span class="kbv-skeleton" style="width:46%;height:10px">.</span></div>
+                <div class="kbv-td-cell"><span class="kbv-skeleton" style="width:70%;height:18px">.</span><span class="kbv-skeleton" style="width:46%;height:10px">.</span></div>
+                <div class="kbv-td-cell"><span class="kbv-skeleton" style="width:70%;height:18px">.</span><span class="kbv-skeleton" style="width:46%;height:10px">.</span></div>
+              </div>
+              <div class="kbv-td-switch">
+                <span class="kbv-skeleton" style="width:200px;height:36px;border-radius:var(--kb-r-pill)">.</span>
+                <span class="kbv-sr-only" role="status">Cargando la tarea</span>
+              </div>
+            </section>
+
+            <!-- ── ESTADO · ERROR ────────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Estado</span>
+              <span class="t">No se pudo cargar</span>
+              <span class="n">La falla es de la conexión, no del dato: la tarea sigue existiendo, así que la salida es reintentar y no volver al tablero.</span>
+            </div>
+
+            <section class="kbv-card" role="alert">
+              <div class="kbv-empty" style="background: var(--kb-hp-soft); border-style: solid; border-color: var(--kb-hp)">
+                <span class="glyph" style="color: var(--kb-hp-ink)" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 4.5l8.5 15h-17z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16.8" r="1" fill="currentColor" stroke="none"/></svg></span>
+                <span class="ttl">No pudimos cargar esta tarea</span>
+                <span class="bod">La conexión se cortó a media carga. Tus cambios locales siguen aquí: nada se perdió.</span>
+                <div style="display:flex;gap:var(--kb-sp-4);flex-wrap:wrap;justify-content:center">
+                  <button type="button" class="kbv-btn kbv-btn-secondary sm">Ir a Tareas</button>
+                  <button type="button" class="kbv-btn kbv-btn-primary sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.6-5.9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v4h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Reintentar
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ── ESTADO · LA TAREA NO EXISTE ───────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Estado</span>
+              <span class="t">Esa tarea ya no existe</span>
+              <span class="n">Es el destino canónico de cualquier enlace a una tarea, así que un enlace viejo cae aquí. Sin cabecera de página: no hay sujeto que nombrar.</span>
+            </div>
+
+            <section class="kbv-empty">
+              <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+              <span class="ttl">Esa tarea ya no existe</span>
+              <span class="bod">Puede que se haya borrado. Vuelve al tablero para ver las de hoy.</span>
+              <button type="button" class="kbv-btn kbv-btn-primary">Ir a Tareas</button>
+            </section>
+
+            <!-- ── ESTADO · PREMIUM ──────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Estado</span>
+              <span class="t">Bloqueo premium</span>
+              <span class="n">Declarado, no dibujado: esta pantalla no tiene uno.</span>
+            </div>
+
+            <section class="kbv-card compact">
+              <div class="kbv-td-row">
+                <span class="l" style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Sin estado bloqueado
+                </span>
+                <span class="v" style="font-weight:500;color:var(--kb-text-2);text-align:right">Tareas es un módulo libre. El candado vive en el armazón —en el enlace del menú—, nunca dentro de la pantalla: un módulo bloqueado no llega a montar su detalle.</span>
+              </div>
+            </section>
+
+            <!-- ── MODAL · EDITAR TAREA, SOBRE ESTA PANTALLA ─────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Modal</span>
+              <span class="t">Editar tarea</span>
+              <span class="n">Se abre desde «Editar» y desde el tablero. Ancho lg (720): formulario a dos columnas con listas. La meta llega plegada; abajo se muestra desplegada.</span>
+            </div>
+
+            <div class="kbv-td-scene" style="min-height:1140px">
+              <header class="kbv-page-head">
+                <div class="ph-id">
+                  <nav class="kbv-crumb" aria-label="Ruta">
+                    <a href="#">Tu plan</a>
+                    <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <a href="#">Tareas</a>
+                    <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="here">Cerrar propuesta para cliente Aurora</span>
+                  </nav>
+                  <h1 class="kbv-h1">Cerrar propuesta para cliente Aurora</h1>
+                </div>
+              </header>
+              <div class="kbv-card flush" style="--c: var(--area-wealth)">
+                <div class="kbv-td-band">
+                  <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><ellipse cx="12" cy="6.5" rx="7.5" ry="3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 6.5v10c0 1.93 3.36 3.5 7.5 3.5s7.5-1.57 7.5-3.5v-10" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="flat">Riqueza</span>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="flat">Cliente Aurora</span>
+                </div>
+              </div>
+
+              <div class="kbv-modal-veil" role="dialog" aria-modal="true" aria-label="Editar tarea">
+                <div class="kbv-modal-card lg">
+                  <div class="kbv-modal-head">
+                    <div class="mh-id">
+                      <div class="kbv-modal-title">Cerrar propuesta para cliente Aurora</div>
+                      <div class="kbv-modal-sub">Tarea · Riqueza · Cliente Aurora</div>
+                    </div>
+                    <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                  <div class="kbv-modal-body">
+                    <div class="kbv-filter-bar">
+                      <span class="kbv-tag tint" style="--c: var(--pri-urgent)">Urgente</span>
+                      <span class="kbv-td-seg" style="--c: var(--kb-primary);width:72px;flex:none" role="img" aria-label="Esfuerzo 4 de 5"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+                      <span class="kbv-meta">4/5</span>
+                      <span class="kbv-meta">2 h</span>
+                      <span class="kbv-areapill" style="--c: var(--area-wealth)">Riqueza</span>
+                      <span class="kbv-areapill" style="--c: var(--kb-text-2)">Cliente Aurora</span>
+                      <span class="grow"></span>
+                      <button type="button" class="kbv-btn kbv-btn-ghost sm" aria-expanded="false">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Editar la meta
+                      </button>
+                    </div>
+
+                    <div class="kbv-td-grid">
+                      <div class="kbv-field">
+                        <label class="kbv-label" for="td-ini">Fecha inicio</label>
+                        <input class="kbv-input" id="td-ini" type="date" value="2026-09-05">
+                      </div>
+                      <div class="kbv-field">
+                        <label class="kbv-label" for="td-fin">Fecha objetivo</label>
+                        <input class="kbv-input" id="td-fin" type="date" value="2026-09-10">
+                      </div>
+                      <div class="kbv-field span2">
+                        <label class="kbv-label" for="td-dur">Duración</label>
+                        <input class="kbv-input" id="td-dur" type="text" value="5 días" disabled>
+                        <span class="kbv-help">Se calcula de las dos fechas; no se escribe a mano.</span>
+                      </div>
+                    </div>
+
+                    <div class="kbv-field">
+                      <label class="kbv-label" for="td-desc">Descripción</label>
+                      <textarea class="kbv-input" id="td-desc" rows="3">Reunir alcance, tiempos y precio en un solo documento, revisarlo con el equipo y enviarlo antes del viernes.</textarea>
+                      <span class="kbv-help">Contexto, objetivo y criterios de cierre. Lo descriptivo siempre se puede editar.</span>
+                    </div>
+
+                    <div class="kbv-field">
+                      <div class="kbv-section-head">
+                        <div class="sh-id">
+                          <div class="kbv-h4">Pasos</div>
+                          <div class="sub">2 de 4 completados</div>
+                        </div>
+                        <div class="sh-act"><span class="kbv-badge quiet">4</span></div>
+                      </div>
+                      <div class="kbv-progress xs tone-xp"><div class="fill" style="width:50%"></div></div>
+                      <div class="kbv-td-editrow on">
+                        <span class="kbv-check on" role="checkbox" aria-checked="true" tabindex="0"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <span class="txt">Revisar contexto del proyecto</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar el paso «Revisar contexto del proyecto»"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                      </div>
+                      <div class="kbv-td-editrow on">
+                        <span class="kbv-check on" role="checkbox" aria-checked="true" tabindex="0"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <span class="txt">Borrador inicial del documento</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar el paso «Borrador inicial del documento»"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                      </div>
+                      <div class="kbv-td-editrow">
+                        <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0"></span>
+                        <span class="txt">Pasar por revisión interna</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar el paso «Pasar por revisión interna»"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                      </div>
+                      <div class="kbv-td-editrow">
+                        <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0"></span>
+                        <span class="txt">Enviar versión final al cliente</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar el paso «Enviar versión final al cliente»"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                      </div>
+                      <div class="kbv-td-add">
+                        <input class="kbv-input" type="text" placeholder="Nuevo paso… (Enter para agregar)" aria-label="Nuevo paso">
+                        <button type="button" class="kbv-btn kbv-btn-secondary" aria-label="Agregar el paso">
+                          <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="kbv-field">
+                      <div class="kbv-section-head">
+                        <div class="sh-id">
+                          <div class="kbv-h4">Subtareas</div>
+                          <div class="sub">0 de 2 hechas · cada una puede volverse tarea propia</div>
+                        </div>
+                        <div class="sh-act"><span class="kbv-badge quiet">2</span></div>
+                      </div>
+                      <div class="kbv-td-editrow">
+                        <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0"></span>
+                        <span class="txt">Lanzar reunión de arranque</span>
+                        <span class="kbv-tag" style="--c: var(--kb-text-2)">Subtarea</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar la subtarea «Lanzar reunión de arranque»"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                      </div>
+                      <div class="kbv-td-editrow">
+                        <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0"></span>
+                        <span class="txt">Compartir el documento con el equipo</span>
+                        <span class="kbv-tag" style="--c: var(--kb-text-2)">Subtarea</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar la subtarea «Compartir el documento con el equipo»"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                      </div>
+                      <div class="kbv-td-add">
+                        <input class="kbv-input" type="text" placeholder="Nueva subtarea… se convierte en tarea propia" aria-label="Nueva subtarea">
+                        <button type="button" class="kbv-btn kbv-btn-secondary" aria-label="Agregar la subtarea">
+                          <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                      </div>
+                    </div>
+
+                    <div class="kbv-field">
+                      <label class="kbv-label" for="td-notas">Notas adicionales</label>
+                      <textarea class="kbv-input" id="td-notas" rows="2" placeholder="Comentarios, decisiones, enlaces…"></textarea>
+                    </div>
+                  </div>
+                  <div class="kbv-modal-foot">
+                    <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                    <div class="mf-end">
+                      <span class="kbv-td-pillrw" title="Recompensa al cerrar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l2.2 5.3L20 9.5l-4 3.9.9 5.6L12 16.4 7.1 19l.9-5.6-4-3.9 5.8-1.2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Al cerrar: +100 XP · 60 Divisa
+                      </span>
+                      <button type="button" class="kbv-btn kbv-btn-secondary">Ver pantalla completa</button>
+                      <button type="button" class="kbv-btn kbv-btn-primary">
+                        Guardar
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── MODAL · BLOQUE DE EDICIÓN DESPLEGADO ──────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Modal · estado</span>
+              <span class="t">Meta desplegada</span>
+              <span class="n">«Editar la meta» cambia la tira de solo lectura por su formulario. Recorte del mismo modal: lo que va debajo no cambia.</span>
+            </div>
+
+            <div class="kbv-modal-card lg" style="margin-inline:auto">
+              <div class="kbv-modal-head">
+                <div class="mh-id">
+                  <div class="kbv-modal-title">Cerrar propuesta para cliente Aurora</div>
+                  <div class="kbv-modal-sub">Tarea · Riqueza · Cliente Aurora</div>
+                </div>
+                <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+              <div class="kbv-modal-body">
+                <div class="kbv-filter-bar">
+                  <span class="kbv-meta">Editando la meta de la tarea</span>
+                  <span class="grow"></span>
+                  <button type="button" class="kbv-btn kbv-btn-ghost sm" aria-expanded="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Listo
+                  </button>
+                </div>
+                <div class="kbv-td-grid">
+                  <div class="kbv-field span2">
+                    <label class="kbv-label" for="td-tit">Título</label>
+                    <input class="kbv-input" id="td-tit" type="text" value="Cerrar propuesta para cliente Aurora">
+                  </div>
+                  <div class="kbv-field span2">
+                    <span class="kbv-label" id="td-pri-lbl">Prioridad</span>
+                    <div class="kbv-td-pris" role="radiogroup" aria-labelledby="td-pri-lbl">
+                      <button type="button" class="kbv-td-pri on" style="--c: var(--pri-urgent)" role="radio" aria-checked="true">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Urgente
+                      </button>
+                      <button type="button" class="kbv-td-pri" style="--c: var(--pri-high)" role="radio" aria-checked="false">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Alta
+                      </button>
+                      <button type="button" class="kbv-td-pri" style="--c: var(--pri-medium)" role="radio" aria-checked="false">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Media
+                      </button>
+                      <button type="button" class="kbv-td-pri" style="--c: var(--pri-low)" role="radio" aria-checked="false">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Baja
+                      </button>
+                      <button type="button" class="kbv-td-pri" style="--c: var(--pri-vlow)" role="radio" aria-checked="false">
+                        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 21V4h11l-1.6 3.5L17 11H6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        Muy baja
+                      </button>
+                    </div>
+                  </div>
+                  <div class="kbv-field span2">
+                    <span class="kbv-label" id="td-esf-lbl">Esfuerzo</span>
+                    <div class="kbv-td-rate" role="radiogroup" aria-labelledby="td-esf-lbl">
+                      <button type="button" role="radio" aria-checked="false">1</button>
+                      <button type="button" role="radio" aria-checked="false">2</button>
+                      <button type="button" role="radio" aria-checked="false">3</button>
+                      <button type="button" class="on" role="radio" aria-checked="true">4</button>
+                      <button type="button" role="radio" aria-checked="false">5</button>
+                    </div>
+                    <span class="kbv-help">4 de 5 — pide concentración larga. Sube la recompensa junto con la prioridad.</span>
+                  </div>
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="td-area">Área</label>
+                    <span class="kbv-select">
+                      <select class="kbv-input" id="td-area">
+                        <option>Vigor</option>
+                        <option>Sabiduría</option>
+                        <option selected>Riqueza</option>
+                        <option>Comunidad</option>
+                        <option>Voluntad</option>
+                      </select>
+                      <span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </span>
+                  </div>
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="td-proy">Proyecto</label>
+                    <span class="kbv-select">
+                      <select class="kbv-input" id="td-proy">
+                        <option>Sin proyecto</option>
+                        <option selected>Cliente Aurora</option>
+                        <option>Maratón otoño 2026</option>
+                        <option>Migrar gastos a YNAB</option>
+                      </select>
+                      <span class="chev" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M6 9.5l6 6 6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </span>
+                  </div>
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="td-tiempo">Tiempo estimado</label>
+                    <input class="kbv-input" id="td-tiempo" type="text" value="2h" placeholder="45m · 1.5h…">
+                  </div>
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="td-tiempo-err">Tiempo estimado</label>
+                    <input class="kbv-input" id="td-tiempo-err" type="text" value="dos horas" aria-invalid="true">
+                    <span class="kbv-error">
+                      <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 8v4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16" r="1" fill="currentColor" stroke="none"/></svg>
+                      Escríbelo en minutos u horas: 45m o 1.5h.
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="kbv-modal-foot">
+                <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                <div class="mf-end">
+                  <button type="button" class="kbv-btn kbv-btn-primary">
+                    Guardar
+                    <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- ── AVISO EFÍMERO ─────────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Superposición</span>
+              <span class="t">Aviso de 2.2 s</span>
+              <span class="n">Confirma lo que ya pasó y desaparece solo. Nunca pide acción, así que no roba el foco ni tiene botón de cierre.</span>
+            </div>
+
+            <div class="kbv-td-scene" style="min-height:260px">
+              <div class="kbv-card">
+                <div class="kbv-td-switch" style="border-top:0;padding-top:0">
+                  <span class="lbl">Estado</span>
+                  <div class="kbv-seg" role="tablist" aria-label="Estado de la tarea">
+                    <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-text-2)" aria-hidden="true"></span>Por hacer</button>
+                    <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-primary)" aria-hidden="true"></span>En curso</button>
+                    <button type="button" role="tab" aria-selected="false"><span class="kbv-td-dot" style="--c: var(--kb-hp)" aria-hidden="true"></span>Bloqueado</button>
+                    <button type="button" class="on" role="tab" aria-selected="true"><span class="kbv-td-dot" style="--c: var(--kb-good)" aria-hidden="true"></span>Hecho</button>
+                  </div>
+                </div>
+              </div>
+              <div class="kbv-toast" role="status">
+                <span class="glyph" style="color: var(--kb-good)" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.8" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                Cerrada · +100 XP · 60 Divisa
+              </div>
+            </div>
+
+            <section class="kbv-card">
+              <div class="kbv-card-head">
+                <div>
+                  <div class="kbv-card-title">Las otras tres copias</div>
+                  <div class="kbv-card-sub">Mismo aviso, distinto disparador. Uno nuevo reemplaza al anterior; nunca se encolan.</div>
+                </div>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-6)">
+                <span class="kbv-toast inline" role="status">
+                  <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M4 17l6-6 4 4 6-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 8h5v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  Movida a «Bloqueado»
+                </span>
+                <span class="kbv-toast inline" role="status">
+                  <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  Nota guardada en el histórico
+                </span>
+                <span class="kbv-toast inline" role="status">
+                  <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.8" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  Cambios guardados
+                </span>
+              </div>
+            </section>
+
+            <!-- ── COMPORTAMIENTO ────────────────────────────────────────── -->
+            <div class="kbv-td-label">
+              <span class="k">Para quien la construya</span>
+              <span class="t">Comportamiento</span>
+              <span class="n">Lo que no se lee en el dibujo.</span>
+            </div>
+
+            <section class="kbv-card roomy">
+              <ul class="kbv-td-beh">
+                <li><span class="k">Regreso</span><span class="d">La migaja «Tareas» es el camino de vuelta al tablero; el detalle no tiene entrada propia en el menú, así que «Tareas» queda marcado como destino activo.</span></li>
+                <li><span class="k">Conmutador de estado</span><span class="d">Cambia la columna al instante. A «Hecho» avisa «Cerrada · +100 XP · 60 Divisa»; a cualquier otra, «Movida a «…»».</span></li>
+                <li><span class="k">Marcar hecha</span><span class="d">El primario de la cabecera es un atajo al mismo cambio de estado, y desaparece cuando la tarea ya está hecha.</span></li>
+                <li><span class="k">Recompensa</span><span class="d">XP y Divisa salen de prioridad por energía. La tarea no las guarda: las calcula el motor de progresión, que es también quien las acredita.</span></li>
+                <li><span class="k">Salto al área</span><span class="d">Abre Áreas en la pestaña «Proyectos» mediante el evento de ventana <code>kibo:navigate</code>. El área es un eje de la tarea, nunca un destino con datos propios.</span></li>
+                <li><span class="k">Salto al proyecto</span><span class="d">Abre el proyecto. El avance del proyecto se deriva de sus tareas cada vez que se pinta; no se guarda en ningún lado.</span></li>
+                <li><span class="k">Pasos y subtareas</span><span class="d">La fila completa marca y desmarca —no solo la casilla— y cada marca escribe un evento en el histórico. Agregar y borrar se hace desde el modal.</span></li>
+                <li><span class="k">Pestañas</span><span class="d">Detalle, Pasos e Histórico no recargan la tarea. El contador del rótulo se recalcula al marcar un paso.</span></li>
+                <li><span class="k">Filtro del histórico</span><span class="d">Los chips se generan de los tipos presentes en esta tarea, no del catálogo completo. «Todo» siempre está y siempre empieza activo.</span></li>
+                <li><span class="k">Nota</span><span class="d">Se antepone al histórico como evento «Notas» firmado «Tú». El botón vive deshabilitado mientras el campo esté vacío o solo tenga espacios.</span></li>
+                <li><span class="k">Histórico derivado</span><span class="d">Si la tarea no trae histórico propio, se deriva de su estado real —creación, liga al proyecto, prioridad, fechas, columna, pasos y recompensa— para que una tarea hecha no muestre una historia a medias.</span></li>
+                <li><span class="k">Modal</span><span class="d">Cierra con Escape, con clic en el velo y con su botón. El foco queda atrapado dentro mientras esté abierto y regresa a «Editar» al cerrarse.</span></li>
+                <li><span class="k">Guardar</span><span class="d">Al guardar, el modal se cierra, la ficha se repinta con los valores nuevos y avisa «Cambios guardados».</span></li>
+                <li><span class="k">Enlace muerto</span><span class="d">Un identificador de tarea inexistente cae en «Esa tarea ya no existe», con una sola salida al tablero.</span></li>
+                <li><span class="k">Movimiento reducido</span><span class="d">Con <code>prefers-reduced-motion</code> se apagan el brillo del esqueleto y la transición de las barras; KIBO conserva su propio tempo.</span></li>
+                <li><span class="k">Teléfono</span><span class="d">Por debajo de 640 el pulso baja a una columna, el modal se vuelve hoja inferior con su asa y el primario del pie ocupa todo el ancho.</span></li>
+              </ul>
+            </section>
           </div>
         </main>
 

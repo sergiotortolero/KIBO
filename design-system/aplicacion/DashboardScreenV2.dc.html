@@ -925,7 +925,7 @@
         <nav class="kbv-side-nav">
           <div class="kbv-side-section">
             <div class="kbv-eyebrow">General</div>
-            <button type="button" class="kbv-side-link">
+            <button type="button" class="kbv-side-link active" aria-current="page">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Hoy</span>
             </button>
@@ -937,7 +937,7 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow">Tu plan</div>
-            <button type="button" class="kbv-side-link active" aria-current="page">
+            <button type="button" class="kbv-side-link">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
               <span class="lbl">Tareas</span>
               <span class="kbv-badge quiet">6</span>
@@ -1111,11 +1111,1089 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<!-- ═══ CONTENIDO DE LA PANTALLA ═══
-     Sustituye ESTE comentario por el contenido completo: la cabecera de pagina
-     (.kbv-page-head con su migaja, su .kbv-h1 y sus acciones), las secciones,
-     los estados y los modales superpuestos. Todo dentro de .kbv-page.
-     No toques nada fuera de este hueco: el armazon es contrato compartido. -->
+            <style>
+              /* Piezas del sistema que esta pantalla compone y el armazon aun no
+                 publica en su helmet: modal (§6.7), campo (§6.2), escenario y
+                 estado vacio (§6.8). Formas canonicas, sin valores nuevos. */
+              .kbv-stage { position: relative; overflow: hidden; box-sizing: border-box;
+                           border-radius: var(--kb-r-lg); border: 1px solid var(--kb-border);
+                           background: var(--kb-surface); }
+              .kbv-stage .under { display: flex; flex-direction: column; height: 100%; }
+              .kbv-stage.h-sm { height: 320px; }
+              .kbv-stage.h-md { height: 420px; }
+              .kbv-stage.h-lg { height: 520px; }
+
+              .kbv-side-scrim { position: absolute; inset: 0; z-index: var(--kb-z-overlay);
+                                background: color-mix(in srgb, var(--kb-text) 42%, transparent); }
+
+              .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal);
+                                background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                                backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+                                display: flex; align-items: center; justify-content: center;
+                                padding: var(--kb-sp-9); box-sizing: border-box; }
+              .kbv-modal-card { background: var(--kb-card); border-radius: var(--kb-r-xl);
+                                width: 100%; max-width: 580px; max-height: 100%;
+                                display: flex; flex-direction: column; overflow: hidden;
+                                box-shadow: var(--kb-sh-pop); box-sizing: border-box; }
+              .kbv-modal-card.sm { max-width: 420px; }
+              .kbv-modal-card.lg { max-width: 720px; }
+              .kbv-modal-head { display: flex; justify-content: space-between; align-items: flex-start;
+                                gap: var(--kb-sp-6); padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                                border-bottom: 1px solid var(--kb-border-soft); }
+              .kbv-modal-head .title { font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl);
+                                       font-weight: 800; line-height: var(--kb-lh-snug);
+                                       letter-spacing: -.01em; color: var(--kb-text); }
+              .kbv-modal-head .sub { font-size: var(--kb-fs-md); color: var(--kb-text-2);
+                                     margin-top: var(--kb-sp-2); max-width: 46ch; }
+              .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none;
+                                 border-radius: var(--kb-r-pill); border: 1.5px solid var(--kb-border);
+                                 background: var(--kb-card); color: var(--kb-text-2); cursor: pointer;
+                                 display: flex; align-items: center; justify-content: center;
+                                 box-sizing: border-box; }
+              .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+              .kbv-modal-body { padding: var(--kb-sp-8) var(--kb-sp-9); display: flex;
+                                flex-direction: column; gap: var(--kb-sp-7); overflow-y: auto; flex: 1 1 auto; }
+              .kbv-modal-foot { display: flex; justify-content: space-between; align-items: center;
+                                gap: var(--kb-sp-5); padding: var(--kb-sp-7) var(--kb-sp-9);
+                                border-top: 1px solid var(--kb-border-soft); background: var(--kb-surface); }
+              .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+              .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+              .kbv-label { font-family: var(--kb-f-body); font-weight: 600; font-size: var(--kb-fs-md);
+                           color: var(--kb-text); }
+              .kbv-input { display: flex; align-items: center; gap: var(--kb-sp-4); height: var(--kb-ctl-h);
+                           padding: 0 var(--kb-sp-7); background: var(--kb-card); box-sizing: border-box;
+                           border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-md);
+                           font-size: var(--kb-fs-lg); font-weight: 500; color: var(--kb-text); }
+              .kbv-input.ph { color: var(--kb-text-2); }
+              .kbv-input.area { height: auto; min-height: 108px; align-items: flex-start;
+                                padding: var(--kb-sp-6) var(--kb-sp-7); font-size: var(--kb-fs-md);
+                                font-weight: 400; line-height: var(--kb-lh-body); }
+              .kbv-help { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+
+              .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                           gap: var(--kb-sp-5); padding: var(--kb-sp-9); box-sizing: border-box;
+                           background: var(--kb-surface-2); border: 1.5px dashed var(--kb-border-strong);
+                           border-radius: var(--kb-r-lg); }
+              .kbv-empty .disc { width: 64px; height: 64px; flex: none; border-radius: var(--kb-r-lg);
+                                 background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                                 display: flex; align-items: center; justify-content: center; }
+              .kbv-empty .kbv-h3 { color: var(--kb-text); }
+
+              .kbv-btn-link { height: auto; padding: 0; border: 0; background: transparent; box-shadow: none;
+                              font-size: var(--kb-fs-md); color: var(--kb-primary-ink); cursor: pointer; }
+              .kbv-btn-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+              /* Historial de divisa: panel anclado a la pildora del HUD, no un modal.
+                 No lleva velo — se cierra con un clic fuera, en --kb-z-dropdown. */
+              .kbv-currency-dropdown { width: 420px; box-sizing: border-box; display: flex;
+                                       flex-direction: column; gap: var(--kb-sp-6); padding: var(--kb-sp-7);
+                                       background: var(--kb-card); border: 1px solid var(--kb-border);
+                                       border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-pop);
+                                       z-index: var(--kb-z-dropdown); }
+              .kbv-currency-dropdown .dd-head { display: flex; align-items: flex-start;
+                                                justify-content: space-between; gap: var(--kb-sp-6); }
+              .kbv-currency-dropdown .dd-title { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+              .kbv-currency-dropdown .dd-title .big { display: flex; align-items: center; gap: var(--kb-sp-4);
+                                                      font-family: var(--kb-f-display); font-weight: 800;
+                                                      font-size: var(--kb-fs-3xl); line-height: 1;
+                                                      letter-spacing: -.02em; font-variant-numeric: tabular-nums;
+                                                      color: var(--kb-text); }
+              .kbv-currency-dropdown .dd-glyph { width: 32px; height: 32px; flex: none; border-radius: var(--kb-r-pill);
+                                                 display: flex; align-items: center; justify-content: center;
+                                                 background: var(--kb-coin-soft); color: var(--kb-coin-ink);
+                                                 border: 1px solid var(--kb-coin-border); }
+              .kbv-currency-dropdown .dd-glyph.elemento { background: var(--kb-void-1); border-color: var(--kb-dark-facet);
+                                                          box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-dark-halo) 22%, transparent); }
+              .kbv-currency-dropdown .dd-summary { display: flex; flex-direction: column; align-items: flex-end;
+                                                   gap: var(--kb-sp-1); flex: none; }
+              .kbv-currency-dropdown .dd-summary .fig { display: flex; align-items: baseline; gap: var(--kb-sp-3);
+                                                        font-family: var(--kb-f-display); font-weight: 700;
+                                                        font-size: var(--kb-fs-lg); font-variant-numeric: tabular-nums; }
+              .kbv-currency-dropdown .dd-summary .fig.earn  { color: var(--kb-primary-ink); }
+              .kbv-currency-dropdown .dd-summary .fig.spend { color: var(--kb-hp-ink); }
+              .kbv-currency-dropdown .dd-summary .fig span { font-family: var(--kb-f-body); font-size: var(--kb-fs-sm);
+                                                             font-weight: 600; color: var(--kb-text-2); }
+              .kbv-currency-dropdown .dd-srcs { display: flex; flex-wrap: wrap; gap: var(--kb-sp-3); }
+              .kbv-currency-dropdown .dd-list { display: flex; flex-direction: column;
+                                                max-height: 268px; overflow-y: auto; }
+              .kbv-currency-dropdown .dd-row { display: flex; align-items: center; gap: var(--kb-sp-6);
+                                               padding: var(--kb-sp-5) 0; min-width: 0;
+                                               border-bottom: 1px solid var(--kb-border-soft); }
+              .kbv-currency-dropdown .dd-row:last-child { border-bottom: 0; }
+              .kbv-currency-dropdown .dd-row .amt { flex: none; width: 78px; display: flex; align-items: center;
+                                                    justify-content: flex-end; gap: var(--kb-sp-2);
+                                                    font-family: var(--kb-f-display); font-weight: 700;
+                                                    font-size: var(--kb-fs-md); font-variant-numeric: tabular-nums; }
+              .kbv-currency-dropdown .dd-row.earn  .amt { color: var(--kb-primary-ink); }
+              .kbv-currency-dropdown .dd-row.spend .amt { color: var(--kb-hp-ink); }
+              .kbv-currency-dropdown .dd-row .info { flex: 1 1 auto; min-width: 0; display: flex;
+                                                     flex-direction: column; gap: var(--kb-sp-1); }
+              .kbv-currency-dropdown .dd-row .reason { font-size: var(--kb-fs-md); color: var(--kb-text);
+                                                       overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+              .kbv-currency-dropdown .dd-row .when { display: flex; align-items: center; gap: var(--kb-sp-4);
+                                                     flex-wrap: wrap; font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+              .kbv-currency-dropdown .dd-row .src { display: inline-flex; align-items: center; gap: var(--kb-sp-2);
+                                                    font-weight: 600;
+                                                    color: color-mix(in oklab, var(--c, var(--kb-text-2)) 54%, var(--kb-void-2)); }
+              .kbv-currency-dropdown .dd-foot { display: flex; align-items: center; justify-content: space-between;
+                                                gap: var(--kb-sp-5); padding-top: var(--kb-sp-5);
+                                                border-top: 1px solid var(--kb-border-soft); }
+
+              /* ── Contenido de muestra de ESTA lamina (smp-*, no contrato) ── */
+              .smp-plate { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+              .smp-plate-hd { display: flex; align-items: center; gap: var(--kb-sp-5); }
+              .smp-plate-hd .line { flex: 1 1 auto; height: 1px; background: var(--kb-border); }
+
+              .smp-routes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-4); }
+              .smp-route { display: flex; align-items: center; gap: var(--kb-sp-5); min-width: 0;
+                           padding: var(--kb-sp-5) var(--kb-sp-6); background: var(--kb-card);
+                           border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); }
+              .smp-route .rt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-1); }
+              .smp-route .rt .n { font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text);
+                                  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+              .smp-route .rt .id { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                                   letter-spacing: .06em; color: var(--kb-text-2); }
+              .smp-route .lock { flex: none; display: flex; color: var(--kb-text-2); }
+
+              .smp-mods { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+              .smp-mod-price { display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+                               font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                               font-variant-numeric: tabular-nums; color: var(--kb-text); }
+
+              /* Esquemas del armazon: proporciones reales (232 / 76 / 640), sin texto. */
+              .smp-minis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+              .smp-mini-fig { display: flex; flex-direction: column; gap: var(--kb-sp-4); min-width: 0; }
+              .smp-mini { position: relative; display: flex; height: 156px; overflow: hidden;
+                          border: 1px solid var(--kb-border); border-radius: var(--kb-r-md);
+                          background: var(--kb-surface); }
+              .smp-mini .m-side { flex: none; width: 62px; box-sizing: border-box; display: flex;
+                                  flex-direction: column; gap: var(--kb-sp-3); padding: var(--kb-sp-4);
+                                  background: var(--kb-canvas); border-right: 1px solid var(--kb-border); }
+              .smp-mini .m-side .m-row { height: 8px; border-radius: var(--kb-r-pill); background: var(--kb-surface-2); }
+              .smp-mini .m-side .m-row.on { background: var(--kb-primary-soft); }
+              .smp-mini.rail .m-side { width: 22px; align-items: center; padding: var(--kb-sp-4) var(--kb-sp-2); }
+              .smp-mini.rail .m-side .m-row { width: 12px; height: 12px; border-radius: var(--kb-r-xs); }
+              .smp-mini.pinned .m-side { border-right: 2px solid var(--kb-primary); }
+              .smp-mini .m-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+              .smp-mini .m-head { flex: none; height: 20px; background: var(--kb-canvas);
+                                  border-bottom: 1px solid var(--kb-border); }
+              .smp-mini .m-canvas { flex: 1 1 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+                                    grid-auto-rows: 1fr; gap: var(--kb-sp-3); padding: var(--kb-sp-4); }
+              .smp-mini .m-w { background: var(--kb-card); border: 1px solid var(--kb-border);
+                               border-radius: var(--kb-r-xs); }
+              .smp-mini .m-tab { flex: none; height: 18px; display: grid; grid-template-columns: repeat(5, 1fr);
+                                 gap: var(--kb-sp-2); align-items: center; padding: 0 var(--kb-sp-3);
+                                 background: var(--kb-card); border-top: 1px solid var(--kb-border); }
+              .smp-mini .m-tab .m-t { height: 6px; border-radius: var(--kb-r-pill); background: var(--kb-surface-2); }
+              .smp-mini .m-tab .m-t.on { background: var(--kb-primary-soft); }
+              .smp-mini .m-drawer { position: absolute; inset: 0 auto 0 0; width: 62px; box-sizing: border-box;
+                                    display: flex; flex-direction: column; gap: var(--kb-sp-3);
+                                    padding: var(--kb-sp-4); background: var(--kb-canvas);
+                                    border-right: 1px solid var(--kb-border); box-shadow: var(--kb-sh-4);
+                                    z-index: calc(var(--kb-z-overlay) + 1); }
+              .smp-mini .m-drawer .m-row { height: 8px; border-radius: var(--kb-r-pill); background: var(--kb-surface-2); }
+              .smp-mini .m-drawer .m-row.on { background: var(--kb-primary-soft); }
+
+              /* Menu en modo Personalizar: especimen a ancho real (232 px). */
+              .smp-sidebar-spec { width: 232px; flex: none; box-sizing: border-box; display: flex;
+                                  flex-direction: column; gap: var(--kb-sp-5); padding: var(--kb-sp-7) var(--kb-sp-6);
+                                  background: var(--kb-canvas); border: 1px solid var(--kb-border);
+                                  border-radius: var(--kb-r-md); }
+              .smp-sec-hd { display: flex; align-items: center; gap: var(--kb-sp-3);
+                            padding: var(--kb-sp-2) var(--kb-sp-4); border-radius: var(--kb-r-sm);
+                            background: var(--kb-surface); }
+              .smp-sec-hd .kbv-eyebrow { flex: 1 1 auto; min-width: 0; }
+              .smp-grip { flex: none; display: flex; color: var(--kb-text-2); cursor: grab; }
+
+              /* Esqueleto de carga: el rotulo se vuelve transparente y la caja late. */
+              .smp-skel { border-radius: var(--kb-r-sm); background: var(--kb-surface-2);
+                          animation: smpPulse 1.4s var(--kb-ease-standard) infinite; }
+              @keyframes smpPulse { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+              /* Tarjeta de reencauce: aviso flotante, role=status, se va sola a los 14 s. */
+              .smp-rc { width: 320px; box-sizing: border-box; display: flex; flex-direction: column;
+                        gap: var(--kb-sp-5); padding: var(--kb-sp-7); background: var(--kb-card);
+                        border: 1px solid var(--kb-border); border-left: 0; border-radius: var(--kb-r-lg);
+                        box-shadow: var(--kb-sh-4); }
+              .smp-rc .rc-head { display: flex; align-items: flex-start; gap: var(--kb-sp-5); }
+              .smp-rc .rc-ico { width: 32px; height: 32px; flex: none; border-radius: var(--kb-r-sm);
+                                background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                                display: flex; align-items: center; justify-content: center; }
+              .smp-rc .rc-txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+              .smp-rc .rc-opt { display: flex; flex-direction: column; align-items: flex-start; gap: var(--kb-sp-2);
+                                width: 100%; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
+                                background: var(--kb-surface); border: 1.5px solid var(--kb-border);
+                                border-radius: var(--kb-r-sm); cursor: pointer; text-align: left;
+                                font-family: var(--kb-f-body); color: var(--kb-text); }
+              .smp-rc .rc-opt:hover { border-color: var(--kb-primary); background: var(--kb-primary-soft); }
+              .smp-rc .rc-opt strong { font-family: var(--kb-f-display); font-size: var(--kb-fs-md); font-weight: 700; }
+              .smp-rc .rc-opt span { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+              .smp-rc .rc-opts { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+
+              /* Bloque de comportamiento: una linea por conducta no obvia. */
+              .smp-beh { display: flex; flex-direction: column; }
+              .smp-beh .b { display: flex; align-items: flex-start; gap: var(--kb-sp-6);
+                            padding: var(--kb-sp-5) 0; border-bottom: 1px solid var(--kb-border-soft); }
+              .smp-beh .b:last-child { border-bottom: 0; padding-bottom: 0; }
+              .smp-beh .b .k { flex: none; width: 168px; font-family: var(--kb-f-label);
+                               font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em;
+                               text-transform: uppercase; color: var(--kb-text-2); padding-top: 3px; }
+              .smp-beh .b .v { flex: 1 1 auto; min-width: 0; font-size: var(--kb-fs-md);
+                               line-height: var(--kb-lh-body); color: var(--kb-text); }
+            </style>
+
+            <!-- ── La cabecera de pagina ─────────────────────────────────── -->
+            <header class="kbv-page-head">
+              <div class="ph-id">
+                <nav class="kbv-crumb" aria-label="Dónde estás">
+                  <a href="#general">General</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="here" aria-current="page">Hoy</span>
+                </nav>
+                <h1 class="kbv-h1">Hoy</h1>
+                <p class="kbv-meta kbv-prose">El armazón monta aquí la pantalla del destino activo. Esta lámina retrata al armazón mismo: a dónde lleva, qué tapa, qué estados toma y qué abre encima.</p>
+              </div>
+              <div class="ph-act">
+                <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-pressed="false">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M10 3h4l1 6 3 2.5V14H6v-2.5L9 9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 14v7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Fijar menú
+                </button>
+                <button type="button" class="kbv-btn kbv-btn-primary sm">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 8h16l-1.2 11H5.2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Ver módulos
+                </button>
+              </div>
+            </header>
+
+            <!-- ── 1 · Las piezas que el armazon monta ───────────────────── -->
+            <section class="kbv-section" aria-labelledby="sec-piezas">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <h2 class="kbv-h3" id="sec-piezas">Las piezas que monta</h2>
+                  <span class="sub">Ocho piezas. Seis están siempre; dos aparecen solo cuando algo las llama.</span>
+                </div>
+              </div>
+              <div class="kbv-canvas-grid">
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-primary)">Siempre</span>
+                  <div class="kbv-card-title">Menú lateral</div>
+                  <p class="kbv-meta">232 px de columna, 76 px de riel. La taxonomía del producto y la única fuente de la migaja.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-primary)">Siempre</span>
+                  <div class="kbv-card-title">Cabecera · HUD</div>
+                  <p class="kbv-meta">72 px. Cinco lecturas — identidad y XP, buscador, HP, racha, Divisa y Elemento. Ninguna escritura.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-primary)">Siempre</span>
+                  <div class="kbv-card-title">Región de contenido</div>
+                  <p class="kbv-meta">La única que hace scroll. Toda pantalla se compone dentro de <span class="kbv-tag">.kbv-page</span>, a 1200 px máximo.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-primary)">Siempre</span>
+                  <div class="kbv-card-title">Cuerpo enrutado</div>
+                  <p class="kbv-meta">La pantalla del destino activo. Se remonta de cero solo cuando la navegación llega sin sujeto.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-primary)">Siempre</span>
+                  <div class="kbv-card-title">KIBO · botón flotante</div>
+                  <p class="kbv-meta">Vive fuera del contenido, así que su rueda registra sin navegar y su modal se superpone a cualquier pantalla.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--area-wisdom)">≤ 640 px</span>
+                  <div class="kbv-card-title">Barra al pulgar</div>
+                  <p class="kbv-meta">Cinco destinos fijos: Hoy, Tareas, Hábitos, Progreso y «Más», que abre el mismo menú completo.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-warn)">Condicional</span>
+                  <div class="kbv-card-title">Velo del menú</div>
+                  <p class="kbv-meta">Solo con el menú abierto en anchos estrechos. Un toque encima lo cierra.</p>
+                </article>
+                <article class="kbv-card compact">
+                  <span class="kbv-areapill" style="--c: var(--kb-warn)">Condicional</span>
+                  <div class="kbv-card-title">Tarjeta de reencauce</div>
+                  <p class="kbv-meta">Aparece cuando algo falla y ofrece una versión más pequeña del compromiso. Nunca regaña.</p>
+                </article>
+              </div>
+            </section>
+
+            <!-- ── 2 · La tabla de rutas ─────────────────────────────────── -->
+            <section class="kbv-section" aria-labelledby="sec-rutas">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <h2 class="kbv-h3" id="sec-rutas">A dónde lleva</h2>
+                  <span class="sub">Veinte destinos y un sujeto. Toda ruta que no exista resuelve a Hoy.</span>
+                </div>
+                <div class="sh-act">
+                  <span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">Premium</span>
+                  <span class="kbv-tag">Sin pantalla propia</span>
+                </div>
+              </div>
+              <div class="smp-routes">
+                <div class="smp-route"><div class="rt"><span class="n">Hoy</span><span class="id">today</span></div><span class="kbv-tag tint" style="--c: var(--kb-primary)">Por defecto</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Tareas</span><span class="id">tareas</span></div></div>
+                <div class="smp-route"><div class="rt"><span class="n">Proyectos</span><span class="id">projects</span></div></div>
+                <div class="smp-route"><div class="rt"><span class="n">Tarea</span><span class="id">tarea · taskId</span></div><span class="kbv-tag">Sujeto</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Hábitos</span><span class="id">habits</span></div></div>
+                <div class="smp-route"><div class="rt"><span class="n">Retos</span><span class="id">retos</span></div></div>
+                <div class="smp-route"><div class="rt"><span class="n">Mi progreso</span><span class="id">progreso</span></div><span class="kbv-tag">Sin pantalla</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Salud</span><span class="id">salud</span></div><span class="kbv-tag">Sin pantalla</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Amigos</span><span class="id">social</span></div><span class="kbv-tag">Sin pantalla</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Familia</span><span class="id">familia</span></div><span class="kbv-tag">Sin pantalla</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Tienda</span><span class="id">store · tab</span></div></div>
+                <div class="smp-route"><div class="rt"><span class="n">Personalización</span><span class="id">personalizar · tab</span></div><span class="kbv-tag">Sin pantalla</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Finanzas</span><span class="id">finanzas</span></div><span class="lock"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">400</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Estudio</span><span class="id">estudio</span></div><span class="lock"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">250</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Bóveda</span><span class="id">resources</span></div><span class="lock"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">300</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Entretenimiento</span><span class="id">watch</span></div><span class="lock"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">150</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Lectura</span><span class="id">lectura</span></div><span class="lock"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">150</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Diario</span><span class="id">diario</span></div><span class="lock"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">120</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Configuración</span><span class="id">settings</span></div><span class="kbv-tag">Sin pantalla</span></div>
+                <div class="smp-route"><div class="rt"><span class="n">Cuenta</span><span class="id">account</span></div><span class="kbv-tag">Sin pantalla</span></div>
+              </div>
+              <div class="kbv-card compact" style="background: var(--kb-community-soft); border-color: var(--kb-community-border)">
+                <div class="kbv-card-head">
+                  <span style="display:flex;flex:none;color:var(--kb-community-ink)"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <div class="kbv-card-sub" style="flex:1 1 auto;color:var(--kb-text)"><strong>Áreas dejó de ser un destino.</strong> El área es propiedad de todo hecho — un eje y un filtro, nunca una pantalla con datos propios. La ruta <span class="kbv-tag">areas</span> se retira y su lugar en la barra al pulgar lo toma Mi progreso.</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ── 3 · La compuerta freemium ─────────────────────────────── -->
+            <section class="kbv-section" aria-labelledby="sec-freemium">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <h2 class="kbv-h3" id="sec-freemium">La compuerta freemium</h2>
+                  <span class="sub">El armazón es quien tapa un módulo premium, no el módulo. La pantalla ni se entera.</span>
+                </div>
+                <div class="sh-act">
+                  <div class="kbv-seg" role="group" aria-label="Perfil de prueba">
+                    <button type="button">Novato</button>
+                    <button type="button" class="on" aria-pressed="true">Intermedio</button>
+                    <button type="button">Maestro</button>
+                  </div>
+                </div>
+              </div>
+              <div class="smp-mods">
+                <article class="kbv-card compact">
+                  <div class="kbv-card-head">
+                    <div class="kbv-card-title">Finanzas</div>
+                    <span class="lock" style="display:flex;flex:none;color:var(--kb-text-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+                  </div>
+                  <p class="kbv-meta">Cuentas, gastos, presupuesto, deudas e inversiones — con auto-registro.</p>
+                  <div class="kbv-card-foot">
+                    <span class="smp-mod-price"><span class="kbv-facet" aria-hidden="true"></span>400<span class="kbv-sr-only"> Elemento</span></span>
+                    <button type="button" class="kbv-btn kbv-btn-secondary sm">Desbloquear</button>
+                  </div>
+                </article>
+                <article class="kbv-card compact">
+                  <div class="kbv-card-head">
+                    <div class="kbv-card-title">Bóveda</div>
+                    <span class="lock" style="display:flex;flex:none;color:var(--kb-text-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+                  </div>
+                  <p class="kbv-meta">Notas importadas y lecturas sintetizadas con IA.</p>
+                  <div class="kbv-card-foot">
+                    <span class="smp-mod-price"><span class="kbv-facet" aria-hidden="true"></span>300<span class="kbv-sr-only"> Elemento</span></span>
+                    <button type="button" class="kbv-btn kbv-btn-secondary sm">Desbloquear</button>
+                  </div>
+                </article>
+                <article class="kbv-card compact">
+                  <div class="kbv-card-head">
+                    <div class="kbv-card-title">Estudio</div>
+                    <span class="lock" style="display:flex;flex:none;color:var(--kb-text-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+                  </div>
+                  <p class="kbv-meta">Pomodoro, cursos, agenda académica y ranking de conocimiento.</p>
+                  <div class="kbv-card-foot">
+                    <span class="smp-mod-price"><span class="kbv-facet" aria-hidden="true"></span>250<span class="kbv-sr-only"> Elemento</span></span>
+                    <button type="button" class="kbv-btn kbv-btn-secondary sm">Desbloquear</button>
+                  </div>
+                </article>
+                <article class="kbv-card compact">
+                  <div class="kbv-card-head">
+                    <div class="kbv-card-title">Entretenimiento</div>
+                    <span class="lock" style="display:flex;flex:none;color:var(--kb-text-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+                  </div>
+                  <p class="kbv-meta">Series, pelis y resumen anual sincronizado.</p>
+                  <div class="kbv-card-foot">
+                    <span class="smp-mod-price"><span class="kbv-facet" aria-hidden="true"></span>150<span class="kbv-sr-only"> Elemento</span></span>
+                    <button type="button" class="kbv-btn kbv-btn-secondary sm">Desbloquear</button>
+                  </div>
+                </article>
+                <article class="kbv-card compact">
+                  <div class="kbv-card-head">
+                    <div class="kbv-card-title">Lectura</div>
+                    <span class="kbv-tag tint" style="--c: var(--kb-primary)">Abierto</span>
+                  </div>
+                  <p class="kbv-meta">Libros activos, sesiones cronometradas y notas con IA.</p>
+                  <div class="kbv-card-foot">
+                    <span class="kbv-meta">Incluido en tu perfil</span>
+                    <button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir</button>
+                  </div>
+                </article>
+                <article class="kbv-card compact">
+                  <div class="kbv-card-head">
+                    <div class="kbv-card-title">Diario</div>
+                    <span class="kbv-tag tint" style="--c: var(--kb-primary)">Abierto</span>
+                  </div>
+                  <p class="kbv-meta">Bitácora emocional: ánimo, gratitud, foto y dictado.</p>
+                  <div class="kbv-card-foot">
+                    <span class="kbv-meta">Incluido en tu perfil</span>
+                    <button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir</button>
+                  </div>
+                </article>
+              </div>
+              <p class="kbv-meta kbv-prose">El núcleo es gratis para siempre. Un módulo se abre con Elemento, que también se gana jugando — así se llega a lo mismo sin pagar. Cambiar de perfil de prueba devuelve los módulos a su estado inicial.</p>
+            </section>
+
+            <!-- ── 4 · Los estados del armazon ───────────────────────────── -->
+            <section class="kbv-section" aria-labelledby="sec-estados">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <h2 class="kbv-h3" id="sec-estados">Estados</h2>
+                  <span class="sub">Cada uno dibujado. El menú toma cinco formas; el cuerpo enrutado, cinco más.</span>
+                </div>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · el menú</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="smp-minis">
+                  <figure class="smp-mini-fig" style="margin:0">
+                    <div class="smp-mini" aria-hidden="true">
+                      <div class="m-side"><div class="m-row on"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div></div>
+                      <div class="m-body"><div class="m-head"></div><div class="m-canvas"><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div></div></div>
+                    </div>
+                    <figcaption class="kbv-meta"><strong style="color:var(--kb-text)">Escritorio ancho · desplegado.</strong> Columna de 232 px con los rótulos de cada grupo. Es el estado por defecto.</figcaption>
+                  </figure>
+                  <figure class="smp-mini-fig" style="margin:0">
+                    <div class="smp-mini rail" aria-hidden="true">
+                      <div class="m-side"><div class="m-row on"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div></div>
+                      <div class="m-body"><div class="m-head"></div><div class="m-canvas"><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div></div></div>
+                    </div>
+                    <figcaption class="kbv-meta"><strong style="color:var(--kb-text)">Replegado a riel.</strong> 76 px, solo glifos. El usuario lo pidió y se recuerda entre sesiones.</figcaption>
+                  </figure>
+                  <figure class="smp-mini-fig" style="margin:0">
+                    <div class="smp-mini pinned" aria-hidden="true">
+                      <div class="m-side"><div class="m-row on"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div></div>
+                      <div class="m-body"><div class="m-head"></div><div class="m-canvas"><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div></div></div>
+                    </div>
+                    <figcaption class="kbv-meta"><strong style="color:var(--kb-text)">Fijo.</strong> La preferencia manda sobre lo guardado y sobre el riel automático: no se repliega aunque la ventana angoste.</figcaption>
+                  </figure>
+                  <figure class="smp-mini-fig" style="margin:0">
+                    <div class="smp-mini rail" aria-hidden="true">
+                      <div class="m-side"><div class="m-row on"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div></div>
+                      <div class="m-body"><div class="m-head"></div><div class="m-canvas" style="grid-template-columns:repeat(2,minmax(0,1fr))"><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div></div></div>
+                    </div>
+                    <figcaption class="kbv-meta"><strong style="color:var(--kb-text)">Estrecho · 1080 px o menos.</strong> El riel llega solo. Aquí el botón ya no repliega: abre el menú encima.</figcaption>
+                  </figure>
+                  <figure class="smp-mini-fig" style="margin:0">
+                    <div class="smp-mini" aria-hidden="true">
+                      <div class="m-body"><div class="m-head"></div><div class="m-canvas" style="grid-template-columns:minmax(0,1fr)"><div class="m-w"></div><div class="m-w"></div></div><div class="m-tab"><span class="m-t on"></span><span class="m-t"></span><span class="m-t"></span><span class="m-t"></span><span class="m-t"></span></div></div>
+                    </div>
+                    <figcaption class="kbv-meta"><strong style="color:var(--kb-text)">Teléfono · 640 px o menos.</strong> Cambia el modelo, no la escala: el menú se vuelve cajón y la navegación baja al pulgar.</figcaption>
+                  </figure>
+                  <figure class="smp-mini-fig" style="margin:0">
+                    <div class="smp-mini rail" aria-hidden="true">
+                      <div class="m-side"><div class="m-row on"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div></div>
+                      <div class="m-body"><div class="m-head"></div><div class="m-canvas" style="grid-template-columns:repeat(2,minmax(0,1fr))"><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div><div class="m-w"></div></div></div>
+                      <div class="kbv-side-scrim"></div>
+                      <div class="m-drawer"><div class="m-row on"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div><div class="m-row"></div></div>
+                    </div>
+                    <figcaption class="kbv-meta"><strong style="color:var(--kb-text)">Cajón abierto con velo.</strong> El menú completo se monta encima del contenido; el velo lo cierra al tocarlo.</figcaption>
+                  </figure>
+                </div>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · el menú en modo Personalizar</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div style="display:flex;gap:var(--kb-sp-8);align-items:flex-start;flex-wrap:wrap">
+                  <div class="smp-sidebar-spec">
+                    <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+                      <span class="kbv-h4" style="flex:1 1 auto;font-size:var(--kb-fs-lg)">Personalizar</span>
+                      <button type="button" class="kbv-btn kbv-btn-ghost sm" style="padding:0 var(--kb-sp-5)">Listo</button>
+                    </div>
+                    <div class="kbv-side-section">
+                      <div class="smp-sec-hd">
+                        <span class="smp-grip" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg></span>
+                        <span class="kbv-eyebrow">General</span>
+                        <span class="lock" style="display:flex;flex:none;color:var(--kb-text-2)"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Esta sección no se puede borrar</span></span>
+                      </div>
+                      <div class="kbv-side-link">
+                        <span class="smp-grip" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg></span>
+                        <span class="lbl">Hoy</span>
+                      </div>
+                      <div class="kbv-side-link">
+                        <span class="smp-grip" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg></span>
+                        <span class="lbl">Mi progreso</span>
+                      </div>
+                    </div>
+                    <div class="kbv-side-section">
+                      <div class="smp-sec-hd">
+                        <span class="smp-grip" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg></span>
+                        <span class="kbv-eyebrow">Tu bitácora</span>
+                        <button type="button" class="kbv-icon-btn" aria-label="Ocultar la sección Tu bitácora">
+                          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4l16 16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button type="button" class="kbv-icon-btn" aria-label="Eliminar la sección Tu bitácora">
+                          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 7h16M9 7V5h6v2M6.5 7l1 13h9l1-13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                      </div>
+                      <div class="kbv-side-link">
+                        <span class="smp-grip" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg></span>
+                        <span class="lbl">Salud</span>
+                      </div>
+                      <div class="kbv-side-link">
+                        <span class="smp-grip" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg></span>
+                        <span class="lbl">Diario</span>
+                      </div>
+                    </div>
+                    <div class="kbv-field">
+                      <span class="kbv-label" style="font-size:var(--kb-fs-sm)">Renombrando</span>
+                      <div class="kbv-input" style="height:36px;font-size:var(--kb-fs-md);border-color:var(--kb-primary);box-shadow:var(--kb-focus-halo)">Tu bitácora</div>
+                    </div>
+                    <button type="button" class="kbv-btn kbv-btn-secondary sm" style="width:100%">
+                      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Nueva sección
+                    </button>
+                    <div class="kbv-side-section">
+                      <span class="kbv-eyebrow">Ocultas</span>
+                      <div class="kbv-side-link" style="opacity:1">
+                        <span class="lbl" style="color:var(--kb-text-2)">Tu gente</span>
+                        <button type="button" class="kbv-btn kbv-btn-ghost sm" style="padding:0 var(--kb-sp-4);height:28px">Mostrar</button>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="kbv-meta kbv-prose" style="flex:1 1 260px">Con Personalizar encendido cada sección y cada acceso muestra su asa: se arrastran para reordenar, y un acceso se puede soltar en otra sección. El rótulo se edita en su sitio. El ojo tachado oculta la sección a la bandeja de abajo, de donde vuelve con «Mostrar». La papelera solo aparece en secciones que se pueden borrar — «General» está bloqueada — y si la sección todavía tiene accesos, pregunta antes.</p>
+                </div>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · el cuerpo, bloqueado por premium</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage">
+                  <div class="under" style="align-items:center;justify-content:center;padding:var(--kb-sp-9)">
+                    <div class="kbv-card roomy" style="max-width:520px;align-items:center;text-align:center">
+                      <span style="width:72px;height:72px;flex:none;border-radius:var(--kb-r-lg);background:var(--kb-primary-soft);color:var(--kb-primary-ink);display:flex;align-items:center;justify-content:center">
+                        <svg width="34" height="34" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                      <span class="kbv-tag tint" style="--c: var(--kb-dark-edge)">Módulo premium</span>
+                      <h3 class="kbv-h3">Finanzas</h3>
+                      <p class="kbv-body kbv-prose">Cuentas, gastos, presupuesto, deudas e inversiones — con auto-registro.</p>
+                      <p class="kbv-meta kbv-prose">Kibo es modular: el núcleo es gratis para siempre. Este módulo se abre con <strong style="color:var(--kb-text)">Elemento</strong>, que también ganas jugando — así que puedes tenerlo sin pagar.</p>
+                      <div style="display:flex;align-items:center;gap:var(--kb-sp-4);flex-wrap:wrap;justify-content:center">
+                        <button type="button" class="kbv-btn kbv-btn-primary">
+                          <span class="kbv-facet" aria-hidden="true"></span>
+                          Desbloquear · 400 Elemento
+                        </button>
+                        <button type="button" class="kbv-btn kbv-btn-ghost">Ver módulos en la Tienda</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">Sustituye al cuerpo entero, venga la navegación de donde venga. El menú, el HUD y KIBO siguen en pie: lo que se tapa es el destino, no la aplicación. La lámina completa vive en <span class="kbv-tag">ModuleLocked</span>.</p>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · vacío — el destino existe pero aún no tiene pantalla</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage">
+                  <div class="under" style="padding:var(--kb-sp-9)">
+                    <div class="kbv-empty">
+                      <span class="disc">
+                        <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                      <h3 class="kbv-h3">Mi progreso</h3>
+                      <p class="kbv-body kbv-prose">Indicadores personales y prestigio. Esta sección llega en la próxima entrega; mientras tanto, todo lo importante vive en tu Hoy.</p>
+                      <span class="kbv-tag tint" style="--c: var(--kb-warn)">Próxima entrega</span>
+                      <button type="button" class="kbv-btn kbv-btn-secondary sm">Ir a Hoy</button>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">Nueve destinos caen aquí hoy. También es la red del enrutador: si la pantalla real no cargó, el usuario ve esto y no una pantalla en blanco.</p>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · cargando — el cuerpo mientras monta</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage">
+                  <div class="under" style="padding:var(--kb-sp-9);gap:var(--kb-sp-8)">
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5)">
+                      <div class="smp-skel" style="width:120px;height:12px"></div>
+                      <div class="smp-skel" style="width:280px;height:30px"></div>
+                    </div>
+                    <div class="kbv-canvas-grid">
+                      <div class="smp-skel" style="height:96px"></div>
+                      <div class="smp-skel" style="height:96px"></div>
+                      <div class="smp-skel" style="height:96px"></div>
+                      <div class="smp-skel" style="height:96px"></div>
+                    </div>
+                    <div class="smp-skel" style="height:64px"></div>
+                  </div>
+                </div>
+                <p class="kbv-meta">El armazón no parpadea: menú, HUD y KIBO ya están dibujados y solo el cuerpo late. Conserva la silueta de la pantalla que viene, para que nada salte al llegar.</p>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · error — la pantalla no abrió</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage">
+                  <div class="under" style="align-items:center;justify-content:center;padding:var(--kb-sp-9)">
+                    <div class="kbv-card roomy" style="max-width:520px;align-items:center;text-align:center;background:var(--kb-hp-soft);border-color:color-mix(in oklab, var(--kb-hp) 32%, var(--kb-canvas))">
+                      <span style="display:flex;flex:none;color:var(--kb-hp-ink)">
+                        <svg width="32" height="32" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 4.2l8.6 15.3H3.4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10v4.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="17" r="1.05" fill="currentColor" stroke="none"/></svg>
+                      </span>
+                      <h3 class="kbv-h3">Esta pantalla no pudo abrirse</h3>
+                      <p class="kbv-body kbv-prose">Nada de lo tuyo se perdió: lo que falló fue mostrarla. Vuelve a intentarlo o regresa a Hoy.</p>
+                      <div style="display:flex;align-items:center;gap:var(--kb-sp-4);flex-wrap:wrap;justify-content:center">
+                        <button type="button" class="kbv-btn kbv-btn-secondary">Reintentar</button>
+                        <button type="button" class="kbv-btn kbv-btn-primary">Volver a Hoy</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">El error se detiene en el cuerpo. El armazón sobrevive a la pantalla que falló, así que siempre queda una salida a la vista.</p>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · ruta desconocida</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-card compact" style="background:var(--kb-primary-soft);border-color:var(--kb-primary-border)">
+                  <div class="kbv-card-head">
+                    <span style="display:flex;flex:none;color:var(--kb-primary-ink)"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <div class="kbv-card-sub" style="flex:1 1 auto;color:var(--kb-text)">Un destino que no está en la tabla no deja al usuario en la nada: el armazón monta Hoy y no avisa nada. Un enlace viejo o mal escrito aterriza en casa.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Estado · el fracaso reencauza</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage h-sm">
+                  <div class="under" style="padding:var(--kb-sp-9);gap:var(--kb-sp-6);filter:saturate(.6)">
+                    <div class="kbv-h4">Hábitos de hoy</div>
+                    <div class="kbv-card compact" style="height:56px"></div>
+                    <div class="kbv-card compact" style="height:56px"></div>
+                  </div>
+                  <div style="position:absolute;left:0;top:var(--kb-sp-8);z-index:var(--kb-z-raised)">
+                    <div class="smp-rc" role="status">
+                      <div class="rc-head">
+                        <span class="rc-ico" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <div class="rc-txt">
+                          <strong class="kbv-h4" style="font-size:var(--kb-fs-lg)">El fracaso reencauza</strong>
+                          <span class="kbv-meta">Se te fue «Correr 5 km». Escoge algo más pequeño y sigues de pie.</span>
+                        </div>
+                        <button type="button" class="kbv-icon-btn" aria-label="Cerrar el aviso">
+                          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                      </div>
+                      <div class="rc-opts">
+                        <button type="button" class="rc-opt"><strong>La mitad, mañana</strong><span>Medio hábito cuenta como día vivo.</span></button>
+                        <button type="button" class="rc-opt"><strong>Solo empezar</strong><span>Dos minutos y lo dejas si quieres.</span></button>
+                        <button type="button" class="rc-opt"><strong>Día de gracia</strong><span>Uno por semana. Tu racha no se rompe.</span></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">Es aviso, no diálogo: no bloquea la pantalla, no lleva velo y se retira solo a los catorce segundos. Aceptar un reencauce devuelve la mitad del golpe de HP; el día de gracia lo devuelve entero y no se compra.</p>
+              </div>
+            </section>
+
+            <!-- ── 5 · Lo que se abre encima ─────────────────────────────── -->
+            <section class="kbv-section" aria-labelledby="sec-modales">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <h2 class="kbv-h3" id="sec-modales">Lo que se abre encima</h2>
+                  <span class="sub">Cinco superficies. Ninguna es una pantalla: todas se montan sobre la que ya estaba y la devuelven al cerrarse.</span>
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:var(--kb-sp-8)">
+                <div class="smp-plate">
+                  <div class="smp-plate-hd">
+                    <span class="kbv-eyebrow">Panel · historial de Divisa</span>
+                    <span class="line" aria-hidden="true"></span>
+                  </div>
+                  <div class="kbv-stage" style="height:672px">
+                    <div class="under">
+                      <div style="flex:none;height:72px;display:flex;align-items:center;justify-content:flex-end;gap:var(--kb-sp-5);padding:0 var(--kb-sp-8);background:var(--kb-canvas);border-bottom:1px solid var(--kb-border)">
+                        <div class="kbv-hud-streak" role="button" tabindex="0" title="Racha · 23 días">
+                          <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 21c3.9 0 6.5-2.6 6.5-6 0-4.5-4.5-6.2-4-11-3 1.4-5 4.4-5 7 0 1.2-.8 2-1.7 1.4C7 11.7 6.6 10.6 6.6 9.4 5.6 11 5.5 12.6 5.5 15c0 3.4 2.6 6 6.5 6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <span class="days">23</span>
+                        </div>
+                        <div class="kbv-stat-pill coin" role="button" tabindex="0" aria-expanded="true" style="box-shadow:var(--kb-focus-halo)">
+                          <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <span>1 480</span>
+                        </div>
+                      </div>
+                      <div style="flex:1 1 auto;min-height:0;padding:var(--kb-sp-8);display:flex;flex-direction:column;gap:var(--kb-sp-6);filter:saturate(.55)">
+                        <div class="kbv-h4">Hoy</div>
+                        <div class="kbv-card compact" style="height:84px"></div>
+                        <div class="kbv-card compact" style="height:84px"></div>
+                      </div>
+                    </div>
+                    <div style="position:absolute;right:var(--kb-sp-8);top:78px">
+                      <div class="kbv-currency-dropdown" role="dialog" aria-label="Historial de Divisa">
+                        <div class="dd-head">
+                          <div class="dd-title">
+                            <span class="big">
+                              <span class="dd-glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                              <span>1 480</span>
+                            </span>
+                            <span class="kbv-meta">Divisa · ganada por actividad</span>
+                          </div>
+                          <div class="dd-summary">
+                            <span class="fig earn">+480 <span>ganadas</span></span>
+                            <span class="fig spend">−670 <span>gastadas</span></span>
+                          </div>
+                        </div>
+                        <div class="dd-srcs" role="group" aria-label="Filtrar por origen">
+                          <button type="button" class="kbv-chip active" aria-pressed="true">Todo</button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--area-wisdom)"></span>Proyectos <b>+150</b></button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--kb-streak)"></span>Hábitos <b>+100</b></button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--kb-hp)"></span>Retos <b>+90</b></button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--kb-primary)"></span>Tareas <b>+80</b></button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--kb-media)"></span>Lectura <b>+60</b></button>
+                        </div>
+                        <div class="dd-list">
+                          <div class="dd-row earn">
+                            <span class="amt">+25</span>
+                            <div class="info"><span class="reason">Hábitos completados (3×)</span><span class="when"><span class="src" style="--c: var(--kb-streak)">Hábitos</span>Hoy · 10:42</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+60</span>
+                            <div class="info"><span class="reason">Sesión de lectura · 45 min</span><span class="when"><span class="src" style="--c: var(--kb-media)">Lectura</span>Hoy · 09:15</span></div>
+                          </div>
+                          <div class="dd-row spend">
+                            <span class="amt">−120</span>
+                            <div class="info"><span class="reason">Recompensa: cena italiana</span><span class="when"><span class="src" style="--c: var(--kb-medal)">Recompensas</span>Ayer · 21:30</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+80</span>
+                            <div class="info"><span class="reason">Tarea cerrada · prioridad alta</span><span class="when"><span class="src" style="--c: var(--kb-primary)">Tareas</span>Ayer · 18:04</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+40</span>
+                            <div class="info"><span class="reason">Hábitos completados (4×)</span><span class="when"><span class="src" style="--c: var(--kb-streak)">Hábitos</span>Ayer · 09:00</span></div>
+                          </div>
+                          <div class="dd-row spend">
+                            <span class="amt">−200</span>
+                            <div class="info"><span class="reason">Recompensa: película y palomitas</span><span class="when"><span class="src" style="--c: var(--kb-medal)">Recompensas</span>Sáb · 16:12</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+150</span>
+                            <div class="info"><span class="reason">Proyecto completado · Aurora</span><span class="when"><span class="src" style="--c: var(--area-wisdom)">Proyectos</span>Vie · 17:48</span></div>
+                          </div>
+                          <div class="dd-row spend">
+                            <span class="amt">−350</span>
+                            <div class="info"><span class="reason">Cofre de Divisa (5×)</span><span class="when"><span class="src" style="--c: var(--kb-void-1)">Cofres</span>Jue · 12:20</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+35</span>
+                            <div class="info"><span class="reason">Hábitos y diario</span><span class="when"><span class="src" style="--c: var(--kb-streak)">Hábitos</span>Mié · 22:05</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+90</span>
+                            <div class="info"><span class="reason">Reto día 18 · sin falta</span><span class="when"><span class="src" style="--c: var(--kb-hp)">Retos</span>Mar · 23:00</span></div>
+                          </div>
+                        </div>
+                        <div class="dd-foot">
+                          <button type="button" class="kbv-btn kbv-btn-link">Cerrar</button>
+                          <span class="kbv-meta">Cambia Divisa por cofres premium — 10 a 1.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="kbv-meta">Sin filtro. Los chips de origen van de mayor a menor aporte y responden «¿de dónde salió todo esto?» en un renglón. Es un panel anclado, no un modal: por eso no lleva velo y se cierra con un clic fuera.</p>
+                </div>
+
+                <div class="smp-plate">
+                  <div class="smp-plate-hd">
+                    <span class="kbv-eyebrow">Panel · historial de Elemento, filtrado</span>
+                    <span class="line" aria-hidden="true"></span>
+                  </div>
+                  <div class="kbv-stage" style="height:672px">
+                    <div class="under">
+                      <div style="flex:none;height:72px;display:flex;align-items:center;justify-content:flex-end;gap:var(--kb-sp-5);padding:0 var(--kb-sp-8);background:var(--kb-canvas);border-bottom:1px solid var(--kb-border)">
+                        <div class="kbv-stat-pill coin" role="button" tabindex="0">
+                          <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <span>1 480</span>
+                        </div>
+                        <div class="kbv-stat-pill elemento" role="button" tabindex="0" aria-expanded="true">
+                          <span class="kbv-facet" aria-hidden="true"></span>
+                          <span>12</span>
+                        </div>
+                      </div>
+                      <div style="flex:1 1 auto;min-height:0;padding:var(--kb-sp-8);display:flex;flex-direction:column;gap:var(--kb-sp-6);filter:saturate(.55)">
+                        <div class="kbv-h4">Hoy</div>
+                        <div class="kbv-card compact" style="height:84px"></div>
+                        <div class="kbv-card compact" style="height:84px"></div>
+                      </div>
+                    </div>
+                    <div style="position:absolute;right:var(--kb-sp-8);top:78px">
+                      <div class="kbv-currency-dropdown" role="dialog" aria-label="Historial de Elemento">
+                        <div class="dd-head">
+                          <div class="dd-title">
+                            <span class="big">
+                              <span class="dd-glyph elemento" aria-hidden="true"><span class="kbv-facet"></span></span>
+                              <span>12</span>
+                            </span>
+                            <span class="kbv-meta">Elemento · Premium · recompensas de retos</span>
+                          </div>
+                          <div class="dd-summary">
+                            <span class="fig earn">+210 <span>ganados</span></span>
+                            <span class="fig spend">0 <span>gastados</span></span>
+                          </div>
+                        </div>
+                        <div class="dd-srcs" role="group" aria-label="Filtrar por origen">
+                          <button type="button" class="kbv-chip" aria-pressed="false">Todo</button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--area-community)"></span>Compra <b>+5 300</b></button>
+                          <button type="button" class="kbv-chip active" aria-pressed="true"><span class="dot" style="background:var(--kb-hp)"></span>Retos <b>+210</b></button>
+                          <button type="button" class="kbv-chip" aria-pressed="false"><span class="dot" style="background:var(--kb-streak)"></span>Racha <b>+15</b></button>
+                        </div>
+                        <div class="dd-list">
+                          <div class="dd-row earn">
+                            <span class="amt">+40</span>
+                            <div class="info"><span class="reason">Reto completado · «7 días sin redes»</span><span class="when"><span class="src" style="--c: var(--kb-hp)">Retos</span>8 feb</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+60</span>
+                            <div class="info"><span class="reason">Reto completado · «Meditar 30 días»</span><span class="when"><span class="src" style="--c: var(--kb-hp)">Retos</span>15 abr</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+30</span>
+                            <div class="info"><span class="reason">Reto día 30 · «Sin azúcar»</span><span class="when"><span class="src" style="--c: var(--kb-hp)">Retos</span>22 mar</span></div>
+                          </div>
+                          <div class="dd-row earn">
+                            <span class="amt">+80</span>
+                            <div class="info"><span class="reason">Reto «Procrastinación» · día 30</span><span class="when"><span class="src" style="--c: var(--kb-hp)">Retos</span>28 feb</span></div>
+                          </div>
+                        </div>
+                        <div class="dd-foot">
+                          <button type="button" class="kbv-btn kbv-btn-link">Cerrar</button>
+                          <span class="kbv-meta">El Elemento se compra o se gana en retos premium.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="kbv-meta">Con «Retos» activo. El resumen se recalcula sobre el filtro — por eso lo gastado queda en cero: los retos solo suman. Volver a pulsar el chip regresa a «Todo».</p>
+                </div>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Modal · confirmación, eliminar sección del menú</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage h-sm">
+                  <div class="under" style="padding:var(--kb-sp-9);gap:var(--kb-sp-6)">
+                    <div class="kbv-h4">Personalizar el menú</div>
+                    <div class="kbv-card compact" style="height:56px"></div>
+                    <div class="kbv-card compact" style="height:56px"></div>
+                  </div>
+                  <div class="kbv-modal-veil">
+                    <div class="kbv-modal-card sm" role="alertdialog" aria-labelledby="del-t" aria-describedby="del-d">
+                      <div class="kbv-modal-head">
+                        <div>
+                          <div class="title" id="del-t">Eliminar sección</div>
+                          <div class="sub" id="del-d">¿Eliminar la sección «Tu bitácora»? Sus 5 accesos se moverán a otra sección — no se pierden.</div>
+                        </div>
+                      </div>
+                      <div class="kbv-modal-foot">
+                        <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                        <div class="right">
+                          <button type="button" class="kbv-btn kbv-btn-danger">Sí, eliminar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">Una confirmación no lleva botón de cerrar: obliga a elegir. El título dice qué se pierde y el verbo del botón repite la acción. Con la sección vacía no se pregunta nada, y «General» nunca llega hasta aquí.</p>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Superposición · el menú como cajón, con su velo</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage h-md">
+                  <div class="under" style="flex-direction:row">
+                    <div style="flex:none;width:76px;display:flex;flex-direction:column;align-items:center;gap:var(--kb-sp-5);padding:var(--kb-sp-7) var(--kb-sp-5);background:var(--kb-canvas);border-right:1px solid var(--kb-border)">
+                      <span class="kbv-logo" style="padding:0;height:auto"><span class="mark">K</span></span>
+                      <span style="display:flex;color:var(--kb-primary-ink)"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      <span style="display:flex;color:var(--kb-text-2)"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+                      <span style="display:flex;color:var(--kb-text-2)"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </div>
+                    <div style="flex:1 1 auto;min-width:0;padding:var(--kb-sp-8);display:flex;flex-direction:column;gap:var(--kb-sp-6)">
+                      <div class="kbv-h4">Hoy</div>
+                      <div class="kbv-canvas-grid">
+                        <div class="kbv-card compact w-2" style="height:96px"></div>
+                        <div class="kbv-card compact w-2" style="height:96px"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="kbv-side-scrim" aria-hidden="true"></div>
+                  <div style="position:absolute;inset:0 auto 0 0;width:232px;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--kb-sp-6);padding:var(--kb-sp-7) var(--kb-sp-6);background:var(--kb-canvas);border-right:1px solid var(--kb-border);box-shadow:var(--kb-sh-4);z-index:calc(var(--kb-z-overlay) + 1)">
+                    <div class="kbv-logo">
+                      <span class="mark">K</span>
+                      <span class="word">Kibo</span>
+                      <button type="button" class="kbv-icon-btn" aria-label="Cerrar el menú">
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
+                    </div>
+                    <div class="kbv-hud-streak" role="button" tabindex="0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 21c3.9 0 6.5-2.6 6.5-6 0-4.5-4.5-6.2-4-11-3 1.4-5 4.4-5 7 0 1.2-.8 2-1.7 1.4C7 11.7 6.6 10.6 6.6 9.4 5.6 11 5.5 12.6 5.5 15c0 3.4 2.6 6 6.5 6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <span class="days">23</span>
+                      <span class="kbv-meta" style="color:inherit">días de racha</span>
+                    </div>
+                    <div class="kbv-side-section">
+                      <div class="kbv-eyebrow">General</div>
+                      <button type="button" class="kbv-side-link active" aria-current="page">
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="lbl">Hoy</span>
+                      </button>
+                      <button type="button" class="kbv-side-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="lbl">Mi progreso</span>
+                      </button>
+                    </div>
+                    <div class="kbv-side-section">
+                      <div class="kbv-eyebrow">Tu plan</div>
+                      <button type="button" class="kbv-side-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+                        <span class="lbl">Tareas</span>
+                        <span class="kbv-badge quiet">6</span>
+                      </button>
+                      <button type="button" class="kbv-side-link child">
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="lbl">Proyectos</span>
+                        <span class="kbv-badge quiet">3</span>
+                      </button>
+                    </div>
+                    <div class="kbv-side-section">
+                      <div class="kbv-eyebrow">Tu constancia</div>
+                      <button type="button" class="kbv-side-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="lbl">Hábitos</span>
+                        <span class="kbv-badge quiet">4</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">A 1080 px o menos el menú deja de ser columna y se abre encima: es el Sidebar íntegro, no una lista aparte, así que las secciones que el usuario editó siguen siendo las mismas. El velo lo cierra, y navegar a cualquier destino también.</p>
+              </div>
+
+              <div class="smp-plate">
+                <div class="smp-plate-hd">
+                  <span class="kbv-eyebrow">Modal · acción rápida de KIBO</span>
+                  <span class="line" aria-hidden="true"></span>
+                </div>
+                <div class="kbv-stage" style="height:560px">
+                  <div class="under" style="padding:var(--kb-sp-9);gap:var(--kb-sp-6)">
+                    <div class="kbv-h4">Hábitos de hoy</div>
+                    <div class="kbv-card compact" style="height:56px"></div>
+                    <div class="kbv-card compact" style="height:56px"></div>
+                  </div>
+                  <div class="kbv-modal-veil">
+                    <div class="kbv-modal-card" role="dialog" aria-labelledby="qa-t">
+                      <div class="kbv-modal-head">
+                        <div>
+                          <div class="title" id="qa-t">Entrada de diario</div>
+                          <div class="sub">KIBO la abre donde estés. Al guardar vuelves a la misma pantalla, en el mismo lugar.</div>
+                        </div>
+                        <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+                          <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                      </div>
+                      <div class="kbv-modal-body">
+                        <div class="kbv-field">
+                          <span class="kbv-label">¿Cómo te fue?</span>
+                          <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+                            <button type="button" class="kbv-chip" aria-pressed="false">Mal</button>
+                            <button type="button" class="kbv-chip" aria-pressed="false">Regular</button>
+                            <button type="button" class="kbv-chip active" aria-pressed="true">Bien</button>
+                            <button type="button" class="kbv-chip" aria-pressed="false">Muy bien</button>
+                            <button type="button" class="kbv-chip" aria-pressed="false">Increíble</button>
+                          </div>
+                        </div>
+                        <div class="kbv-field">
+                          <span class="kbv-label">¿Qué pasó hoy?</span>
+                          <div class="kbv-input area ph">Cerré el pendiente que traía atorado desde el lunes.</div>
+                          <span class="kbv-help">Se guarda solo para ti. Puedes dictarlo en vez de escribirlo.</span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(2, minmax(0,1fr));gap:var(--kb-sp-6)">
+                          <div class="kbv-field">
+                            <span class="kbv-label">Área</span>
+                            <div class="kbv-input">Voluntad</div>
+                          </div>
+                          <div class="kbv-field">
+                            <span class="kbv-label">Foto <span class="kbv-help" style="font-weight:400">· opcional</span></span>
+                            <div class="kbv-input ph">Agregar una foto</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="kbv-modal-foot">
+                        <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                        <div class="right">
+                          <button type="button" class="kbv-btn kbv-btn-primary">Guardar entrada</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="kbv-meta">La rueda de KIBO tiene cuatro sectores y dos comportamientos: <strong style="color:var(--kb-text)">Diario</strong> monta este formulario encima sin sacarte de donde estás; <strong style="color:var(--kb-text)">Leer</strong>, <strong style="color:var(--kb-text)">Foco</strong> y <strong style="color:var(--kb-text)">Dinero</strong> navegan a su módulo. Cualquier parte de la aplicación puede pedir este modal por su nombre.</p>
+              </div>
+            </section>
+
+            <!-- ── 6 · Comportamiento ────────────────────────────────────── -->
+            <section class="kbv-section" aria-labelledby="sec-comportamiento">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <h2 class="kbv-h3" id="sec-comportamiento">Comportamiento</h2>
+                  <span class="sub">Lo que no se ve en el dibujo, para quien lo va a construir.</span>
+                </div>
+              </div>
+              <div class="kbv-card roomy">
+                <div class="smp-beh">
+                  <div class="b"><span class="k">Enrutar</span><span class="v">Veinte destinos y un sujeto. Un destino que no está en la tabla monta Hoy, sin avisar.</span></div>
+                  <div class="b"><span class="k">Navegar por evento</span><span class="v">Los widgets, el buscador, KIBO y la ficha de héroe piden destino por un solo canal, y pueden traer sujeto: tarea, proyecto, reto, pestaña o acción.</span></div>
+                  <div class="b"><span class="k">Remontar o conservar</span><span class="v">Llegar sin sujeto reinicia la pantalla de cero; llegar con sujeto la conserva. Es la diferencia entre pulsar el menú y abrir una tarea concreta.</span></div>
+                  <div class="b"><span class="k">Un botón, dos oficios</span><span class="v">En escritorio repliega el menú y lo recuerda para la próxima sesión. En estrecho no repliega: abre el menú encima.</span></div>
+                  <div class="b"><span class="k">Medir la caja, no la ventana</span><span class="v">El armazón mide su propio ancho. Si midiera la ventana, el riel y los cortes de estilo se contradirían: menú de escritorio con maquetación de teléfono, o al revés.</span></div>
+                  <div class="b"><span class="k">Menú fijo</span><span class="v">La preferencia gana sobre lo guardado y sobre el riel automático. En teléfono no aplica: ahí el menú siempre es cajón.</span></div>
+                  <div class="b"><span class="k">Cerrar al llegar</span><span class="v">Navegar a cualquier destino cierra el cajón. Volver a un ancho amplio también.</span></div>
+                  <div class="b"><span class="k">Compuerta premium</span><span class="v">El armazón sustituye el cuerpo entero cuando el módulo está bloqueado. La pantalla del módulo no sabe que existe la compuerta, y por eso no hay dos formas de bloquear.</span></div>
+                  <div class="b"><span class="k">Desbloquear</span><span class="v">Abre el módulo en el acto y descuenta el Elemento. Cambiar de perfil de prueba devuelve los módulos a su estado inicial.</span></div>
+                  <div class="b"><span class="k">Ir a los módulos</span><span class="v">«Ver módulos» y la entrada del pie del menú llevan a la Tienda con la pestaña de módulos ya abierta.</span></div>
+                  <div class="b"><span class="k">Precio al pasar</span><span class="v">En un acceso bloqueado el precio se suma al candado y nunca lo sustituye: en el riel el candado es la única señal que queda, y un módulo cerrado jamás debe leerse libre.</span></div>
+                  <div class="b"><span class="k">Historial de divisa</span><span class="v">Se abre desde su píldora del HUD. Filtra por origen y volver a pulsar el mismo chip regresa a «Todo». Se cierra con un clic fuera o con «Cerrar»; no lleva velo porque no bloquea la pantalla.</span></div>
+                  <div class="b"><span class="k">Arrastrar el menú</span><span class="v">Las secciones se reordenan entre sí y los accesos se sueltan dentro de otra sección. El asa aparece solo en modo Personalizar.</span></div>
+                  <div class="b"><span class="k">Borrar una sección</span><span class="v">Con accesos, pregunta y luego los muda a la primera sección disponible. Vacía, se borra sin preguntar. «General» está bloqueada y no ofrece papelera.</span></div>
+                  <div class="b"><span class="k">Ocultar y recuperar</span><span class="v">Ocultar una sección la manda a la bandeja del pie, de donde vuelve entera con «Mostrar». Ocultar no borra nada.</span></div>
+                  <div class="b"><span class="k">Rueda de KIBO</span><span class="v">Diario abre su modal encima de la pantalla actual; Leer, Foco y Dinero navegan a su módulo. La captura nunca cambia de pantalla por sí sola.</span></div>
+                  <div class="b"><span class="k">Teclado</span><span class="v">Ctrl+K enfoca el buscador. Escape cierra el modal, el panel de divisa y el cajón. Mientras un modal está abierto el foco queda atrapado dentro.</span></div>
+                  <div class="b"><span class="k">Movimiento reducido</span><span class="v">La interfaz se aquieta entera y solo KIBO conserva su respiración: es identidad, no decoración.</span></div>
+                  <div class="b"><span class="k">HP y racha</span><span class="v">El HUD las lee, no las calcula. Salen del motor de progresión, que es el único sitio donde se deciden — y el mismo HP que pinta la barra es el que le pone la cara a KIBO.</span></div>
+                </div>
+              </div>
+            </section>
           </div>
         </main>
 
