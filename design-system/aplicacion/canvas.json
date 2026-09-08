@@ -1,10 +1,6 @@
 {
   "pages": [
     {
-      "id": "marca",
-      "name": "Decisión de marca"
-    },
-    {
       "id": "general",
       "name": "Armazón y componentes"
     },
@@ -22,16 +18,6 @@
     }
   ],
   "artboards": [
-    {
-      "file": "Verdes.dc.html",
-      "page": "marca",
-      "x": 0,
-      "y": 0,
-      "w": 1440,
-      "h": 3618,
-      "title": "El verde de Kibo · cinco candidatos medidos",
-      "expand": "fit"
-    },
     {
       "file": "Main.dc.html",
       "page": "general",
@@ -176,14 +162,6 @@
   ],
   "annotations": [
     {
-      "id": "nota-marca",
-      "page": "marca",
-      "x": 0,
-      "y": -210,
-      "w": 700,
-      "text": "Decisión de marca — el verde.\n\nCinco candidatos, del teal de hoy al verde más vibrante que el sistema resiste, cada uno pintado sobre la misma composición real en tema claro y en tema oscuro. Un color de marca no se juzga en un cuadrito: se juzga en la pantalla que va a pintar.\n\nEl contraste está medido en navegador, no estimado. Los cinco pasan el piso de texto en los dos temas, así que la elección es estética y es tuya.\n\nLa medición destapó un defecto que ya existía: la barra de progreso mide 2.72 contra su propia pista en tema claro, bajo el piso de 3.0, con el teal actual. El arreglo está abajo, con su antes y su después."
-    },
-    {
       "id": "n-general",
       "page": "general",
       "x": 0,
@@ -218,6 +196,6 @@
   ],
   "launch": {
     "view": "canvas",
-    "page": "marca"
+    "page": "general"
   }
 }

@@ -63,9 +63,9 @@
 
   /* ---- Marca: Teal ------------------------------------------------------- */
   --kb-primary:       #1CA4A0;
-  --kb-primary-hover: #178F8B;
-  --kb-primary-soft:  #E4F4F3;
-  --kb-primary-ink:   #0F6E6B;
+  --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
+  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
+  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
 
   /* ---- Gamificacion ------------------------------------------------------ */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -300,15 +300,18 @@
     }
     .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
     .kbv-btn.lg { height: 54px; padding: 0 var(--kb-sp-9); font-size: var(--kb-fs-xl); border-radius: var(--kb-r-lg); }
+    /* La cara lleva el color a plena fuerza y el rotulo lo decide el color,
+       no el boton: sobre la marca plena el blanco mide 3.06 y la tinta 6.18. */
     .kbv-btn-primary, .kbv-btn-danger {
-      --face: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
-      --lip:  color-mix(in oklab, var(--c) 30%, var(--kb-void-2));
-      background: var(--face); color: var(--kb-text-inverse);
+      --lip: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      background: var(--face); color: var(--on-face);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
-    .kbv-btn-primary { --c: var(--kb-primary); }
-    .kbv-btn-danger  { --c: var(--kb-hp); }
-    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 78%, var(--c)); }
+    .kbv-btn-primary { --c: var(--kb-primary); --face: var(--c); --on-face: var(--kb-void-2); }
+    /* El peligro no es superficie de marca: su trabajo es la urgencia. */
+    .kbv-btn-danger  { --c: var(--kb-hp); --on-face: var(--kb-text-inverse);
+                       --face: color-mix(in oklab, var(--c) 74%, var(--kb-void-2)); }
+    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
     .kbv-btn-secondary:hover { background: var(--kb-surface); }
@@ -380,7 +383,7 @@
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
       background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) 24%, var(--kb-canvas));
+      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
     }
     .kbv-progress.xs { height: 4px; }
     .kbv-progress.sm { height: 6px; }
@@ -568,7 +571,7 @@
                  color: transparent; cursor: pointer; }
     .kbv-check::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
-    .kbv-check.on { background: var(--kb-primary-fill); border-color: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+    .kbv-check.on { background: var(--kb-primary); border-color: var(--kb-primary); color: var(--kb-void-2); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
 
     /* ── Estado vacio ─────────────────────────────────────────────────
