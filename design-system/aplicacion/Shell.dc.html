@@ -251,6 +251,19 @@
     .wback { color: var(--kb-text-2); }
     .wbacklab { fill: var(--kb-text-2); font-family: var(--kb-f-label); font-size: 12px; font-weight: 800;
                 letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
+  
+    /* Boton con papel de enlace: la semantica de un boton sin su caja. La zona
+       de toque se restituye con un ::after transparente, porque el texto solo
+       mide su linea. */
+    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+                    border: 0; height: auto; min-height: 0; padding: 0; position: relative;
+                    font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 700; }
+    .kbv-btn-link:hover { color: var(--kb-primary); text-decoration: underline; }
+    .kbv-btn-link::after { content: ""; position: absolute; left: 50%; top: 50%;
+                           width: 100%; min-width: 44px; height: 44px;
+                           transform: translate(-50%, -50%); }
+    .kbv-btn-link:focus-visible { outline: none; border-radius: var(--kb-r-xs);
+                                  box-shadow: var(--kb-focus-halo); }
   </style>
 
   <style>

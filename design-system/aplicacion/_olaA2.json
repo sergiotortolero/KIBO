@@ -1,0 +1,20 @@
+[
+ {
+  "artboard": "AreaProjectsV3",
+  "nombre": "Pestaña Proyectos del área (jerarquía hacia abajo)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaWillTab",
+  "nombre": "Pestaña Voluntad · Retos y hábitos (homologada 1:1)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaConfigV3",
+  "nombre": "Pestaña Configuración del área",
+  "archivo": "areas-v2.jsx",
+  "modales": 0
+ }
+]

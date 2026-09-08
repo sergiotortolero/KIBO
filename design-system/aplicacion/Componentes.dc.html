@@ -251,6 +251,19 @@
     .wback { color: var(--kb-text-2); }
     .wbacklab { fill: var(--kb-text-2); font-family: var(--kb-f-label); font-size: 12px; font-weight: 800;
                 letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
+  
+    /* Boton con papel de enlace: la semantica de un boton sin su caja. La zona
+       de toque se restituye con un ::after transparente, porque el texto solo
+       mide su linea. */
+    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+                    border: 0; height: auto; min-height: 0; padding: 0; position: relative;
+                    font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 700; }
+    .kbv-btn-link:hover { color: var(--kb-primary); text-decoration: underline; }
+    .kbv-btn-link::after { content: ""; position: absolute; left: 50%; top: 50%;
+                           width: 100%; min-width: 44px; height: 44px;
+                           transform: translate(-50%, -50%); }
+    .kbv-btn-link:focus-visible { outline: none; border-radius: var(--kb-r-xs);
+                                  box-shadow: var(--kb-focus-halo); }
   </style>
 
   <style>
@@ -428,9 +441,11 @@
     .kbv-kpi .band {
       display: flex; align-items: center; gap: var(--kb-sp-3);
       padding: var(--kb-sp-4) var(--kb-sp-6);
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      /* Lavado, borde y tinta salen de la RECETA como cantidad y ancla: con
+         las cifras escritas a mano el rotulo medía 2.71 en tema oscuro. */
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-wash-anchor));
+      color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
       letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     }
@@ -553,6 +568,190 @@
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
     .kbv-check.on { background: var(--kb-primary-fill); border-color: var(--kb-primary-fill); color: var(--kb-text-inverse); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    /* ── Estado vacio ─────────────────────────────────────────────────
+       Un glifo, el titulo de lo que falta, una linea que dice para que
+       sirve y la accion que lo llena. El hueco ya dice que esta vacio;
+       la explicacion tiene que decir otra cosa. */
+    .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                 box-sizing: border-box; gap: var(--kb-sp-5); padding: var(--kb-sp-9);
+                 border-radius: var(--kb-r-lg); border: 1.5px dashed var(--kb-border-strong);
+                 background: var(--kb-surface-2); }
+    .kbv-empty .glyph { width: 48px; height: 48px; flex: none; border-radius: var(--kb-r-pill);
+                        display: flex; align-items: center; justify-content: center;
+                        background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-empty .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl);
+                      line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    /* La explicacion va en --kb-text, no en el secundario: sobre superficie-2
+       el secundario mide 4.36 en oscuro y no llega a AA. La jerarquia contra
+       el titulo la hacen el tamano y el peso, como en R-14. */
+    .kbv-empty .desc { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                       color: var(--kb-text); max-width: 54ch; }
+    .kbv-empty .acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-sp-4); }
+    /* Dentro de una columna de kanban o de una tarjeta compacta no cabe el
+       relleno grande: baja el paso, no el contenido. */
+    .kbv-empty.compact { padding: var(--kb-sp-7); gap: var(--kb-sp-4); }
+    .kbv-empty.compact .glyph { width: 36px; height: 36px; }
+    .kbv-empty.compact .ttl { font-size: var(--kb-fs-lg); }
+    .kbv-empty.compact .desc { font-size: var(--kb-fs-sm); }
+
+    /* ── Esqueleto de carga ───────────────────────────────────────────
+       La silueta del contenido mientras llega. El contenedor lleva
+       aria-busy y cada pieza aria-hidden: es dibujo, no texto, y por eso
+       no tiene par de contraste que medir. */
+    .kbv-skel { display: block; border-radius: var(--kb-r-sm); background: var(--kb-surface-2);
+                animation: kbSkelPulso 1.4s var(--kb-ease-standard) infinite; }
+    .kbv-skel.line  { height: 14px; }
+    .kbv-skel.big   { height: 26px; }
+    .kbv-skel.bar   { height: 10px; }
+    .kbv-skel.sq    { width: 26px; height: 26px; border-radius: var(--kb-r-xs); }
+    .kbv-skel.band  { height: 40px; border-radius: 0; }
+    .kbv-skel.spark { height: 34px; }
+    .kbv-skel.grow  { flex: 1 1 auto; }
+    /* La fila: la silueta de un renglon de tabla o de lista. */
+    .kbv-skel-row { display: flex; align-items: center; gap: var(--kb-sp-5); min-width: 0; }
+    @keyframes kbSkelPulso { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+    /* ── Aviso en pagina ──────────────────────────────────────────────
+       R-1, cuarto patron: fondo tintado CON glifo. El lavado y la tinta
+       leen la RECETA como cantidad y ancla; una cifra literal se mezcla
+       contra el lienzo claro cuando el tema oscuro reasigna el ancla.
+       Sobre tinte todo el texto va en --kb-text (R-14). */
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+                  color: var(--kb-text); }
+    .kbv-notice.info  { --c: var(--kb-primary); }
+    .kbv-notice.warn  { --c: var(--kb-warn); }
+    .kbv-notice.error { --c: var(--kb-hp); }
+    .kbv-notice .glyph { flex: none; display: flex;
+                         color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                       line-height: var(--kb-lh-snug); }
+    .kbv-notice .sub { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); }
+    .kbv-notice .act { flex: none; display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Afordancia de explicacion ────────────────────────────────────
+       Dice COMO SE CALCULA el dato de al lado. No es la etiqueta de
+       periodo, que solo informa del rango. El panel es el inverso de la
+       pagina —se construye con --kb-text y --kb-canvas—, asi el tema
+       oscuro lo revalua y nunca queda del color del lienzo. */
+    .kbv-tip-wrap { display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap; min-width: 0; }
+    /* Dibuja 18 y TOCA 44 con una zona transparente. */
+    .kbv-tip-dot { position: relative; width: 18px; height: 18px; flex: none; padding: 0;
+                   border: 0; border-radius: var(--kb-r-pill); background: transparent;
+                   color: var(--kb-text-2); display: inline-flex; align-items: center;
+                   justify-content: center; cursor: pointer; }
+    .kbv-tip-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
+                          width: var(--kb-touch-min); height: var(--kb-touch-min);
+                          transform: translate(-50%, -50%); }
+    .kbv-tip-dot:hover { color: var(--kb-primary-ink); }
+    .kbv-tip-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-tip { max-width: 46ch; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
+               border-radius: var(--kb-r-md); background: var(--kb-text); color: var(--kb-canvas);
+               font-family: var(--kb-f-body); font-size: var(--kb-fs-sm);
+               line-height: var(--kb-lh-body); box-shadow: var(--kb-sh-3); }
+    /* La formula, dicha en su forma y no en prosa. */
+    .kbv-tip .fx { display: block; margin-top: var(--kb-sp-3); font-family: var(--kb-f-label);
+                   font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* ── Escenario ────────────────────────────────────────────────────
+       El contenedor rotulado que envuelve un especimen dentro de un
+       artboard. El rotulo nombra el estado y se queda POR ENCIMA del
+       velo: sin el, dos estados apilados no se distinguen. */
+    .kbv-stage { position: relative; box-sizing: border-box; border-radius: var(--kb-r-md);
+                 overflow: hidden; background: var(--kb-surface); border: 1px solid var(--kb-border); }
+    .kbv-stage > .lbl { position: relative; z-index: calc(var(--kb-z-modal) + 1);
+                        display: flex; align-items: center; gap: var(--kb-sp-4);
+                        padding: var(--kb-sp-4) var(--kb-sp-7);
+                        background: var(--kb-surface-2); border-bottom: 1px solid var(--kb-border);
+                        font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                        letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text); }
+    .kbv-stage > .under { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+    .kbv-stage.h-sm { min-height: 400px; }
+    .kbv-stage.h-md { min-height: 460px; }
+    .kbv-stage.h-lg { min-height: 640px; }
+    .kbv-stage.h-xl { min-height: 720px; }
+
+    /* ── Modal §6.7 · velo → tarjeta → cabeza → cuerpo → pie ──────────
+       Solo el cuerpo hace scroll, y el ancho la decide el contenido. En un
+       artboard el velo es absoluto y se recorta al escenario; en la
+       aplicacion es fijo sobre la ventana. */
+    .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal); box-sizing: border-box;
+                      display: flex; align-items: center; justify-content: center; padding: var(--kb-sp-9);
+                      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .kbv-modal-card { width: 100%; max-width: 580px; max-height: 100%; box-sizing: border-box;
+                      display: flex; flex-direction: column; overflow: hidden;
+                      background: var(--kb-card); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-pop); }
+    .kbv-modal-card.sm   { max-width: 420px; }
+    .kbv-modal-card.lg   { max-width: 720px; }
+    .kbv-modal-card.full { max-width: 1040px; }
+    .kbv-modal-head { display: flex; align-items: flex-start; justify-content: space-between;
+                      gap: var(--kb-sp-6); padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                      border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-modal-head .id { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xl);
+                             line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                           color: var(--kb-text-2); max-width: 46ch; }
+    .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none;
+                       box-sizing: border-box; border-radius: var(--kb-r-pill);
+                       border: 1.5px solid var(--kb-border); background: var(--kb-card);
+                       color: var(--kb-text-2); display: flex; align-items: center;
+                       justify-content: center; cursor: pointer; }
+    .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--kb-sp-8) var(--kb-sp-9);
+                      display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .kbv-modal-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-5);
+                      padding: var(--kb-sp-7) var(--kb-sp-9); background: var(--kb-surface);
+                      border-top: 1px solid var(--kb-border-soft); }
+    .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Lista de definicion ──────────────────────────────────────────
+       Un termino y su explicacion: la forma con la que una pantalla
+       documenta la regla que la gobierna. */
+    .kbv-def { display: flex; flex-direction: column; gap: var(--kb-sp-5); margin: 0; }
+    .kbv-def > div { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-def dt { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                  line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-def dd { margin: 0; font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                  color: var(--kb-text-2); }
+    /* El termino al lado, en la misma columna de 168 que .kbv-behavior. */
+    .kbv-def.side > div { display: grid; grid-template-columns: 168px minmax(0, 1fr);
+                          column-gap: var(--kb-sp-6); align-items: baseline; }
+
+    /* ── Comportamientos no obvios ────────────────────────────────────
+       El bloque final de una pantalla: lo que hace y no se ve, para quien
+       la construya. Rotulo a la izquierda, regla a la derecha. */
+    .kbv-behavior { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                    margin: 0; padding: 0; list-style: none; }
+    .kbv-behavior > li { display: flex; align-items: baseline; gap: var(--kb-sp-6);
+                         font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+    .kbv-behavior .k { flex: 0 0 168px; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                       font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                       color: var(--kb-text-2); }
+    .kbv-behavior .v { flex: 1 1 auto; min-width: 0; }
+
+    /* Telefono: el modal es una hoja al borde inferior y las dos listas de
+       dos columnas se doblan. Mide la VENTANA, como el resto del armazon. */
+    @container kbwin (max-width: 640px) {
+      .kbv-modal-veil { padding: 0; align-items: flex-end; }
+      .kbv-modal-card, .kbv-modal-card.sm, .kbv-modal-card.lg, .kbv-modal-card.full {
+        max-width: none; border-radius: var(--kb-r-xl) var(--kb-r-xl) 0 0; }
+      /* El asidero de la hoja: 36 x 4, solo en telefono y sin marca en el HTML. */
+      .kbv-modal-card::before { content: ""; flex: none; width: 36px; height: 4px;
+        margin: var(--kb-sp-5) auto 0; border-radius: var(--kb-r-pill);
+        background: var(--kb-border-strong); }
+      .kbv-modal-foot { flex-wrap: wrap; }
+      .kbv-modal-foot .right { width: 100%; }
+      .kbv-modal-foot .right > .kbv-btn { flex: 1 1 auto; }
+      .kbv-def.side > div { grid-template-columns: minmax(0, 1fr); row-gap: var(--kb-sp-2); }
+      .kbv-behavior > li { flex-direction: column; gap: var(--kb-sp-2); }
+      .kbv-behavior .k { flex: none; }
+    }
   </style>
 
   <style>
@@ -1166,7 +1365,7 @@
                  jerarquia area › agrupador › tarea agrupa los hechos, no el
                  menu. Colgar Proyectos de Tareas dejaba a Areas sin destino. -->
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l8.5 6.2-3.2 10H6.7l-3.2-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12l0-9M12 12l8.5-2.8M12 12l-3.2 7.2M12 12l6.3 7.2M12 12L3.5 9.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></svg>
               <span class="lbl">Áreas</span>
               <span class="kbv-badge quiet">5</span>
             </button>
@@ -1215,7 +1414,7 @@
               <span class="kbv-badge quiet">2</span>
             </button>
             <button type="button" class="kbv-side-link locked">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11.2V16c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 9.4V14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Estudio</span>
               <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>250<span class="kbv-sr-only"> Elemento</span></span>
               <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -1560,7 +1759,7 @@
               <div class="kbv-section-head">
                 <div class="sh-id">
                   <div class="kbv-h3">Componentes generales</div>
-                  <div class="sub">Cinco piezas que cada módulo repite · se componen, no se reescriben</div>
+                  <div class="sub">Trece piezas que cada módulo repite · se componen, no se reescriben</div>
                 </div>
               </div>
 
@@ -1777,6 +1976,281 @@
                   <span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb live" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
                 </div>
                 <div class="kbv-meta">El ánimo cambia solo la cara; el cuerpo lleva <code class="kbv-code">--skin</code>, que el usuario compra y recolorea. Las dos entradas nunca comparten capa.</div>
+              </div>
+
+              <!-- 6 · Estado vacío ───────────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Estado vacío · <code class="kbv-code">.kbv-empty</code></div>
+                    <div class="kbv-card-sub">Lo que se dibuja cuando todavía no hay nada: <code class="kbv-code">.glyph</code> · <code class="kbv-code">.ttl</code> · <code class="kbv-code">.desc</code> · <code class="kbv-code">.acts</code>. El modificador <code class="kbv-code">.compact</code> es el que cabe dentro de una columna de kanban.</div>
+                  </div>
+                </div>
+                <div class="kbv-empty">
+                  <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 7.5h16V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/><path d="M4 7.5L6 4h12l2 3.5"/><path d="M10 12h4"/></svg></span>
+                  <div class="ttl">Todavía no tienes proyectos en Riqueza</div>
+                  <p class="desc">Un proyecto agrupa las tareas que empujan una misma meta, y de ellas se deriva el avance del área.</p>
+                  <div class="acts">
+                    <button type="button" class="kbv-btn kbv-btn-primary">Crear un proyecto</button>
+                    <button type="button" class="kbv-btn kbv-btn-ghost">Ver un ejemplo</button>
+                  </div>
+                </div>
+                <div class="kbv-empty compact">
+                  <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+                  <div class="ttl">Nada en revisión</div>
+                  <p class="desc">Lo que termines de trabajar cae aquí antes de cerrarse.</p>
+                  <div class="acts"><button type="button" class="kbv-btn kbv-btn-secondary">Traer una tarea</button></div>
+                </div>
+                <div class="kbv-meta">La explicación dice para qué sirve lo que falta, nunca que está vacío: eso ya lo dice el hueco. La acción es la que llena ese hueco, no una cualquiera.</div>
+              </div>
+
+              <!-- 7 · Esqueleto de carga ─────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Esqueleto de carga · <code class="kbv-code">.kbv-skel</code></div>
+                    <div class="kbv-card-sub">La silueta del contenido mientras llega. Tamaños <code class="kbv-code">.line</code> · <code class="kbv-code">.big</code> · <code class="kbv-code">.bar</code> · <code class="kbv-code">.sq</code> · <code class="kbv-code">.band</code> · <code class="kbv-code">.spark</code> · <code class="kbv-code">.grow</code>, y la fila con <code class="kbv-code">.kbv-skel-row</code>.</div>
+                  </div>
+                </div>
+                <div class="kbv-canvas-grid" aria-busy="true">
+                  <div class="w-2" style="display:flex;flex-direction:column;gap:var(--kb-sp-5)">
+                    <span class="kbv-eyebrow">Una línea de texto</span>
+                    <span class="kbv-skel big" style="width:56%" aria-hidden="true"></span>
+                    <span class="kbv-skel line" aria-hidden="true"></span>
+                    <span class="kbv-skel line" style="width:74%" aria-hidden="true"></span>
+                  </div>
+                  <div class="w-2" style="display:flex;flex-direction:column;gap:var(--kb-sp-5)">
+                    <span class="kbv-eyebrow">Una tarjeta</span>
+                    <div class="kbv-card flush" style="overflow:hidden">
+                      <span class="kbv-skel band" aria-hidden="true"></span>
+                      <span style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-6)">
+                        <span class="kbv-skel spark" aria-hidden="true"></span>
+                        <span class="kbv-skel line" style="width:62%" aria-hidden="true"></span>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="w-4" style="display:flex;flex-direction:column;gap:var(--kb-sp-5)">
+                    <span class="kbv-eyebrow">Una fila</span>
+                    <span class="kbv-skel-row"><span class="kbv-skel sq" aria-hidden="true"></span><span class="kbv-skel line" style="width:22%" aria-hidden="true"></span><span class="kbv-skel bar grow" aria-hidden="true"></span><span class="kbv-skel line" style="width:64px" aria-hidden="true"></span></span>
+                    <span class="kbv-skel-row"><span class="kbv-skel sq" aria-hidden="true"></span><span class="kbv-skel line" style="width:18%" aria-hidden="true"></span><span class="kbv-skel bar grow" aria-hidden="true"></span><span class="kbv-skel line" style="width:64px" aria-hidden="true"></span></span>
+                    <span class="kbv-skel-row"><span class="kbv-skel sq" aria-hidden="true"></span><span class="kbv-skel line" style="width:26%" aria-hidden="true"></span><span class="kbv-skel bar grow" aria-hidden="true"></span><span class="kbv-skel line" style="width:64px" aria-hidden="true"></span></span>
+                  </div>
+                </div>
+                <div class="kbv-meta">La silueta copia la forma que va a llegar, no un bloque genérico: si el salto al contenido cambia el alto de la caja, el esqueleto mintió. El contenedor lleva <code class="kbv-code">aria-busy</code> y cada pieza <code class="kbv-code">aria-hidden</code>, así que el lector de pantalla anuncia la espera y no lee el dibujo.</div>
+              </div>
+
+              <!-- 8 · Aviso en página ────────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Aviso en página · <code class="kbv-code">.kbv-notice</code></div>
+                    <div class="kbv-card-sub">Tres papeles: <code class="kbv-code">.info</code> · <code class="kbv-code">.warn</code> · <code class="kbv-code">.error</code>. Partes <code class="kbv-code">.glyph</code> · <code class="kbv-code">.txt</code> (<code class="kbv-code">.ttl</code> y <code class="kbv-code">.sub</code>) · <code class="kbv-code">.act</code>.</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5)">
+                  <div class="kbv-notice info">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+                    <div class="txt">
+                      <div class="ttl">El avance se recalcula cada noche</div>
+                      <div class="sub">Lo que cierres hoy se refleja en el balance de áreas mañana por la mañana.</div>
+                    </div>
+                  </div>
+                  <div class="kbv-notice warn">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg></span>
+                    <div class="txt">
+                      <div class="ttl">Voluntad lleva tres semanas sin movimiento</div>
+                      <div class="sub">Un área sin tareas cerradas deja de aportar al nivel general.</div>
+                    </div>
+                    <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary">Abrir Voluntad</button></div>
+                  </div>
+                  <div class="kbv-notice error" role="alert">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></span>
+                    <div class="txt">
+                      <div class="ttl">No se pudo leer la progresión</div>
+                      <div class="sub">Lo que ya estaba en pantalla se queda; el resto vuelve cuando reintentes.</div>
+                    </div>
+                    <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary">Reintentar</button></div>
+                  </div>
+                </div>
+                <div class="theme-dark" style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-6);border-radius:var(--kb-r-md)">
+                  <div class="kbv-notice info">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+                    <div class="txt">
+                      <div class="ttl">El avance se recalcula cada noche</div>
+                      <div class="sub">El mismo aviso en oscuro: el lavado se reevalúa contra el vacío, no contra el lienzo claro.</div>
+                    </div>
+                  </div>
+                  <div class="kbv-notice warn">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg></span>
+                    <div class="txt">
+                      <div class="ttl">Voluntad lleva tres semanas sin movimiento</div>
+                      <div class="sub">Un área sin tareas cerradas deja de aportar al nivel general.</div>
+                    </div>
+                  </div>
+                  <div class="kbv-notice error">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></span>
+                    <div class="txt">
+                      <div class="ttl">No se pudo leer la progresión</div>
+                      <div class="sub">Lo que ya estaba en pantalla se queda; el resto vuelve cuando reintentes.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="kbv-meta">El lavado lee <code class="kbv-code">--kb-wash-amt</code> y <code class="kbv-code">--kb-wash-anchor</code>, y la tinta del glifo lee <code class="kbv-code">--kb-ink-amt</code> y <code class="kbv-code">--kb-ink-anchor</code>: una cifra literal se mezclaría contra el lienzo claro y en oscuro se saldría del sistema. Nunca sin glifo —el color solo no es un mensaje— y sobre tinte todo el texto va en <code class="kbv-code">--kb-text</code>.</div>
+              </div>
+
+              <!-- 9 · Afordancia de explicación ──────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Afordancia de explicación · <code class="kbv-code">.kbv-tip</code></div>
+                    <div class="kbv-card-sub">El punto <code class="kbv-code">.kbv-tip-dot</code> junto al dato, el panel <code class="kbv-code">.kbv-tip</code> con su fórmula en <code class="kbv-code">.fx</code>, y la fila que los junta, <code class="kbv-code">.kbv-tip-wrap</code>.</div>
+                  </div>
+                </div>
+                <div class="kbv-tip-wrap">
+                  <span class="kbv-num" style="font-size:var(--kb-fs-3xl)">64<span style="font-size:var(--kb-fs-lg);font-weight:600;color:var(--kb-text-2)">%</span></span>
+                  <button type="button" class="kbv-tip-dot" aria-label="Cómo se calcula el avance del área" aria-expanded="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg>
+                  </button>
+                  <span class="kbv-tip" role="note">El avance del área es el de sus agrupadores, y el de cada agrupador se deriva de sus tareas: ninguna cifra se captura a mano.<span class="fx">tareas cerradas ÷ tareas del área × 100</span></span>
+                </div>
+                <div class="kbv-tip-wrap">
+                  <span class="kbv-tag tint" style="--c: var(--kb-primary)">Últimas 8 semanas</span>
+                  <span class="kbv-meta">La etiqueta de periodo solo dice el rango. No explica cómo se calcula nada, así que no lleva punto de información.</span>
+                </div>
+                <div class="kbv-meta">El punto se dibuja de 18 y toca 44 con una zona transparente. El panel es el inverso de la página —se construye con <code class="kbv-code">--kb-text</code> sobre <code class="kbv-code">--kb-canvas</code>—, así que en oscuro se invierte solo y nunca queda del color del lienzo.</div>
+              </div>
+
+              <!-- 10 · Escenario ─────────────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Escenario · <code class="kbv-code">.kbv-stage</code></div>
+                    <div class="kbv-card-sub">El contenedor rotulado que envuelve un espécimen dentro de un artboard: <code class="kbv-code">.lbl</code> nombra el estado, <code class="kbv-code">.under</code> lleva lo que se tapa, y el alto es un modificador — <code class="kbv-code">.h-sm</code> · <code class="kbv-code">.h-md</code> · <code class="kbv-code">.h-lg</code> · <code class="kbv-code">.h-xl</code>.</div>
+                  </div>
+                </div>
+                <div class="kbv-canvas-grid">
+                  <div class="kbv-stage w-2">
+                    <div class="lbl">Con datos</div>
+                    <div class="under">
+                      <div class="kbv-progress-meta">
+                        <div class="top"><span class="name">Sabiduría</span><span class="val">24/41</span></div>
+                        <div class="kbv-progress"><div class="fill" style="width:59%;--c: var(--area-wisdom)"></div></div>
+                      </div>
+                      <div class="kbv-progress-meta">
+                        <div class="top"><span class="name">Vigor</span><span class="val">12/18</span></div>
+                        <div class="kbv-progress"><div class="fill" style="width:67%;--c: var(--area-vigor)"></div></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="kbv-stage w-2">
+                    <div class="lbl">Cargando</div>
+                    <div class="under" aria-busy="true">
+                      <span class="kbv-skel-row"><span class="kbv-skel line" style="width:34%" aria-hidden="true"></span><span class="kbv-skel line grow" aria-hidden="true"></span></span>
+                      <span class="kbv-skel bar" aria-hidden="true"></span>
+                      <span class="kbv-skel-row"><span class="kbv-skel line" style="width:28%" aria-hidden="true"></span><span class="kbv-skel line grow" aria-hidden="true"></span></span>
+                      <span class="kbv-skel bar" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="kbv-meta">El rótulo se queda por encima del velo: un escenario que se tapa sin nombre no se distingue del de al lado cuando los estados se apilan uno debajo de otro.</div>
+              </div>
+
+              <!-- 11 · Modal ─────────────────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Modal · <code class="kbv-code">.kbv-modal-veil</code> › <code class="kbv-code">-card</code> › <code class="kbv-code">-head</code> › <code class="kbv-code">-body</code> › <code class="kbv-code">-foot</code></div>
+                    <div class="kbv-card-sub">Cuatro anchos que decide el contenido, no la importancia: <code class="kbv-code">.sm</code> 420 · normal 580 · <code class="kbv-code">.lg</code> 720 · <code class="kbv-code">.full</code> 1040. Si el contenido no cabe, hace scroll el cuerpo, nunca el ancho.</div>
+                  </div>
+                </div>
+                <div class="kbv-stage h-md">
+                  <div class="lbl">Formulario · ancho normal 580</div>
+                  <div class="under">
+                    <div class="kbv-skel-row"><span class="kbv-skel line" style="width:38%" aria-hidden="true"></span></div>
+                    <span class="kbv-skel line" aria-hidden="true"></span>
+                    <span class="kbv-skel line" style="width:82%" aria-hidden="true"></span>
+                  </div>
+                  <div class="kbv-modal-veil">
+                    <div class="kbv-modal-card" role="dialog" aria-modal="true" aria-labelledby="mdl-ttl">
+                      <div class="kbv-modal-head">
+                        <div class="id">
+                          <div class="title" id="mdl-ttl">Nueva área de vida</div>
+                          <div class="sub">Un área agrupa lo que empuja una misma parte de tu vida. Puedes recolorearla después.</div>
+                        </div>
+                        <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                        </button>
+                      </div>
+                      <div class="kbv-modal-body">
+                        <div class="kbv-notice info">
+                          <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+                          <div class="txt"><div class="sub">Cinco áreas es el reparto que cabe en la rueda. La sexta entra, pero deja de verse de un vistazo.</div></div>
+                        </div>
+                        <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+                          <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+                          <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+                          <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+                        </div>
+                      </div>
+                      <div class="kbv-modal-foot">
+                        <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                        <div class="right">
+                          <button type="button" class="kbv-btn kbv-btn-secondary">Guardar borrador</button>
+                          <button type="button" class="kbv-btn kbv-btn-primary">Crear el área</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="kbv-meta">Cierra con Escape, con el velo y con el botón, y el foco queda atrapado dentro mientras está abierto. Una confirmación no lleva botón de cerrar: obliga a elegir, su título dice qué se pierde y el verbo del botón repite la acción. En teléfono los cuatro anchos son la misma hoja al borde inferior, con su asidero de 36 × 4 y la acción principal a todo lo ancho.</div>
+              </div>
+
+              <!-- 12 · Lista de definición ───────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Lista de definición · <code class="kbv-code">.kbv-def</code></div>
+                    <div class="kbv-card-sub">Un término y su explicación: la forma con la que una pantalla documenta la regla que la gobierna. Con <code class="kbv-code">.side</code> el término pasa a una columna de 168 y se dobla en teléfono.</div>
+                  </div>
+                </div>
+                <dl class="kbv-def">
+                  <div>
+                    <dt>Área</dt>
+                    <dd>El frente de vida que se mide. Son cinco y el usuario las recolorea; su avance no se captura, se deriva.</dd>
+                  </div>
+                  <div>
+                    <dt>Agrupador</dt>
+                    <dd>Lo que cuelga de un área: un proyecto en Vigor, Riqueza y Comunidad; un curso o una lectura en Sabiduría; un reto o un hábito en Voluntad.</dd>
+                  </div>
+                </dl>
+                <dl class="kbv-def side">
+                  <div>
+                    <dt>Avance</dt>
+                    <dd>Tareas cerradas entre tareas del agrupador. Manda el conteo y el porcentaje acompaña.</dd>
+                  </div>
+                  <div>
+                    <dt>Límite en curso</dt>
+                    <dd>Cuántos agrupadores admite una columna a la vez. Es un acuerdo, y cuando se pasa la columna lo dice con texto y glifo.</dd>
+                  </div>
+                </dl>
+                <div class="kbv-meta">El término va en la display y la explicación en la de lectura: lo que se busca con el ojo y lo que se lee con calma no son la misma tipografía.</div>
+              </div>
+
+              <!-- 13 · Comportamientos ───────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Comportamientos · <code class="kbv-code">.kbv-behavior</code></div>
+                    <div class="kbv-card-sub">El bloque final de una pantalla: lo que hace y no se ve, para quien la construya. <code class="kbv-code">.k</code> es el rótulo y <code class="kbv-code">.v</code> la regla.</div>
+                  </div>
+                </div>
+                <ul class="kbv-behavior">
+                  <li><span class="k">Al entrar</span><span class="v">Se abre en la última área que miraste. Si es la primera vez, en la de mayor rezago.</span></li>
+                  <li><span class="k">Sin conexión</span><span class="v">Lo ya leído se queda en pantalla y el aviso de error solo cubre la parte que falló.</span></li>
+                  <li><span class="k">Al recolorear</span><span class="v">El tono nuevo entra por el lavado y la tinta a la vez: no hay pieza que se quede con el color viejo.</span></li>
+                  <li><span class="k">Movimiento reducido</span><span class="v">El esqueleto deja de latir y se queda en su opacidad plena; KIBO conserva su tempo.</span></li>
+                </ul>
+                <div class="kbv-meta">Es lo último de la pantalla porque es lo que se lee al construirla, no al usarla.</div>
               </div>
             </section>
 

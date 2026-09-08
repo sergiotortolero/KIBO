@@ -1157,7 +1157,7 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Tu plan</div>
-            <button type="button" class="kbv-side-link active" aria-current="page">
+            <button type="button" class="kbv-side-link">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
               <span class="lbl">Tareas</span>
               <span class="kbv-badge quiet">6</span>
@@ -1165,7 +1165,7 @@
             <!-- Areas y Proyectos son HERMANOS de Tareas, no crias suyas: la
                  jerarquia area › agrupador › tarea agrupa los hechos, no el
                  menu. Colgar Proyectos de Tareas dejaba a Areas sin destino. -->
-            <button type="button" class="kbv-side-link">
+            <button type="button" class="kbv-side-link active" aria-current="page">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l8.5 6.2-3.2 10H6.7l-3.2-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12l0-9M12 12l8.5-2.8M12 12l-3.2 7.2M12 12l6.3 7.2M12 12L3.5 9.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></svg>
               <span class="lbl">Áreas</span>
               <span class="kbv-badge quiet">5</span>
@@ -1362,11 +1362,997 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<!-- ═══ CONTENIDO DE LA PANTALLA ═══
-     Sustituye ESTE comentario por el contenido completo: la cabecera de pagina
-     (.kbv-page-head con su migaja, su .kbv-h1 y sus acciones), las secciones,
-     los estados y los modales superpuestos. Todo dentro de .kbv-page.
-     No toques nada fuera de este hueco: el armazon es contrato compartido. -->
+<style>
+    /* ==========================================================================
+       AREAS · VISTA GENERAL — piezas propias del panorama. Todo sale de los
+       tokens del helmet; aqui no se escribe un solo color.
+       ========================================================================== */
+
+    /* La quinta variante del boton (DS 6.1), que el armazon todavia no publica. */
+    .kbv-btn-link { position: relative; background: transparent; color: var(--kb-primary-ink);
+                    box-shadow: none; height: auto; padding: 0; border: 0;
+                    font-size: var(--kb-fs-md); text-underline-offset: 3px; }
+    .kbv-btn-link::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                           height: var(--kb-touch-min); transform: translateY(-50%); }
+    .kbv-btn-link:hover { text-decoration: underline; }
+    .kbv-btn-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    /* Tres lecturas derivadas = tres KPI. La familia ya existe (DS 6.6); lo que
+       le faltaba era el modificador de tres columnas, con sus dos cortes. */
+    .kbv-kpi-grid.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .kbv-insight .body { align-items: flex-start; gap: var(--kb-sp-4); }
+    .kbv-insight .ref { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+
+    /* ── Tarjeta de area ──────────────────────────────────────────────
+       El area entra por BANDA DE ENCABEZADO (R-1): la tarjeta pasa de 120 px y
+       el nombre del area es su titulo, asi que la banda lo lleva con el glifo,
+       el prestigio y el nivel. Nunca una franja al canto. */
+    .kbv-area-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .kbv-area-mini { padding: 0; gap: 0; text-align: left; cursor: pointer;
+                     font-family: var(--kb-f-body); align-items: stretch;
+                     transition: transform var(--kb-dur-base) var(--kb-ease-out),
+                                 box-shadow var(--kb-dur-base) var(--kb-ease-out); }
+    .kbv-area-mini:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2); }
+    .kbv-area-mini:focus-visible { outline: none; border-color: var(--kb-primary);
+                                   box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+    .kbv-area-mini .band { display: flex; align-items: center; gap: var(--kb-sp-5);
+                           padding: var(--kb-sp-5) var(--kb-sp-6);
+                           background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
+                           border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-wash-anchor));
+                           color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-area-mini .band .g { flex: none; display: flex; }
+    .kbv-area-mini .band .nm { flex: 1 1 auto; min-width: 0; font-family: var(--kb-f-display);
+                               font-weight: 800; font-size: var(--kb-fs-lg); letter-spacing: -.01em;
+                               overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-area-mini .band .lv { flex: none; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                               font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                               font-variant-numeric: tabular-nums; }
+    /* Maestro se sale del lavado y se va al vacio: es el unico prestigio con
+       superficie propia. El borde toma el tono pleno, que sobre el vacio mide 4:1. */
+    .kbv-area-mini.master .band { background: color-mix(in oklab, var(--c) 24%, var(--kb-void-1));
+                                  border-bottom-color: var(--c); color: var(--kb-text-inverse); }
+
+    /* El prestigio se cuenta con estrellas: llena = ganada, hueca = por ganar.
+       La diferencia es la FORMA, no la opacidad — un medidor no baja de 3:1. */
+    .kbv-rankstars { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+    .kbv-rankstars svg { display: block; }
+
+    .kbv-area-mini .bd { display: flex; flex-direction: column; gap: var(--kb-sp-5);
+                         padding: var(--kb-sp-6); }
+    /* La chispa: lenguaje de graficas del DS 6.9 (trazo 2.4, remate redondo,
+       area en degradado .26 a 0). El TRAZO va en la tinta y no en el tono
+       pleno: en Riqueza y Voluntad el tono pleno mide 1.79 y 2.21 sobre la
+       tarjeta, y un medidor no baja de 3:1. */
+    .kbv-spark { display: block; width: 100%; height: 34px; }
+    .kbv-spark .ln { fill: none; stroke: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor));
+                     stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .kbv-spark .ar { stroke: none; }
+    .kbv-spark-empty { display: flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+                       height: 34px; border-radius: var(--kb-r-sm);
+                       border: 1.5px dashed var(--kb-border-strong);
+                       color: var(--kb-text-2); font-size: var(--kb-fs-sm); }
+    .kbv-area-mini .foot { display: flex; align-items: baseline; justify-content: space-between;
+                           gap: var(--kb-sp-5); flex-wrap: wrap; }
+    .kbv-area-mini .pulse { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                            font-variant-numeric: tabular-nums; color: var(--kb-text); }
+    .kbv-area-mini .pulse .l { font-family: var(--kb-f-body); font-weight: 600;
+                               font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    /* Lo que CUELGA del area, con su palabra: proyecto en Vigor, curso en
+       Sabiduria, habito y reto en Voluntad. La linea nunca dice «0 proyectos». */
+    .kbv-area-mini .hang { display: flex; align-items: center; gap: var(--kb-sp-3); min-width: 0;
+                           font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-area-mini .hang svg { flex: none; }
+    .kbv-area-mini .home { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-area-mini .home strong { font-weight: 700; color: var(--kb-text); }
+
+    /* ── Balance entre areas ──────────────────────────────────────────
+       Una fila por area, ordenada por prestigio y, a igualdad, por nivel. El
+       area la pinta la PASTILLA (R-1, patron compacto); la barra va en el papel
+       neutro tone-progress, porque dos canales de color en la misma fila
+       compiten y el amarillo de Riqueza no llega a 3:1 sobre su propia pista. */
+    .kbv-arearank { display: flex; flex-direction: column; }
+    .kbv-arearank .row { display: grid; align-items: center; gap: var(--kb-sp-6);
+                         grid-template-columns: 44px minmax(0, 1.5fr) 132px minmax(0, 1.6fr) 104px 88px;
+                         width: 100%; box-sizing: border-box; min-height: var(--kb-touch-min);
+                         padding: var(--kb-sp-5) var(--kb-sp-4); border: 0; border-radius: var(--kb-r-sm);
+                         border-bottom: 1px solid var(--kb-border-soft); background: transparent;
+                         text-align: left; font-family: var(--kb-f-body); color: var(--kb-text); }
+    .kbv-arearank .row:last-child { border-bottom: 0; }
+    .kbv-arearank button.row { cursor: pointer; }
+    .kbv-arearank button.row:hover { background: var(--kb-surface); }
+    .kbv-arearank button.row:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-arearank .row.head { min-height: 0; padding-top: 0; font-family: var(--kb-f-label);
+                              font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em;
+                              text-transform: uppercase; color: var(--kb-text-2);
+                              border-bottom: 1px solid var(--kb-border); }
+    .kbv-arearank .pos { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
+                         font-variant-numeric: tabular-nums; color: var(--kb-text-2); }
+    .kbv-arearank .rank { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                          font-variant-numeric: tabular-nums; color: var(--kb-text); }
+    .kbv-arearank .trk { display: flex; align-items: center; gap: var(--kb-sp-5); min-width: 0; }
+    .kbv-arearank .trk .kbv-progress { flex: 1 1 auto; min-width: 0; }
+    .kbv-arearank .trk .pct { flex: none; font-family: var(--kb-f-display); font-weight: 700;
+                              font-size: var(--kb-fs-sm); font-variant-numeric: tabular-nums;
+                              color: var(--kb-text); }
+    .kbv-arearank .weeks { font-size: var(--kb-fs-sm); font-variant-numeric: tabular-nums;
+                           color: var(--kb-text-2); }
+    /* El sentido viaja por glifo y por palabra; el color solo lo acompana. */
+    .kbv-arearank .mv { display: flex; align-items: center; gap: var(--kb-sp-3);
+                        font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                        font-variant-numeric: tabular-nums; color: var(--kb-text-2); }
+    .kbv-arearank .mv svg { flex: none; }
+    .kbv-arearank .mv.up { color: var(--kb-primary-ink); }
+    .kbv-arearank .mv.down { color: var(--kb-hp-ink); }
+
+    /* ── Estados de datos ────────────────────────────────────────────────── */
+    .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                 gap: var(--kb-sp-5); padding: var(--kb-sp-9); border-radius: var(--kb-r-lg);
+                 border: 1.5px dashed var(--kb-border-strong); background: var(--kb-surface-2); }
+    .kbv-empty .glyph { width: 48px; height: 48px; border-radius: var(--kb-r-pill); flex: none;
+                        display: flex; align-items: center; justify-content: center;
+                        background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-empty .ttl { font-family: var(--kb-f-display); font-weight: 700;
+                      font-size: var(--kb-fs-xl); color: var(--kb-text); }
+    .kbv-empty .desc { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 54ch; }
+    .kbv-empty .acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-sp-4); }
+
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: color-mix(in oklab, var(--c, var(--kb-hp)) 10%, var(--kb-canvas));
+                  color: var(--kb-text); }
+    .kbv-notice .glyph { flex: none; display: flex;
+                         color: color-mix(in oklab, var(--c, var(--kb-hp)) 54%, var(--kb-void-2)); }
+    .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md); }
+    .kbv-notice .sub { font-size: var(--kb-fs-sm); }
+
+    .kbv-skel { display: block; border-radius: var(--kb-r-sm); background: var(--kb-surface-2);
+                animation: kbSkelPulso 1.4s var(--kb-ease-standard) infinite; }
+    .kbv-skel.line { height: 14px; }
+    .kbv-skel.bar { height: 10px; }
+    .kbv-skel.big { height: 26px; }
+    .kbv-skel.sq { width: 26px; height: 26px; border-radius: var(--kb-r-xs); }
+    .kbv-skel.band { height: 40px; border-radius: 0; }
+    .kbv-skel.spark { height: 34px; }
+    .kbv-skel.grow { flex: 1 1 auto; }
+    @keyframes kbSkelPulso { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+    /* ── Ayuda, velo y escenario ─────────────────────────────────────────── */
+    .kbv-tip { max-width: 320px; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
+               border-radius: var(--kb-r-md); background: var(--kb-void-2); color: var(--kb-text-inverse);
+               font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); box-shadow: var(--kb-sh-3); }
+    .kbv-tip-wrap { display: flex; align-items: center; gap: var(--kb-sp-5); }
+
+    .kbv-stage { position: relative; border-radius: var(--kb-r-md); overflow: hidden;
+                 background: var(--kb-surface); border: 1px solid var(--kb-border); }
+    /* El escenario declara su alto por modificador: si es mas bajo que la
+       tarjeta, el velo la recorta y la lamina miente sobre lo que se ve. */
+    .kbv-stage.tall { min-height: 720px; }
+    .kbv-stage .under { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+
+    .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal); box-sizing: border-box;
+                      display: flex; align-items: center; justify-content: center; padding: var(--kb-sp-9);
+                      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .kbv-modal-card { width: 100%; max-width: 580px; max-height: 100%; box-sizing: border-box;
+                      display: flex; flex-direction: column; overflow: hidden;
+                      background: var(--kb-card); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-pop); }
+    .kbv-modal-card.sm { max-width: 420px; }
+    .kbv-modal-card.lg { max-width: 720px; }
+    .kbv-modal-card.full { max-width: 1040px; }
+    .kbv-modal-head { display: flex; align-items: flex-start; justify-content: space-between;
+                      gap: var(--kb-sp-6); padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                      border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xl);
+                             line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 46ch; }
+    .kbv-modal-head .id { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none;
+                       box-sizing: border-box; border-radius: var(--kb-r-pill);
+                       border: 1.5px solid var(--kb-border); background: var(--kb-card);
+                       color: var(--kb-text-2); display: flex; align-items: center;
+                       justify-content: center; cursor: pointer; }
+    .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--kb-sp-8) var(--kb-sp-9);
+                      display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .kbv-modal-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-5);
+                      padding: var(--kb-sp-7) var(--kb-sp-9); background: var(--kb-surface);
+                      border-top: 1px solid var(--kb-border-soft); }
+    .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* La formula, dicha en su forma, no en prosa: una linea por concepto. */
+    .kbv-def { display: flex; flex-direction: column; gap: var(--kb-sp-5); margin: 0; }
+    .kbv-def > div { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-def dt { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                  color: var(--kb-text); }
+    .kbv-def dd { margin: 0; font-size: var(--kb-fs-md); color: var(--kb-text-2);
+                  line-height: var(--kb-lh-body); }
+
+    /* ── El bloque de comportamiento, para quien lo construya ────────────── */
+    .kbv-behavior { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                    margin: 0; padding: 0; list-style: none; }
+    .kbv-behavior > li { display: flex; align-items: baseline; gap: var(--kb-sp-6);
+                         font-size: var(--kb-fs-md); color: var(--kb-text); line-height: var(--kb-lh-body); }
+    .kbv-behavior .k { flex: 0 0 168px; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                       font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                       color: var(--kb-text-2); }
+    .kbv-behavior .v { flex: 1 1 auto; min-width: 0; }
+
+    /* Los cortes de la pantalla, sobre el mismo contenedor que el armazon. */
+    @container kbwin (max-width: 1024px) {
+      .kbv-kpi-grid.cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .kbv-area-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .kbv-arearank .row { grid-template-columns: 40px minmax(0, 1.4fr) 124px minmax(0, 1.4fr) 84px; }
+      .kbv-arearank .weeks { display: none; }
+    }
+    @container kbwin (max-width: 768px) {
+      .kbv-kpi-grid.cols-3 { grid-template-columns: minmax(0, 1fr); }
+      .kbv-area-cards { grid-template-columns: minmax(0, 1fr); }
+      /* En telefono la fila se dobla: identidad arriba, rango y barra debajo. */
+      .kbv-arearank .row { grid-template-columns: 32px minmax(0, 1fr) 80px; row-gap: var(--kb-sp-4); }
+      .kbv-arearank .rank { grid-column: 2 / span 2; }
+      .kbv-arearank .trk { grid-column: 2 / span 2; }
+      .kbv-arearank .row.head .rank, .kbv-arearank .row.head .trk { display: none; }
+      .kbv-behavior > li { flex-direction: column; gap: var(--kb-sp-2); }
+      .kbv-behavior .k { flex: none; }
+    }
+  </style>
+
+  <!-- Los degradados de la chispa viven una sola vez y se citan por id: un
+       degradado repetido por tarjeta duplicaria ids en la misma lamina. -->
+  <svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+    <defs>
+      <linearGradient id="kbv-spk-vigor" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--area-vigor)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--area-vigor)" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="kbv-spk-wisdom" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--area-wisdom)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--area-wisdom)" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="kbv-spk-wealth" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--area-wealth)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--area-wealth)" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="kbv-spk-community" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--area-community)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--area-community)" stop-opacity="0"/>
+      </linearGradient>
+      <linearGradient id="kbv-spk-will" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--area-will)" stop-opacity=".26"/>
+        <stop offset="1" stop-color="var(--area-will)" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       1 · LA PANTALLA
+       El panorama: tres lecturas derivadas, una tarjeta por area y el balance
+       entre las cinco. Areas no posee nada: agrupa y deriva.
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="kbv-page-head">
+    <div class="ph-id">
+      <nav class="kbv-crumb" aria-label="Ruta">
+        <a href="#">Tu plan</a>
+        <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+        <span class="here">Áreas</span>
+      </nav>
+      <h1 class="kbv-h1">Áreas</h1>
+      <span class="kbv-meta">Cómo se reparte tu esfuerzo entre las cinco áreas de tu vida, y cuál está pidiendo atención.</span>
+    </div>
+    <div class="ph-act">
+      <button type="button" class="kbv-btn kbv-btn-ghost sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.4"/><path d="M12 16.6v.4"/></svg>
+        Cómo se calcula
+      </button>
+      <button type="button" class="kbv-btn kbv-btn-secondary sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>
+        Configurar áreas
+      </button>
+    </div>
+  </div>
+
+  <!-- Las tres lecturas: numero primero, periodo explicito en la banda y una
+       sola salida por tarjeta. Ninguna de las tres es un dato guardado. -->
+  <section class="kbv-section" aria-label="Lecturas del periodo">
+    <div class="kbv-kpi-grid cols-3">
+      <div class="kbv-kpi kbv-insight" style="--c: var(--area-wisdom)">
+        <span class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7"/><path d="M16 8h4v4"/></svg>
+          Patrón · 30 días
+        </span>
+        <div class="body">
+          <span class="val">+1 080 <span class="unit">XP</span></span>
+          <span class="delta good">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+            +2 niveles
+          </span>
+          <span class="ref">Sabiduría lleva el impulso.</span>
+          <button type="button" class="kbv-btn kbv-btn-link">Analizar Sabiduría <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px"><path d="M5 12h13"/><path d="M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+
+      <div class="kbv-kpi kbv-insight" style="--c: var(--area-community)">
+        <span class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10v4"/><path d="M12 16.6v.4"/></svg>
+          Oportunidad · 8 semanas
+        </span>
+        <div class="body">
+          <span class="val">−75 <span class="unit">%</span></span>
+          <span class="delta bad">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+            actividad a la baja
+          </span>
+          <span class="ref">Comunidad pasó de 4 a 1 en el índice semanal.</span>
+          <button type="button" class="kbv-btn kbv-btn-link">Revisar Comunidad <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px"><path d="M5 12h13"/><path d="M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+
+      <div class="kbv-kpi kbv-insight" style="--c: var(--area-vigor)">
+        <span class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+          Prioridad · ahora
+        </span>
+        <div class="body">
+          <span class="val">9 <span class="unit">abiertas</span></span>
+          <span class="delta">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.4l2.6 1.6"/></svg>
+            3 en curso
+          </span>
+          <span class="ref">Vigor concentra el pendiente.</span>
+          <button type="button" class="kbv-btn kbv-btn-link">Ver proyectos de Vigor <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:inline-block;vertical-align:-1px"><path d="M5 12h13"/><path d="M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Una tarjeta por area. El pie dice QUE cuelga de ella con la palabra de
+       esa area y DONDE vive: la jerarquia es de agrupacion, no de propiedad. -->
+  <section class="kbv-section" aria-label="Tus áreas">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <h2 class="kbv-h3">Tus áreas <span class="kbv-meta">(5)</span></h2>
+        <span class="sub">Toca un área para ver su detalle. La tendencia es el índice de actividad de las últimas 8 semanas, en la misma escala para las cinco.</span>
+      </div>
+    </div>
+
+    <div class="kbv-area-cards">
+      <button type="button" class="kbv-card flush kbv-area-mini" style="--c: var(--area-vigor)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z"/></svg></span>
+          <span class="nm">Vigor</span>
+          <span class="kbv-rankstars" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+          </span>
+          <span class="kbv-sr-only">Prestigio 2 de 5.</span>
+          <span class="lv">Nv 23</span>
+        </span>
+        <span class="bd">
+          <svg class="kbv-spark" viewBox="0 0 240 34" preserveAspectRatio="none" role="img" aria-label="Actividad de las últimas 8 semanas: sube de 3 a 7">
+            <path class="ar" fill="url(#kbv-spk-vigor)" d="M4 22.2 L37.14 19.6 L70.29 19.6 L103.43 17 L136.57 17 L169.71 14.4 L202.86 14.4 L236 11.8 L236 34 L4 34 Z"/>
+            <path class="ln" vector-effect="non-scaling-stroke" d="M4 22.2 L37.14 19.6 L70.29 19.6 L103.43 17 L136.57 17 L169.71 14.4 L202.86 14.4 L236 11.8"/>
+          </svg>
+          <span class="foot">
+            <span class="pulse">8.2k <span class="l">pasos/día</span></span>
+            <span class="hang">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              2 proyectos · 9 tareas
+            </span>
+          </span>
+          <span class="home">Cuelga de <strong>Salud</strong></span>
+        </span>
+      </button>
+
+      <button type="button" class="kbv-card flush kbv-area-mini" style="--c: var(--area-wisdom)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z"/><path d="M6 11.2V16c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-4.8"/><path d="M21 9.4V14"/></svg></span>
+          <span class="nm">Sabiduría</span>
+          <span class="kbv-rankstars" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+          </span>
+          <span class="kbv-sr-only">Prestigio 3 de 5.</span>
+          <span class="lv">Nv 41</span>
+        </span>
+        <span class="bd">
+          <svg class="kbv-spark" viewBox="0 0 240 34" preserveAspectRatio="none" role="img" aria-label="Actividad de las últimas 8 semanas: sube de 4 a 9">
+            <path class="ar" fill="url(#kbv-spk-wisdom)" d="M4 19.6 L37.14 17 L70.29 14.4 L103.43 14.4 L136.57 11.8 L169.71 9.2 L202.86 6.6 L236 6.6 L236 34 L4 34 Z"/>
+            <path class="ln" vector-effect="non-scaling-stroke" d="M4 19.6 L37.14 17 L70.29 14.4 L103.43 14.4 L136.57 11.8 L169.71 9.2 L202.86 6.6 L236 6.6"/>
+          </svg>
+          <span class="foot">
+            <span class="pulse">38 h <span class="l">de foco · mes</span></span>
+            <span class="hang">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5c-2-2-5-2-8-1v15c3-1 6-1 8 1m0-15c2-2 5-2 8-1v15c-3-1-6-1-8 1m0-15v15"/></svg>
+              3 cursos · 7 tareas
+            </span>
+          </span>
+          <span class="home">Cuelga de <strong>Estudio</strong></span>
+        </span>
+      </button>
+
+      <button type="button" class="kbv-card flush kbv-area-mini" style="--c: var(--area-wealth)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg></span>
+          <span class="nm">Riqueza</span>
+          <span class="kbv-rankstars" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+          </span>
+          <span class="kbv-sr-only">Prestigio 4 de 5.</span>
+          <span class="lv">Nv 8</span>
+        </span>
+        <span class="bd">
+          <svg class="kbv-spark" viewBox="0 0 240 34" preserveAspectRatio="none" role="img" aria-label="Actividad de las últimas 8 semanas: sube de 2 a 4">
+            <path class="ar" fill="url(#kbv-spk-wealth)" d="M4 24.8 L37.14 24.8 L70.29 22.2 L103.43 22.2 L136.57 22.2 L169.71 22.2 L202.86 19.6 L236 19.6 L236 34 L4 34 Z"/>
+            <path class="ln" vector-effect="non-scaling-stroke" d="M4 24.8 L37.14 24.8 L70.29 22.2 L103.43 22.2 L136.57 22.2 L169.71 22.2 L202.86 19.6 L236 19.6"/>
+          </svg>
+          <span class="foot">
+            <span class="pulse">78 % <span class="l">fondo de emergencia</span></span>
+            <span class="hang">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>
+              3 proyectos financieros · 4 tareas
+            </span>
+          </span>
+          <span class="home">Cuelga de <strong>Finanzas</strong></span>
+        </span>
+      </button>
+
+      <button type="button" class="kbv-card flush kbv-area-mini" style="--c: var(--area-community)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="9" cy="9" r="3"/><circle cx="17" cy="10" r="2.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5"/><path d="M15 14.2c2.5 0 6 1.4 6 4.8"/></svg></span>
+          <span class="nm">Comunidad</span>
+          <span class="kbv-rankstars" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+          </span>
+          <span class="kbv-sr-only">Prestigio 1 de 5.</span>
+          <span class="lv">Nv 27</span>
+        </span>
+        <span class="bd">
+          <svg class="kbv-spark" viewBox="0 0 240 34" preserveAspectRatio="none" role="img" aria-label="Actividad de las últimas 8 semanas: baja de 4 a 1">
+            <path class="ar" fill="url(#kbv-spk-community)" d="M4 19.6 L37.14 22.2 L70.29 22.2 L103.43 24.8 L136.57 24.8 L169.71 24.8 L202.86 27.4 L236 27.4 L236 34 L4 34 Z"/>
+            <path class="ln" vector-effect="non-scaling-stroke" d="M4 19.6 L37.14 22.2 L70.29 22.2 L103.43 24.8 L136.57 24.8 L169.71 24.8 L202.86 27.4 L236 27.4"/>
+          </svg>
+          <span class="foot">
+            <span class="pulse">14 d <span class="l">sin contacto clave</span></span>
+            <span class="hang">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              1 proyecto · 3 tareas
+            </span>
+          </span>
+          <span class="home">Vive aquí: no tiene módulo propio</span>
+        </span>
+      </button>
+
+      <!-- Voluntad es el hueco polimorfico dicho en voz alta: NO cuelgan
+           proyectos, cuelgan retos y habitos. El pie nunca dice «0 proyectos». -->
+      <button type="button" class="kbv-card flush kbv-area-mini master" style="--c: var(--area-will)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+          <span class="nm">Voluntad</span>
+          <span class="kbv-rankstars" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+          </span>
+          <span class="kbv-sr-only">Prestigio maestro, el quinto de 5.</span>
+          <span class="lv">Maestro · Nv 67</span>
+        </span>
+        <span class="bd">
+          <svg class="kbv-spark" viewBox="0 0 240 34" preserveAspectRatio="none" role="img" aria-label="Actividad de las últimas 8 semanas: sube de 6 a 9 y se sostiene">
+            <path class="ar" fill="url(#kbv-spk-will)" d="M4 14.4 L37.14 11.8 L70.29 11.8 L103.43 9.2 L136.57 9.2 L169.71 6.6 L202.86 6.6 L236 6.6 L236 34 L4 34 Z"/>
+            <path class="ln" vector-effect="non-scaling-stroke" d="M4 14.4 L37.14 11.8 L70.29 11.8 L103.43 9.2 L136.57 9.2 L169.71 6.6 L202.86 6.6 L236 6.6"/>
+          </svg>
+          <span class="foot">
+            <span class="pulse">92 % <span class="l">de cumplimiento</span></span>
+            <span class="hang">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6l-9 9-3-3z"/><path d="M9 16l-4 4M5 16l3 3"/></svg>
+              3 hábitos · 2 retos · 2 tareas
+            </span>
+          </span>
+          <span class="home">Cuelga de <strong>Hábitos y Retos</strong> · aquí no hay proyectos</span>
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <!-- El balance: el ranking se calcula al vuelo, no se guarda. -->
+  <section class="kbv-section" aria-label="Balance entre áreas">
+    <div class="kbv-card">
+      <div class="kbv-card-head">
+        <div class="kbv-card-title">Balance entre áreas</div>
+        <button type="button" class="kbv-icon-btn" aria-label="Cómo se calcula el balance">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .9-1 1.6v.4"/><path d="M12 16.6v.4"/></svg>
+        </button>
+      </div>
+      <div class="kbv-arearank">
+        <div class="row head" role="presentation">
+          <span class="pos">#</span>
+          <span class="id">Área</span>
+          <span class="rank">Rango</span>
+          <span class="trk">Progreso general</span>
+          <span class="weeks">En el puesto</span>
+          <span class="mv">Mov.</span>
+        </div>
+
+        <button type="button" class="row" style="--c: var(--area-will)">
+          <span class="pos">1</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Voluntad</span></span>
+          <span class="rank"><span class="kbv-tag tint" style="--c: var(--kb-medal)">Maestro</span></span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:100%"></span></span>
+            <span class="pct">100 %</span>
+          </span>
+          <span class="weeks">6 sem</span>
+          <span class="mv">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 12h12"/></svg>
+            <span class="kbv-sr-only">Sin cambio de posición</span>
+          </span>
+        </button>
+
+        <button type="button" class="row" style="--c: var(--area-wealth)">
+          <span class="pos">2</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Riqueza</span></span>
+          <span class="rank">P4 · Nv 8</span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:83%"></span></span>
+            <span class="pct">83 %</span>
+          </span>
+          <span class="weeks">5 sem</span>
+          <span class="mv down">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+            2<span class="kbv-sr-only"> puestos abajo</span>
+          </span>
+        </button>
+
+        <button type="button" class="row" style="--c: var(--area-wisdom)">
+          <span class="pos">3</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Sabiduría</span></span>
+          <span class="rank">P3 · Nv 41</span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:76%"></span></span>
+            <span class="pct">76 %</span>
+          </span>
+          <span class="weeks">3 sem</span>
+          <span class="mv up">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+            1<span class="kbv-sr-only"> puesto arriba</span>
+          </span>
+        </button>
+
+        <button type="button" class="row" style="--c: var(--area-vigor)">
+          <span class="pos">4</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Vigor</span></span>
+          <span class="rank">P2 · Nv 23</span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:49%"></span></span>
+            <span class="pct">49 %</span>
+          </span>
+          <span class="weeks">2 sem</span>
+          <span class="mv up">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+            1<span class="kbv-sr-only"> puesto arriba</span>
+          </span>
+        </button>
+
+        <button type="button" class="row" style="--c: var(--area-community)">
+          <span class="pos">5</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Comunidad</span></span>
+          <span class="rank">P1 · Nv 27</span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:31%"></span></span>
+            <span class="pct">31 %</span>
+          </span>
+          <span class="weeks">4 sem</span>
+          <span class="mv down">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+            1<span class="kbv-sr-only"> puesto abajo</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       2 · ESTADO · ÁREA MAESTRA
+       El quinto prestigio no es una estrella mas: cambia la superficie de la
+       banda y la celda de rango deja de decir «P5 · Nv 67».
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · área maestra</div>
+        <span class="sub">Prestigio 5 de 5. La banda se va al vacío con el tono pleno por borde; en el balance el rango se lee «Maestro» y el progreso general queda en 100 %.</span>
+      </div>
+    </div>
+    <div class="kbv-area-cards">
+      <button type="button" class="kbv-card flush kbv-area-mini master" style="--c: var(--area-will)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+          <span class="nm">Voluntad</span>
+          <span class="kbv-rankstars" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z"/></svg>
+          </span>
+          <span class="kbv-sr-only">Prestigio maestro, el quinto de 5.</span>
+          <span class="lv">Maestro · Nv 67</span>
+        </span>
+        <span class="bd">
+          <span class="foot">
+            <span class="pulse">2.º ciclo <span class="l">17 de 50 niveles</span></span>
+            <span class="hang">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6l-9 9-3-3z"/><path d="M9 16l-4 4M5 16l3 3"/></svg>
+              3 hábitos · 2 retos
+            </span>
+          </span>
+          <span class="home">En Maestro el nivel sigue subiendo: cada 50 cierra un ciclo</span>
+        </span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       3 · ESTADO · MOVIMIENTO EN EL RANKING
+       Las tres formas juntas. El glifo y la palabra cargan el sentido; el
+       color solo acompana, porque el color solo no dice «subiste».
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · movimiento en el ranking</div>
+        <span class="sub">Sube, baja y sin cambio, comparados contra la posición de hace ocho semanas.</span>
+      </div>
+    </div>
+    <div class="kbv-card compact">
+      <div class="kbv-arearank">
+        <button type="button" class="row" style="--c: var(--area-wisdom)">
+          <span class="pos">3</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Sabiduría</span></span>
+          <span class="rank">P3 · Nv 41</span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:76%"></span></span>
+            <span class="pct">76 %</span>
+          </span>
+          <span class="weeks">3 sem</span>
+          <span class="mv up">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5"/><path d="M6 11l6-6 6 6"/></svg>
+            1<span class="kbv-sr-only"> puesto arriba</span>
+          </span>
+        </button>
+        <button type="button" class="row" style="--c: var(--area-wealth)">
+          <span class="pos">2</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Riqueza</span></span>
+          <span class="rank">P4 · Nv 8</span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:83%"></span></span>
+            <span class="pct">83 %</span>
+          </span>
+          <span class="weeks">5 sem</span>
+          <span class="mv down">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+            2<span class="kbv-sr-only"> puestos abajo</span>
+          </span>
+        </button>
+        <button type="button" class="row" style="--c: var(--area-will)">
+          <span class="pos">1</span>
+          <span class="id"><span class="kbv-areapill"><span class="dot"></span>Voluntad</span></span>
+          <span class="rank"><span class="kbv-tag tint" style="--c: var(--kb-medal)">Maestro</span></span>
+          <span class="trk">
+            <span class="kbv-progress sm tone-progress"><span class="fill" style="width:100%"></span></span>
+            <span class="pct">100 %</span>
+          </span>
+          <span class="weeks">6 sem</span>
+          <span class="mv">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 12h12"/></svg>
+            <span class="kbv-sr-only">Sin cambio de posición</span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       4 · ESTADO · VACIO
+       Sin XP en ninguna area no hay patron, ni tendencia, ni ranking: el
+       panorama no dibuja tablas en cero, dibuja la salida.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · vacío</div>
+        <span class="sub">Cuenta recién creada, o cinco áreas todavía sin un solo hecho registrado. Ocupa el lugar de las tres lecturas, las tarjetas y el balance.</span>
+      </div>
+    </div>
+    <div class="kbv-empty">
+      <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8.5 6.2-3.2 10H6.7l-3.2-10z"/><path d="M12 12V3M12 12l8.5-2.8M12 12l-3.2 7.2M12 12l6.3 7.2M12 12L3.5 9.2"/></svg></span>
+      <span class="ttl">Todavía no hay balance que comparar</span>
+      <span class="desc">El panorama se calcula con lo que registras: en cuanto una tarea, un hábito o un reto sume XP a un área, aquí aparecen el patrón de 30 días, la tendencia de 8 semanas y el orden entre tus cinco áreas. Nada de esto se captura a mano.</span>
+      <span class="acts">
+        <button type="button" class="kbv-btn kbv-btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+          Registrar algo
+        </button>
+        <button type="button" class="kbv-btn kbv-btn-ghost">Cómo se calcula el balance</button>
+      </span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       5 · ESTADO · CARGANDO
+       El esqueleto conserva la forma que va a llegar: tres KPI, la rejilla de
+       areas y la tabla con su encabezado, para que nada salte.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section" aria-busy="true">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · cargando</div>
+        <span class="sub">Mientras responde el motor de progresión. El encabezado del balance ya está: solo faltan las filas.</span>
+      </div>
+    </div>
+    <span class="kbv-sr-only">Cargando el panorama de tus áreas</span>
+    <div class="kbv-kpi-grid cols-3">
+      <div class="kbv-kpi">
+        <span class="kbv-skel band"></span>
+        <span class="body"><span class="kbv-skel big" style="width:58%"></span><span class="kbv-skel line" style="width:40%"></span></span>
+      </div>
+      <div class="kbv-kpi">
+        <span class="kbv-skel band"></span>
+        <span class="body"><span class="kbv-skel big" style="width:44%"></span><span class="kbv-skel line" style="width:52%"></span></span>
+      </div>
+      <div class="kbv-kpi">
+        <span class="kbv-skel band"></span>
+        <span class="body"><span class="kbv-skel big" style="width:50%"></span><span class="kbv-skel line" style="width:46%"></span></span>
+      </div>
+    </div>
+    <div class="kbv-area-cards">
+      <div class="kbv-card flush kbv-area-mini">
+        <span class="kbv-skel band"></span>
+        <span class="bd"><span class="kbv-skel spark"></span><span class="kbv-skel line" style="width:62%"></span></span>
+      </div>
+      <div class="kbv-card flush kbv-area-mini">
+        <span class="kbv-skel band"></span>
+        <span class="bd"><span class="kbv-skel spark"></span><span class="kbv-skel line" style="width:54%"></span></span>
+      </div>
+      <div class="kbv-card flush kbv-area-mini">
+        <span class="kbv-skel band"></span>
+        <span class="bd"><span class="kbv-skel spark"></span><span class="kbv-skel line" style="width:70%"></span></span>
+      </div>
+    </div>
+    <div class="kbv-card">
+      <div class="kbv-card-head"><div class="kbv-card-title">Balance entre áreas</div></div>
+      <div class="kbv-arearank">
+        <div class="row head" role="presentation">
+          <span class="pos">#</span>
+          <span class="id">Área</span>
+          <span class="rank">Rango</span>
+          <span class="trk">Progreso general</span>
+          <span class="weeks">En el puesto</span>
+          <span class="mv">Mov.</span>
+        </div>
+        <div class="row">
+          <span class="pos"><span class="kbv-skel line" style="width:18px"></span></span>
+          <span class="id"><span class="kbv-skel line" style="width:64%"></span></span>
+          <span class="rank"><span class="kbv-skel line" style="width:72%"></span></span>
+          <span class="trk"><span class="kbv-skel bar grow"></span></span>
+          <span class="weeks"><span class="kbv-skel line" style="width:60%"></span></span>
+          <span class="mv"><span class="kbv-skel line" style="width:44%"></span></span>
+        </div>
+        <div class="row">
+          <span class="pos"><span class="kbv-skel line" style="width:18px"></span></span>
+          <span class="id"><span class="kbv-skel line" style="width:52%"></span></span>
+          <span class="rank"><span class="kbv-skel line" style="width:66%"></span></span>
+          <span class="trk"><span class="kbv-skel bar grow"></span></span>
+          <span class="weeks"><span class="kbv-skel line" style="width:60%"></span></span>
+          <span class="mv"><span class="kbv-skel line" style="width:44%"></span></span>
+        </div>
+        <div class="row">
+          <span class="pos"><span class="kbv-skel line" style="width:18px"></span></span>
+          <span class="id"><span class="kbv-skel line" style="width:58%"></span></span>
+          <span class="rank"><span class="kbv-skel line" style="width:70%"></span></span>
+          <span class="trk"><span class="kbv-skel bar grow"></span></span>
+          <span class="weeks"><span class="kbv-skel line" style="width:60%"></span></span>
+          <span class="mv"><span class="kbv-skel line" style="width:44%"></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       6 · ESTADO · ERROR
+       Dos alturas: se cae la progresion completa, o solo la serie de una
+       tarjeta. Lo que si se pudo leer se queda en pantalla.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · error</div>
+        <span class="sub">Arriba, la progresión que no respondió. Abajo, el área que sí cargó su nivel pero no su tendencia de 8 semanas.</span>
+      </div>
+    </div>
+    <div class="kbv-notice" style="--c: var(--kb-hp)">
+      <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10v4"/><path d="M12 16.6v.4"/></svg></span>
+      <span class="txt">
+        <span class="ttl">No pudimos leer tu progresión por área</span>
+        <span class="sub">El balance y las tres lecturas se calculan con ella, así que quedan en espera. Tu XP, tus niveles y tu historial siguen guardados; no se perdió nada.</span>
+      </span>
+      <button type="button" class="kbv-btn kbv-btn-secondary sm">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.4h-4.4"/></svg>
+        Reintentar
+      </button>
+    </div>
+    <div class="kbv-area-cards">
+      <div class="kbv-card flush kbv-area-mini" style="--c: var(--area-wealth)">
+        <span class="band">
+          <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg></span>
+          <span class="nm">Riqueza</span>
+          <span class="lv">Nv 8</span>
+        </span>
+        <span class="bd">
+          <span class="kbv-spark-empty">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7"/><path d="M4 4l16 16"/></svg>
+            Sin tendencia
+          </span>
+          <span class="foot">
+            <span class="hang">No pudimos leer las 8 semanas.</span>
+            <button type="button" class="kbv-btn kbv-btn-link">Reintentar</button>
+          </span>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       7 · SUPERPOSICION · CÓMO SE CALCULA EL BALANCE
+       La unica superficie por encima de la pantalla: lo que el punto de
+       informacion abre en telefono. En escritorio el mismo texto cabe en la
+       ayuda flotante, que va debajo para comparar las dos formas.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Superposición · cómo se calcula el balance</div>
+        <span class="sub">Velo, tarjeta de 580, y el cuerpo como única región que se desplaza. Cierra con Escape, con el velo y con su botón.</span>
+      </div>
+    </div>
+    <div class="kbv-stage tall">
+      <div class="under">
+        <div class="kbv-card compact">
+          <div class="kbv-card-head"><div class="kbv-card-title">Balance entre áreas</div></div>
+          <div class="kbv-arearank">
+            <button type="button" class="row" style="--c: var(--area-will)">
+              <span class="pos">1</span>
+              <span class="id"><span class="kbv-areapill"><span class="dot"></span>Voluntad</span></span>
+              <span class="rank"><span class="kbv-tag tint" style="--c: var(--kb-medal)">Maestro</span></span>
+              <span class="trk">
+                <span class="kbv-progress sm tone-progress"><span class="fill" style="width:100%"></span></span>
+                <span class="pct">100 %</span>
+              </span>
+              <span class="weeks">6 sem</span>
+              <span class="mv">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 12h12"/></svg>
+                <span class="kbv-sr-only">Sin cambio de posición</span>
+              </span>
+            </button>
+            <button type="button" class="row" style="--c: var(--area-wealth)">
+              <span class="pos">2</span>
+              <span class="id"><span class="kbv-areapill"><span class="dot"></span>Riqueza</span></span>
+              <span class="rank">P4 · Nv 8</span>
+              <span class="trk">
+                <span class="kbv-progress sm tone-progress"><span class="fill" style="width:83%"></span></span>
+                <span class="pct">83 %</span>
+              </span>
+              <span class="weeks">5 sem</span>
+              <span class="mv down">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14"/><path d="M6 13l6 6 6-6"/></svg>
+                2<span class="kbv-sr-only"> puestos abajo</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="kbv-modal-veil" role="dialog" aria-modal="true" aria-labelledby="bal-title">
+        <div class="kbv-modal-card">
+          <div class="kbv-modal-head">
+            <div class="id">
+              <div class="title" id="bal-title">Cómo se calcula el balance</div>
+              <span class="sub">Nada de esta pantalla se captura: todo se deriva de lo que ya registraste en tus tareas, hábitos, retos y proyectos.</span>
+            </div>
+            <button type="button" class="kbv-modal-close" aria-label="Cerrar la explicación">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="kbv-modal-body">
+            <dl class="kbv-def">
+              <div>
+                <dt>El orden</dt>
+                <dd>Primero por prestigio y, entre áreas del mismo prestigio, por nivel. Nunca por XP suelto: dos áreas con la misma XP pueden estar en prestigios distintos.</dd>
+              </div>
+              <div>
+                <dt>Progreso general</dt>
+                <dd>Son <strong>5 prestigios de 50 niveles</strong>, 250 en total. El progreso es (prestigios completos × 50 + nivel) sobre 250. Un área en Maestro se muestra al 100 %, aunque su nivel siga subiendo.</dd>
+              </div>
+              <div>
+                <dt>Patrón · 30 días</dt>
+                <dd>El área que más XP sumó en los últimos 30 días, con los niveles que ganó en ese mismo tramo.</dd>
+              </div>
+              <div>
+                <dt>Oportunidad · 8 semanas</dt>
+                <dd>El área que más cayó entre la primera y la última de las 8 semanas del índice de actividad. Si ninguna cae, la tarjeta dice «estable».</dd>
+              </div>
+              <div>
+                <dt>Prioridad · ahora</dt>
+                <dd>El área con más tareas abiertas, con cuántas de ellas están en curso. Es un conteo del momento, no un promedio.</dd>
+              </div>
+              <div>
+                <dt>Mov.</dt>
+                <dd>Cuántos puestos se movió el área contra su posición de hace ocho semanas, y cuántas semanas lleva en la que ocupa hoy.</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="kbv-modal-foot">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Ver mi progreso</button>
+            <div class="right">
+              <button type="button" class="kbv-btn kbv-btn-primary">Entendido</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kbv-tip-wrap">
+      <span class="kbv-tip">Ranking por prestigio y, a igualdad, por nivel. Las flechas dicen cómo se movió tu posición en las últimas ocho semanas.</span>
+      <span class="kbv-meta">La misma ayuda en escritorio, abierta desde el punto de información del balance.</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       8 · COMPORTAMIENTO
+       Lo que el dibujo no puede decir. Una linea por comportamiento no obvio.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Comportamiento</div>
+        <span class="sub">Para quien lo construya. Nada de esto se deduce del dibujo.</span>
+      </div>
+    </div>
+    <ul class="kbv-behavior">
+      <li><span class="k">Áreas no posee nada</span><span class="v">Es un centro de análisis: ninguna cifra de esta pantalla se guarda aquí. Todas se derivan de las tareas, los hábitos, los retos y los proyectos que ya llevan área. Editar algo desde aquí siempre significa ir al módulo dueño del hecho.</span></li>
+      <li><span class="k">Lo que cuelga</span><span class="v">El pie de cada tarjeta toma la palabra de <strong>su</strong> área: proyectos en Vigor y Comunidad, cursos en Sabiduría, proyectos financieros en Riqueza, hábitos y retos en Voluntad. Voluntad no lleva proyectos y su línea nunca dice «0 proyectos»; la salida de la tarjeta de prioridad cambia con ella («Ver proyectos» / «Ver hábitos»).</span></li>
+      <li><span class="k">Dónde vive</span><span class="v">Salud, Estudio, Finanzas y Hábitos son la casa del agrupador, no su dueña: tocar el área lleva a su detalle, y desde ahí a la casa. Comunidad no tiene módulo y se agota en su detalle.</span></li>
+      <li><span class="k">Avance derivado</span><span class="v">Un agrupador nunca muestra un porcentaje suelto: se lee «8/14 · 56 %», el conteo primero. Sin las tareas debajo el porcentaje no se puede verificar, así que sin conteo no se dibuja.</span></li>
+      <li><span class="k">Orden del balance</span><span class="v">Se calcula al vuelo en cada apertura: prestigio descendente y, a igualdad, nivel descendente. No hay orden guardado ni columna que el usuario reordene; cambiarlo es cambiar la regla, no la vista.</span></li>
+      <li><span class="k">Progreso general</span><span class="v">(prestigios completos × 50 + nivel) / 250. Un área en Maestro entra a la fórmula como 4 prestigios + 50 niveles, así que siempre marca 100 % y encabeza el orden aunque su nivel siga creciendo.</span></li>
+      <li><span class="k">Las tres lecturas</span><span class="v">Patrón = mayor XP a 30 días. Oportunidad = mayor caída entre la primera y la última de las 8 semanas; si ninguna cae, la cifra dice «estable» y la tarjeta pierde el juicio de color. Prioridad = más tareas abiertas ahora. La misma área puede ganar dos lecturas: no se reparten para que salgan distintas.</span></li>
+      <li><span class="k">Tendencia comparable</span><span class="v">Las cinco chispas usan la misma escala del índice (0 a 10), no una escala por área: normalizar cada serie a su propio máximo haría que una caída y un récord se dibujaran igual.</span></li>
+      <li><span class="k">Color de la chispa</span><span class="v">El trazo va en la <strong>tinta</strong> del área, no en el tono pleno. Medido sobre la tarjeta, el tono pleno de Riqueza da 1.79:1 y el de Voluntad 2.21:1, por debajo del piso de 3:1 de un medidor; la tinta da entre 5.73 y 9.00. El relleno bajo la línea sí es el tono pleno, en degradado, porque es adorno.</span></li>
+      <li><span class="k">Un solo canal por fila</span><span class="v">En el balance el área la pinta la pastilla y la barra va en el papel neutro. Dos colores en la misma fila compiten, y la barra tintada no llega a 3:1 sobre su propia pista en Riqueza ni en Voluntad.</span></li>
+      <li><span class="k">Destino único</span><span class="v">La tarjeta de área es un solo blanco: no hay segundo destino dentro. Las tres lecturas invierten la regla — ahí la tarjeta no se toca y el enlace es el único blanco, para que no haya un objetivo dentro de otro.</span></li>
+      <li><span class="k">Sentido sin color</span><span class="v">Subir, bajar y no moverse llevan glifo propio y texto para lector de pantalla. Quien no distingue el verde del rojo lee el mismo dato: el color solo confirma.</span></li>
+      <li><span class="k">Vacío contra error</span><span class="v">Sin XP en ninguna área es vacío y se dibuja la invitación. Con XP que no se pudo leer es error, se conserva en pantalla lo que sí cargó y el reintento es por lo que falló: la progresión completa, o solo la serie de una tarjeta.</span></li>
+      <li><span class="k">Teclado</span><span class="v">Las tarjetas y las filas son botones y entran en el orden natural de tabulación. Abierta la explicación, el foco queda atrapado dentro y vuelve al punto de información al cerrarla.</span></li>
+    </ul>
+  </section>
           </div>
         </main>
 

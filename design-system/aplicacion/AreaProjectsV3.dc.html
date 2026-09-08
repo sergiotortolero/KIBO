@@ -251,6 +251,19 @@
     .wback { color: var(--kb-text-2); }
     .wbacklab { fill: var(--kb-text-2); font-family: var(--kb-f-label); font-size: 12px; font-weight: 800;
                 letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
+  
+    /* Boton con papel de enlace: la semantica de un boton sin su caja. La zona
+       de toque se restituye con un ::after transparente, porque el texto solo
+       mide su linea. */
+    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+                    border: 0; height: auto; min-height: 0; padding: 0; position: relative;
+                    font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 700; }
+    .kbv-btn-link:hover { color: var(--kb-primary); text-decoration: underline; }
+    .kbv-btn-link::after { content: ""; position: absolute; left: 50%; top: 50%;
+                           width: 100%; min-width: 44px; height: 44px;
+                           transform: translate(-50%, -50%); }
+    .kbv-btn-link:focus-visible { outline: none; border-radius: var(--kb-r-xs);
+                                  box-shadow: var(--kb-focus-halo); }
   </style>
 
   <style>
@@ -428,9 +441,11 @@
     .kbv-kpi .band {
       display: flex; align-items: center; gap: var(--kb-sp-3);
       padding: var(--kb-sp-4) var(--kb-sp-6);
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      /* Lavado, borde y tinta salen de la RECETA como cantidad y ancla: con
+         las cifras escritas a mano el rotulo medía 2.71 en tema oscuro. */
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-wash-anchor));
+      color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
       letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     }
@@ -553,6 +568,190 @@
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
     .kbv-check.on { background: var(--kb-primary-fill); border-color: var(--kb-primary-fill); color: var(--kb-text-inverse); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    /* ── Estado vacio ─────────────────────────────────────────────────
+       Un glifo, el titulo de lo que falta, una linea que dice para que
+       sirve y la accion que lo llena. El hueco ya dice que esta vacio;
+       la explicacion tiene que decir otra cosa. */
+    .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                 box-sizing: border-box; gap: var(--kb-sp-5); padding: var(--kb-sp-9);
+                 border-radius: var(--kb-r-lg); border: 1.5px dashed var(--kb-border-strong);
+                 background: var(--kb-surface-2); }
+    .kbv-empty .glyph { width: 48px; height: 48px; flex: none; border-radius: var(--kb-r-pill);
+                        display: flex; align-items: center; justify-content: center;
+                        background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-empty .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl);
+                      line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    /* La explicacion va en --kb-text, no en el secundario: sobre superficie-2
+       el secundario mide 4.36 en oscuro y no llega a AA. La jerarquia contra
+       el titulo la hacen el tamano y el peso, como en R-14. */
+    .kbv-empty .desc { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                       color: var(--kb-text); max-width: 54ch; }
+    .kbv-empty .acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-sp-4); }
+    /* Dentro de una columna de kanban o de una tarjeta compacta no cabe el
+       relleno grande: baja el paso, no el contenido. */
+    .kbv-empty.compact { padding: var(--kb-sp-7); gap: var(--kb-sp-4); }
+    .kbv-empty.compact .glyph { width: 36px; height: 36px; }
+    .kbv-empty.compact .ttl { font-size: var(--kb-fs-lg); }
+    .kbv-empty.compact .desc { font-size: var(--kb-fs-sm); }
+
+    /* ── Esqueleto de carga ───────────────────────────────────────────
+       La silueta del contenido mientras llega. El contenedor lleva
+       aria-busy y cada pieza aria-hidden: es dibujo, no texto, y por eso
+       no tiene par de contraste que medir. */
+    .kbv-skel { display: block; border-radius: var(--kb-r-sm); background: var(--kb-surface-2);
+                animation: kbSkelPulso 1.4s var(--kb-ease-standard) infinite; }
+    .kbv-skel.line  { height: 14px; }
+    .kbv-skel.big   { height: 26px; }
+    .kbv-skel.bar   { height: 10px; }
+    .kbv-skel.sq    { width: 26px; height: 26px; border-radius: var(--kb-r-xs); }
+    .kbv-skel.band  { height: 40px; border-radius: 0; }
+    .kbv-skel.spark { height: 34px; }
+    .kbv-skel.grow  { flex: 1 1 auto; }
+    /* La fila: la silueta de un renglon de tabla o de lista. */
+    .kbv-skel-row { display: flex; align-items: center; gap: var(--kb-sp-5); min-width: 0; }
+    @keyframes kbSkelPulso { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+    /* ── Aviso en pagina ──────────────────────────────────────────────
+       R-1, cuarto patron: fondo tintado CON glifo. El lavado y la tinta
+       leen la RECETA como cantidad y ancla; una cifra literal se mezcla
+       contra el lienzo claro cuando el tema oscuro reasigna el ancla.
+       Sobre tinte todo el texto va en --kb-text (R-14). */
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+                  color: var(--kb-text); }
+    .kbv-notice.info  { --c: var(--kb-primary); }
+    .kbv-notice.warn  { --c: var(--kb-warn); }
+    .kbv-notice.error { --c: var(--kb-hp); }
+    .kbv-notice .glyph { flex: none; display: flex;
+                         color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                       line-height: var(--kb-lh-snug); }
+    .kbv-notice .sub { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); }
+    .kbv-notice .act { flex: none; display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Afordancia de explicacion ────────────────────────────────────
+       Dice COMO SE CALCULA el dato de al lado. No es la etiqueta de
+       periodo, que solo informa del rango. El panel es el inverso de la
+       pagina —se construye con --kb-text y --kb-canvas—, asi el tema
+       oscuro lo revalua y nunca queda del color del lienzo. */
+    .kbv-tip-wrap { display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap; min-width: 0; }
+    /* Dibuja 18 y TOCA 44 con una zona transparente. */
+    .kbv-tip-dot { position: relative; width: 18px; height: 18px; flex: none; padding: 0;
+                   border: 0; border-radius: var(--kb-r-pill); background: transparent;
+                   color: var(--kb-text-2); display: inline-flex; align-items: center;
+                   justify-content: center; cursor: pointer; }
+    .kbv-tip-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
+                          width: var(--kb-touch-min); height: var(--kb-touch-min);
+                          transform: translate(-50%, -50%); }
+    .kbv-tip-dot:hover { color: var(--kb-primary-ink); }
+    .kbv-tip-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-tip { max-width: 46ch; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
+               border-radius: var(--kb-r-md); background: var(--kb-text); color: var(--kb-canvas);
+               font-family: var(--kb-f-body); font-size: var(--kb-fs-sm);
+               line-height: var(--kb-lh-body); box-shadow: var(--kb-sh-3); }
+    /* La formula, dicha en su forma y no en prosa. */
+    .kbv-tip .fx { display: block; margin-top: var(--kb-sp-3); font-family: var(--kb-f-label);
+                   font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* ── Escenario ────────────────────────────────────────────────────
+       El contenedor rotulado que envuelve un especimen dentro de un
+       artboard. El rotulo nombra el estado y se queda POR ENCIMA del
+       velo: sin el, dos estados apilados no se distinguen. */
+    .kbv-stage { position: relative; box-sizing: border-box; border-radius: var(--kb-r-md);
+                 overflow: hidden; background: var(--kb-surface); border: 1px solid var(--kb-border); }
+    .kbv-stage > .lbl { position: relative; z-index: calc(var(--kb-z-modal) + 1);
+                        display: flex; align-items: center; gap: var(--kb-sp-4);
+                        padding: var(--kb-sp-4) var(--kb-sp-7);
+                        background: var(--kb-surface-2); border-bottom: 1px solid var(--kb-border);
+                        font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                        letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text); }
+    .kbv-stage > .under { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+    .kbv-stage.h-sm { min-height: 400px; }
+    .kbv-stage.h-md { min-height: 460px; }
+    .kbv-stage.h-lg { min-height: 640px; }
+    .kbv-stage.h-xl { min-height: 720px; }
+
+    /* ── Modal §6.7 · velo → tarjeta → cabeza → cuerpo → pie ──────────
+       Solo el cuerpo hace scroll, y el ancho la decide el contenido. En un
+       artboard el velo es absoluto y se recorta al escenario; en la
+       aplicacion es fijo sobre la ventana. */
+    .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal); box-sizing: border-box;
+                      display: flex; align-items: center; justify-content: center; padding: var(--kb-sp-9);
+                      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .kbv-modal-card { width: 100%; max-width: 580px; max-height: 100%; box-sizing: border-box;
+                      display: flex; flex-direction: column; overflow: hidden;
+                      background: var(--kb-card); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-pop); }
+    .kbv-modal-card.sm   { max-width: 420px; }
+    .kbv-modal-card.lg   { max-width: 720px; }
+    .kbv-modal-card.full { max-width: 1040px; }
+    .kbv-modal-head { display: flex; align-items: flex-start; justify-content: space-between;
+                      gap: var(--kb-sp-6); padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                      border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-modal-head .id { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xl);
+                             line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                           color: var(--kb-text-2); max-width: 46ch; }
+    .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none;
+                       box-sizing: border-box; border-radius: var(--kb-r-pill);
+                       border: 1.5px solid var(--kb-border); background: var(--kb-card);
+                       color: var(--kb-text-2); display: flex; align-items: center;
+                       justify-content: center; cursor: pointer; }
+    .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--kb-sp-8) var(--kb-sp-9);
+                      display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .kbv-modal-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-5);
+                      padding: var(--kb-sp-7) var(--kb-sp-9); background: var(--kb-surface);
+                      border-top: 1px solid var(--kb-border-soft); }
+    .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Lista de definicion ──────────────────────────────────────────
+       Un termino y su explicacion: la forma con la que una pantalla
+       documenta la regla que la gobierna. */
+    .kbv-def { display: flex; flex-direction: column; gap: var(--kb-sp-5); margin: 0; }
+    .kbv-def > div { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-def dt { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                  line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-def dd { margin: 0; font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                  color: var(--kb-text-2); }
+    /* El termino al lado, en la misma columna de 168 que .kbv-behavior. */
+    .kbv-def.side > div { display: grid; grid-template-columns: 168px minmax(0, 1fr);
+                          column-gap: var(--kb-sp-6); align-items: baseline; }
+
+    /* ── Comportamientos no obvios ────────────────────────────────────
+       El bloque final de una pantalla: lo que hace y no se ve, para quien
+       la construya. Rotulo a la izquierda, regla a la derecha. */
+    .kbv-behavior { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                    margin: 0; padding: 0; list-style: none; }
+    .kbv-behavior > li { display: flex; align-items: baseline; gap: var(--kb-sp-6);
+                         font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+    .kbv-behavior .k { flex: 0 0 168px; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                       font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                       color: var(--kb-text-2); }
+    .kbv-behavior .v { flex: 1 1 auto; min-width: 0; }
+
+    /* Telefono: el modal es una hoja al borde inferior y las dos listas de
+       dos columnas se doblan. Mide la VENTANA, como el resto del armazon. */
+    @container kbwin (max-width: 640px) {
+      .kbv-modal-veil { padding: 0; align-items: flex-end; }
+      .kbv-modal-card, .kbv-modal-card.sm, .kbv-modal-card.lg, .kbv-modal-card.full {
+        max-width: none; border-radius: var(--kb-r-xl) var(--kb-r-xl) 0 0; }
+      /* El asidero de la hoja: 36 x 4, solo en telefono y sin marca en el HTML. */
+      .kbv-modal-card::before { content: ""; flex: none; width: 36px; height: 4px;
+        margin: var(--kb-sp-5) auto 0; border-radius: var(--kb-r-pill);
+        background: var(--kb-border-strong); }
+      .kbv-modal-foot { flex-wrap: wrap; }
+      .kbv-modal-foot .right { width: 100%; }
+      .kbv-modal-foot .right > .kbv-btn { flex: 1 1 auto; }
+      .kbv-def.side > div { grid-template-columns: minmax(0, 1fr); row-gap: var(--kb-sp-2); }
+      .kbv-behavior > li { flex-direction: column; gap: var(--kb-sp-2); }
+      .kbv-behavior .k { flex: none; }
+    }
   </style>
 
   <style>
@@ -1157,7 +1356,7 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Tu plan</div>
-            <button type="button" class="kbv-side-link active" aria-current="page">
+            <button type="button" class="kbv-side-link">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
               <span class="lbl">Tareas</span>
               <span class="kbv-badge quiet">6</span>
@@ -1165,7 +1364,7 @@
             <!-- Areas y Proyectos son HERMANOS de Tareas, no crias suyas: la
                  jerarquia area › agrupador › tarea agrupa los hechos, no el
                  menu. Colgar Proyectos de Tareas dejaba a Areas sin destino. -->
-            <button type="button" class="kbv-side-link">
+            <button type="button" class="kbv-side-link active" aria-current="page">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l8.5 6.2-3.2 10H6.7l-3.2-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12l0-9M12 12l8.5-2.8M12 12l-3.2 7.2M12 12l6.3 7.2M12 12L3.5 9.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></svg>
               <span class="lbl">Áreas</span>
               <span class="kbv-badge quiet">5</span>
@@ -1362,11 +1561,963 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<!-- ═══ CONTENIDO DE LA PANTALLA ═══
-     Sustituye ESTE comentario por el contenido completo: la cabecera de pagina
-     (.kbv-page-head con su migaja, su .kbv-h1 y sus acciones), las secciones,
-     los estados y los modales superpuestos. Todo dentro de .kbv-page.
-     No toques nada fuera de este hueco: el armazon es contrato compartido. -->
+<style>
+  /* ==================================================================
+     LO UNICO QUE ESTA PANTALLA ESTRENA
+     Dos MODIFICADORES de la tarjeta (§6.5), no familias nuevas. Se
+     escriben con su nombre canonico para que la siguiente pantalla que
+     los necesite los suba al armazon en vez de rebautizarlos.
+     ================================================================== */
+
+  /* El estado interactivo de §6.5: la tarjeta ES el destino. Como aqui
+     se dibuja con <a>, tambien apaga el color y el subrayado del enlace
+     — el texto de la tarjeta no es un enlace, la tarjeta entera lo es. */
+  .kbv-card.tap { color: inherit; text-decoration: none; cursor: pointer;
+                  transition: transform var(--kb-dur-fast) var(--kb-ease-out),
+                              box-shadow var(--kb-dur-fast) var(--kb-ease-out),
+                              border-color var(--kb-dur-fast) var(--kb-ease-out); }
+  .kbv-card.tap:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2);
+                        border-color: var(--kb-border-strong); text-decoration: none; }
+  .kbv-card.tap:focus-visible { outline: none; border-color: var(--kb-primary);
+                                box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+
+  /* La tarjeta en horizontal: el renglon de una lista dentro del modal.
+     Mismo relleno y mismo borde; solo cambia la direccion. */
+  .kbv-card.row { flex-direction: row; align-items: center; gap: var(--kb-sp-5); }
+  .kbv-card.row > .grow { flex: 1 1 auto; min-width: 0; }
+</style>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     1 · CABECERA DE PAGINA
+     La migaja se deriva del menu: grupo › destino › sujeto. Por eso
+     «Areas» queda marcado en la barra lateral y no hay boton de vuelta.
+     El primario abre la CASA del area — aqui, Salud.
+     ══════════════════════════════════════════════════════════════════ -->
+<header class="kbv-page-head">
+  <div class="ph-id">
+    <nav class="kbv-crumb" aria-label="Ruta">
+      <a href="#">Tu plan</a>
+      <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+      <a href="#">Áreas</a>
+      <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+      <span class="here">Vigor</span>
+    </nav>
+    <h1 class="kbv-h1">Vigor</h1>
+    <p class="kbv-meta">De Vigor cuelgan proyectos y metas físicas · 2 proyectos · lo que cuelga se ejecuta en Salud</p>
+  </div>
+  <div class="ph-act">
+    <button type="button" class="kbv-btn kbv-btn-secondary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>
+      Editar el área
+    </button>
+    <button type="button" class="kbv-btn kbv-btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6"/><path d="M20 4l-8.5 8.5"/><path d="M19 13.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4.5"/></svg>
+      Abrir Salud
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     2 · PESTANAS DEL AREA
+     La de en medio no tiene nombre fijo: lo toma de lo que cuelga. En
+     Vigor se llama «Proyectos»; la tabla de la seccion 7 la recorre.
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="kbv-seg" role="tablist" aria-label="Secciones del área Vigor">
+  <button type="button" role="tab" aria-selected="false">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7"/><path d="M16 8h4v4"/></svg>
+    Progreso
+  </button>
+  <button type="button" role="tab" aria-selected="true" class="on">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5"/></svg>
+    Proyectos
+  </button>
+  <button type="button" role="tab" aria-selected="false">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.3 5.3l2 2M16.7 16.7l2 2M18.7 5.3l-2 2M7.3 16.7l-2 2"/></svg>
+    Configuración
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     3 · QUE CUELGA, Y DONDE SE EJECUTA
+     Cuarto patron de R-1: fondo tintado CON glifo. Dice la jerarquia y
+     dice que esta pantalla ANALIZA — no ejecuta.
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="kbv-notice info">
+  <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+  <div class="txt">
+    <div class="ttl">De Vigor cuelgan proyectos y metas físicas; de cada uno, sus tareas</div>
+    <div class="sub">Aquí solo <strong>analizas</strong>: cada agrupador abre donde se ejecuta. Los de Vigor viven en Salud.</div>
+  </div>
+  <div class="act">
+    <button type="button" class="kbv-btn kbv-btn-secondary sm">Abrir Salud</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     4 · PULSO DE LO QUE CUELGA
+     Las cuatro cifras se DERIVAN de las tareas de los agrupadores; no se
+     guardan. El punto de informacion dice con que formula.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Pulso del área">
+  <div class="kbv-kpi-grid">
+    <div class="kbv-kpi" style="--c: var(--area-vigor)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>Proyectos</div>
+      <div class="body"><div class="val">2</div></div>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--kb-primary)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>Actividades abiertas</div>
+      <div class="body"><div class="val">26</div></div>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--pri-high)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 3"/></svg>En progreso</div>
+      <div class="body"><div class="val">6</div></div>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--kb-hp)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M6.4 6.4l11.2 11.2"/></svg>Bloqueadas</div>
+      <div class="body">
+        <div class="val">2</div>
+        <div class="delta bad"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5M6 11l6-6 6 6"/></svg>+1 vs. semana pasada</div>
+      </div>
+    </div>
+  </div>
+  <div class="kbv-tip-wrap">
+    <span class="kbv-meta">Ninguna de las cuatro se guarda.</span>
+    <button type="button" class="kbv-tip-dot" aria-label="Cómo se calculan estas cuatro cifras" aria-expanded="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg>
+    </button>
+    <span class="kbv-tip" role="note">Se recorren los agrupadores del área y se suman las tareas de cada uno por su estado. El área no captura ninguna: es dueña de los hechos, no de las cuentas.<span class="fx">abiertas = por hacer + en curso + bloqueadas</span></span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     5 · LA LECTURA
+     Una sola linea, y la elige el dato: con bloqueadas manda el bloqueo.
+     Las otras dos lecturas se dibujan en la seccion 9.
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="kbv-notice warn">
+  <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg></span>
+  <div class="txt">
+    <div class="ttl">Tienes 2 tareas bloqueadas</div>
+    <div class="sub">Desbloquéalas primero: detienen el avance de toda el área. Las dos están en «Maratón otoño 2026».</div>
+  </div>
+  <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary sm">Ver las bloqueadas</button></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     6 · LOS AGRUPADORES
+     Misma forma para proyecto, materia, curso y meta financiera: nombre,
+     el area que lo pinta y un avance DERIVADO. Manda la cuenta («12/32»)
+     y el porcentaje la acompana — un 38 % suelto no dice de cuantas.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Proyectos de Vigor">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Proyectos · 2</div>
+      <span class="sub">Cada tarjeta es el destino completo: al tocarla abre su proyecto en Salud.</span>
+    </div>
+    <div class="sh-act">
+      <button type="button" class="kbv-btn kbv-btn-ghost sm">
+        Abrir Salud
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="kbv-filter-bar">
+    <span class="lbl">Estado</span>
+    <div class="grp">
+      <button type="button" class="kbv-chip active">Todos</button>
+      <button type="button" class="kbv-chip"><span class="dot" style="background: var(--pri-high)" aria-hidden="true"></span>En progreso</button>
+      <button type="button" class="kbv-chip"><span class="dot" style="background: var(--kb-hp)" aria-hidden="true"></span>Con bloqueo</button>
+      <button type="button" class="kbv-chip"><span class="dot" style="background: var(--kb-good)" aria-hidden="true"></span>Cerrados</button>
+    </div>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="lbl">Orden</span>
+    <div class="grp">
+      <button type="button" class="kbv-chip active">Más trabajo abierto</button>
+      <button type="button" class="kbv-chip">Vencimiento</button>
+      <button type="button" class="kbv-chip">Avance</button>
+    </div>
+    <div class="end">
+      <button type="button" class="kbv-btn kbv-btn-link">Limpiar</button>
+    </div>
+  </div>
+
+  <div class="kbv-canvas-grid">
+    <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-vigor)">
+      <div class="gr-top">
+        <div class="gr-name">Maratón otoño 2026</div>
+        <span class="kbv-tag">vence Sep 28</span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+        <span class="kbv-tag tint" style="--c: var(--area-vigor)">Proyecto</span>
+        <span class="kbv-tag tint" style="--c: var(--kb-hp)">2 bloqueadas</span>
+      </div>
+      <div class="kbv-progress sm" style="--c: var(--area-vigor)" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="32" aria-label="12 de 32 tareas hechas">
+        <span class="fill" style="width:38%"></span>
+      </div>
+      <div class="gr-adv">12<span class="of">/32</span><span class="sep" aria-hidden="true">·</span>38<span class="of">%</span></div>
+      <p class="kbv-meta">14 por hacer · 4 en curso · 12 hechas · se ejecuta en Salud</p>
+    </a>
+
+    <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-vigor)">
+      <div class="gr-top">
+        <div class="gr-name">Mejorar VO2 max</div>
+        <span class="kbv-tag">vence Jul 15</span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+        <span class="kbv-tag tint" style="--c: var(--area-vigor)">Proyecto</span>
+      </div>
+      <div class="kbv-progress sm" style="--c: var(--area-vigor)" role="progressbar" aria-valuenow="8" aria-valuemin="0" aria-valuemax="14" aria-label="8 de 14 tareas hechas">
+        <span class="fill" style="width:57%"></span>
+      </div>
+      <div class="gr-adv">8<span class="of">/14</span><span class="sep" aria-hidden="true">·</span>57<span class="of">%</span></div>
+      <p class="kbv-meta">4 por hacer · 2 en curso · 8 hechas · se ejecuta en Salud</p>
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     7 · EL MISMO HUECO, OTRA FORMA
+     La pestana es POLIMORFICA: cambia lo que cuelga, no la forma. Cuatro
+     escenarios, uno por cada otra manera en que el area lo llena.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="El hueco polimórfico">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">El mismo hueco, otra forma</div>
+      <span class="sub">Cambia qué cuelga y cambia el rótulo de la pestaña; la tarjeta de agrupador y la derivación del avance son las mismas en las cinco.</span>
+    </div>
+  </div>
+
+  <dl class="kbv-def side">
+    <div><dt>Vigor</dt><dd>Proyectos y metas físicas · casa: Salud · pestaña «Proyectos»</dd></div>
+    <div><dt>Sabiduría</dt><dd>Cursos, materias y lectura · casa: Estudio · pestaña «Aprendizaje»</dd></div>
+    <div><dt>Riqueza</dt><dd>Proyectos financieros, sin tareas · casa: Finanzas · pestaña «Finanzas»</dd></div>
+    <div><dt>Comunidad</dt><dd>Proyectos · <strong>sin casa</strong> · pestaña «Proyectos»</dd></div>
+    <div><dt>Voluntad</dt><dd>Retos y hábitos, no hay proyectos · casa: Hábitos y Retos · pestaña «Retos y hábitos»</dd></div>
+  </dl>
+
+  <!-- 7.1 · Sabiduria: dos listas, un solo tipo de tarjeta ─────────── -->
+  <div class="kbv-stage">
+    <div class="lbl">Sabiduría · materias y cursos</div>
+    <div class="under">
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+        <div class="txt">
+          <div class="ttl">De Sabiduría cuelgan materias (escuela formal) y cursos (autoaprendizaje)</div>
+          <div class="sub">Se separan en dos listas porque se cursan distinto, pero se dibujan con la misma tarjeta. Tocar una abre su detalle sin salir de aquí.</div>
+        </div>
+      </div>
+      <div class="kbv-kpi-grid">
+        <div class="kbv-kpi" style="--c: var(--area-wisdom)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg>Materias y cursos</div>
+          <div class="body"><div class="val">6</div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>Actividades abiertas</div>
+          <div class="body"><div class="val">48</div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--pri-high)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 3"/></svg>En progreso</div>
+          <div class="body"><div class="val">11</div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-hp)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M6.4 6.4l11.2 11.2"/></svg>Bloqueadas</div>
+          <div class="body"><div class="val">1</div></div>
+        </div>
+      </div>
+
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Materias · 3</div>
+          <span class="sub">Escuela formal.</span>
+        </div>
+        <div class="sh-act"><button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir Estudio <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+      </div>
+      <div class="kbv-canvas-grid">
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">Cálculo II</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wisdom)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg>
+              Materia
+            </span>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">1 bloqueada</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="9" aria-valuemin="0" aria-valuemax="24" aria-label="9 de 24 tareas hechas">
+            <span class="fill" style="width:38%"></span>
+          </div>
+          <div class="gr-adv">9<span class="of">/24</span><span class="sep" aria-hidden="true">·</span>38<span class="of">%</span></div>
+          <p class="kbv-meta">11 por hacer · 3 en curso · 9 hechas</p>
+        </a>
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">Álgebra lineal</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wisdom)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg>
+              Materia
+            </span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="14" aria-valuemin="0" aria-valuemax="20" aria-label="14 de 20 tareas hechas">
+            <span class="fill" style="width:70%"></span>
+          </div>
+          <div class="gr-adv">14<span class="of">/20</span><span class="sep" aria-hidden="true">·</span>70<span class="of">%</span></div>
+          <p class="kbv-meta">5 por hacer · 1 en curso · 14 hechas</p>
+        </a>
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">Bases de datos</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wisdom)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg>
+              Materia
+            </span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="18" aria-label="6 de 18 tareas hechas">
+            <span class="fill" style="width:33%"></span>
+          </div>
+          <div class="gr-adv">6<span class="of">/18</span><span class="sep" aria-hidden="true">·</span>33<span class="of">%</span></div>
+          <p class="kbv-meta">9 por hacer · 3 en curso · 6 hechas</p>
+        </a>
+      </div>
+
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Cursos · 3</div>
+          <span class="sub">Autoaprendizaje.</span>
+        </div>
+        <div class="sh-act"><button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir Estudio <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+      </div>
+      <div class="kbv-canvas-grid">
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">System Design Interview</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+              Curso
+            </span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="18" aria-valuemin="0" aria-valuemax="25" aria-label="18 de 25 tareas hechas">
+            <span class="fill" style="width:72%"></span>
+          </div>
+          <div class="gr-adv">18<span class="of">/25</span><span class="sep" aria-hidden="true">·</span>72<span class="of">%</span></div>
+          <p class="kbv-meta">5 por hacer · 2 en curso · 18 hechas</p>
+        </a>
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">SwiftUI desde cero</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+              Curso
+            </span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="4" aria-valuemin="0" aria-valuemax="12" aria-label="4 de 12 tareas hechas">
+            <span class="fill" style="width:33%"></span>
+          </div>
+          <div class="gr-adv">4<span class="of">/12</span><span class="sep" aria-hidden="true">·</span>33<span class="of">%</span></div>
+          <p class="kbv-meta">6 por hacer · 2 en curso · 4 hechas</p>
+        </a>
+        <!-- Sin tareas no hay nada que derivar: se va la barra y se va la
+             cifra. Un 0 % implicaria que se midio algo. -->
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">Machine Learning Specialization</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+              Curso
+            </span>
+            <span class="kbv-tag">Sin tareas todavía</span>
+          </div>
+          <p class="kbv-meta">Sin tareas no hay avance que derivar: no se dibuja barra ni porcentaje. Ábrelo en Estudio para anotar la primera.</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.2 · Riqueza: indicadores y metas, sin una sola tarea ──────── -->
+  <div class="kbv-stage">
+    <div class="lbl">Riqueza · indicadores y metas, sin tareas</div>
+    <div class="under">
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Riqueza se gestiona en Finanzas y no tiene tareas</div>
+          <div class="sub">Aquí ves tus <strong>indicadores clave</strong> y el avance de cada meta financiera. El avance se deriva del monto, no de una lista de tareas.</div>
+        </div>
+        <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary sm">Abrir Finanzas</button></div>
+      </div>
+      <div class="kbv-kpi-grid">
+        <div class="kbv-kpi" style="--c: var(--kb-good)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg>Saldo total</div>
+          <div class="body"><div class="val">+$28.1<span class="unit">K</span></div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-good)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2"/></svg>Patrimonio neto</div>
+          <div class="body"><div class="val">$42.3<span class="unit">K</span></div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-hp)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M6 13l6 6 6-6"/></svg>Deuda activa</div>
+          <div class="body"><div class="val">$14.2<span class="unit">K</span></div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-good)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5M6 11l6-6 6 6"/></svg>Ahorro · mes</div>
+          <div class="body"><div class="val">+$8.2<span class="unit">K</span></div></div>
+        </div>
+      </div>
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3.5l1.85 5.15L19 10.5l-5.15 1.85L12 17.5l-1.85-5.15L5 10.5l5.15-1.85z"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Tu fondo de emergencia va al 78% — la meta más cercana a cerrarse</div>
+          <div class="sub">Prioriza esos $5.4K antes de acelerar el viaje 2026.</div>
+        </div>
+      </div>
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Metas financieras · 3</div>
+          <span class="sub">El avance es monto contra meta.</span>
+        </div>
+        <div class="sh-act"><button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir Finanzas <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+      </div>
+      <div class="kbv-canvas-grid">
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wealth)">
+          <div class="gr-top"><div class="gr-name">Fondo de emergencia</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wealth)">Meta financiera</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wealth)" role="progressbar" aria-valuenow="18600" aria-valuemin="0" aria-valuemax="24000" aria-label="18.6 mil de 24 mil pesos">
+            <span class="fill" style="width:78%"></span>
+          </div>
+          <div class="gr-adv">$18.6K<span class="of">/$24K</span><span class="sep" aria-hidden="true">·</span>78<span class="of">%</span></div>
+          <p class="kbv-meta">Faltan $5.4K · se ejecuta en Finanzas</p>
+        </a>
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wealth)">
+          <div class="gr-top"><div class="gr-name">Inversión mensual</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-good)">Cumplida este mes</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wealth)" role="progressbar" aria-valuenow="6500" aria-valuemin="0" aria-valuemax="6500" aria-label="6.5 mil de 6.5 mil pesos al mes">
+            <span class="fill" style="width:100%"></span>
+          </div>
+          <div class="gr-adv">$6.5K<span class="of">/$6.5K al mes</span><span class="sep" aria-hidden="true">·</span>100<span class="of">%</span></div>
+          <p class="kbv-meta">Se reinicia cada mes · se ejecuta en Finanzas</p>
+        </a>
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-wealth)">
+          <div class="gr-top"><div class="gr-name">Viaje 2026</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wealth)">Meta financiera</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wealth)" role="progressbar" aria-valuenow="12400" aria-valuemin="0" aria-valuemax="40000" aria-label="12.4 mil de 40 mil pesos">
+            <span class="fill" style="width:31%"></span>
+          </div>
+          <div class="gr-adv">$12.4K<span class="of">/$40K</span><span class="sep" aria-hidden="true">·</span>31<span class="of">%</span></div>
+          <p class="kbv-meta">Faltan $27.6K · se ejecuta en Finanzas</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.3 · Comunidad: la misma pantalla SIN casa a donde mandar ──── -->
+  <div class="kbv-stage">
+    <div class="lbl">Comunidad · sin casa: la cabecera pierde su primario</div>
+    <div class="under">
+      <header class="kbv-page-head">
+        <div class="ph-id">
+          <nav class="kbv-crumb" aria-label="Ruta">
+            <a href="#">Tu plan</a>
+            <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+            <a href="#">Áreas</a>
+            <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+            <span class="here">Comunidad</span>
+          </nav>
+          <h1 class="kbv-h1">Comunidad</h1>
+          <p class="kbv-meta">De Comunidad cuelgan proyectos · 1 proyecto · no tiene módulo propio: se ejecuta en Proyectos</p>
+        </div>
+        <div class="ph-act">
+          <button type="button" class="kbv-btn kbv-btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>
+            Editar el área
+          </button>
+        </div>
+      </header>
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M16.5 5.2a3 3 0 0 1 0 5.9M17.5 14.9c2 .7 3.5 2.6 3.5 5.1"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Comunidad no tiene módulo propio</div>
+          <div class="sub">Sus proyectos se ejecutan en Proyectos, el módulo general. Por eso la cabecera no ofrece un botón de «abrir la casa»: no hay una a donde ir.</div>
+        </div>
+      </div>
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3.5l1.85 5.15L19 10.5l-5.15 1.85L12 17.5l-1.85-5.15L5 10.5l5.15-1.85z"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Buen balance de carga en Comunidad</div>
+          <div class="sub">Saca el siguiente del backlog cuando cierres lo activo.</div>
+        </div>
+      </div>
+      <div class="kbv-canvas-grid">
+        <a href="#" class="kbv-card compact kbv-grouper tap w-2" style="--c: var(--area-community)">
+          <div class="gr-top">
+            <div class="gr-name">Cena mensual familia</div>
+            <span class="kbv-tag">vence May 28</span>
+          </div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+            <span class="kbv-tag tint" style="--c: var(--area-community)">Proyecto</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-community)" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="5" aria-label="3 de 5 tareas hechas">
+            <span class="fill" style="width:60%"></span>
+          </div>
+          <div class="gr-adv">3<span class="of">/5</span><span class="sep" aria-hidden="true">·</span>60<span class="of">%</span></div>
+          <p class="kbv-meta">2 por hacer · 0 en curso · 3 hechas · se ejecuta en Proyectos</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7.4 · Voluntad: la pestana se delega y lo DICE ──────────────── -->
+  <div class="kbv-stage">
+    <div class="lbl">Voluntad · no hay proyectos: la pestaña se delega</div>
+    <div class="under">
+      <div class="kbv-seg" role="tablist" aria-label="Secciones del área Voluntad">
+        <button type="button" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7"/><path d="M16 8h4v4"/></svg>
+          Progreso
+        </button>
+        <button type="button" role="tab" aria-selected="true" class="on">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg>
+          Retos y hábitos
+        </button>
+        <button type="button" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.6v2.8M12 18.6v2.8M2.6 12h2.8M18.6 12h2.8M5.3 5.3l2 2M16.7 16.7l2 2M18.7 5.3l-2 2M7.3 16.7l-2 2"/></svg>
+          Configuración
+        </button>
+      </div>
+      <div class="kbv-empty">
+        <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+        <div class="ttl">De Voluntad cuelgan retos y hábitos, no proyectos</div>
+        <p class="desc">La constancia no se agrupa en proyectos: se sostiene día a día. Esta pestaña cambia de nombre y de contenido, y la dibuja su propia lámina.</p>
+        <div class="acts">
+          <button type="button" class="kbv-btn kbv-btn-primary">Abrir Hábitos y Retos</button>
+        </div>
+      </div>
+      <p class="kbv-meta">No se dibuja una pestaña vacía ni una lista de proyectos con cero elementos: la jerarquía de Voluntad declara que ahí no existen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     8 · ESTADOS DEL DATO
+     El area no calcula estas cifras: las devuelve el modulo dueno. Por eso
+     la pantalla tiene que saber decir «todavia no llega» y «no llego».
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Estados del dato">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Estados del dato</div>
+      <span class="sub">Cargando, vacío, vacío por filtro, lista vacía dentro de una sección, y error del módulo dueño.</span>
+    </div>
+  </div>
+
+  <div class="kbv-canvas-grid">
+    <div class="kbv-stage w-2">
+      <div class="lbl">Cargando</div>
+      <div class="under" aria-busy="true">
+        <div class="kbv-skel-row"><span class="kbv-skel line" style="width:32%" aria-hidden="true"></span><span class="kbv-skel line grow" aria-hidden="true"></span></div>
+        <span class="kbv-skel band" aria-hidden="true"></span>
+        <div class="kbv-skel-row">
+          <span class="kbv-skel sq" aria-hidden="true"></span>
+          <span class="kbv-skel line grow" aria-hidden="true"></span>
+          <span class="kbv-skel line" style="width:14%" aria-hidden="true"></span>
+        </div>
+        <span class="kbv-skel bar" aria-hidden="true"></span>
+        <div class="kbv-skel-row">
+          <span class="kbv-skel sq" aria-hidden="true"></span>
+          <span class="kbv-skel line grow" aria-hidden="true"></span>
+          <span class="kbv-skel line" style="width:14%" aria-hidden="true"></span>
+        </div>
+        <span class="kbv-skel bar" aria-hidden="true"></span>
+        <p class="kbv-meta">La silueta respeta el orden real: pulso arriba, agrupadores abajo. Así nada salta de sitio cuando llega el dato.</p>
+      </div>
+    </div>
+
+    <div class="kbv-stage w-2">
+      <div class="lbl">Vacío · el área todavía no agrupa nada</div>
+      <div class="under">
+        <div class="kbv-empty">
+          <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v5M9.5 13.5h5"/></svg></span>
+          <div class="ttl">Aún no hay nada en esta área</div>
+          <p class="desc">Un proyecto agrupa las tareas que empujan una misma meta, y de ellas se deriva el avance del área. Crea el primero para que empiece a subir.</p>
+          <div class="acts">
+            <button type="button" class="kbv-btn kbv-btn-primary">Crear un proyecto</button>
+            <button type="button" class="kbv-btn kbv-btn-ghost">Abrir Salud</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kbv-stage w-2">
+      <div class="lbl">Vacío por filtro · sí hay agrupadores</div>
+      <div class="under">
+        <div class="kbv-filter-bar">
+          <span class="lbl">Estado</span>
+          <div class="grp">
+            <button type="button" class="kbv-chip">Todos</button>
+            <button type="button" class="kbv-chip active"><span class="dot" style="background: var(--kb-good)" aria-hidden="true"></span>Cerrados</button>
+          </div>
+          <div class="end"><button type="button" class="kbv-btn kbv-btn-link">Limpiar</button></div>
+        </div>
+        <div class="kbv-empty compact">
+          <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></span>
+          <div class="ttl">Ningún proyecto cerrado todavía</div>
+          <p class="desc">Los 2 proyectos de Vigor siguen abiertos. Quita el filtro para verlos.</p>
+          <div class="acts"><button type="button" class="kbv-btn kbv-btn-secondary">Quitar el filtro</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kbv-stage w-2">
+      <div class="lbl">Sabiduría · una de las dos listas vacía</div>
+      <div class="under">
+        <div class="kbv-section-head">
+          <div class="sh-id">
+            <div class="kbv-eyebrow">Cursos · 0</div>
+            <span class="sub">Autoaprendizaje.</span>
+          </div>
+          <div class="sh-act"><button type="button" class="kbv-btn kbv-btn-ghost sm">Abrir Estudio <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></div>
+        </div>
+        <div class="kbv-empty compact">
+          <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          <div class="ttl">Sin cursos registrados</div>
+          <p class="desc">Tus 3 materias siguen ahí arriba. Una lista vacía no vacía la otra: cada una se dibuja por su cuenta.</p>
+          <div class="acts"><button type="button" class="kbv-btn kbv-btn-secondary">Registrar un curso</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kbv-stage w-4">
+      <div class="lbl">Error · el módulo dueño del dato no respondió</div>
+      <div class="under">
+        <div class="kbv-notice error" role="alert">
+          <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M15 9l-6 6M9 9l6 6"/></svg></span>
+          <div class="txt">
+            <div class="ttl">No se pudo leer el avance de los proyectos de Vigor</div>
+            <div class="sub">Salud no respondió. Los nombres y las fechas siguen en pantalla porque son del área; lo que falta son las cuentas de tareas, que las tiene Salud.</div>
+          </div>
+          <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary">Reintentar</button></div>
+        </div>
+        <div class="kbv-canvas-grid">
+          <div class="kbv-card compact kbv-grouper w-2" style="--c: var(--area-vigor)">
+            <div class="gr-top">
+              <div class="gr-name">Maratón otoño 2026</div>
+              <span class="kbv-tag">vence Sep 28</span>
+            </div>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+              <span class="kbv-tag tint" style="--c: var(--area-vigor)">Proyecto</span>
+            </div>
+            <div class="gr-adv">—<span class="sep" aria-hidden="true">·</span>—</div>
+            <p class="kbv-meta">Avance no disponible. La raya ocupa el lugar de la cifra: un cero diría que se midió y dio cero.</p>
+          </div>
+          <div class="kbv-card compact kbv-grouper w-2" style="--c: var(--area-vigor)">
+            <div class="gr-top">
+              <div class="gr-name">Mejorar VO2 max</div>
+              <span class="kbv-tag">vence Jul 15</span>
+            </div>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+              <span class="kbv-tag tint" style="--c: var(--area-vigor)">Proyecto</span>
+            </div>
+            <div class="gr-adv">—<span class="sep" aria-hidden="true">·</span>—</div>
+            <p class="kbv-meta">Avance no disponible.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     9 · LAS TRES LECTURAS
+     Una sola linea acompana al pulso, y la elige el dato en este orden:
+     primero el bloqueo, luego la concentracion, y si no hay ninguna de las
+     dos, el balance. Nunca se muestran dos a la vez.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Las tres lecturas">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Las tres lecturas</div>
+      <span class="sub">La misma fila, tres textos y tres tonos. El glifo acompaña siempre: el color solo no dice qué pasa.</span>
+    </div>
+  </div>
+  <div class="kbv-stage">
+    <div class="lbl">1 · Hay bloqueadas — manda el bloqueo</div>
+    <div class="under">
+      <div class="kbv-notice warn">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Tienes 2 tareas bloqueadas</div>
+          <div class="sub">Desbloquéalas primero: detienen el avance de toda el área.</div>
+        </div>
+        <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary sm">Ver las bloqueadas</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="kbv-stage">
+    <div class="lbl">2 · Sin bloqueadas — manda la concentración</div>
+    <div class="under">
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3.5l1.85 5.15L19 10.5l-5.15 1.85L12 17.5l-1.85-5.15L5 10.5l5.15-1.85z"/></svg></span>
+        <div class="txt">
+          <div class="ttl">«Maratón otoño 2026» concentra el trabajo abierto</div>
+          <div class="sub">18 de las 26 actividades abiertas de Vigor están ahí. Cerrar ahí primero es lo que más mueve al área.</div>
+        </div>
+        <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary sm">Abrir el proyecto</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="kbv-stage">
+    <div class="lbl">3 · Ni bloqueo ni concentración — balance</div>
+    <div class="under">
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3.5l1.85 5.15L19 10.5l-5.15 1.85L12 17.5l-1.85-5.15L5 10.5l5.15-1.85z"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Buen balance de carga en Vigor</div>
+          <div class="sub">Saca el siguiente del backlog cuando cierres lo activo.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     10 · MODAL · DETALLE DE MATERIA
+     Ancho lg: una lista con su detalle al lado. Solo lectura, con una
+     salida por tarea hacia donde se ejecuta.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Modal de detalle de materia">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Modal · detalle de materia</div>
+      <span class="sub">Se abre al tocar una materia o un curso de Sabiduría. Aquí, la materia con una tarea bloqueada.</span>
+    </div>
+  </div>
+  <div class="kbv-stage h-xl">
+    <div class="lbl">Materia · con bloqueadas y con tareas</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-canvas-grid">
+        <div class="kbv-card compact kbv-grouper w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">Cálculo II</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot"></span>Sabiduría</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wisdom)">Materia</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)"><span class="fill" style="width:38%"></span></div>
+          <div class="gr-adv">9<span class="of">/24</span><span class="sep">·</span>38<span class="of">%</span></div>
+        </div>
+        <div class="kbv-card compact kbv-grouper w-2" style="--c: var(--area-wisdom)">
+          <div class="gr-top"><div class="gr-name">Álgebra lineal</div></div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot"></span>Sabiduría</span>
+            <span class="kbv-tag tint" style="--c: var(--area-wisdom)">Materia</span>
+          </div>
+          <div class="kbv-progress sm" style="--c: var(--area-wisdom)"><span class="fill" style="width:70%"></span></div>
+          <div class="gr-adv">14<span class="of">/20</span><span class="sep">·</span>70<span class="of">%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card lg" role="dialog" aria-modal="true" aria-labelledby="apMateriaT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="apMateriaT">Cálculo II</div>
+            <div class="sub">Materia de Sabiduría · se cursa en Estudio</div>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+          <div class="kbv-tip-wrap">
+            <span class="kbv-tag tint" style="--c: var(--area-wisdom)">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg>
+              Materia
+            </span>
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag">24 tareas · 38% completado</span>
+          </div>
+          <div class="kbv-progress-meta" style="--c: var(--area-wisdom)">
+            <div class="top"><span class="name">Avance derivado de sus tareas</span><span class="val">9/24 · 38%</span></div>
+            <div class="kbv-progress lg" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="9" aria-valuemin="0" aria-valuemax="24" aria-label="9 de 24 tareas hechas">
+              <span class="fill" style="width:38%"></span>
+            </div>
+          </div>
+          <dl class="kbv-def side">
+            <div><dt>Por hacer</dt><dd>11 tareas</dd></div>
+            <div><dt>En curso</dt><dd>3 tareas</dd></div>
+            <div><dt>Bloqueadas</dt><dd>1 tarea — se muestra solo cuando hay alguna</dd></div>
+            <div><dt>Hechas</dt><dd>9 tareas</dd></div>
+          </dl>
+          <div class="kbv-section-head">
+            <div class="sh-id">
+              <div class="kbv-eyebrow">Sus tareas · 6 de 24</div>
+              <span class="sub">Cada renglón abre la tarea en Tareas.</span>
+            </div>
+          </div>
+          <a href="#" class="kbv-card compact row tap">
+            <span class="grow kbv-body">Entregar serie de derivadas parciales</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">Bloqueada</span>
+          </a>
+          <a href="#" class="kbv-card compact row tap">
+            <span class="grow kbv-body">Resolver la guía del parcial 2</span>
+            <span class="kbv-tag tint" style="--c: var(--pri-high)">En curso</span>
+          </a>
+          <a href="#" class="kbv-card compact row tap">
+            <span class="grow kbv-body">Repasar integrales por partes</span>
+            <span class="kbv-tag tint" style="--c: var(--pri-high)">En curso</span>
+          </a>
+          <a href="#" class="kbv-card compact row tap">
+            <span class="grow kbv-body">Leer el capítulo 7</span>
+            <span class="kbv-tag">Por hacer</span>
+          </a>
+          <a href="#" class="kbv-card compact row tap">
+            <span class="grow kbv-body">Entregar la tarea 5</span>
+            <span class="kbv-tag">Hecha</span>
+            <span class="kbv-badge" style="--c: var(--kb-good)" aria-label="Hecha">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            </span>
+          </a>
+          <a href="#" class="kbv-card compact row tap">
+            <span class="grow kbv-body">Examen rápido de límites</span>
+            <span class="kbv-tag">Hecha</span>
+            <span class="kbv-badge" style="--c: var(--kb-good)" aria-label="Hecha">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 12.5l5 5L20 6.5"/></svg>
+            </span>
+          </a>
+          <p class="kbv-meta">Se listan hasta 6. Las 18 restantes se ven en Estudio.</p>
+        </div>
+        <div class="kbv-modal-foot">
+          <button type="button" class="kbv-btn kbv-btn-ghost">Cerrar</button>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6"/><path d="M20 4l-8.5 8.5"/><path d="M19 13.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4.5"/></svg>
+              Abrir en Estudio
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     11 · MODAL · DETALLE DE CURSO, SIN BLOQUEADAS Y SIN TAREAS
+     El mismo modal en su otro estado: cambia la pastilla y el glifo, se va
+     el renglon de bloqueadas y se va la lista — no se rellena con ceros.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Modal de detalle de curso">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Modal · detalle de curso · sin tareas</div>
+      <span class="sub">Curso recién registrado: nada que derivar todavía. El área sigue pintando; lo que cambia es el tipo.</span>
+    </div>
+  </div>
+  <div class="kbv-stage h-md">
+    <div class="lbl">Curso · sin bloqueadas y sin tareas</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-skel-row"><span class="kbv-skel line" style="width:30%"></span></div>
+      <span class="kbv-skel line"></span>
+      <span class="kbv-skel line" style="width:74%"></span>
+    </div>
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card lg" role="dialog" aria-modal="true" aria-labelledby="apCursoT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="apCursoT">Machine Learning Specialization</div>
+            <div class="sub">Curso de Sabiduría · se cursa en Estudio</div>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+          <div class="kbv-tip-wrap">
+            <span class="kbv-tag">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg>
+              Curso
+            </span>
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag">Sin tareas todavía</span>
+          </div>
+          <div class="kbv-empty compact">
+            <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+            <div class="ttl">Todavía no tiene tareas</div>
+            <p class="desc">Sin tareas no hay avance que derivar, así que no se dibuja barra ni porcentaje. Anota la primera en Estudio y este curso empieza a aportarle a Sabiduría.</p>
+            <div class="acts"><button type="button" class="kbv-btn kbv-btn-secondary">Anotar la primera tarea</button></div>
+          </div>
+          <dl class="kbv-def side">
+            <div><dt>Por hacer</dt><dd>0 tareas</dd></div>
+            <div><dt>En curso</dt><dd>0 tareas</dd></div>
+            <div><dt>Hechas</dt><dd>0 tareas</dd></div>
+          </dl>
+          <p class="kbv-meta">El renglón «Bloqueadas» no aparece: se dibuja solo cuando hay al menos una.</p>
+        </div>
+        <div class="kbv-modal-foot">
+          <button type="button" class="kbv-btn kbv-btn-ghost">Cerrar</button>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6"/><path d="M20 4l-8.5 8.5"/><path d="M19 13.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4.5"/></svg>
+              Abrir en Estudio
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     12 · COMPORTAMIENTO
+     Una linea por comportamiento que el dibujo no puede decir.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Comportamiento">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Comportamiento</div>
+      <span class="sub">Para quien la construya. Nada de esto se deduce del dibujo.</span>
+    </div>
+  </div>
+  <div class="kbv-card roomy">
+    <ul class="kbv-behavior">
+      <li><span class="k">Qué cuelga</span><span class="v">La jerarquía del área decide la forma de esta pestaña: proyectos en Vigor y Comunidad, materias y cursos en Sabiduría, metas financieras en Riqueza, retos y hábitos en Voluntad. La pantalla no elige: lee la jerarquía y compone.</span></li>
+      <li><span class="k">Nombre de la pestaña</span><span class="v">También sale de ahí: «Proyectos», «Aprendizaje», «Finanzas» o «Retos y hábitos». Un rótulo fijo mentiría en tres de las cinco áreas.</span></li>
+      <li><span class="k">Agrupador</span><span class="v">Proyecto, materia, curso y meta financiera son el mismo papel y por eso la misma tarjeta. Lo que cambia es el tipo, dicho con etiqueta y glifo — nunca con un color propio: el área es la única que pinta (R-1).</span></li>
+      <li><span class="k">Avance</span><span class="v">Siempre derivado y nunca guardado: se recorre cada agrupador y se cuentan sus tareas por estado. Por eso viaja con su cuenta —«9/24 · 38%»— y jamás como porcentaje suelto, que no se puede verificar.</span></li>
+      <li><span class="k">Sin partes</span><span class="v">Un agrupador sin tareas no muestra barra ni porcentaje: no hay nada que derivar y un 0% afirmaría que se midió. En su lugar va la etiqueta «Sin tareas todavía».</span></li>
+      <li><span class="k">Riqueza</span><span class="v">Es la excepción de la derivación: sus metas no tienen tareas y el avance sale del monto contra la meta. La forma de la tarjeta no cambia; cambia de qué se deriva.</span></li>
+      <li><span class="k">Voluntad</span><span class="v">Declara que no tiene proyectos, así que esta pestaña no se dibuja vacía: se delega entera a Retos y hábitos, que tiene su propia lámina.</span></li>
+      <li><span class="k">Comunidad</span><span class="v">No tiene módulo propio. Sin casa no hay a dónde mandar, así que el primario de la cabecera desaparece —no se deshabilita— y los agrupadores abren en Proyectos, el módulo general.</span></li>
+      <li><span class="k">Tocar un agrupador</span><span class="v">Abre donde se ejecuta, con el área y el agrupador ya puestos: Salud, Estudio, Finanzas o Proyectos según la jerarquía. En Sabiduría no navega: abre primero el detalle, porque materias y cursos se comparan entre sí antes de entrar a uno.</span></li>
+      <li><span class="k">Toda la tarjeta</span><span class="v">El agrupador es un solo destino: no lleva un segundo enlace dentro. Las etiquetas y la barra son dibujo, no botones.</span></li>
+      <li><span class="k">La lectura</span><span class="v">Solo se muestra una, y se elige en orden: bloqueo, luego concentración, y si no hay ninguna de las dos, balance. Dos avisos a la vez dejan de ser un consejo.</span></li>
+      <li><span class="k">De quién es el dato</span><span class="v">Las cuentas de tareas las devuelve el módulo dueño; el área no las calcula ni las almacena. Por eso su falla no tumba la pantalla: los nombres y las fechas se quedan, y solo el avance cae a una raya.</span></li>
+      <li><span class="k">Filtros</span><span class="v">Filtran la lista, nunca el pulso: las cuatro cifras siguen contando toda el área, porque son su estado y no el de la vista. Cuando el filtro deja la lista en cero se dice que hay agrupadores y que los esconde el filtro.</span></li>
+      <li><span class="k">Modal</span><span class="v">Cierra con Escape, con clic en el velo y con su botón. El foco queda atrapado dentro mientras esté abierto y vuelve a la tarjeta que lo abrió. El renglón de bloqueadas aparece solo si hay alguna, y sin tareas no se dibuja la lista.</span></li>
+      <li><span class="k">Movimiento reducido</span><span class="v">Con <code class="kbv-code">prefers-reduced-motion</code> se apagan el latido del esqueleto, el levante de la tarjeta al pasar el cursor y la transición de las barras.</span></li>
+      <li><span class="k">Teléfono</span><span class="v">Por debajo de 640 el pulso baja a una columna, los agrupadores se apilan, la barra de filtros parte en renglones con «Limpiar» al final del suyo, y los dos modales se vuelven hoja inferior con el primario a todo el ancho del pie.</span></li>
+    </ul>
+  </div>
+</section>
           </div>
         </main>
 
