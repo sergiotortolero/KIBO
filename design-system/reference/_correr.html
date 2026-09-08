@@ -4,21 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kibo — maqueta original (referencia)</title>
+  <!-- Orden canonico, tomado de "Kibo Plataforma.dc.html" del export: las fuentes
+       primero, los tokens, los componentes del sistema, las hojas de la app, y
+       kibo-ds-align ANTES de blob y shell, no al final. -->
+  <link rel="stylesheet" href="kibo-fonts.css">
   <link rel="stylesheet" href="../colors_and_type.css">
   <link rel="stylesheet" href="../kbv-components.css">
-  <link rel="stylesheet" href="kibo-fonts.css">
   <link rel="stylesheet" href="styles-v2.css">
   <link rel="stylesheet" href="styles-extras.css">
-  <link rel="stylesheet" href="kibo-shell.css">
+  <link rel="stylesheet" href="kibo-ds-align.css">
   <link rel="stylesheet" href="kibo-blob.css">
+  <link rel="stylesheet" href="kibo-shell.css">
+  <!-- Hojas que el export no lista pero la app usa; van despues, son aditivas. -->
   <link rel="stylesheet" href="kibo-blob-extras.css">
   <link rel="stylesheet" href="kibo-wheel.css">
   <link rel="stylesheet" href="kibo-charts.css">
-  <link rel="stylesheet" href="kibo-ds-align.css">
   <style> html,body { margin:0; padding:0; height:100%; } kibo-app { display:block; min-height:100%; } </style>
 </head>
 <body>
-  <kibo-app screen="dashboard" profile="intermedio" boss="true"></kibo-app>
+  <kibo-app screen="dashboard" profile="intermedio" boss="true" primary="#1CA4A0"></kibo-app>
   <script src="kibo-boot.js"></script>
 </body>
 </html>

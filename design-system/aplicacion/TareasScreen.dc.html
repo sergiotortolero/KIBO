@@ -1574,11 +1574,1843 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<!-- ═══ CONTENIDO DE LA PANTALLA ═══
-     Sustituye ESTE comentario por el contenido completo: la cabecera de pagina
-     (.kbv-page-head con su migaja, su .kbv-h1 y sus acciones), las secciones,
-     los estados y los modales superpuestos. Todo dentro de .kbv-page.
-     No toques nada fuera de este hueco: el armazon es contrato compartido. -->
+<style>
+  /* ==================================================================
+     TAREAS — lo unico que esta pantalla estrena. Todo lo demas sale del
+     helmet: .kbv-card, .kbv-grouper, .kbv-kpi, .kbv-kanban, .kbv-areapill,
+     .kbv-filter-bar, .kbv-empty, .kbv-skel, .kbv-notice, .kbv-tip,
+     .kbv-stage, el modal, .kbv-def y .kbv-behavior.
+     Ni un color escrito a mano, y ningun porcentaje literal en un
+     color-mix: lavado y tinta se leen como CANTIDAD y ANCLA de
+     --kb-wash-* / --kb-ink-*, que el tema oscuro revalua.
+     ================================================================== */
+
+  /* ── Campo (DS 6.2) · el armazon aun no lo publica ─────────────────
+     Misma receta que las laminas hermanas: rotulo arriba, control, ayuda
+     abajo. El error SUSTITUYE a la ayuda, no se suma a ella. */
+  .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+  .kbv-label { font-family: var(--kb-f-body); font-weight: 600; font-size: var(--kb-fs-md); color: var(--kb-text); }
+  .kbv-input { box-sizing: border-box; width: 100%; height: var(--kb-ctl-h); padding: 0 var(--kb-sp-7);
+               background: var(--kb-card); border: 1.5px solid var(--kb-border);
+               border-radius: var(--kb-r-md); font-family: var(--kb-f-body); font-weight: 500;
+               font-size: var(--kb-fs-lg); color: var(--kb-text); }
+  .kbv-input::placeholder { color: var(--kb-text-2); }
+  .kbv-input:focus-visible { outline: none; border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo); }
+  textarea.kbv-input { height: auto; min-height: 108px; padding: var(--kb-sp-6) var(--kb-sp-7);
+                       line-height: var(--kb-lh-body); font-weight: 400; resize: vertical; }
+  .kbv-input.err { border-color: var(--kb-hp);
+                   box-shadow: 0 0 0 2px var(--kb-hp),
+                               0 0 0 5px color-mix(in srgb, var(--kb-hp) 10%, transparent); }
+  .kbv-help  { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); color: var(--kb-text-2); }
+  .kbv-error { display: flex; align-items: center; gap: var(--kb-sp-3);
+               font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-hp-ink); }
+  .kbv-error svg { flex: none; }
+  .kbv-fieldrow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+  /* El tipo «glifo al final» de 6.2: el galon lo dibuja un SVG, no una
+     imagen de fondo, para que herede el color del tema. */
+  .kbv-select { position: relative; display: flex; min-width: 0; }
+  .kbv-select select.kbv-input { -webkit-appearance: none; appearance: none; padding-right: 42px; }
+  .kbv-select > svg { position: absolute; right: var(--kb-sp-6); top: 50%; margin-top: -6px;
+                      pointer-events: none; color: var(--kb-text-2); }
+  .kbv-select.sm select.kbv-input { height: 36px; padding: 0 38px 0 var(--kb-sp-6);
+                                    font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
+  .kbv-select.sm > svg { right: var(--kb-sp-5); }
+
+  /* ── Modificadores de la tarjeta (6.5) ────────────────────────────
+     Se escriben con su nombre canonico para que la siguiente pantalla que
+     los necesite los suba al armazon en vez de rebautizarlos. */
+  .kbv-card.tap { color: inherit; text-decoration: none; cursor: pointer;
+                  transition: transform var(--kb-dur-fast) var(--kb-ease-out),
+                              box-shadow var(--kb-dur-fast) var(--kb-ease-out),
+                              border-color var(--kb-dur-fast) var(--kb-ease-out); }
+  .kbv-card.tap:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2);
+                        border-color: var(--kb-border-strong); text-decoration: none; }
+  .kbv-card.tap:focus-visible { outline: none; border-color: var(--kb-primary);
+                                box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+  .kbv-card.row { flex-direction: row; align-items: center; gap: var(--kb-sp-5); }
+  .kbv-card.row.wrap { flex-wrap: wrap; row-gap: var(--kb-sp-4); }
+  .kbv-card.row > .grow { flex: 1 1 auto; min-width: 0; }
+  .kbv-card.row > .grow.col { display: flex; flex-direction: column; align-items: flex-start;
+                              gap: var(--kb-sp-2); }
+  /* Cerrada: el titulo se tacha y baja al secundario. La palomita ya dice
+     que esta hecha, asi que el tachado acompana y no carga el mensaje solo. */
+  .kbv-card.done .ttl { text-decoration: line-through; color: var(--kb-text-2); }
+  /* Arrastrando: la pieza se despega. No es opacidad — una tarjeta a medio
+     tono se lee como deshabilitada. */
+  .kbv-card.dragging { border-color: var(--kb-primary); box-shadow: var(--kb-sh-3);
+                       transform: rotate(-1deg); }
+  .kbv-empty.over { border-style: dashed; border-color: var(--kb-primary);
+                    background: var(--kb-primary-soft); }
+
+  /* ── Prioridad: la MARCA ──────────────────────────────────────────
+     El area pinta y la prioridad marca, asi que la prioridad no trae
+     lavado: es un glifo en la tinta de su nivel. La FORMA dice el nivel
+     (doble galon arriba, galon, igual, galon abajo, doble galon abajo),
+     de modo que el color nunca es el unico portador del sentido. */
+  .kbv-pri { display: inline-flex; flex: none;
+             color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+
+  /* ── Esfuerzo: el MEDIDOR ─────────────────────────────────────────
+     Cuatro pasos de altura creciente. Es un glifo que hace de indicador,
+     no texto: va en --kb-text sobre la tarjeta y el paso apagado en el
+     borde fuerte, para que el escalon se vea sin depender del matiz. */
+  .kbv-effort { display: inline-flex; align-items: flex-end; gap: var(--kb-sp-1); flex: none; }
+  .kbv-effort .pip { width: 4px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong); }
+  .kbv-effort .pip:nth-child(1) { height: 6px; }
+  .kbv-effort .pip:nth-child(2) { height: 8px; }
+  .kbv-effort .pip:nth-child(3) { height: 10px; }
+  .kbv-effort .pip:nth-child(4) { height: 12px; }
+  .kbv-effort .pip.on { background: var(--kb-text); }
+
+  /* ── El asa de arrastre ───────────────────────────────────────── */
+  .kbv-grip { flex: none; display: flex; color: var(--kb-text-2); cursor: grab; }
+
+  /* ── Columna del tablero · los estados y los controles de edicion
+     que el armazon todavia no publica ──────────────────────────── */
+  .kbv-kanban-col.over { border-style: dashed; border-color: var(--kb-primary);
+                         background: var(--kb-primary-soft); }
+  .kbv-kanban-col.dragging { border-color: var(--kb-primary); box-shadow: var(--kb-sh-3); }
+  .kbv-kanban-col .col-lock { flex: none; display: flex; color: var(--kb-text-2); }
+  /* Dibuja 14 y toca 44: el disco de color cicla el color de la columna. */
+  .kbv-kanban-col .col-dot { position: relative; width: 14px; height: 14px; flex: none; padding: 0;
+                             border: 0; border-radius: var(--kb-r-pill);
+                             background: var(--c, var(--kb-text-2)); cursor: pointer; }
+  .kbv-kanban-col .col-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
+                                    width: var(--kb-touch-min); height: var(--kb-touch-min);
+                                    transform: translate(-50%, -50%); }
+  .kbv-kanban-col .col-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  /* Quitar: la misma afordancia para una columna y para un renglon del
+     checklist, por eso no vive colgada de la columna. Dibuja 22, toca 44. */
+  .col-x { position: relative; width: 22px; height: 22px; flex: none; padding: 0;
+           display: flex; align-items: center; justify-content: center;
+           border: 0; border-radius: var(--kb-r-xs); background: transparent;
+           color: var(--kb-text-2); cursor: pointer; }
+  .col-x::after { content: ""; position: absolute; left: 50%; top: 50%;
+                  width: var(--kb-touch-min); height: var(--kb-touch-min);
+                  transform: translate(-50%, -50%); }
+  .col-x:hover { background: var(--kb-surface-2); color: var(--kb-text); }
+  .col-x:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  .kbv-kanban-col .col-name-edit { flex: 1 1 auto; min-width: 0; box-sizing: border-box; height: 36px;
+                                   padding: 0 var(--kb-sp-5); border: 1.5px solid var(--kb-primary);
+                                   border-radius: var(--kb-r-sm); background: var(--kb-card);
+                                   color: var(--kb-text); font-family: var(--kb-f-display);
+                                   font-size: var(--kb-fs-md); font-weight: 700;
+                                   box-shadow: var(--kb-focus-halo); }
+  .kbv-kanban-col.add-col { align-items: center; justify-content: center; text-align: center;
+                            gap: var(--kb-sp-3); min-height: 200px; cursor: pointer;
+                            border-style: dashed; border-color: var(--kb-border-strong);
+                            background: transparent; }
+  .kbv-kanban-col.add-col:hover { border-color: var(--kb-primary); }
+  .kbv-kanban-col.add-col:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  .kbv-kanban-col.add-col .add-glyph { width: 36px; height: 36px; flex: none; border-radius: var(--kb-r-pill);
+                                       display: flex; align-items: center; justify-content: center;
+                                       background: var(--kb-surface-2); color: var(--kb-text-2); }
+  .kbv-kanban-col.add-col .add-label { font-family: var(--kb-f-display); font-weight: 700;
+                                       font-size: var(--kb-fs-md); color: var(--kb-text); }
+  .kbv-kanban-col.add-col .add-sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+
+  /* ── Cronograma ───────────────────────────────────────────────────
+     La otra lectura de la MISMA lista. La barra es el tercer patron de
+     R-1 —relleno solido con texto blanco encima—, y por eso se dibuja
+     con .kbv-tag.solid: la receta ya esta publicada y medida. Aqui solo
+     se resuelve DONDE cae y CUANTO mide. */
+  .kbv-tl { display: flex; flex-direction: column; gap: var(--kb-sp-4); min-width: 0; }
+  .kbv-tl .tl-row { display: grid; grid-template-columns: 232px minmax(0, 1fr);
+                    align-items: center; gap: var(--kb-sp-6); min-width: 0; }
+  .kbv-tl .tl-name { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0;
+                     font-size: var(--kb-fs-md); color: var(--kb-text);
+                     overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .kbv-tl .tl-scale { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+                      font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                      letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+  .kbv-tl .tl-track { position: relative; height: 30px; border-radius: var(--kb-r-sm);
+                      background: var(--kb-surface-2); }
+  .kbv-tl .tl-bar { position: absolute; top: 50%; margin-top: -11px; border: 0; cursor: pointer;
+                    overflow: hidden; justify-content: flex-start; }
+  .kbv-tl .tl-bar:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  /* El dia de hoy: una linea de marca, siempre con su rotulo en la escala. */
+  .kbv-tl .tl-today { position: absolute; top: 0; bottom: 0; width: 2px; border-radius: var(--kb-r-pill);
+                      background: var(--kb-primary); }
+
+  /* ── Renglon de palomita · checklist y sub-actividades ───────────
+     La sub-actividad es una PARTE, no una entidad: por eso es un renglon
+     y no una tarjeta. Cuando se vuelve tarea propia, deja de vivir aqui. */
+  .kbv-checkrow { display: flex; align-items: center; gap: var(--kb-sp-5); min-height: var(--kb-touch-min);
+                  min-width: 0; }
+  .kbv-checkrow > .grow { flex: 1 1 auto; min-width: 0; font-size: var(--kb-fs-md); color: var(--kb-text); }
+  .kbv-checkrow > .glyph { flex: none; display: flex; color: var(--kb-text-2); }
+  .kbv-checkrow.done > .grow { text-decoration: line-through; color: var(--kb-text-2); }
+
+  @container kbwin (max-width: 640px) {
+    .kbv-fieldrow { grid-template-columns: minmax(0, 1fr); }
+    .kbv-tl .tl-row { grid-template-columns: minmax(0, 1fr); row-gap: var(--kb-sp-3); }
+  }
+</style>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     1 · CABECERA DE PAGINA
+     La migaja se deriva del menu: grupo › destino. Tareas es hermano de
+     Areas y de Proyectos, no cria suya.
+     ══════════════════════════════════════════════════════════════════ -->
+<header class="kbv-page-head">
+  <div class="ph-id">
+    <nav class="kbv-crumb" aria-label="Ruta">
+      <a href="#">Tu plan</a>
+      <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+      <span class="here">Tareas</span>
+    </nav>
+    <div class="kbv-tip-wrap">
+      <h1 class="kbv-h1">Tareas.</h1>
+      <button type="button" class="kbv-tip-dot" aria-label="Qué es el backlog general" aria-expanded="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg>
+      </button>
+      <span class="kbv-tip" role="note">El backlog general: todo lo que debes, venga de un proyecto, de una materia, de un área o de la nada. Se ordena por cuándo lo vas a hacer, no por columna. Proyectos agrupa; aquí se decide qué sigue. Los hábitos viven aparte.</span>
+    </div>
+    <p class="kbv-meta">9 abiertas · 4 para hoy · el tablero y el cronograma son la misma lista, leída de otra forma</p>
+  </div>
+  <div class="ph-act">
+    <button type="button" class="kbv-btn kbv-btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+      Nueva tarea
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     2 · LA CADENA
+     Cuarto patron de R-1: fondo tintado CON glifo. Aqui se fija la regla
+     que el resto del producto reusa — quien produce, quien agrupa y quien
+     es solo una parte.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="La cadena">
+  <div class="kbv-notice info">
+    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg></span>
+    <div class="txt">
+      <div class="ttl">Área › agrupador › tarea › subtarea</div>
+      <div class="sub">La <strong>tarea</strong> es la que produce el hecho: ella lleva el área, el esfuerzo, la prioridad, la fecha y el estado. Todo lo de arriba se deriva de ella.</div>
+    </div>
+  </div>
+  <div class="kbv-card roomy">
+    <dl class="kbv-def side">
+      <div><dt>Área</dt><dd>El eje que pinta. No captura nada: recibe lo que las tareas producen.</dd></div>
+      <div><dt>Agrupador</dt><dd>Proyecto o curso — la misma forma jugando el mismo papel. <strong>Agrupa, no posee</strong>: su avance se deriva de sus tareas y jamás se guarda.</dd></div>
+      <div><dt>Tarea</dt><dd>La única entidad que escribe el hecho. Existe con proyecto o sin él.</dd></div>
+      <div><dt>Subtarea</dt><dd>Una <strong>parte</strong> de la tarea, sin vida propia fuera de ella. Al convertirse en tarea propia deja de ser parte y empieza a producir.</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     3 · LAS TRES LECTURAS, LOS MOMENTOS Y LOS FILTROS
+     No son tres modulos: son tres maneras de mirar la misma lista. En el
+     backlog los indicadores cuentan MOMENTOS (cuando lo haces); en el
+     tablero cuentan columnas. Son dos preguntas distintas.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Lecturas, momentos y filtros">
+  <div class="kbv-seg" role="tablist" aria-label="Cómo ver el backlog">
+    <button type="button" role="tab" aria-selected="true" class="on">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+      Backlog
+    </button>
+    <button type="button" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5"/></svg>
+      Tablero
+    </button>
+    <button type="button" role="tab" aria-selected="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>
+      Cronograma
+    </button>
+  </div>
+
+  <div class="kbv-kpi-grid">
+    <div class="kbv-kpi" style="--c: var(--pri-urgent)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v5l3 1.8"/></svg>Hoy</div>
+      <div class="body">
+        <div class="val">4</div>
+        <div class="delta">lo que cae hoy</div>
+      </div>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--pri-high)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>Esta semana</div>
+      <div class="body">
+        <div class="val">3</div>
+        <div class="delta">antes del domingo</div>
+      </div>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--pri-low)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12h13M13 6l6 6-6 6"/></svg>Después</div>
+      <div class="body">
+        <div class="val">0</div>
+        <div class="delta">sin fecha todavía</div>
+      </div>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--pri-vlow)">
+      <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.5l1.9 5.2 5.2 1.9-5.2 1.9L12 17.7l-1.9-5.2L4.9 10.6l5.2-1.9z"/></svg>Algún día</div>
+      <div class="body">
+        <div class="val">2</div>
+        <div class="delta">no compromete nada</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-filter-bar">
+    <span class="lbl">Filtros</span>
+    <div class="grp">
+      <span class="kbv-select sm">
+        <select class="kbv-input" aria-label="Filtrar por área">
+          <option>Todas las áreas</option>
+          <option>Vigor</option>
+          <option>Sabiduría</option>
+          <option>Riqueza</option>
+          <option>Comunidad</option>
+          <option>Voluntad</option>
+        </select>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+      <span class="kbv-select sm">
+        <select class="kbv-input" aria-label="Filtrar por proyecto">
+          <option>Todos los proyectos</option>
+          <option>Sin proyecto</option>
+          <option>Maratón otoño 2026</option>
+          <option>Portafolio 2026</option>
+          <option>Cálculo II</option>
+        </select>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+    </div>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="lbl">Prioridad</span>
+    <div class="grp">
+      <button type="button" class="kbv-chip active">Todas</button>
+      <button type="button" class="kbv-chip" aria-label="Solo urgentes">
+        <span class="kbv-pri" style="--c: var(--pri-urgent)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+        Urgente
+      </button>
+      <button type="button" class="kbv-chip" aria-label="Solo prioridad alta">
+        <span class="kbv-pri" style="--c: var(--pri-high)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+        Alta
+      </button>
+      <button type="button" class="kbv-chip" aria-label="Solo prioridad media">
+        <span class="kbv-pri" style="--c: var(--pri-medium)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+        Media
+      </button>
+      <button type="button" class="kbv-chip" aria-label="Solo prioridad baja">
+        <span class="kbv-pri" style="--c: var(--pri-low)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg></span>
+        Baja
+      </button>
+      <button type="button" class="kbv-chip" aria-label="Solo prioridad muy baja">
+        <span class="kbv-pri" style="--c: var(--pri-vlow)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 6l6 6 6-6"/><path d="M6 11l6 6 6-6"/></svg></span>
+        Muy baja
+      </button>
+    </div>
+    <span class="sep" aria-hidden="true"></span>
+    <span class="lbl">Complejidad</span>
+    <div class="grp">
+      <button type="button" class="kbv-chip active">Cualquiera</button>
+      <button type="button" class="kbv-chip">
+        <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span>
+        Simple
+      </button>
+      <button type="button" class="kbv-chip">
+        <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+        Media
+      </button>
+      <button type="button" class="kbv-chip">
+        <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+        Compleja
+      </button>
+      <button type="button" class="kbv-chip">
+        <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></span>
+        Épica
+      </button>
+    </div>
+    <div class="end">
+      <button type="button" class="kbv-btn kbv-btn-link">Limpiar</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     4 · VISTA BACKLOG · la identidad de la pantalla
+     Se agrupa por MOMENTO, no por columna: la pregunta es «qué sigue».
+     El alta rapida vive arriba porque anotar tiene que costar un renglon.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Backlog por momento">
+  <form class="kbv-card compact row wrap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+    <label class="kbv-sr-only" for="qa-titulo">Título de la tarea</label>
+    <input class="kbv-input" id="qa-titulo" type="text" placeholder="Anota una tarea y presiona Enter…" style="flex:1 1 320px; width:auto">
+    <span class="kbv-select">
+      <select class="kbv-input" aria-label="Momento">
+        <option>Hoy</option>
+        <option>Esta semana</option>
+        <option>Después</option>
+        <option>Algún día</option>
+      </select>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+    </span>
+    <button type="button" class="kbv-btn kbv-btn-primary">Anotar</button>
+  </form>
+  <p class="kbv-help">Hereda el área y el proyecto del filtro activo, y deriva la prioridad del momento: hoy nace urgente, algún día nace muy baja. Todo se corrige en el detalle.</p>
+
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Agrupar por</div>
+      <span class="sub">Cambia el corte, no la lista: son las mismas 11 tareas.</span>
+    </div>
+    <div class="sh-act">
+      <div class="kbv-seg" role="tablist" aria-label="Agrupar el backlog por">
+        <button type="button" role="tab" aria-selected="true" class="on">Cuándo</button>
+        <button type="button" role="tab" aria-selected="false">Proyecto</button>
+        <button type="button" role="tab" aria-selected="false">Área</button>
+        <button type="button" role="tab" aria-selected="false">Prioridad</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Hoy ──────────────────────────────────────────────────────── -->
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Hoy · 4</div>
+      <span class="sub">Lo que cae hoy. Arrastra un renglón a otro momento para moverlo.</span>
+    </div>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Entregar la serie de derivadas» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Entregar la serie de derivadas parciales</span>
+      <span class="kbv-meta">Cálculo II · 1.5 h estimadas</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+    <span class="kbv-pri" style="--c: var(--pri-urgent)" role="img" aria-label="Prioridad urgente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: compleja"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+    <span class="kbv-tag tint" style="--c: var(--pri-urgent)">vence hoy</span>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Correr 8 km del plan» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Correr 8 km del plan</span>
+      <span class="kbv-meta">Maratón otoño 2026 · 45 m estimados · en progreso</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+    <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: media"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+    <span class="kbv-tag">hoy</span>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Llamar a casa» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Llamar a casa</span>
+      <span class="kbv-meta">Sin proyecto · 20 m estimados</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+    <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: simple"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span>
+    <span class="kbv-tag">hoy</span>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Revisar el corte de la quincena» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Revisar el corte de la quincena</span>
+      <span class="kbv-meta">Sin proyecto · 30 m estimados</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+    <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: simple"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span>
+    <span class="kbv-tag">hoy</span>
+  </div>
+
+  <!-- ── Esta semana ──────────────────────────────────────────────── -->
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Esta semana · 3</div>
+      <span class="sub">Antes del domingo.</span>
+    </div>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Rediseñar la portada del portafolio» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Rediseñar la portada del portafolio</span>
+      <span class="kbv-meta">Portafolio 2026 · 3 h estimadas · 2 sub-actividades</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+    <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: compleja"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+    <span class="kbv-tag">vence Sep 12</span>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Comparar seguros de gastos médicos» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Comparar seguros de gastos médicos</span>
+      <span class="kbv-meta">Sin proyecto · 1 h estimada</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+    <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: media"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+    <span class="kbv-tag">vence Sep 13</span>
+  </div>
+
+  <!-- Arrastrando una fila: la pieza se despega y el momento destino se
+       enciende. Es el mismo gesto que mueve una tarjeta entre columnas. -->
+  <div class="kbv-card compact row wrap tap dragging" aria-grabbed="true">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Cotizar el cambio de llantas» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Cotizar el cambio de llantas</span>
+      <span class="kbv-meta">Sin proyecto · 30 m estimados · arrastrando</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+    <span class="kbv-pri" style="--c: var(--pri-low)" role="img" aria-label="Prioridad baja"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: simple"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span>
+    <span class="kbv-tag">esta semana</span>
+  </div>
+
+  <!-- ── Después · momento vacio con zona de soltar ───────────────── -->
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Después · 0</div>
+      <span class="sub">Vacío, pero se dibuja: es donde cae lo que sueltas.</span>
+    </div>
+  </div>
+  <div class="kbv-empty compact over">
+    <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg></span>
+    <div class="ttl">Arrastra aquí lo que caiga en este momento</div>
+    <p class="desc">Soltar una tarea aquí solo le cambia el momento: conserva su área, su proyecto y su columna. Si estaba hecha, vuelve a «Por hacer».</p>
+  </div>
+
+  <!-- ── Algún día ────────────────────────────────────────────────── -->
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Algún día · 2</div>
+      <span class="sub">No compromete nada. Vive aquí hasta que tenga fecha.</span>
+    </div>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Planear el viaje de fin de año» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Planear el viaje de fin de año</span>
+      <span class="kbv-meta">Sin proyecto · sin estimar</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+    <span class="kbv-pri" style="--c: var(--pri-vlow)" role="img" aria-label="Prioridad muy baja"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 6l6 6 6-6"/><path d="M6 11l6 6 6-6"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: épica"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></span>
+    <span class="kbv-tag">sin fecha</span>
+  </div>
+
+  <div class="kbv-card compact row wrap tap">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Migrar las notas viejas a la bóveda» como hecha">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Migrar las notas viejas a la bóveda</span>
+      <span class="kbv-meta">Sin proyecto · sin estimar</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+    <span class="kbv-pri" style="--c: var(--pri-vlow)" role="img" aria-label="Prioridad muy baja"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 6l6 6 6-6"/><path d="M6 11l6 6 6-6"/></svg></span>
+    <span class="kbv-effort" role="img" aria-label="Complejidad: compleja"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+    <span class="kbv-tag">sin fecha</span>
+  </div>
+
+  <!-- ── Hechas · solo aparece si hay cerradas ────────────────────── -->
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Hechas · 2</div>
+      <span class="sub">Esta sección no existe cuando no hay ninguna cerrada.</span>
+    </div>
+    <div class="sh-act">
+      <button type="button" class="kbv-btn kbv-btn-link">Ocultar las hechas</button>
+    </div>
+  </div>
+
+  <div class="kbv-card compact row wrap tap done">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Reabrir «Actualizar el currículum»">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Actualizar el currículum</span>
+      <span class="kbv-meta">Portafolio 2026 · cerrada ayer</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+    <span class="kbv-tag tint" style="--c: var(--kb-xp)">+30 XP</span>
+    <span class="kbv-tag tint" style="--c: var(--kb-coin)">+18 Divisa</span>
+  </div>
+
+  <div class="kbv-card compact row wrap tap done">
+    <span class="kbv-grip" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6" r="1.3" fill="currentColor"/><circle cx="15" cy="6" r="1.3" fill="currentColor"/><circle cx="9" cy="12" r="1.3" fill="currentColor"/><circle cx="15" cy="12" r="1.3" fill="currentColor"/><circle cx="9" cy="18" r="1.3" fill="currentColor"/><circle cx="15" cy="18" r="1.3" fill="currentColor"/></svg></span>
+    <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Reabrir «Pagar la tarjeta»">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+    </button>
+    <span class="grow col">
+      <span class="ttl kbv-body">Pagar la tarjeta</span>
+      <span class="kbv-meta">Sin proyecto · cerrada el lunes</span>
+    </span>
+    <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+    <span class="kbv-tag tint" style="--c: var(--kb-xp)">+15 XP</span>
+    <span class="kbv-tag tint" style="--c: var(--kb-coin)">+9 Divisa</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     5 · LOS OTROS TRES CORTES
+     Mismo backlog, otro encabezado de grupo. Por proyecto el encabezado ES
+     la tarjeta de agrupador, y ahi se ve la regla: el avance se DERIVA de
+     las tareas de abajo y jamas se guarda. Por eso viaja con sus partes
+     —«9/16 · 56%»— y nunca como porcentaje suelto.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Otros cortes del backlog">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Agrupado por proyecto</div>
+      <span class="sub">Proyecto y curso son la misma forma jugando el mismo papel: la misma tarjeta de agrupador. Estudio la reusa tal cual.</span>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Agrupador · proyecto</div>
+    <div class="under">
+      <div class="kbv-card compact kbv-grouper" style="--c: var(--area-vigor)">
+        <div class="gr-top">
+          <div class="gr-name">Maratón otoño 2026</div>
+          <span class="kbv-tag">vence Sep 28</span>
+        </div>
+        <div class="gr-meta">
+          <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+          <span class="kbv-tag tint" style="--c: var(--area-vigor)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/></svg>
+            Proyecto
+          </span>
+        </div>
+        <div class="kbv-progress sm" style="--c: var(--area-vigor)" role="progressbar" aria-valuenow="9" aria-valuemin="0" aria-valuemax="16" aria-label="9 de 16 tareas hechas">
+          <span class="fill" style="width:56%"></span>
+        </div>
+        <div class="gr-adv">9<span class="of">/16</span><span class="sep" aria-hidden="true">·</span>56<span class="of">%</span></div>
+        <p class="kbv-meta">5 por hacer · 2 en curso · 9 hechas · el proyecto no guarda ninguna de las cuatro</p>
+      </div>
+
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Correr 8 km del plan» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Correr 8 km del plan</span>
+        <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+        <span class="kbv-tag">hoy</span>
+      </div>
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Comprar tenis de rodaje» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Comprar tenis de rodaje</span>
+        <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+        <span class="kbv-tag">esta semana</span>
+      </div>
+
+      <div class="kbv-card compact kbv-grouper" style="--c: var(--area-wisdom)">
+        <div class="gr-top">
+          <div class="gr-name">Cálculo II</div>
+          <span class="kbv-tag">parcial Sep 19</span>
+        </div>
+        <div class="gr-meta">
+          <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+          <span class="kbv-tag tint" style="--c: var(--area-wisdom)">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg>
+            Materia
+          </span>
+        </div>
+        <div class="kbv-progress sm" style="--c: var(--area-wisdom)" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="24" aria-label="6 de 24 tareas hechas">
+          <span class="fill" style="width:25%"></span>
+        </div>
+        <div class="gr-adv">6<span class="of">/24</span><span class="sep" aria-hidden="true">·</span>25<span class="of">%</span></div>
+        <p class="kbv-meta">14 por hacer · 4 en curso · 6 hechas · misma tarjeta que el proyecto, mismo papel</p>
+      </div>
+
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Entregar la serie de derivadas parciales» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Entregar la serie de derivadas parciales</span>
+        <span class="kbv-pri" style="--c: var(--pri-urgent)" role="img" aria-label="Prioridad urgente"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+        <span class="kbv-tag tint" style="--c: var(--pri-urgent)">vence hoy</span>
+      </div>
+
+      <!-- Un agrupador SIN partes: no hay nada que derivar, asi que no se
+           dibuja barra ni porcentaje. Un 0 % afirmaria que se midio algo. -->
+      <div class="kbv-card compact kbv-grouper" style="--c: var(--area-wisdom)">
+        <div class="gr-top">
+          <div class="gr-name">Portafolio 2026</div>
+          <span class="kbv-tag">Sin tareas abiertas</span>
+        </div>
+        <div class="gr-meta">
+          <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+          <span class="kbv-tag tint" style="--c: var(--area-wisdom)">Proyecto</span>
+        </div>
+        <p class="kbv-meta">Sin tareas abiertas no hay avance que derivar en esta vista: no se dibuja barra ni porcentaje.</p>
+      </div>
+      <div class="kbv-empty compact">
+        <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M5 12h14"/></svg></span>
+        <div class="ttl">Nada por aquí</div>
+        <p class="desc">El grupo se dibuja vacío mientras se pueda soltar algo en él. Los grupos sin tareas y sin zona de soltar no se dibujan.</p>
+      </div>
+
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Sin proyecto · 5</div>
+          <span class="sub">No es un agrupador: no tiene nombre propio, no tiene avance y nada se deriva de él. Es el resto.</span>
+        </div>
+      </div>
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Llamar a casa» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Llamar a casa</span>
+        <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+        <span class="kbv-tag">hoy</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Agrupador · área y prioridad</div>
+    <div class="under">
+      <p class="kbv-meta">Por área y por prioridad el encabezado es sólo el corte: no hay entidad que agrupe, así que no hay avance que derivar ni tarjeta de agrupador.</p>
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Sabiduría · 4</div>
+          <span class="sub">El área pinta; la prioridad marca.</span>
+        </div>
+        <div class="sh-act"><span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span></div>
+      </div>
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Rediseñar la portada del portafolio» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Rediseñar la portada del portafolio</span>
+        <span class="kbv-tag">Portafolio 2026</span>
+        <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+      </div>
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Urgente · 1</div>
+          <span class="sub">El corte por prioridad ordena de urgente a muy baja, siempre en ese orden.</span>
+        </div>
+        <div class="sh-act"><span class="kbv-pri" style="--c: var(--pri-urgent)" role="img" aria-label="Prioridad urgente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span></div>
+      </div>
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Entregar la serie de derivadas parciales» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Entregar la serie de derivadas parciales</span>
+        <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+        <span class="kbv-tag tint" style="--c: var(--pri-urgent)">vence hoy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     6 · VISTA TABLERO
+     La misma lista, cortada por columna. El limite de trabajo en curso es
+     un acuerdo, no un adorno: se lee en el propio conteo («2/3») y, al
+     pasarse, la columna lo dice con texto y glifo — el color solo no puede
+     decir «te pasaste». El boton de columnas vive con el tablero: no
+     existe en Backlog ni en Cronograma.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Vista tablero">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Tablero</div>
+      <span class="sub">Las mismas 11 tareas. Aquí los indicadores cuentan columnas, no momentos.</span>
+    </div>
+    <div class="sh-act">
+      <button type="button" class="kbv-btn kbv-btn-secondary sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 6h8M18 6h2M4 12h2M12 12h8M4 18h10M20 18h0"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+        Configurar las columnas
+      </button>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Tablero · lectura</div>
+    <div class="under">
+      <div class="kbv-kpi-grid">
+        <div class="kbv-kpi" style="--c: var(--pri-vlow)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/></svg>Por hacer</div>
+          <div class="body"><div class="val">4</div><div class="delta">de 11 en pantalla</div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-primary)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 3"/></svg>En progreso</div>
+          <div class="body"><div class="val">2<span class="unit">/3</span></div><div class="delta">de 11 en pantalla</div></div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-coin)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>En revisión</div>
+          <div class="body">
+            <div class="val">3<span class="unit">/2</span></div>
+            <div class="delta bad">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+              1 sobre el límite
+            </div>
+          </div>
+        </div>
+        <div class="kbv-kpi" style="--c: var(--kb-good)">
+          <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>Hecho</div>
+          <div class="body"><div class="val">2</div><div class="delta">de 11 en pantalla</div></div>
+        </div>
+      </div>
+
+      <p class="kbv-meta">11 tareas filtradas · 4 columnas · toca una tarjeta para abrir su detalle</p>
+
+      <div class="kbv-kanban">
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--pri-vlow)">
+              <span class="col-lock" role="img" aria-label="Columna fija: no se mueve ni se borra"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg></span>
+              <span class="dot" aria-hidden="true"></span>
+              Por hacer
+            </span>
+            <span class="count">4</span>
+          </div>
+          <div class="kbv-card compact tap" style="--c: var(--area-wisdom)">
+            <span class="kbv-body ttl">Entregar la serie de derivadas parciales</span>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+              <span class="kbv-pri" style="--c: var(--pri-urgent)" role="img" aria-label="Prioridad urgente"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+              <span class="kbv-effort" role="img" aria-label="Complejidad: compleja"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+            </div>
+          </div>
+          <div class="kbv-card compact tap">
+            <span class="kbv-body ttl">Comparar seguros de gastos médicos</span>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+              <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+              <span class="kbv-effort" role="img" aria-label="Complejidad: media"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+            </div>
+          </div>
+          <button type="button" class="col-add">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+            Tarea aquí
+          </button>
+        </div>
+
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-primary)">
+              <span class="dot" aria-hidden="true"></span>
+              En progreso
+            </span>
+            <span class="count">2/3</span>
+          </div>
+          <div class="kbv-card compact tap">
+            <span class="kbv-body ttl">Correr 8 km del plan</span>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+              <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+              <span class="kbv-effort" role="img" aria-label="Complejidad: media"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+            </div>
+          </div>
+          <button type="button" class="col-add">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+            Tarea aquí
+          </button>
+        </div>
+
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-coin)">
+              <span class="dot" aria-hidden="true"></span>
+              En revisión
+            </span>
+            <span class="count over">3/2</span>
+          </div>
+          <p class="col-warn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+            Te pasaste del límite: 3 de 2. Cierra una antes de jalar otra.
+          </p>
+          <div class="kbv-card compact tap">
+            <span class="kbv-body ttl">Rediseñar la portada del portafolio</span>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+              <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+              <span class="kbv-effort" role="img" aria-label="Complejidad: compleja"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+            </div>
+          </div>
+          <button type="button" class="col-add">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+            Tarea aquí
+          </button>
+        </div>
+
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-good)">
+              <span class="col-lock" role="img" aria-label="Columna fija: no se mueve ni se borra"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg></span>
+              <span class="dot" aria-hidden="true"></span>
+              Hecho
+            </span>
+            <span class="count">2</span>
+          </div>
+          <div class="kbv-card compact tap done">
+            <span class="kbv-body ttl">Actualizar el currículum</span>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+              <span class="kbv-tag tint" style="--c: var(--kb-xp)">+30 XP</span>
+            </div>
+          </div>
+          <button type="button" class="col-add">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+            Tarea aquí
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Tablero · arrastrando una tarjeta</div>
+    <div class="under">
+      <p class="kbv-meta">Soltar una tarjeta en otra columna cambia su estado, nada más: el momento, el área y el proyecto se quedan como estaban.</p>
+      <div class="kbv-kanban">
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--pri-vlow)"><span class="dot" aria-hidden="true"></span>Por hacer</span>
+            <span class="count">3</span>
+          </div>
+          <div class="kbv-card compact tap dragging" aria-grabbed="true">
+            <span class="kbv-body ttl">Comparar seguros de gastos médicos</span>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+              <span class="kbv-tag">arrastrando</span>
+            </div>
+          </div>
+        </div>
+        <div class="kbv-kanban-col over">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-primary)"><span class="dot" aria-hidden="true"></span>En progreso</span>
+            <span class="count">2/3</span>
+          </div>
+          <div class="kbv-empty compact over">
+            <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4v12"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg></span>
+            <div class="ttl">Suelta aquí</div>
+            <p class="desc">Queda en «En progreso» y el conteo pasa a 3/3.</p>
+          </div>
+        </div>
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-coin)"><span class="dot" aria-hidden="true"></span>En revisión</span>
+            <span class="count over">3/2</span>
+          </div>
+          <p class="col-warn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4l9 16H3z"/><path d="M12 10v4"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+            Te pasaste del límite: 3 de 2.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Tablero · editando las columnas</div>
+    <div class="under">
+      <div class="kbv-section-head">
+        <div class="sh-id">
+          <div class="kbv-eyebrow">Modo edición</div>
+          <span class="sub">Arrastra para reordenar, toca el nombre para renombrar, toca el disco para ciclar el color.</span>
+        </div>
+        <div class="sh-act">
+          <button type="button" class="kbv-btn kbv-btn-primary sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+            Terminar de editar
+          </button>
+        </div>
+      </div>
+      <div class="kbv-kanban">
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--pri-vlow)">
+              <span class="col-lock" role="img" aria-label="Columna fija: no se mueve ni se borra"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg></span>
+              <button type="button" class="col-dot" aria-label="Cambiar el color de «Por hacer»"></button>
+              Por hacer
+            </span>
+            <span class="count">4</span>
+          </div>
+          <p class="kbv-meta">Fija: primera del flujo. No se mueve ni se quita.</p>
+        </div>
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-primary)">
+              <button type="button" class="col-dot" aria-label="Cambiar el color de «En progreso»"></button>
+              <input class="col-name-edit" type="text" value="En progreso" aria-label="Nombre de la columna">
+            </span>
+            <button type="button" class="col-x" aria-label="Quitar la columna «En progreso»">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <p class="kbv-meta">Enter guarda, Escape cancela, salir del campo guarda.</p>
+        </div>
+        <div class="kbv-kanban-col dragging" aria-grabbed="true">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-coin)">
+              <button type="button" class="col-dot" aria-label="Cambiar el color de «En revisión»"></button>
+              En revisión
+            </span>
+            <button type="button" class="col-x" aria-label="Quitar la columna «En revisión»">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <p class="kbv-meta">Arrastrando la columna. Las fijas se quedan ancladas en su extremo.</p>
+        </div>
+        <div class="kbv-kanban-col">
+          <div class="col-head">
+            <span class="col-name" style="--c: var(--kb-good)">
+              <span class="col-lock" role="img" aria-label="Columna fija: no se mueve ni se borra"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg></span>
+              <button type="button" class="col-dot" aria-label="Cambiar el color de «Hecho»"></button>
+              Hecho
+            </span>
+            <span class="count">2</span>
+          </div>
+          <p class="kbv-meta">Fija: última del flujo. Cerrar aquí es lo que paga XP y Divisa.</p>
+        </div>
+        <button type="button" class="kbv-kanban-col add-col">
+          <span class="add-glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span class="add-label">Nueva columna</span>
+          <span class="add-sub">Entra antes de «Hecho» · mínimo 2 columnas</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     7 · VISTA CRONOGRAMA
+     La tercera lectura de la misma lista: cuando cae cada cosa. La barra
+     es el tercer patron de R-1 (relleno solido con texto blanco), y se
+     dibuja con .kbv-tag.solid porque esa receta ya esta publicada.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Vista cronograma">
+  <div class="kbv-stage">
+    <div class="lbl">Cronograma · cuándo cae cada cosa</div>
+    <div class="under">
+      <div class="kbv-card">
+        <div class="kbv-card-head">
+          <div class="sh-id">
+            <div class="kbv-card-title">Cronograma · cuándo cae cada cosa</div>
+            <div class="kbv-card-sub">Cada tarea en su momento. Acércate con la rueda, muévete arrastrando y toca una barra para abrirla.</div>
+          </div>
+          <span class="kbv-select sm">
+            <select class="kbv-input" aria-label="Filtrar por estatus">
+              <option>Todos los estatus</option>
+              <option>Por hacer</option>
+              <option>En progreso</option>
+              <option>En revisión</option>
+              <option>Hecho</option>
+            </select>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+          </span>
+        </div>
+        <div class="kbv-tl">
+          <div class="tl-row">
+            <span class="kbv-eyebrow">Tarea</span>
+            <span class="tl-scale" aria-hidden="true"><span>Sep 8</span><span>Sep 15</span><span>Sep 22</span><span>Sep 29</span><span>Oct 6</span></span>
+          </div>
+          <div class="tl-row">
+            <span class="tl-name">
+              <span class="kbv-pri" style="--c: var(--pri-urgent)" role="img" aria-label="Prioridad urgente"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+              Entregar la serie de derivadas
+            </span>
+            <span class="tl-track">
+              <span class="tl-today" aria-hidden="true" style="left:2%"></span>
+              <button type="button" class="kbv-tag solid tl-bar" style="--c: var(--area-wisdom); left:1%; width:12%">Sabiduría</button>
+            </span>
+          </div>
+          <div class="tl-row">
+            <span class="tl-name">
+              <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+              Correr 8 km del plan
+            </span>
+            <span class="tl-track">
+              <span class="tl-today" aria-hidden="true" style="left:2%"></span>
+              <button type="button" class="kbv-tag solid tl-bar" style="--c: var(--area-vigor); left:1%; width:26%">Vigor · 55%</button>
+            </span>
+          </div>
+          <div class="tl-row">
+            <span class="tl-name">
+              <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+              Rediseñar la portada
+            </span>
+            <span class="tl-track">
+              <span class="tl-today" aria-hidden="true" style="left:2%"></span>
+              <button type="button" class="kbv-tag solid tl-bar" style="--c: var(--area-wisdom); left:6%; width:22%">Sabiduría</button>
+            </span>
+          </div>
+          <div class="tl-row">
+            <span class="tl-name">
+              <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+              Comparar seguros
+            </span>
+            <span class="tl-track">
+              <span class="tl-today" aria-hidden="true" style="left:2%"></span>
+              <button type="button" class="kbv-tag solid tl-bar" style="--c: var(--area-wealth); left:14%; width:18%">Riqueza</button>
+            </span>
+          </div>
+          <div class="tl-row">
+            <span class="tl-name">
+              <span class="kbv-pri" style="--c: var(--pri-medium)" role="img" aria-label="Prioridad media"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+              Comprar tenis de rodaje
+            </span>
+            <span class="tl-track">
+              <span class="tl-today" aria-hidden="true" style="left:2%"></span>
+              <button type="button" class="kbv-tag solid tl-bar" style="--c: var(--area-vigor); left:30%; width:16%">Vigor</button>
+            </span>
+          </div>
+          <div class="tl-row">
+            <span class="tl-name">
+              <span class="kbv-pri" style="--c: var(--pri-vlow)" role="img" aria-label="Prioridad muy baja"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 6l6 6 6-6"/><path d="M6 11l6 6 6-6"/></svg></span>
+              Planear el viaje de fin de año
+            </span>
+            <span class="tl-track">
+              <span class="tl-today" aria-hidden="true" style="left:2%"></span>
+              <button type="button" class="kbv-tag solid tl-bar" style="--c: var(--area-community); left:62%; width:30%">Comunidad</button>
+            </span>
+          </div>
+        </div>
+        <div class="kbv-card-foot">
+          <p class="kbv-meta">La línea de marca es hoy. Mover una barra cambia las fechas de la tarea, no su columna.</p>
+          <button type="button" class="kbv-btn kbv-btn-link">Ver todo el periodo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Cronograma · sin nada en el periodo</div>
+    <div class="under">
+      <div class="kbv-empty">
+        <span class="glyph" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg></span>
+        <div class="ttl">Sin tareas en este periodo o estatus</div>
+        <p class="desc">Las tareas siguen ahí: lo que no alcanza son estas cinco semanas o el estatus elegido. Amplía el periodo o vuelve a «Todos los estatus».</p>
+        <div class="acts">
+          <button type="button" class="kbv-btn kbv-btn-secondary">Todos los estatus</button>
+          <button type="button" class="kbv-btn kbv-btn-ghost">Ampliar el periodo</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     8 · LOS ESTADOS DEL DATO
+     Cargando, error, vacio de origen, vacio por filtro y llegada por
+     enlace profundo. Los cinco se dibujan: una descripcion en prosa no se
+     puede comparar contra nada.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Estados del dato">
+  <div class="kbv-stage">
+    <div class="lbl">Cargando</div>
+    <div class="under" aria-busy="true">
+      <div class="kbv-kpi-grid">
+        <div class="kbv-kpi"><span class="kbv-skel band" aria-hidden="true"></span><div class="body"><span class="kbv-skel big" style="width:40%" aria-hidden="true"></span><span class="kbv-skel line" style="width:70%" aria-hidden="true"></span></div></div>
+        <div class="kbv-kpi"><span class="kbv-skel band" aria-hidden="true"></span><div class="body"><span class="kbv-skel big" style="width:40%" aria-hidden="true"></span><span class="kbv-skel line" style="width:70%" aria-hidden="true"></span></div></div>
+        <div class="kbv-kpi"><span class="kbv-skel band" aria-hidden="true"></span><div class="body"><span class="kbv-skel big" style="width:40%" aria-hidden="true"></span><span class="kbv-skel line" style="width:70%" aria-hidden="true"></span></div></div>
+        <div class="kbv-kpi"><span class="kbv-skel band" aria-hidden="true"></span><div class="body"><span class="kbv-skel big" style="width:40%" aria-hidden="true"></span><span class="kbv-skel line" style="width:70%" aria-hidden="true"></span></div></div>
+      </div>
+      <div class="kbv-card compact row">
+        <span class="kbv-skel sq" aria-hidden="true"></span>
+        <span class="kbv-skel line grow" aria-hidden="true"></span>
+        <span class="kbv-skel line" style="width:96px" aria-hidden="true"></span>
+      </div>
+      <div class="kbv-card compact row">
+        <span class="kbv-skel sq" aria-hidden="true"></span>
+        <span class="kbv-skel line grow" aria-hidden="true"></span>
+        <span class="kbv-skel line" style="width:96px" aria-hidden="true"></span>
+      </div>
+      <div class="kbv-card compact row">
+        <span class="kbv-skel sq" aria-hidden="true"></span>
+        <span class="kbv-skel line grow" aria-hidden="true"></span>
+        <span class="kbv-skel line" style="width:96px" aria-hidden="true"></span>
+      </div>
+      <p class="kbv-meta">La silueta conserva el número de renglones y su alto: al llegar el dato nada salta de sitio.</p>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Error al traer las tareas</div>
+    <div class="under">
+      <div class="kbv-notice error">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><circle cx="12" cy="16.5" r="1" fill="currentColor"/></svg></span>
+        <div class="txt">
+          <div class="ttl">No se pudieron traer tus tareas</div>
+          <div class="sub">Lo que ves es lo último que se guardó en este dispositivo, del <strong>8 de septiembre, 7:40</strong>. Nada se perdió y nada se envió: lo que anotes ahora se queda en cola.</div>
+        </div>
+        <div class="act">
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v5h-5"/></svg>
+            Reintentar
+          </button>
+        </div>
+      </div>
+      <div class="kbv-card compact row wrap">
+        <span class="kbv-check" aria-hidden="true"></span>
+        <span class="grow kbv-body ttl">Entregar la serie de derivadas parciales</span>
+        <span class="kbv-tag">en cola</span>
+      </div>
+      <p class="kbv-meta">Los indicadores caen a una raya: la cifra que no se pudo derivar no se rellena con el último valor conocido.</p>
+      <div class="kbv-kpi-grid">
+        <div class="kbv-kpi" style="--c: var(--pri-urgent)"><div class="band">Hoy</div><div class="body"><div class="val">—</div></div></div>
+        <div class="kbv-kpi" style="--c: var(--pri-high)"><div class="band">Esta semana</div><div class="body"><div class="val">—</div></div></div>
+        <div class="kbv-kpi" style="--c: var(--pri-low)"><div class="band">Después</div><div class="body"><div class="val">—</div></div></div>
+        <div class="kbv-kpi" style="--c: var(--pri-vlow)"><div class="band">Algún día</div><div class="body"><div class="val">—</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Vacío · todavía no hay ninguna tarea</div>
+    <div class="under">
+      <div class="kbv-empty">
+        <span class="glyph" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+        <div class="ttl">Tu backlog está limpio</div>
+        <p class="desc">Aquí cae todo lo que debes hacer, venga de un proyecto, de una materia o de la nada. Anota la primera con su momento y KIBO se encarga de recordártela.</p>
+        <div class="acts">
+          <button type="button" class="kbv-btn kbv-btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+            Anotar la primera tarea
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-ghost">Traerlas de un proyecto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Vacío por filtro · hay tareas, el filtro las esconde</div>
+    <div class="under">
+      <div class="kbv-filter-bar">
+        <span class="lbl">Filtros</span>
+        <div class="grp">
+          <button type="button" class="kbv-chip active"><span class="dot" style="background: var(--area-will)" aria-hidden="true"></span>Voluntad</button>
+          <button type="button" class="kbv-chip active">
+            <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></span>
+            Épica
+          </button>
+        </div>
+        <div class="end"><button type="button" class="kbv-btn kbv-btn-link">Limpiar</button></div>
+      </div>
+      <div class="kbv-empty compact">
+        <span class="glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></span>
+        <div class="ttl">Hay 11 tareas; este filtro no deja ninguna</div>
+        <p class="desc">Ninguna tarea de Voluntad es épica. Quita uno de los dos filtros o límpialos: el backlog no cambió, sólo la vista.</p>
+        <div class="acts"><button type="button" class="kbv-btn kbv-btn-secondary">Limpiar los filtros</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage">
+    <div class="lbl">Llegada desde Estudio · filtro puesto por el enlace</div>
+    <div class="under">
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11.5V17c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-5.5"/></svg></span>
+        <div class="txt">
+          <div class="ttl">Llegaste desde Cálculo II</div>
+          <div class="sub">El área y la materia vienen puestas por el enlace. Es un filtro, no otra pantalla: quítalo y vuelve el backlog completo.</div>
+        </div>
+        <div class="act"><button type="button" class="kbv-btn kbv-btn-secondary sm">Ver todo el backlog</button></div>
+      </div>
+      <div class="kbv-filter-bar">
+        <span class="lbl">Filtros</span>
+        <div class="grp">
+          <button type="button" class="kbv-chip active"><span class="dot" style="background: var(--area-wisdom)" aria-hidden="true"></span>Sabiduría</button>
+          <button type="button" class="kbv-chip active">Cálculo II</button>
+        </div>
+        <div class="end"><button type="button" class="kbv-btn kbv-btn-link">Limpiar</button></div>
+      </div>
+      <div class="kbv-card compact row wrap tap">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Entregar la serie de derivadas parciales» como hecha">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg>
+        </button>
+        <span class="grow kbv-body ttl">Entregar la serie de derivadas parciales</span>
+        <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+        <span class="kbv-tag tint" style="--c: var(--pri-urgent)">vence hoy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     9 · MODAL · NUEVA TAREA
+     Ancho por defecto (580): un formulario de hasta seis campos. Lo que
+     nace aqui es la entidad que PRODUCE: sin agrupador tambien existe.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Modal de alta de tarea">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Modal · nueva tarea</div>
+      <span class="sub">El proyecto es opcional y por eso va después del área: una tarea sin proyecto es una tarea completa.</span>
+    </div>
+  </div>
+  <div class="kbv-stage h-xl">
+    <div class="lbl">Alta de tarea</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-skel-row"><span class="kbv-skel line" style="width:34%"></span></div>
+      <span class="kbv-skel line"></span>
+      <span class="kbv-skel line" style="width:72%"></span>
+    </div>
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card" role="dialog" aria-modal="true" aria-labelledby="tkNuevaT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="tkNuevaT">Nueva tarea</div>
+            <div class="sub">Lo mínimo es el título y el momento. Todo lo demás se corrige después.</div>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+          <div class="kbv-field">
+            <label class="kbv-label" for="nt-titulo">Título</label>
+            <input class="kbv-input" id="nt-titulo" type="text" value="Preparar el guion de la entrevista">
+          </div>
+          <div class="kbv-fieldrow">
+            <div class="kbv-field">
+              <label class="kbv-label" for="nt-momento">Momento</label>
+              <span class="kbv-select">
+                <select class="kbv-input" id="nt-momento">
+                  <option>Esta semana</option>
+                  <option>Hoy</option>
+                  <option>Después</option>
+                  <option>Algún día</option>
+                </select>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+              <span class="kbv-help">De aquí sale la prioridad inicial.</span>
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label" for="nt-fecha">Fecha objetivo</label>
+              <input class="kbv-input" id="nt-fecha" type="date" value="2026-09-12">
+              <span class="kbv-help">Opcional. Sin fecha no aparece en el cronograma.</span>
+            </div>
+          </div>
+          <div class="kbv-fieldrow">
+            <div class="kbv-field">
+              <label class="kbv-label" for="nt-area">Área</label>
+              <span class="kbv-select">
+                <select class="kbv-input" id="nt-area">
+                  <option>Comunidad</option>
+                  <option>Vigor</option>
+                  <option>Sabiduría</option>
+                  <option>Riqueza</option>
+                  <option>Voluntad</option>
+                </select>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label" for="nt-proyecto">Proyecto</label>
+              <span class="kbv-select">
+                <select class="kbv-input" id="nt-proyecto">
+                  <option>Sin proyecto</option>
+                  <option>Maratón otoño 2026</option>
+                  <option>Portafolio 2026</option>
+                  <option>Cálculo II</option>
+                </select>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+              <span class="kbv-help">Opcional: sin proyecto la tarea es igual de válida.</span>
+            </div>
+          </div>
+          <div class="kbv-field">
+            <span class="kbv-label" id="nt-pri-lbl">Prioridad</span>
+            <div class="kbv-filter-bar" role="group" aria-labelledby="nt-pri-lbl">
+              <div class="grp">
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-urgent)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+                  Urgente
+                </button>
+                <button type="button" class="kbv-chip active">
+                  <span class="kbv-pri" style="--c: var(--pri-high)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+                  Alta
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-medium)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+                  Media
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-low)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg></span>
+                  Baja
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-vlow)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 6l6 6 6-6"/><path d="M6 11l6 6 6-6"/></svg></span>
+                  Muy baja
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="kbv-field">
+            <span class="kbv-label" id="nt-esf-lbl">Complejidad</span>
+            <div class="kbv-filter-bar" role="group" aria-labelledby="nt-esf-lbl">
+              <div class="grp">
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span>
+                  Simple
+                </button>
+                <button type="button" class="kbv-chip active">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+                  Media
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+                  Compleja
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></span>
+                  Épica
+                </button>
+              </div>
+            </div>
+            <span class="kbv-help">Prioridad y complejidad son las que fijan lo que paga al cerrarse.</span>
+          </div>
+          <div class="kbv-field">
+            <label class="kbv-label" for="nt-tiempo">Tiempo estimado</label>
+            <input class="kbv-input" id="nt-tiempo" type="text" value="45 m" placeholder="45 m · 1.5 h…">
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <div class="kbv-tip-wrap">
+            <span class="kbv-tag tint" style="--c: var(--kb-xp)">+40 XP</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-coin)">+24 Divisa</span>
+            <button type="button" class="kbv-tip-dot" aria-label="Cómo se calcula la recompensa" aria-expanded="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg>
+            </button>
+            <span class="kbv-tip" role="note">Se paga al cerrar la tarea, no al crearla, y sale del peso de la prioridad por el de la complejidad.<span class="fx">prioridad × complejidad · ×5 XP · ×3 Divisa</span></span>
+          </div>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+            <button type="button" class="kbv-btn kbv-btn-primary">Crear la tarea</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     10 · MODAL · DETALLE DE LA TAREA
+     Es el detalle homologado: lo abren la fila del backlog, la tarjeta del
+     tablero, la barra del cronograma y Estudio. Ancho lg. Dos estados: la
+     meta plegada (tira de solo lectura) y desplegada (rejilla de edicion).
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Modal de detalle de tarea">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Modal · detalle · meta plegada</div>
+      <span class="sub">Lo que se lee de un vistazo. La recompensa está siempre a la vista, en el pie, y no cambia al desplegar.</span>
+    </div>
+  </div>
+  <div class="kbv-stage h-xl">
+    <div class="lbl">Detalle de tarea · lectura</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-skel-row"><span class="kbv-skel line" style="width:30%"></span></div>
+      <span class="kbv-skel line"></span>
+      <span class="kbv-skel line" style="width:74%"></span>
+    </div>
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card lg" role="dialog" aria-modal="true" aria-labelledby="tkDetT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="tkDetT">Rediseñar la portada del portafolio</div>
+            <div class="sub">Tarea de Portafolio 2026 · el proyecto agrupa; esta tarea es la que produce</div>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+          <div class="kbv-tip-wrap">
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+            <span class="kbv-tag">Portafolio 2026</span>
+            <span class="kbv-pri" style="--c: var(--pri-high)" role="img" aria-label="Prioridad alta"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+            <span class="kbv-effort" role="img" aria-label="Complejidad: compleja"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+            <span class="kbv-tag">3 h estimadas</span>
+            <span class="kbv-tag">Sep 8 → Sep 12 · 5 días</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-coin)">En revisión</span>
+            <button type="button" class="kbv-btn kbv-btn-link">Editar</button>
+          </div>
+          <p class="kbv-body kbv-prose">Rehacer la portada con el caso de estudio de Kibo arriba y bajar el bloque de contacto. Falta decidir si la tipografía de titulares se queda.</p>
+
+          <div class="kbv-section-head">
+            <div class="sh-id">
+              <div class="kbv-eyebrow">Checklist</div>
+              <span class="sub">Pasos de esta tarea. No son tareas: no tienen área, ni fecha, ni pagan por separado.</span>
+            </div>
+            <div class="sh-act">
+              <div class="kbv-progress-meta tone-progress" style="width:180px">
+                <div class="top"><span class="name">Completados</span><span class="val">3/5</span></div>
+                <span class="kbv-progress sm tone-progress"><span class="fill" style="width:60%"></span></span>
+              </div>
+            </div>
+          </div>
+          <div class="kbv-checkrow done">
+            <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Desmarcar «Recolectar referencias»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Recolectar referencias</span>
+          </div>
+          <div class="kbv-checkrow done">
+            <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Desmarcar «Bocetar tres portadas»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Bocetar tres portadas</span>
+          </div>
+          <div class="kbv-checkrow done">
+            <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Desmarcar «Elegir la tipografía de titulares»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Elegir la tipografía de titulares</span>
+          </div>
+          <div class="kbv-checkrow">
+            <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Maquetar la versión de teléfono»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Maquetar la versión de teléfono</span>
+            <button type="button" class="col-x" aria-label="Eliminar «Maquetar la versión de teléfono» del checklist">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <div class="kbv-checkrow">
+            <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Revisar contraste del texto sobre la foto»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Revisar contraste del texto sobre la foto</span>
+            <button type="button" class="col-x" aria-label="Eliminar «Revisar contraste del texto sobre la foto» del checklist">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <div class="kbv-checkrow">
+            <span class="glyph" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+            <label class="kbv-sr-only" for="dt-nuevo-check">Nuevo ítem del checklist</label>
+            <input class="kbv-input grow" id="dt-nuevo-check" type="text" placeholder="Nuevo ítem del checklist…">
+          </div>
+
+          <div class="kbv-section-head">
+            <div class="sh-id">
+              <div class="kbv-eyebrow">Sub-actividades</div>
+              <span class="sub">Una parte, no una entidad: al convertirse en tarea propia sale de aquí y empieza a producir por su cuenta.</span>
+            </div>
+            <div class="sh-act"><span class="kbv-tag">1/3 hechas</span></div>
+          </div>
+          <div class="kbv-checkrow done">
+            <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Desmarcar «Exportar los assets a 2x»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Exportar los assets a 2x</span>
+          </div>
+          <div class="kbv-checkrow">
+            <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Escribir el texto del caso de estudio»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Escribir el texto del caso de estudio</span>
+            <button type="button" class="kbv-btn kbv-btn-link">Volverla tarea</button>
+          </div>
+          <div class="kbv-checkrow">
+            <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Pedir revisión a dos personas»"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button>
+            <span class="grow">Pedir revisión a dos personas</span>
+            <button type="button" class="kbv-btn kbv-btn-link">Volverla tarea</button>
+          </div>
+          <div class="kbv-checkrow">
+            <span class="glyph" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+            <label class="kbv-sr-only" for="dt-nueva-sub">Nueva sub-actividad</label>
+            <input class="kbv-input grow" id="dt-nueva-sub" type="text" placeholder="Nueva sub-actividad (se convierte en tarea propia)…">
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="dt-notas">Notas adicionales</label>
+            <textarea class="kbv-input" id="dt-notas" rows="3">La foto de la portada la toma Ana el jueves.</textarea>
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <div class="kbv-tip-wrap">
+            <span class="kbv-tag tint" style="--c: var(--kb-xp)">+60 XP</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-coin)">+36 Divisa</span>
+            <button type="button" class="kbv-tip-dot" aria-label="Cómo se calcula la recompensa" aria-expanded="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 7.6v.2"/></svg>
+            </button>
+            <span class="kbv-tip" role="note">Alta por compleja, y se paga entero al cerrar la tarea: el checklist y las sub-actividades no pagan por separado.<span class="fx">prioridad × complejidad · ×5 XP · ×3 Divisa</span></span>
+          </div>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6"/><path d="M20 4l-8.5 8.5"/><path d="M19 13.5V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h4.5"/></svg>
+              Ver pantalla completa
+            </button>
+            <button type="button" class="kbv-btn kbv-btn-primary">Marcar hecha</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Modal · detalle · meta desplegada</div>
+      <span class="sub">El mismo modal con el bloque de edición abierto. Cambia la meta, no la identidad: el título, el checklist y el pie siguen donde estaban.</span>
+    </div>
+  </div>
+  <div class="kbv-stage h-xl">
+    <div class="lbl">Detalle de tarea · edición de la meta</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-skel-row"><span class="kbv-skel line" style="width:30%"></span></div>
+      <span class="kbv-skel line"></span>
+      <span class="kbv-skel line" style="width:64%"></span>
+    </div>
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card lg" role="dialog" aria-modal="true" aria-labelledby="tkDetEdT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="tkDetEdT">Rediseñar la portada del portafolio</div>
+            <div class="sub">Editando la meta. Guardar aplica los cambios; cancelar los descarta.</div>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+          <div class="kbv-field">
+            <label class="kbv-label" for="de-titulo">Título</label>
+            <input class="kbv-input" id="de-titulo" type="text" value="Rediseñar la portada del portafolio">
+          </div>
+          <div class="kbv-fieldrow">
+            <div class="kbv-field">
+              <label class="kbv-label" for="de-area">Área</label>
+              <span class="kbv-select">
+                <select class="kbv-input" id="de-area">
+                  <option>Sabiduría</option>
+                  <option>Vigor</option>
+                  <option>Riqueza</option>
+                  <option>Comunidad</option>
+                  <option>Voluntad</option>
+                </select>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label" for="de-proyecto">Proyecto</label>
+              <span class="kbv-select">
+                <select class="kbv-input" id="de-proyecto">
+                  <option>Portafolio 2026</option>
+                  <option>Sin proyecto</option>
+                  <option>Maratón otoño 2026</option>
+                  <option>Cálculo II</option>
+                </select>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+              <span class="kbv-help">Cambiar de proyecto mueve el avance derivado de los dos: baja en uno y sube en el otro.</span>
+            </div>
+          </div>
+          <div class="kbv-fieldrow">
+            <div class="kbv-field">
+              <label class="kbv-label" for="de-inicio">Fecha de inicio</label>
+              <input class="kbv-input" id="de-inicio" type="date" value="2026-09-08">
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label" for="de-fin">Fecha objetivo</label>
+              <input class="kbv-input" id="de-fin" type="date" value="2026-09-12">
+              <span class="kbv-help">Duración: 5 días. Se calcula, no se captura.</span>
+            </div>
+          </div>
+          <div class="kbv-fieldrow">
+            <div class="kbv-field">
+              <label class="kbv-label" for="de-tiempo">Tiempo estimado</label>
+              <input class="kbv-input" id="de-tiempo" type="text" value="3 h">
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label" for="de-columna">Columna</label>
+              <span class="kbv-select">
+                <select class="kbv-input" id="de-columna">
+                  <option>En revisión</option>
+                  <option>Por hacer</option>
+                  <option>En progreso</option>
+                  <option>Hecho</option>
+                </select>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+              </span>
+            </div>
+          </div>
+          <div class="kbv-field">
+            <span class="kbv-label" id="de-pri-lbl">Prioridad</span>
+            <div class="kbv-filter-bar" role="group" aria-labelledby="de-pri-lbl">
+              <div class="grp">
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-urgent)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6"/><path d="M6 18l6-6 6 6"/></svg></span>
+                  Urgente
+                </button>
+                <button type="button" class="kbv-chip active">
+                  <span class="kbv-pri" style="--c: var(--pri-high)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+                  Alta
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-medium)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 10h12M6 15h12"/></svg></span>
+                  Media
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-low)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg></span>
+                  Baja
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-pri" style="--c: var(--pri-vlow)" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 6l6 6 6-6"/><path d="M6 11l6 6 6-6"/></svg></span>
+                  Muy baja
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="kbv-field">
+            <span class="kbv-label" id="de-esf-lbl">Complejidad</span>
+            <div class="kbv-filter-bar" role="group" aria-labelledby="de-esf-lbl">
+              <div class="grp">
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span>
+                  Simple
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip"></span><span class="pip"></span></span>
+                  Media
+                </button>
+                <button type="button" class="kbv-chip active">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip"></span></span>
+                  Compleja
+                </button>
+                <button type="button" class="kbv-chip">
+                  <span class="kbv-effort" aria-hidden="true"><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span><span class="pip on"></span></span>
+                  Épica
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="kbv-field">
+            <label class="kbv-label" for="de-desc">Descripción</label>
+            <textarea class="kbv-input" id="de-desc" rows="3">Rehacer la portada con el caso de estudio de Kibo arriba y bajar el bloque de contacto.</textarea>
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <div class="kbv-tip-wrap">
+            <span class="kbv-tag tint" style="--c: var(--kb-xp)">+60 XP</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-coin)">+36 Divisa</span>
+            <span class="kbv-meta">se recalcula al cambiar prioridad o complejidad</span>
+          </div>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+            <button type="button" class="kbv-btn kbv-btn-primary">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     11 · MODAL · LOS DOS DIALOGOS DE COLUMNA
+     Ancho sm y SIN boton de cerrar: una confirmacion obliga a elegir. El
+     titulo dice lo que se pierde y el verbo del boton repite la accion.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Diálogos de columna">
+  <div class="kbv-stage h-sm">
+    <div class="lbl">Confirmación · quitar una columna</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-skel-row"><span class="kbv-skel line" style="width:40%"></span></div>
+      <span class="kbv-skel line"></span>
+    </div>
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card sm" role="alertdialog" aria-modal="true" aria-labelledby="tkColDelT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="tkColDelT">Quitar «En revisión»</div>
+            <div class="sub">Las 3 tareas que están aquí se mueven a «Por hacer» — no se pierde ninguna.</div>
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-danger">Sí, quitar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kbv-stage h-sm">
+    <div class="lbl">Aviso · el tablero necesita dos columnas</div>
+    <div class="under" aria-hidden="true">
+      <div class="kbv-skel-row"><span class="kbv-skel line" style="width:40%"></span></div>
+      <span class="kbv-skel line"></span>
+    </div>
+    <div class="kbv-modal-veil">
+      <div class="kbv-modal-card sm" role="alertdialog" aria-modal="true" aria-labelledby="tkColMinT">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="tkColMinT">Necesitas al menos 2 columnas</div>
+            <div class="sub">Un tablero con una sola columna no distingue estados. «Por hacer» y «Hecho» son fijas por eso mismo.</div>
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <span class="kbv-meta">Se cierra con Escape o con el botón.</span>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-primary">Entendido</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     12 · COMPORTAMIENTO
+     Una linea por comportamiento que el dibujo no puede decir.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Comportamiento">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Comportamiento</div>
+      <span class="sub">Para quien la construya. Nada de esto se deduce del dibujo.</span>
+    </div>
+  </div>
+  <div class="kbv-card roomy">
+    <ul class="kbv-behavior">
+      <li><span class="k">Quién produce</span><span class="v">La tarea es la única entidad que escribe el hecho: lleva su área, su complejidad, su prioridad, su fecha y su columna. Área y agrupador leen de ella; ninguno de los dos guarda nada.</span></li>
+      <li><span class="k">Avance del agrupador</span><span class="v">Siempre derivado y nunca guardado: se cuentan sus tareas por estado en el momento de dibujar. Por eso viaja con sus partes —«9/16 · 56%»— y jamás como porcentaje suelto, que no se puede verificar. Un agrupador sin tareas no dibuja barra ni cifra: un 0% afirmaría que se midió.</span></li>
+      <li><span class="k">Proyecto y curso</span><span class="v">Son la misma forma jugando el mismo papel, así que comparten tarjeta. Lo que cambia es la etiqueta de tipo y su glifo, nunca un color propio: el área es la única que pinta (R-1). Estudio reusa esta tarjeta tal cual.</span></li>
+      <li><span class="k">Subtarea</span><span class="v">Es una parte de su tarea, sin área, sin fecha y sin paga propia. «Volverla tarea» la saca de la lista y la da de alta con el área y el proyecto de la madre; desde ese momento produce por su cuenta y ya no vuelve.</span></li>
+      <li><span class="k">Tres lecturas, una lista</span><span class="v">Backlog, tablero y cronograma no son módulos: son cortes de las mismas tareas. La misma tarea aparece en los tres y cerrar una en cualquiera de ellos la cierra en todos.</span></li>
+      <li><span class="k">Momento contra columna</span><span class="v">El momento dice cuándo la vas a hacer y la columna en qué estado está: son ejes distintos y se editan por separado. Arrastrar en el backlog cambia el momento; arrastrar en el tablero cambia la columna.</span></li>
+      <li><span class="k">Alta rápida</span><span class="v">Título más Enter basta. Hereda el área y el proyecto del filtro activo y deriva la prioridad del momento —hoy nace urgente, algún día nace muy baja—, y nace en la primera columna.</span></li>
+      <li><span class="k">Cerrar y reabrir</span><span class="v">Al cerrar, la tarea pasa a la última columna, sale de su momento y paga XP y Divisa una sola vez. Al reabrir vuelve a «Por hacer» y se le vuelve a sembrar el momento por su fecha; lo pagado no se retira.</span></li>
+      <li><span class="k">Recompensa</span><span class="v">Peso de la prioridad por el de la complejidad, ×5 en XP y ×3 en Divisa. Se calcula al dibujar, se muestra desde el alta y se paga sólo al cerrar: el checklist y las sub-actividades no pagan por separado.</span></li>
+      <li><span class="k">Límite de trabajo en curso</span><span class="v">Es un acuerdo por columna, no un candado: soltar de más se permite y la columna lo dice con el conteo «3/2» y una línea de aviso con glifo. El color solo no puede decir «te pasaste».</span></li>
+      <li><span class="k">Columnas</span><span class="v">La primera y la última son fijas: no se mueven, no se quitan y llevan su marca de candado. Una columna nueva entra antes de la última. Quitar una pide confirmación y sus tareas se mueven a la primera; por debajo de dos columnas la operación se rechaza con aviso.</span></li>
+      <li><span class="k">Renombrar</span><span class="v">Enter guarda, Escape descarta y salir del campo guarda. Un nombre vacío deja el anterior.</span></li>
+      <li><span class="k">Filtros</span><span class="v">Área, proyecto, prioridad y complejidad se combinan y sólo recortan la vista: el backlog no cambia. «Limpiar» resetea los cuatro de un golpe. Cuando el filtro deja la lista en cero se dice cuántas tareas hay y que el filtro las esconde.</span></li>
+      <li><span class="k">Indicadores</span><span class="v">En backlog cuentan momentos y sólo tareas abiertas; en tablero y cronograma cuentan columnas sobre lo filtrado. Son dos preguntas distintas, por eso cambian de rótulo al cambiar de lectura.</span></li>
+      <li><span class="k">Grupos vacíos</span><span class="v">Un momento vacío se dibuja con su zona de soltar, porque es un destino. Un grupo vacío que no admite soltar no se dibuja. «Hechas» sólo existe cuando hay al menos una cerrada.</span></li>
+      <li><span class="k">Llegada por enlace</span><span class="v">Un enlace desde Estudio, Áreas o Proyectos entra como filtro puesto, no como otra pantalla, y puede abrir directamente el detalle o el alta. Quitar el filtro devuelve el backlog completo.</span></li>
+      <li><span class="k">Detalle</span><span class="v">Es el mismo modal desde la fila, la tarjeta y la barra del cronograma, y el mismo que abre Estudio. Cierra con Escape, con clic en el velo y con su botón; el foco queda atrapado dentro y vuelve a la pieza que lo abrió. Los dos diálogos de columna no llevan cierre: obligan a elegir.</span></li>
+      <li><span class="k">Movimiento reducido</span><span class="v">Con <span class="kbv-code">prefers-reduced-motion</span> se apagan el latido del esqueleto, el levante de la tarjeta al pasar el cursor, el giro de la pieza arrastrada y la transición de las barras.</span></li>
+      <li><span class="k">Teléfono</span><span class="v">Por debajo de 640 los indicadores bajan a una columna, la barra de filtros parte en renglones con «Limpiar» al final del suyo, el tablero se desplaza en horizontal, el cronograma apila nombre y barra, y los modales se vuelven hoja inferior con el primario a todo el ancho del pie.</span></li>
+    </ul>
+  </div>
+</section>
           </div>
         </main>
 

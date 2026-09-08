@@ -24,8 +24,13 @@
      El 10 % solo mide 1.11:1 sobre el lienzo. El aro interior es el que
      cumple el 3:1 de WCAG 1.4.11: medido 3.93 sobre lienzo, 3.70 sobre
      superficie, 3.47 sobre superficie-2 y 4.80 sobre el void del Elemento. */
+  --kb-halo-amt: 10%;
   --kb-focus-halo: 0 0 0 2px var(--kb-primary-hover),
-                   0 0 0 5px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+                   0 0 0 5px color-mix(in srgb, var(--kb-primary) var(--kb-halo-amt), transparent);
+  /* El halo de PELIGRO es la misma receta con el matiz de peligro: lee la
+     misma cantidad, nunca un porcentaje reescrito en la pieza. */
+  --kb-danger-halo: 0 0 0 2px var(--kb-hp),
+                    0 0 0 5px color-mix(in srgb, var(--kb-hp) var(--kb-halo-amt), transparent);
 
   /* ---- Escala tipografica (9 pasos). Piso duro de legibilidad = 10px ----- */
   --kb-fs-2xs: 10px;
@@ -325,6 +330,51 @@
     /* Cargando (§6.1) la define la primera pantalla que la necesite: el rotulo
        se vuelve transparente, gira un disco de 16 y el boton conserva su ancho. */
 
+    /* ── Campo ────────────────────────────────────────────────────────
+       Rotulo arriba, control, ayuda abajo. El error SUSTITUYE a la ayuda,
+       no se suma a ella, y dice como corregir el valor. */
+    .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+    .kbv-label { font-family: var(--kb-f-body); font-weight: 600; font-size: var(--kb-fs-md);
+                 color: var(--kb-text); }
+    .kbv-input { box-sizing: border-box; width: 100%; height: var(--kb-ctl-h); padding: 0 var(--kb-sp-7);
+                 background: var(--kb-card); border: 1.5px solid var(--kb-border);
+                 border-radius: var(--kb-r-md); color: var(--kb-text);
+                 font-family: var(--kb-f-body); font-weight: 500; font-size: var(--kb-fs-lg); }
+    .kbv-input::placeholder { color: var(--kb-text-2); }
+    /* La forma COMPUESTA: cuando el control es una caja que contiene piezas
+       —un buscador con su glifo y su cursor— y no un control nativo. El
+       display no baja a la base porque un campo nativo es un elemento
+       reemplazado y no admite hijos. */
+    div.kbv-input { display: flex; align-items: center; gap: var(--kb-sp-4); line-height: 1; }
+    div.kbv-input .caret { width: 1.5px; height: 18px; flex: none; background: var(--kb-text); }
+    textarea.kbv-input { height: auto; min-height: 108px; padding: var(--kb-sp-6) var(--kb-sp-7);
+                         line-height: var(--kb-lh-body); font-weight: 400; resize: vertical; }
+    /* Foco. .is-focus es el MISMO estado dibujado a mano, para el espécimen y
+       para el control compuesto que no recibe :focus-visible del navegador. */
+    .kbv-input:focus-visible,
+    .kbv-input.is-focus { outline: none; border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo); }
+    /* Error: el borde toma el matiz de peligro y el aro sale del halo de
+       peligro, que es la receta del foco con otro matiz. */
+    .kbv-input.err { border-color: var(--kb-hp); box-shadow: var(--kb-danger-halo); }
+    /* Deshabilitado: superficie hundida y borde retirado, no opacidad. */
+    .kbv-input[disabled],
+    .kbv-input.is-disabled { background: var(--kb-surface-2); border-color: transparent;
+                             color: var(--kb-text-2); cursor: not-allowed; }
+    .kbv-help  { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); color: var(--kb-text-2); }
+    .kbv-error { display: flex; align-items: center; gap: var(--kb-sp-3);
+                 font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-hp-ink); }
+    .kbv-error svg { flex: none; }
+    .kbv-fieldrow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    /* El tipo «glifo al final»: el galon lo dibuja un SVG, no una imagen de
+       fondo, para que herede el color del tema. */
+    .kbv-select { position: relative; display: flex; min-width: 0; }
+    .kbv-select select.kbv-input { -webkit-appearance: none; appearance: none; padding-right: 42px; }
+    .kbv-select > svg { position: absolute; right: var(--kb-sp-6); top: 50%; margin-top: -6px;
+                        pointer-events: none; color: var(--kb-text-2); }
+    .kbv-select.sm select.kbv-input { height: 36px; padding: 0 38px 0 var(--kb-sp-6);
+                                      font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
+    .kbv-select.sm > svg { right: var(--kb-sp-5); }
+
     /* ── Chip · etiqueta · contador ───────────────────────────────────── */
     .kbv-chip {
       position: relative; box-sizing: border-box;
@@ -390,7 +440,7 @@
     .kbv-progress-meta .name { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
     .kbv-progress-meta .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                       font-variant-numeric: tabular-nums;
-                      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+                      color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor)); }
 
     /* ── Tarjeta ──────────────────────────────────────────────────────── */
     .kbv-card {
@@ -408,6 +458,34 @@
     .kbv-card-sub   { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
     .kbv-card-foot  { display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5);
                       padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    /* ── Modificadores de la tarjeta ──────────────────────────────────
+       Arriba estan las densidades: cuanto MIDE. Aqui esta lo que HACE. */
+    /* Pulsable: la tarjeta entera es el destino, asi que dibujada como enlace
+       apaga tambien el color y el subrayado — el texto no es el enlace, la
+       tarjeta lo es. */
+    .kbv-card.tap { color: inherit; text-decoration: none; cursor: pointer;
+                    transition: transform var(--kb-dur-fast) var(--kb-ease-out),
+                                box-shadow var(--kb-dur-fast) var(--kb-ease-out),
+                                border-color var(--kb-dur-fast) var(--kb-ease-out); }
+    .kbv-card.tap:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2);
+                          border-color: var(--kb-border-strong); text-decoration: none; }
+    .kbv-card.tap:focus-visible { outline: none; border-color: var(--kb-primary);
+                                  box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+    /* Fila: la misma tarjeta en horizontal. Mismo relleno y mismo borde; solo
+       cambia la direccion, por eso es un modificador y no otra base. */
+    .kbv-card.row { flex-direction: row; align-items: center; gap: var(--kb-sp-5); }
+    .kbv-card.row.wrap { flex-wrap: wrap; row-gap: var(--kb-sp-4); }
+    .kbv-card.row > .grow { flex: 1 1 auto; min-width: 0; }
+    .kbv-card.row > .grow.col { display: flex; flex-direction: column; align-items: flex-start;
+                                gap: var(--kb-sp-2); }
+    /* Cerrada: la palomita ya dice que esta hecha, asi que el tachado
+       acompana y no carga el mensaje solo. */
+    .kbv-card.done .ttl,
+    .kbv-card.done .kbv-card-title { text-decoration: line-through; color: var(--kb-text-2); }
+    /* Tomada para arrastrar: la pieza se DESPEGA —sombra alta y un grado de
+       giro—. No es opacidad: una tarjeta a medio tono se lee deshabilitada. */
+    .kbv-card.dragging { border-color: var(--kb-primary-ink); box-shadow: var(--kb-sh-3);
+                         transform: rotate(-1deg); }
     /* ── Pastilla de area · el patron compacto de R-1 ─────────────────
        La pieza mas repetida del producto: la llevan tarea, proyecto, habito y
        reto. Es la MISMA en claro y en oscuro porque las dos recetas se leen de
@@ -475,7 +553,12 @@
                            gap: var(--kb-sp-5); }
     .kbv-grouper .gr-name { font-family: var(--kb-f-display); font-size: var(--kb-fs-lg); font-weight: 700;
                             line-height: var(--kb-lh-snug); color: var(--kb-text); min-width: 0; }
-    .kbv-grouper .gr-meta { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
+    /* La tira de meta se publica SUELTA: la llevan tambien la tarjeta del
+       tablero y el renglon del cronograma, que no son agrupadores. El
+       selector descendiente se conserva para no bajar su especificidad. */
+    .gr-meta,
+    .kbv-grouper .gr-meta { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap;
+                            min-width: 0; }
     .kbv-grouper .gr-adv { display: flex; align-items: baseline;
                            font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                            font-variant-numeric: tabular-nums;
@@ -494,7 +577,11 @@
                       box-sizing: border-box; padding: var(--kb-sp-6);
                       background: var(--kb-surface); border: 1px solid var(--kb-border);
                       border-radius: var(--kb-r-lg); }
-    .kbv-kanban-col > .col-head { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; }
+    /* La cabeza mide el piso de toque: el punto de color y el renombrar viven
+       aqui, y un campo nativo no admite el ::after con el que las demas
+       piezas del sistema restituyen la zona de 44. */
+    .kbv-kanban-col > .col-head { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0;
+                                  min-height: var(--kb-touch-min); }
     .kbv-kanban-col .col-name { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0;
                                 flex: 1 1 auto; font-family: var(--kb-f-display); font-size: var(--kb-fs-md);
                                 font-weight: 700; color: var(--kb-text);
@@ -516,6 +603,50 @@
                                font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; }
     .kbv-kanban-col .col-add:hover { border-color: var(--kb-primary); color: var(--kb-primary-ink); }
     .kbv-kanban-col .col-add:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    /* Los dos lados del arrastre. El DESTINO cambia la linea a punteada:
+       eso se ve sin distinguir el tono. El ORIGEN se despega con sombra.
+       La linea va en la TINTA de la marca, no en el tono pleno: R-13 vale
+       tambien para el trazo mas pequeno del sistema, y sobre el lavado el
+       tono pleno se queda en 2.7 contra el piso de 3 de una senal. */
+    .kbv-kanban-col.over { border-style: dashed; border-color: var(--kb-primary-ink);
+                           background: var(--kb-primary-soft); }
+    .kbv-kanban-col.dragging { border-color: var(--kb-primary-ink); box-shadow: var(--kb-sh-3); }
+    /* Limite alcanzado: el candado acompana al conteo en la cabeza. El aviso
+       con texto lo sigue dando .col-warn — el glifo solo no dice «te pasaste». */
+    .kbv-kanban-col .col-lock { flex: none; display: flex; color: var(--kb-text-2); }
+    /* El punto de color es un CONTROL cuando la columna se edita: dibuja 14 y
+       toca 44 con una zona transparente, sin crecer el dibujo. */
+    .kbv-kanban-col .col-dot { position: relative; width: 14px; height: 14px; flex: none; padding: 0;
+                               border: 0; border-radius: var(--kb-r-pill);
+                               background: var(--c, var(--kb-text-2)); cursor: pointer; }
+    .kbv-kanban-col .col-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
+                                      width: var(--kb-touch-min); height: var(--kb-touch-min);
+                                      transform: translate(-50%, -50%); }
+    .kbv-kanban-col .col-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    /* Renombrar en sitio: ocupa el lugar exacto del nombre y hereda su letra,
+       para que el cambio sea de estado y no de composicion. Nace enfocado. */
+    .kbv-kanban-col .col-name-edit { flex: 1 1 auto; min-width: 0; box-sizing: border-box;
+                                     height: var(--kb-touch-min);
+                                     padding: 0 var(--kb-sp-5); border: 1.5px solid var(--kb-primary-ink);
+                                     border-radius: var(--kb-r-sm); background: var(--kb-card);
+                                     color: var(--kb-text); font-family: var(--kb-f-display);
+                                     font-size: var(--kb-fs-md); font-weight: 700;
+                                     box-shadow: var(--kb-focus-halo); }
+    /* La columna fantasma: no contiene nada, ofrece crear. Por eso es la misma
+       caja sin fondo y con la linea punteada del hueco. */
+    .kbv-kanban-col.add-col { align-items: center; justify-content: center; text-align: center;
+                              gap: var(--kb-sp-3); min-height: 200px; cursor: pointer;
+                              border-style: dashed; border-color: var(--kb-border-strong);
+                              background: transparent; font-family: var(--kb-f-body);
+                              -webkit-appearance: none; appearance: none; }
+    .kbv-kanban-col.add-col:hover { border-color: var(--kb-primary); }
+    .kbv-kanban-col.add-col:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-kanban-col.add-col .add-glyph { width: 36px; height: 36px; flex: none; border-radius: var(--kb-r-pill);
+                                         display: flex; align-items: center; justify-content: center;
+                                         background: var(--kb-surface-2); color: var(--kb-text-2); }
+    .kbv-kanban-col.add-col .add-label { font-family: var(--kb-f-display); font-weight: 700;
+                                         font-size: var(--kb-fs-md); color: var(--kb-text); }
+    .kbv-kanban-col.add-col .add-sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
 
     /* ── Encabezado de seccion y de pagina ────────────────────────────── */
     .kbv-section-head { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap;
@@ -594,6 +725,9 @@
     .kbv-empty.compact .glyph { width: 36px; height: 36px; }
     .kbv-empty.compact .ttl { font-size: var(--kb-fs-lg); }
     .kbv-empty.compact .desc { font-size: var(--kb-fs-sm); }
+    /* El hueco como DESTINO de arrastre: la misma senal que la columna —linea
+       de marca y lavado— para que soltar se lea igual en los dos sitios. */
+    .kbv-empty.over { border-color: var(--kb-primary-ink); background: var(--kb-primary-soft); }
 
     /* ── Esqueleto de carga ───────────────────────────────────────────
        La silueta del contenido mientras llega. El contenedor lleva
@@ -807,6 +941,12 @@
          ancla clara y un descendiente hereda el valor, no la formula. */
       --kb-wash-amt: 22%;   --kb-wash-anchor: var(--kb-void-1);
       --kb-ink-amt:  42%;   --kb-ink-anchor:  var(--kb-text-inverse);
+      /* El halo se REASIGNA aqui por lo mismo que las recetas: el de :root ya
+         resolvio su teal claro y un descendiente hereda el valor, no la
+         formula. Sin esta linea el aro de foco se queda en el tono claro.
+         El de peligro no la necesita: los tonos no cambian entre temas. */
+      --kb-focus-halo: 0 0 0 2px var(--d-primary-hover),
+                       0 0 0 5px color-mix(in srgb, var(--d-primary) var(--kb-halo-amt), transparent);
       --kb-coin-soft:        color-mix(in oklab, var(--kb-coin) 22%, var(--kb-void-1));
       --kb-coin-border:      color-mix(in oklab, var(--kb-coin) 38%, var(--kb-void-1));
       --kb-primary-border:   color-mix(in oklab, var(--kb-primary) 32%, var(--kb-void-1));
@@ -1759,7 +1899,7 @@
               <div class="kbv-section-head">
                 <div class="sh-id">
                   <div class="kbv-h3">Componentes generales</div>
-                  <div class="sub">Trece piezas que cada módulo repite · se componen, no se reescriben</div>
+                  <div class="sub">Diecisiete piezas que cada módulo repite · se componen, no se reescriben</div>
                 </div>
               </div>
 
@@ -2251,6 +2391,266 @@
                   <li><span class="k">Movimiento reducido</span><span class="v">El esqueleto deja de latir y se queda en su opacidad plena; KIBO conserva su tempo.</span></li>
                 </ul>
                 <div class="kbv-meta">Es lo último de la pantalla porque es lo que se lee al construirla, no al usarla.</div>
+              </div>
+
+              <!-- 14 · Campo y sus estados ───────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Campo · <code class="kbv-code">.kbv-field</code> · <code class="kbv-code">.kbv-input</code></div>
+                    <div class="kbv-card-sub">Rótulo arriba, control, ayuda abajo. Los cuatro estados salen de la misma base: el foco y el error son la misma receta de halo con distinto matiz, y el deshabilitado hunde la superficie en vez de bajar la opacidad.</div>
+                  </div>
+                </div>
+                <div class="kbv-fieldrow">
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="dsc-reposo">Reposo</label>
+                    <input class="kbv-input" id="dsc-reposo" type="text" value="Rediseñar el sitio del portafolio" />
+                    <span class="kbv-help">La ayuda explica de qué depende el valor, no lo repite.</span>
+                  </div>
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="dsc-foco">Foco · <code class="kbv-code">.is-focus</code></label>
+                    <input class="kbv-input is-focus" id="dsc-foco" type="text" value="Preparar el guion de la entrevista" />
+                    <span class="kbv-help">Aro de marca de 2 px más el difuso: la misma señal en toda pieza enfocable.</span>
+                  </div>
+                </div>
+                <div class="kbv-fieldrow">
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="dsc-err">Error · <code class="kbv-code">.err</code></label>
+                    <input class="kbv-input err" id="dsc-err" type="text" value="" placeholder="Sin nombre" aria-invalid="true" aria-describedby="dsc-err-msg" />
+                    <span class="kbv-error" id="dsc-err-msg">
+                      <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor"/><path d="M12 7.2v5.2" fill="none" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1.1" fill="currentColor"/></svg>
+                      Escribe un nombre: es lo que se lee en el tablero
+                    </span>
+                  </div>
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="dsc-off">Deshabilitado</label>
+                    <input class="kbv-input" id="dsc-off" type="text" value="Se hereda del área" disabled />
+                    <span class="kbv-help">El error sustituye a la ayuda; nunca se suman las dos líneas.</span>
+                  </div>
+                </div>
+                <div class="kbv-fieldrow">
+                  <div class="kbv-field">
+                    <label class="kbv-label" for="dsc-sel">Con glifo al final · <code class="kbv-code">.kbv-select</code></label>
+                    <div class="kbv-select">
+                      <select class="kbv-input" id="dsc-sel">
+                        <option>Hoy</option>
+                        <option>Esta semana</option>
+                        <option>Algún día</option>
+                      </select>
+                      <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                  </div>
+                  <div class="kbv-field">
+                    <span class="kbv-label" id="dsc-busc-lbl">Control compuesto · <code class="kbv-code">div.kbv-input</code></span>
+                    <div class="kbv-input is-focus" role="searchbox" aria-labelledby="dsc-busc-lbl" tabindex="0">
+                      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor"/><path d="M20 20l-4.2-4.2" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>
+                      <span>guion</span><span class="caret" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="theme-dark" style="padding:var(--kb-sp-6);border-radius:var(--kb-r-md)">
+                  <div class="kbv-fieldrow">
+                    <div class="kbv-field">
+                      <label class="kbv-label" for="dsc-foco-d">Foco en oscuro</label>
+                      <input class="kbv-input is-focus" id="dsc-foco-d" type="text" value="Preparar el guion" />
+                    </div>
+                    <div class="kbv-field">
+                      <label class="kbv-label" for="dsc-err-d">Error en oscuro</label>
+                      <input class="kbv-input err" id="dsc-err-d" type="text" value="" placeholder="Sin nombre" aria-invalid="true" />
+                    </div>
+                  </div>
+                </div>
+                <div class="kbv-meta">El halo de error no reescribe el porcentaje: lee la misma cantidad que el de foco, así que el tema oscuro revalúa los dos a la vez.</div>
+              </div>
+
+              <!-- 15 · Modificadores de la tarjeta ───────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Modificadores de la tarjeta · <code class="kbv-code">.kbv-card</code></div>
+                    <div class="kbv-card-sub">La densidad dice cuánto mide; el modificador dice qué hace. Pulsable, fila, completada y tomada para arrastrar son la misma base con una clase encima.</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-6)">
+                  <div>
+                    <div class="kbv-eyebrow" style="margin-bottom:var(--kb-sp-4)">Pulsable · <code class="kbv-code">.tap</code></div>
+                    <a class="kbv-card tap" href="#dsc-tap" id="dsc-tap">
+                      <div class="kbv-card-head">
+                        <div>
+                          <div class="kbv-card-title">Kibo v1 · rediseño del armazón</div>
+                          <div class="kbv-card-sub">La tarjeta entera es el destino: no hay un segundo enlace dentro.</div>
+                        </div>
+                      </div>
+                      <div class="gr-meta">
+                        <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+                        <span class="kbv-tag tint" style="--c: var(--pri-high)">Compleja</span>
+                      </div>
+                    </a>
+                  </div>
+                  <div>
+                    <div class="kbv-eyebrow" style="margin-bottom:var(--kb-sp-4)">Fila de lista · <code class="kbv-code">.row</code> · y completada · <code class="kbv-code">.done</code></div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-4)">
+                      <article class="kbv-card compact row">
+                        <span class="kbv-check" aria-hidden="true"></span>
+                        <div class="grow col">
+                          <div class="kbv-card-title">Cerrar el guion de la entrevista</div>
+                          <div class="gr-meta">
+                            <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+                            <span class="kbv-tag tint" style="--c: var(--pri-urgent)">Urgente</span>
+                          </div>
+                        </div>
+                        <span class="kbv-meta">Hoy</span>
+                      </article>
+                      <article class="kbv-card compact row done">
+                        <span class="kbv-check on" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="3" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <div class="grow col">
+                          <div class="kbv-card-title">Reservar la sala de grabación</div>
+                          <div class="gr-meta">
+                            <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+                          </div>
+                        </div>
+                        <span class="kbv-meta">Ayer</span>
+                      </article>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="kbv-eyebrow" style="margin-bottom:var(--kb-sp-4)">Tomada para arrastrar · <code class="kbv-code">.dragging</code> · y densidad compacta · <code class="kbv-code">.compact</code></div>
+                    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--kb-sp-6)">
+                      <article class="kbv-card compact kbv-grouper dragging" style="--c: var(--area-vigor)">
+                        <div class="gr-top"><div class="gr-name">Maratón de otoño</div></div>
+                        <div class="gr-meta">
+                          <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+                        </div>
+                        <div class="kbv-progress sm"><div class="fill" style="width:38%"></div></div>
+                      </article>
+                      <article class="kbv-card compact kbv-grouper" style="--c: var(--area-wealth)">
+                        <div class="gr-top"><div class="gr-name">Fondo de emergencia</div></div>
+                        <div class="gr-meta">
+                          <span class="kbv-areapill" style="--c: var(--area-wealth)"><span class="dot" aria-hidden="true"></span>Riqueza</span>
+                        </div>
+                        <div class="kbv-progress sm"><div class="fill" style="width:67%"></div></div>
+                      </article>
+                    </div>
+                  </div>
+                </div>
+                <div class="kbv-meta">Arrastrar no baja la opacidad: una tarjeta a medio tono se lee deshabilitada. Lo que la despega son la sombra alta y un grado de giro.</div>
+              </div>
+
+              <!-- 16 · Estados de la columna y del hueco ─────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Estados de la columna · <code class="kbv-code">.kbv-kanban-col</code></div>
+                    <div class="kbv-card-sub">Recibir, estar tomada, tener el límite alcanzado, renombrarse en sitio y ofrecer una columna nueva. El destino de arrastre cambia la línea a punteada: se ve sin distinguir el tono.</div>
+                  </div>
+                </div>
+                <div class="kbv-kanban">
+                  <div class="kbv-kanban-col over">
+                    <div class="col-head">
+                      <span class="col-name" style="--c: var(--kb-primary)"><span class="dot" aria-hidden="true"></span>Recibe</span>
+                      <span class="count">2</span>
+                    </div>
+                    <article class="kbv-card compact kbv-grouper" style="--c: var(--area-will)">
+                      <div class="gr-top"><div class="gr-name">Mudanza de marzo</div></div>
+                      <div class="gr-meta">
+                        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+                      </div>
+                    </article>
+                    <div class="kbv-meta">La columna de destino: <code class="kbv-code">.over</code>.</div>
+                  </div>
+
+                  <div class="kbv-kanban-col dragging">
+                    <div class="col-head">
+                      <span class="col-name" style="--c: var(--kb-coin)"><span class="dot" aria-hidden="true"></span>Tomada</span>
+                      <span class="count">1</span>
+                    </div>
+                    <article class="kbv-card compact kbv-grouper" style="--c: var(--area-wisdom)">
+                      <div class="gr-top"><div class="gr-name">Estadística aplicada</div></div>
+                      <div class="gr-meta">
+                        <span class="kbv-areapill" style="--c: var(--area-wisdom)"><span class="dot" aria-hidden="true"></span>Sabiduría</span>
+                      </div>
+                    </article>
+                    <div class="kbv-meta">La columna de origen: <code class="kbv-code">.dragging</code>.</div>
+                  </div>
+
+                  <div class="kbv-kanban-col">
+                    <div class="col-head">
+                      <span class="col-name" style="--c: var(--kb-media)"><span class="dot" aria-hidden="true"></span>Al límite</span>
+                      <span class="col-lock" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5" fill="none" stroke="currentColor"/><path d="M8.2 10.5V7.2a3.8 3.8 0 0 1 7.6 0v3.3" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+                      <span class="count over" title="3 con un límite de 3 — la columna está llena">3/3</span>
+                    </div>
+                    <div class="col-warn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 4l9 16H3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="17" r="1" fill="currentColor"/></svg>
+                      Llegaste a tu límite — cierra algo antes de traer más
+                    </div>
+                    <div class="kbv-meta"><code class="kbv-code">.col-lock</code> acompaña al conteo; el aviso con texto lo sigue dando <code class="kbv-code">.col-warn</code>.</div>
+                  </div>
+
+                  <div class="kbv-kanban-col">
+                    <div class="col-head">
+                      <button type="button" class="col-dot" style="--c: var(--area-will)" aria-label="Cambiar el color de la columna"></button>
+                      <input class="col-name-edit" type="text" value="Revisión" aria-label="Nombre de la columna" />
+                    </div>
+                    <div class="kbv-meta"><code class="kbv-code">.col-dot</code> dibuja 14 y toca 44 · <code class="kbv-code">.col-name-edit</code> ocupa el lugar exacto del nombre.</div>
+                  </div>
+
+                  <button type="button" class="kbv-kanban-col add-col">
+                    <span class="add-glyph" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="add-label">Añadir columna</span>
+                    <span class="add-sub">Un estado más en tu tablero</span>
+                  </button>
+                </div>
+                <div class="kbv-eyebrow">El hueco como destino · <code class="kbv-code">.kbv-empty.over</code></div>
+                <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--kb-sp-6)">
+                  <div class="kbv-empty compact">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+                    <div class="ttl">Sin tareas en revisión</div>
+                    <div class="desc">Reposo: superficie hundida y línea neutra.</div>
+                  </div>
+                  <div class="kbv-empty compact over">
+                    <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 4v11M8 11l4 4 4-4M4 19h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <div class="ttl">Suelta aquí</div>
+                    <div class="desc">Recibiendo: la misma línea de marca y el mismo lavado que la columna.</div>
+                  </div>
+                </div>
+                <div class="kbv-meta">La columna fantasma es la misma caja sin fondo: ofrece crear, no contiene nada, y por eso lleva la línea del hueco.</div>
+              </div>
+
+              <!-- 17 · Tira de meta ──────────────────────────────────────── -->
+              <div class="kbv-card">
+                <div class="kbv-card-head">
+                  <div>
+                    <div class="kbv-card-title">Tira de meta · <code class="kbv-code">.gr-meta</code></div>
+                    <div class="kbv-card-sub">Las marcas que acompañan a un nombre: el chip de área, la prioridad y el esfuerzo. Se publica suelta porque la llevan también la tarjeta del tablero y el renglón del cronograma, que no son agrupadores.</div>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-6)">
+                  <div>
+                    <div class="kbv-eyebrow" style="margin-bottom:var(--kb-sp-4)">Dentro del agrupador</div>
+                    <article class="kbv-card compact kbv-grouper" style="--c: var(--area-will)">
+                      <div class="gr-top"><div class="gr-name">Mudanza de marzo</div></div>
+                      <div class="gr-meta">
+                        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+                        <span class="kbv-tag tint" style="--c: var(--kb-coin)">Media</span>
+                      </div>
+                    </article>
+                  </div>
+                  <div>
+                    <div class="kbv-eyebrow" style="margin-bottom:var(--kb-sp-4)">Suelta · en una tarjeta que no es agrupador</div>
+                    <article class="kbv-card compact row wrap">
+                      <div class="grow col">
+                        <div class="kbv-card-title">Cerrar el guion de la entrevista</div>
+                        <div class="gr-meta">
+                          <span class="kbv-areapill" style="--c: var(--area-community)"><span class="dot" aria-hidden="true"></span>Comunidad</span>
+                          <span class="kbv-tag tint" style="--c: var(--pri-urgent)">Urgente</span>
+                          <span class="kbv-tag">Esfuerzo medio</span>
+                          <span class="kbv-meta">12 sep</span>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+                <div class="kbv-meta">Sin publicarla suelta la tira se dibujaba en bloque, sin separación y sin ajuste de línea, en toda pieza que no fuera un agrupador.</div>
               </div>
             </section>
 

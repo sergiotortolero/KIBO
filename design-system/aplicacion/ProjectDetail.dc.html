@@ -1694,7 +1694,7 @@
       <span class="kbv-tag">vence Sep 28</span>
     </div>
     <div class="gr-meta">
-      <a href="#" class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</a>
+      <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
       <span class="kbv-tag tint" style="--c: var(--area-vigor)">Proyecto</span>
       <span class="kbv-tag">En curso</span>
       <span class="kbv-tag tint" style="--c: var(--kb-hp)">2 bloqueadas</span>
@@ -1702,13 +1702,12 @@
     <div class="kbv-progress-meta" style="--c: var(--area-vigor)">
       <div class="top">
         <span class="name">Avance derivado de sus 32 tareas</span>
-        <span class="val">12/32 · 38%</span>
+        <span class="gr-adv">12<span class="of">/32</span><span class="sep" aria-hidden="true">·</span>38<span class="of">%</span></span>
       </div>
       <div class="kbv-progress lg" style="--c: var(--area-vigor)" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="32" aria-label="12 de 32 tareas hechas">
         <span class="fill" style="width:38%"></span>
       </div>
     </div>
-    <div class="gr-adv">12<span class="of">/32</span><span class="sep" aria-hidden="true">·</span>38<span class="of">%</span></div>
     <div class="kbv-tip-wrap">
       <span class="kbv-meta">El avance no se guarda en el proyecto.</span>
       <button type="button" class="kbv-tip-dot" aria-label="Cómo se calcula el avance" aria-expanded="true">
@@ -1817,7 +1816,10 @@
       <dl class="kbv-def side">
         <div>
           <dt>Área</dt>
-          <dd><a href="#" class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</a></dd>
+          <dd>
+            <span class="kbv-areapill" style="--c: var(--area-vigor)"><span class="dot" aria-hidden="true"></span>Vigor</span>
+            <button type="button" class="kbv-btn kbv-btn-link">Abrir el área</button>
+          </dd>
         </div>
         <div><dt>Estado</dt><dd>En curso</dd></div>
         <div><dt>Inicio</dt><dd>4 de agosto de 2026</dd></div>
@@ -2473,7 +2475,7 @@
       <li><span class="k">Límite en curso</span><span class="v">Es un acuerdo, no un candado: la columna deja mover la tarjeta y avisa con la cifra («4/3») y con texto. El color no lo dice solo.</span></li>
       <li><span class="k">Filtros</span><span class="v">Filtran las tareas de la vista, nunca el pulso ni el avance: esos cuentan el proyecto entero. Con la lista en cero se dice que sí hay tareas y que las esconde el filtro.</span></li>
       <li><span class="k">Abrir una tarea</span><span class="v">Cada tarjeta es un solo destino y abre la tarea completa; no lleva un segundo enlace dentro. Las etiquetas y las barras son dibujo, no botones.</span></li>
-      <li><span class="k">Ir al área</span><span class="v">La pastilla de área de la ficha y de la cabecera abre el área con Proyectos ya seleccionado, para volver sin pasar por el menú.</span></li>
+      <li><span class="k">Ir al área</span><span class="v">Lo hace el enlace de la ficha, que abre el área con Proyectos ya seleccionado. La pastilla de área no es el control: mide 22 px y no alcanza el piso de toque de 44, así que pinta y no navega.</span></li>
       <li><span class="k">Hitos</span><span class="v">También se derivan: se cruzan al llegar la cuenta de hechas a su tramo y se descruzan si una tarea se reabre. La XP del hito se otorga una sola vez, la primera vez que se cruza.</span></li>
       <li><span class="k">Archivar y borrar</span><span class="v">Viven en Configuración y se confirman. Ninguno toca las tareas: quedan sin agrupador y siguen en su área. Lo que se pierde es el avance, porque se calculaba aquí.</span></li>
       <li><span class="k">Modales</span><span class="v">Cierran con Escape, con clic en el velo y con su botón; el foco queda atrapado dentro y vuelve a lo que los abrió. La confirmación es la excepción: no lleva botón de cerrar, porque obliga a elegir.</span></li>

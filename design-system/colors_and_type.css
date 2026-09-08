@@ -27,6 +27,11 @@
   /* ---- Halo de foco: aro difuso de marca al 10 % ------------------------- */
   --kb-focus-halo: 0 0 0 3px color-mix(in srgb, var(--kb-primary) 10%, transparent);
 
+  /* La cantidad del halo, factorizada de su propia declaracion: el halo de
+     peligro es la misma receta con el matiz de riesgo. */
+  --kb-halo-amt: 10%;
+  --kb-danger-halo: 0 0 0 2px var(--kb-hp),
+                    0 0 0 5px color-mix(in srgb, var(--kb-hp) var(--kb-halo-amt), transparent);
   /* ---- Type scale (named-9, px). Hard legibility floor = 10px ----------- */
   --kb-fs-2xs: 10px;
   --kb-fs-xs:  11px;
