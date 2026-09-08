@@ -1498,6 +1498,7 @@
   .aj-bar { height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
             background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
   .aj-bar > span { display: block; height: 100%; border-radius: var(--kb-r-pill); }
+  .aj-piezas[data-tinta] .aj-pill, .aj-piezas[data-tinta] .aj-btn { color: var(--kb-void-2); }
   .aj-pill { min-width: 20px; height: 20px; border-radius: var(--kb-r-pill); padding: 0 6px;
              display: inline-flex; align-items: center; justify-content: center;
              font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xs);
@@ -1547,94 +1548,100 @@
       </div>
 
       <div class="aj-sec">
-        <h2 class="kbv-h4">1 &middot; El matiz de los rellenos</h2>
-        <div class="kbv-meta">El rojo grita porque nace saturado y la receta de hoy <b>multiplica</b> su croma. Igualarlo lo baja a la media en vez de subirlo, sin tocar el token del &aacute;rea.</div>
+        <h2 class="kbv-h4">1 &middot; M&aacute;s brillante &mdash; y qu&eacute; cuesta</h2>
+        <div class="kbv-meta">El r&oacute;tulo blanco tiene un techo duro: por encima de una luminosidad de <b>0.52</b> deja de pasar el piso de 4.5, y a 0.58 ya mide 3.72. Para subir el brillo, <b>el r&oacute;tulo pasa a tinta oscura</b>. Es lo contrario del intento anterior: aquella tinta oscura iba sobre una cara oscura y se ve&iacute;a lodosa; sobre una cara brillante se lee como marcatextos. El croma sigue igualado en los tres, as&iacute; que el rojo nunca domina.</div>
         <div class="aj-tres">
           <div class="aj-caso">
-            <h5>Hoy</h5><div class="sub">croma multiplicado &times;1.5</div>
+            <h5>Brillo medio</h5><div class="sub">luminosidad 0.62</div>
             
-  <div class="aj-piezas" style="--v:hoy">
-    <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:oklch(from var(--c) 0.50 calc(c * 1.5) h)"></span></div>
+  <div class="aj-piezas" style="--v:b62" data-tinta>
+    <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:oklch(from var(--c) 0.62 0.15 h)"></span></div>
     <div class="aj-row">
-      <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)">2</span>
-      <span class="aj-btn" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)">Eliminar</span>
-      <span class="aj-btn" style="--c: var(--kb-primary); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)">Guardar</span>
-      <span class="aj-btn" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)">Divisa</span>
+      <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.62 0.15 h)">2</span>
+      <span class="aj-btn" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.62 0.15 h)">Eliminar</span>
+      <span class="aj-btn" style="--c: var(--kb-primary); background:oklch(from var(--c) 0.62 0.15 h)">Guardar</span>
+      <span class="aj-btn" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.62 0.15 h)">Divisa</span>
     </div>
     <div class="aj-row">
-      <span class="aj-dot" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)"></span>
-      <span class="aj-dot" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)"></span>
-      <span class="aj-dot" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)"></span>
-      <span class="aj-dot" style="--c: var(--area-community); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)"></span>
-      <span class="aj-dot" style="--c: var(--area-will); background:oklch(from var(--c) 0.50 calc(c * 1.5) h)"></span>
+      <span class="aj-dot" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.62 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.62 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.62 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-community); background:oklch(from var(--c) 0.62 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-will); background:oklch(from var(--c) 0.62 0.15 h)"></span>
     </div>
   </div>
-            <div class="aj-med" data-med="hoy">r&oacute;tulo blanco <b>4.98&ndash;6.10</b> &middot; pasa, pero el rojo domina</div>
+            <div class="aj-med" data-med="b62">r&oacute;tulo oscuro <b>4.79&ndash;6.13</b></div>
           </div><div class="aj-caso">
-            <h5>Croma igualado</h5><div class="sub">todos los matices pesan igual</div>
+            <h5>Brillo alto</h5><div class="sub">luminosidad 0.66</div>
             
-  <div class="aj-piezas" style="--v:igual">
-    <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:oklch(from var(--c) 0.52 0.13 h)"></span></div>
+  <div class="aj-piezas" style="--v:b66" data-tinta>
+    <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:oklch(from var(--c) 0.66 0.15 h)"></span></div>
     <div class="aj-row">
-      <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.52 0.13 h)">2</span>
-      <span class="aj-btn" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.52 0.13 h)">Eliminar</span>
-      <span class="aj-btn" style="--c: var(--kb-primary); background:oklch(from var(--c) 0.52 0.13 h)">Guardar</span>
-      <span class="aj-btn" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.52 0.13 h)">Divisa</span>
+      <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.66 0.15 h)">2</span>
+      <span class="aj-btn" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.66 0.15 h)">Eliminar</span>
+      <span class="aj-btn" style="--c: var(--kb-primary); background:oklch(from var(--c) 0.66 0.15 h)">Guardar</span>
+      <span class="aj-btn" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.66 0.15 h)">Divisa</span>
     </div>
     <div class="aj-row">
-      <span class="aj-dot" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.52 0.13 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.52 0.13 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.52 0.13 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-community); background:oklch(from var(--c) 0.52 0.13 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-will); background:oklch(from var(--c) 0.52 0.13 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.66 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.66 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.66 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-community); background:oklch(from var(--c) 0.66 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-will); background:oklch(from var(--c) 0.66 0.15 h)"></span>
     </div>
   </div>
-            <div class="aj-med" data-med="igual">r&oacute;tulo blanco <b>4.85&ndash;5.88</b> &middot; pasa y ning&uacute;n matiz domina</div>
+            <div class="aj-med" data-med="b66">r&oacute;tulo oscuro <b>5.63&ndash;7.02</b></div>
           </div><div class="aj-caso">
-            <h5>Igualado y m&aacute;s claro</h5><div class="sub">un paso de brillo &mdash; y el l&iacute;mite</div>
+            <h5>Brillo m&aacute;ximo</h5><div class="sub">luminosidad 0.70</div>
             
-  <div class="aj-piezas" style="--v:vivo">
-    <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:oklch(from var(--c) 0.58 0.15 h)"></span></div>
+  <div class="aj-piezas" style="--v:b70" data-tinta>
+    <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:oklch(from var(--c) 0.70 0.15 h)"></span></div>
     <div class="aj-row">
-      <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.58 0.15 h)">2</span>
-      <span class="aj-btn" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.58 0.15 h)">Eliminar</span>
-      <span class="aj-btn" style="--c: var(--kb-primary); background:oklch(from var(--c) 0.58 0.15 h)">Guardar</span>
-      <span class="aj-btn" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.58 0.15 h)">Divisa</span>
+      <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.70 0.15 h)">2</span>
+      <span class="aj-btn" style="--c: var(--kb-hp); background:oklch(from var(--c) 0.70 0.15 h)">Eliminar</span>
+      <span class="aj-btn" style="--c: var(--kb-primary); background:oklch(from var(--c) 0.70 0.15 h)">Guardar</span>
+      <span class="aj-btn" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.70 0.15 h)">Divisa</span>
     </div>
     <div class="aj-row">
-      <span class="aj-dot" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.58 0.15 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.58 0.15 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.58 0.15 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-community); background:oklch(from var(--c) 0.58 0.15 h)"></span>
-      <span class="aj-dot" style="--c: var(--area-will); background:oklch(from var(--c) 0.58 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.70 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.70 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.70 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-community); background:oklch(from var(--c) 0.70 0.15 h)"></span>
+      <span class="aj-dot" style="--c: var(--area-will); background:oklch(from var(--c) 0.70 0.15 h)"></span>
     </div>
   </div>
-            <div class="aj-med" data-med="vivo">r&oacute;tulo blanco <b>3.72&ndash;4.63</b> &middot; <b>reprueba</b> el piso de 4.5</div>
+            <div class="aj-med" data-med="b70">r&oacute;tulo oscuro <b>6.57&ndash;8.08</b></div>
           </div>
         </div>
       </div>
 
       <div class="aj-sec">
         <h2 class="kbv-h4">2 &middot; Los lavados grisáceos</h2>
-        <div class="kbv-meta">Un lavado se hace mezclando el matiz contra el blanco, y esa mezcla arrastra el croma hacia el blanco: por eso sale gris&aacute;ceo. Construirlo con croma propio lo deja claro pero de color.</div>
-        <div class="aj-dos">
+        <div class="kbv-meta">Un lavado se hace mezclando el matiz contra el blanco, y esa mezcla arrastra el croma hacia el blanco: por eso sale gris&aacute;ceo. Con croma propio se ve de color. El cian de Voluntad es el que m&aacute;s fosforece a igual croma &mdash; mira los dos niveles y dime cu&aacute;l.</div>
+        <div class="aj-tres">
           <div class="aj-caso"><h5>Hoy</h5><div class="sub">mezcla contra el lienzo</div><div class="aj-row">
     <span class="aj-chip" style="--c: var(--kb-streak); background:color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color:color-mix(in oklab, var(--c) 54%, var(--kb-void-2))">23 d&iacute;as</span><span class="aj-chip" style="--c: var(--kb-coin); background:color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color:color-mix(in oklab, var(--c) 54%, var(--kb-void-2))">1 480</span>
     <span class="aj-chip" style="--c: var(--area-vigor); background:color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color:color-mix(in oklab, var(--c) 54%, var(--kb-void-2))">Vigor</span><span class="aj-chip" style="--c: var(--area-wisdom); background:color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color:color-mix(in oklab, var(--c) 54%, var(--kb-void-2))">Sabidur&iacute;a</span>
     <span class="aj-chip" style="--c: var(--area-wealth); background:color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color:color-mix(in oklab, var(--c) 54%, var(--kb-void-2))">Riqueza</span><span class="aj-chip" style="--c: var(--area-will); background:color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color:color-mix(in oklab, var(--c) 54%, var(--kb-void-2))">Voluntad</span>
   </div>
-            <div class="aj-med">tinta 5.16 &middot; se separa del lienzo <b>1.07&ndash;1.15</b></div></div>
-          <div class="aj-caso"><h5>Con croma propio</h5><div class="sub">misma claridad, color de verdad</div><div class="aj-row">
+            <div class="aj-med">gris&aacute;ceo &middot; se separa del lienzo 1.07&ndash;1.15</div></div>
+          <div class="aj-caso"><h5>Croma 0.09</h5><div class="sub">lo que viste &mdash; Voluntad fosforece</div><div class="aj-row">
     <span class="aj-chip" style="--c: var(--kb-streak); background:oklch(from var(--c) 0.90 0.09 h); color:oklch(from var(--c) 0.38 0.13 h)">23 d&iacute;as</span><span class="aj-chip" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.90 0.09 h); color:oklch(from var(--c) 0.38 0.13 h)">1 480</span>
     <span class="aj-chip" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.90 0.09 h); color:oklch(from var(--c) 0.38 0.13 h)">Vigor</span><span class="aj-chip" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.90 0.09 h); color:oklch(from var(--c) 0.38 0.13 h)">Sabidur&iacute;a</span>
     <span class="aj-chip" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.90 0.09 h); color:oklch(from var(--c) 0.38 0.13 h)">Riqueza</span><span class="aj-chip" style="--c: var(--area-will); background:oklch(from var(--c) 0.90 0.09 h); color:oklch(from var(--c) 0.38 0.13 h)">Voluntad</span>
   </div>
-            <div class="aj-med">tinta <b>6.74</b> &middot; se separa del lienzo <b>1.32&ndash;1.48</b></div></div>
+            <div class="aj-med">tinta 6.74 &middot; separaci&oacute;n 1.32&ndash;1.48</div></div>
+          <div class="aj-caso"><h5>Croma 0.07</h5><div class="sub">el punto medio</div><div class="aj-row">
+    <span class="aj-chip" style="--c: var(--kb-streak); background:oklch(from var(--c) 0.90 0.07 h); color:oklch(from var(--c) 0.38 0.13 h)">23 d&iacute;as</span><span class="aj-chip" style="--c: var(--kb-coin); background:oklch(from var(--c) 0.90 0.07 h); color:oklch(from var(--c) 0.38 0.13 h)">1 480</span>
+    <span class="aj-chip" style="--c: var(--area-vigor); background:oklch(from var(--c) 0.90 0.07 h); color:oklch(from var(--c) 0.38 0.13 h)">Vigor</span><span class="aj-chip" style="--c: var(--area-wisdom); background:oklch(from var(--c) 0.90 0.07 h); color:oklch(from var(--c) 0.38 0.13 h)">Sabidur&iacute;a</span>
+    <span class="aj-chip" style="--c: var(--area-wealth); background:oklch(from var(--c) 0.90 0.07 h); color:oklch(from var(--c) 0.38 0.13 h)">Riqueza</span><span class="aj-chip" style="--c: var(--area-will); background:oklch(from var(--c) 0.90 0.07 h); color:oklch(from var(--c) 0.38 0.13 h)">Voluntad</span>
+  </div>
+            <div class="aj-med">tinta <b>6.73</b> &middot; separaci&oacute;n 1.32&ndash;1.42</div></div>
         </div>
       </div>
 
       <div class="aj-sec">
-        <h2 class="kbv-h4">3 &middot; Cu&aacute;nto color lleva la interfaz</h2>
+        <h2 class="kbv-h4">3 &middot; Cu&aacute;nto color lleva la interfaz <span style="font-family:var(--kb-f-label);font-size:var(--kb-fs-2xs);letter-spacing:.08em;text-transform:uppercase;color:var(--kb-primary-ink)">&mdash; decidido</span></h2>
         <div class="kbv-meta">Puede que no sea el color de las piezas sino el del fondo: hoy el armaz&oacute;n es blanco y gris, y las piezas de color flotan sobre neutro. Un tinte de marca muy leve cambia la sensaci&oacute;n sin tocar ninguna pieza.</div>
         <div class="aj-tres">
           <div class="aj-caso"><h5>Hoy</h5><div class="sub">armaz&oacute;n neutro</div><div class="aj-mini">
@@ -1655,7 +1662,7 @@
       <div class="aj-mini-body"><div class="aj-card"></div><div class="aj-card"></div></div>
     </div>
   </div></div>
-          <div class="aj-caso"><h5>Men&uacute; y cabecera</h5><div class="sub">el armaz&oacute;n completo</div><div class="aj-mini">
+          <div class="aj-caso" style="border-color: var(--kb-primary); box-shadow: 0 0 0 2px var(--kb-primary-soft)"><h5>Men&uacute; y cabecera</h5><div class="sub">el armaz&oacute;n completo &mdash; elegido</div><div class="aj-mini">
     <div class="aj-mini-cab" style="background:oklch(from var(--kb-primary) 0.97 0.02 h)"><span class="aj-mark"></span><b>Kibo</b><span class="aj-grow"></span><span class="aj-mini-hud"></span></div>
     <div class="aj-mini-cols">
       <div class="aj-mini-side" style="background:oklch(from var(--kb-primary) 0.96 0.03 h)">

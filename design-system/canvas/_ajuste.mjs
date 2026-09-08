@@ -7,20 +7,20 @@ const cabeza = shell.slice(0, shell.indexOf('</helmet>'));
 
 // Las tres variantes del matiz, como pares de luminosidad y croma.
 const V = [
-  { id: 'hoy',  nom: 'Hoy',              sub: 'croma multiplicado &times;1.5', l: '0.50', c: 'calc(c * 1.5)' },
-  { id: 'igual', nom: 'Croma igualado',  sub: 'todos los matices pesan igual', l: '0.52', c: '0.13' },
-  { id: 'vivo', nom: 'Igualado y m&aacute;s claro', sub: 'un paso de brillo &mdash; y el l&iacute;mite', l: '0.58', c: '0.15' },
+  { id: 'b62', nom: 'Brillo medio',  sub: 'luminosidad 0.62', l: '0.62', c: '0.15', tinta: true },
+  { id: 'b66', nom: 'Brillo alto',   sub: 'luminosidad 0.66', l: '0.66', c: '0.15', tinta: true },
+  { id: 'b70', nom: 'Brillo m&aacute;ximo', sub: 'luminosidad 0.70', l: '0.70', c: '0.15', tinta: true },
 ];
 // Medido en navegador sobre esta misma lamina: rotulo blanco sobre la cara.
 const MED = {
-  hoy:   'r&oacute;tulo blanco <b>4.98&ndash;6.10</b> &middot; pasa, pero el rojo domina',
-  igual: 'r&oacute;tulo blanco <b>4.85&ndash;5.88</b> &middot; pasa y ning&uacute;n matiz domina',
-  vivo:  'r&oacute;tulo blanco <b>3.72&ndash;4.63</b> &middot; <b>reprueba</b> el piso de 4.5',
+  b62: 'r&oacute;tulo oscuro <b>4.79&ndash;6.13</b>',
+  b66: 'r&oacute;tulo oscuro <b>5.63&ndash;7.02</b>',
+  b70: 'r&oacute;tulo oscuro <b>6.57&ndash;8.08</b>',
 };
 const cara = (v) => `oklch(from var(--c) ${v.l} ${v.c} h)`;
 
 const piezas = (v) => `
-  <div class="aj-piezas" style="--v:${v.id}">
+  <div class="aj-piezas" style="--v:${v.id}"${v.tinta ? ' data-tinta' : ''}>
     <div class="aj-bar" style="--c: var(--kb-hp)"><span style="width:82%; background:${cara(v)}"></span></div>
     <div class="aj-row">
       <span class="aj-pill" data-m="rojo" style="--c: var(--kb-hp); background:${cara(v)}">2</span>
@@ -41,7 +41,7 @@ const piezas = (v) => `
 const chips = (modo) => {
   const bg = modo === 'hoy'
     ? 'color-mix(in oklab, var(--c) 12%, var(--kb-canvas))'
-    : 'oklch(from var(--c) 0.90 0.09 h)';
+    : `oklch(from var(--c) 0.90 ${modo} h)`;
   const tinta = modo === 'hoy'
     ? 'color-mix(in oklab, var(--c) 54%, var(--kb-void-2))'
     : 'oklch(from var(--c) 0.38 0.13 h)';
@@ -85,6 +85,7 @@ const CSS = `
   .aj-bar { height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
             background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
   .aj-bar > span { display: block; height: 100%; border-radius: var(--kb-r-pill); }
+  .aj-piezas[data-tinta] .aj-pill, .aj-piezas[data-tinta] .aj-btn { color: var(--kb-void-2); }
   .aj-pill { min-width: 20px; height: 20px; border-radius: var(--kb-r-pill); padding: 0 6px;
              display: inline-flex; align-items: center; justify-content: center;
              font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-2xs);
@@ -134,8 +135,8 @@ const cuerpo = `
       </div>
 
       <div class="aj-sec">
-        <h2 class="kbv-h4">1 &middot; El matiz de los rellenos</h2>
-        <div class="kbv-meta">El rojo grita porque nace saturado y la receta de hoy <b>multiplica</b> su croma. Igualarlo lo baja a la media en vez de subirlo, sin tocar el token del &aacute;rea.</div>
+        <h2 class="kbv-h4">1 &middot; M&aacute;s brillante &mdash; y qu&eacute; cuesta</h2>
+        <div class="kbv-meta">El r&oacute;tulo blanco tiene un techo duro: por encima de una luminosidad de <b>0.52</b> deja de pasar el piso de 4.5, y a 0.58 ya mide 3.72. Para subir el brillo, <b>el r&oacute;tulo pasa a tinta oscura</b>. Es lo contrario del intento anterior: aquella tinta oscura iba sobre una cara oscura y se ve&iacute;a lodosa; sobre una cara brillante se lee como marcatextos. El croma sigue igualado en los tres, as&iacute; que el rojo nunca domina.</div>
         <div class="aj-tres">
           ${V.map(v => `<div class="aj-caso">
             <h5>${v.nom}</h5><div class="sub">${v.sub}</div>
@@ -147,22 +148,24 @@ const cuerpo = `
 
       <div class="aj-sec">
         <h2 class="kbv-h4">2 &middot; Los lavados grisáceos</h2>
-        <div class="kbv-meta">Un lavado se hace mezclando el matiz contra el blanco, y esa mezcla arrastra el croma hacia el blanco: por eso sale gris&aacute;ceo. Construirlo con croma propio lo deja claro pero de color.</div>
-        <div class="aj-dos">
+        <div class="kbv-meta">Un lavado se hace mezclando el matiz contra el blanco, y esa mezcla arrastra el croma hacia el blanco: por eso sale gris&aacute;ceo. Con croma propio se ve de color. El cian de Voluntad es el que m&aacute;s fosforece a igual croma &mdash; mira los dos niveles y dime cu&aacute;l.</div>
+        <div class="aj-tres">
           <div class="aj-caso"><h5>Hoy</h5><div class="sub">mezcla contra el lienzo</div>${chips('hoy')}
-            <div class="aj-med">tinta 5.16 &middot; se separa del lienzo <b>1.07&ndash;1.15</b></div></div>
-          <div class="aj-caso"><h5>Con croma propio</h5><div class="sub">misma claridad, color de verdad</div>${chips('oklch')}
-            <div class="aj-med">tinta <b>6.74</b> &middot; se separa del lienzo <b>1.32&ndash;1.48</b></div></div>
+            <div class="aj-med">gris&aacute;ceo &middot; se separa del lienzo 1.07&ndash;1.15</div></div>
+          <div class="aj-caso"><h5>Croma 0.09</h5><div class="sub">lo que viste &mdash; Voluntad fosforece</div>${chips('0.09')}
+            <div class="aj-med">tinta 6.74 &middot; separaci&oacute;n 1.32&ndash;1.48</div></div>
+          <div class="aj-caso"><h5>Croma 0.07</h5><div class="sub">el punto medio</div>${chips('0.07')}
+            <div class="aj-med">tinta <b>6.73</b> &middot; separaci&oacute;n 1.32&ndash;1.42</div></div>
         </div>
       </div>
 
       <div class="aj-sec">
-        <h2 class="kbv-h4">3 &middot; Cu&aacute;nto color lleva la interfaz</h2>
+        <h2 class="kbv-h4">3 &middot; Cu&aacute;nto color lleva la interfaz <span style="font-family:var(--kb-f-label);font-size:var(--kb-fs-2xs);letter-spacing:.08em;text-transform:uppercase;color:var(--kb-primary-ink)">&mdash; decidido</span></h2>
         <div class="kbv-meta">Puede que no sea el color de las piezas sino el del fondo: hoy el armaz&oacute;n es blanco y gris, y las piezas de color flotan sobre neutro. Un tinte de marca muy leve cambia la sensaci&oacute;n sin tocar ninguna pieza.</div>
         <div class="aj-tres">
           <div class="aj-caso"><h5>Hoy</h5><div class="sub">armaz&oacute;n neutro</div>${mini('neutro')}</div>
           <div class="aj-caso"><h5>Men&uacute; con tinte</h5><div class="sub">la marca al 3&nbsp;% de croma</div>${mini('menu')}</div>
-          <div class="aj-caso"><h5>Men&uacute; y cabecera</h5><div class="sub">el armaz&oacute;n completo</div>${mini('todo')}</div>
+          <div class="aj-caso" style="border-color: var(--kb-primary); box-shadow: 0 0 0 2px var(--kb-primary-soft)"><h5>Men&uacute; y cabecera</h5><div class="sub">el armaz&oacute;n completo &mdash; elegido</div>${mini('todo')}</div>
         </div>
       </div>
 
