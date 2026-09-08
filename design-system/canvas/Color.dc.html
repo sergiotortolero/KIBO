@@ -86,9 +86,10 @@
 
      paleta entre 4.96 y 6.37 en los dos temas. */
 
-  --kb-face-l: 0.50;
+  --kb-frame-l: 0.965; --kb-frame-c: 0.012;
+      --kb-face-l: 0.66;
 
-  --kb-face-c: 1.5;
+  --kb-face-c: 0.15;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -239,7 +240,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -570,7 +571,7 @@
       <sc-for list="{{hues}}" as="h" hint-placeholder-count="5">
         <div class="col">
           <div class="wash ink" style="--c: var({{h.tok}}); padding: var(--kb-sp-5) var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-xs); font-weight: 700">{{h.name}}</div>
-          <div style="--c: var({{h.tok}}); background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); padding: var(--kb-sp-5) var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-xs); font-weight: 700">{{h.name}}</div>
+          <div style="--c: var({{h.tok}}); background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); padding: var(--kb-sp-5) var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-xs); font-weight: 700">{{h.name}}</div>
           <div class="tok">{{h.tok}}</div>
         </div>
       </sc-for>

@@ -71,8 +71,9 @@
      Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
      contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
      blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
-  --kb-face-l: 0.50;
-  --kb-face-c: 1.5;
+  --kb-frame-l: 0.965; --kb-frame-c: 0.012;
+      --kb-face-l: 0.66;
+  --kb-face-c: 0.15;
 
   /* ---- Gamificacion ------------------------------------------------------ */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -205,7 +206,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, var(--kb-void-2));
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, var(--kb-void-2));
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, var(--kb-void-2));
-  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, var(--kb-canvas));
   --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, var(--kb-canvas));
@@ -314,9 +315,9 @@
       background: var(--face); color: var(--on-face);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
-    .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); --on-face: var(--kb-text-inverse); }
+    .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     /* El peligro no es superficie de marca: su trabajo es la urgencia. */
-    .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); --on-face: var(--kb-text-inverse); }
+    .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
@@ -364,16 +365,16 @@
     /* Las DOS recetas, escritas en la propiedad del propio elemento: ahi si
        resuelve su --c. Lo que cambia entre temas son la cantidad y el ancla,
        no la formula, asi que una pieza tintada sirve en claro y en oscuro. */
-    .kbv-tag.tint  { background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
-                     color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-tag.tint  { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+                     color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     /* Solida: relleno que CARGA texto blanco, asi que se queda en el 54 % sobre
        el void en los dos temas — la tinta clara del tema oscuro es para texto. */
-    .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
+    .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
 
     .kbv-badge {
       display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
       min-width: 20px; height: 20px; gap: var(--kb-sp-2); padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
-      background: oklch(from var(--c, var(--kb-hp)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse);
+      background: oklch(from var(--c, var(--kb-hp)) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2);
       font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -389,12 +390,12 @@
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
       background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
+      box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
     }
     .kbv-progress.xs { height: 4px; }
     .kbv-progress.sm { height: 6px; }
     .kbv-progress.lg { height: 12px; }
-    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h);
                           transition: width var(--kb-dur-slow) var(--kb-ease-out); }
     .kbv-progress-meta { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
     .kbv-progress-meta .top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--kb-sp-5); }
@@ -428,8 +429,8 @@
       display: inline-flex; align-items: center; gap: var(--kb-sp-3); align-self: flex-start;
       box-sizing: border-box; max-width: 100%;
       height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
-      background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
-      color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor));
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
       font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700;
       letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
@@ -454,9 +455,9 @@
       padding: var(--kb-sp-4) var(--kb-sp-6);
       /* Lavado, borde y tinta salen de la RECETA como cantidad y ancla: con
          las cifras escritas a mano el rotulo medía 2.71 en tema oscuro. */
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
       border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-wash-anchor));
-      color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
+      color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
       letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     }
@@ -490,7 +491,7 @@
     .kbv-grouper .gr-adv { display: flex; align-items: baseline;
                            font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                            font-variant-numeric: tabular-nums;
-                           color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+                           color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-grouper .gr-adv .of { color: var(--kb-text-2); font-weight: 600; }
     .kbv-grouper .gr-adv .sep { color: var(--kb-border-strong); font-weight: 600;
                                 margin: 0 var(--kb-sp-3); }
@@ -517,7 +518,7 @@
     .kbv-kanban-col .count.over { color: var(--kb-warn-ink); }
     .kbv-kanban-col .col-warn { display: flex; align-items: center; gap: var(--kb-sp-3);
                                 padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-sm);
-                                background: color-mix(in oklab, var(--kb-warn) var(--kb-wash-amt), var(--kb-wash-anchor));
+                                background: oklch(from var(--kb-warn) var(--kb-wash-l) var(--kb-wash-c) h);
                                 color: var(--kb-text); font-size: var(--kb-fs-sm); font-weight: 600; }
     .kbv-kanban-col .col-warn svg { flex: none; color: var(--kb-warn-ink); }
     .kbv-kanban-col .col-add { display: flex; align-items: center; justify-content: center; gap: var(--kb-sp-3);
@@ -577,7 +578,7 @@
                  color: transparent; cursor: pointer; }
     .kbv-check::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
-    .kbv-check.on { background: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); border-color: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
+    .kbv-check.on { background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); border-color: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
 
     /* ── Estado vacio ─────────────────────────────────────────────────
@@ -630,13 +631,13 @@
        Sobre tinte todo el texto va en --kb-text (R-14). */
     .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
                   padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
-                  background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+                  background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
                   color: var(--kb-text); }
     .kbv-notice.info  { --c: var(--kb-primary); }
     .kbv-notice.warn  { --c: var(--kb-warn); }
     .kbv-notice.error { --c: var(--kb-hp); }
     .kbv-notice .glyph { flex: none; display: flex;
-                         color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+                         color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
     .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
                        line-height: var(--kb-lh-snug); }
@@ -779,6 +780,8 @@
          color-mix en su propia propiedad (ahi resuelve su --c) y lee de aqui
          cuanto y contra que mezclar; el tema oscuro revalua estos cuatro y no
          una sola clase de componente. */
+      --kb-wash-l: 0.90;  --kb-wash-c: 0.07;
+      --kb-ink-l:  0.38;  --kb-ink-c:  0.13;
       --kb-wash-amt: 12%;   --kb-wash-anchor: var(--kb-canvas);
       --kb-ink-amt:  54%;   --kb-ink-anchor:  var(--kb-void-2);
       --side-w: 232px;
@@ -816,6 +819,8 @@
       /* Las dos recetas en oscuro: lavado 22 % sobre void-1, tinta 42 % sobre
          el inverso. Se reasignan aqui porque las de :root ya resolvieron su
          ancla clara y un descendiente hereda el valor, no la formula. */
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.08;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.13;
       --kb-wash-amt: 22%;   --kb-wash-anchor: var(--kb-void-1);
       --kb-ink-amt:  42%;   --kb-ink-anchor:  var(--kb-text-inverse);
       --kb-coin-soft:        color-mix(in oklab, var(--kb-coin) 22%, var(--kb-void-1));
@@ -848,14 +853,14 @@
     .kbv-sidebar { grid-column: 1; min-width: 0; display: flex; flex-direction: column;
                    align-items: stretch; gap: var(--kb-sp-7);
                    padding: var(--rail-side-pad, var(--kb-sp-7) var(--kb-sp-6));
-                   background: var(--kb-canvas); border-right: 1px solid var(--kb-border);
+                   background: oklch(from var(--kb-primary) var(--kb-frame-l) var(--kb-frame-c) h); border-right: 1px solid var(--kb-border);
                    box-sizing: border-box; overflow: hidden; }
     .kbv-logo { display: flex; flex-direction: var(--rail-col, row); align-items: center;
                 justify-content: var(--rail-center, flex-start); gap: var(--kb-sp-4);
                 padding: var(--rail-logo-pad, 0 var(--kb-sp-4));
                 height: var(--rail-logo-h, 36px); flex: none; }
     .kbv-logo .mark { width: 28px; height: 28px; border-radius: var(--kb-r-xs); flex: none;
-                      background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                      background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2);
                       display: flex; align-items: center; justify-content: center;
                       font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md); }
     .kbv-logo .word { display: var(--rail-hide, block); font-family: var(--kb-f-display);
@@ -879,7 +884,7 @@
                        justify-content: var(--rail-center, flex-start);
                        padding: var(--kb-sp-5) var(--kb-sp-6); text-align: left; cursor: pointer;
                        border-radius: var(--kb-r-md);
-                       background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
+                       background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
                        border: 1px solid color-mix(in oklab, var(--c) 32%, var(--kb-wash-anchor));
                        color: var(--kb-text);
                        transition: border-color var(--kb-dur-fast) var(--kb-ease-standard),
@@ -889,21 +894,21 @@
                              border-color: color-mix(in oklab, var(--c) 54%, var(--kb-wash-anchor)); }
     .kbv-side-streak:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-side-streak .flame { flex: none; display: flex;
-                              color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+                              color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-side-streak .meta { display: var(--rail-hide, flex); flex-direction: column; gap: var(--kb-sp-1);
                              min-width: 0; }
     /* Sobre tinte, el texto toma --kb-text: la jerarquia la hacen tamano y peso
        (R-14). Solo el rotulo y la cifra van en la tinta del rol. */
     .kbv-side-streak .meta .label { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
                                     font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
-                                    color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor));
+                                    color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
                                     white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .kbv-side-streak .meta .days { font-family: var(--kb-f-display); font-size: var(--kb-fs-md);
                                    font-weight: 600; line-height: var(--kb-lh-snug); color: var(--kb-text);
                                    font-variant-numeric: tabular-nums; white-space: nowrap; }
     .kbv-side-streak .meta .days strong { font-size: var(--kb-fs-xl); font-weight: 800;
                                           letter-spacing: -.01em; margin-right: var(--kb-sp-1);
-                                          color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+                                          color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     .kbv-side-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
                     display: flex; flex-direction: column; gap: var(--kb-sp-5); }
@@ -927,7 +932,7 @@
     /* .smp-hover retrata el hover en la lamina; una pantalla usa el estado real. */
     .kbv-side-link:hover, .kbv-side-link.smp-hover { background: var(--kb-surface); color: var(--kb-text); }
     .kbv-side-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
-    .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); font-weight: 700; }
+    .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); font-weight: 700; }
     .kbv-side-link .kbv-badge { display: var(--rail-hide, inline-flex); flex: none; }
     .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: var(--kb-primary-ink); }
     /* Candado freemium: el armazon es quien tapa, no el modulo. Un modulo
@@ -975,7 +980,7 @@
     .kbv-content { grid-column: 2; min-width: 0; display: flex; flex-direction: column;
                    position: relative; overflow: hidden; }
     .kbv-header { height: 72px; display: flex; align-items: center; gap: var(--kb-sp-7);
-                  padding: 0 var(--kb-sp-8); background: var(--kb-canvas);
+                  padding: 0 var(--kb-sp-8); background: oklch(from var(--kb-primary) calc(var(--kb-frame-l) + 0.012) var(--kb-frame-c) h);
                   border-bottom: 1px solid var(--kb-border); flex: none; min-width: 0; box-sizing: border-box; }
     .kbv-header .left   { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 0 1 auto; min-width: 0; }
     .kbv-header .center { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 1 1 auto; min-width: 0; justify-content: center; }
@@ -1247,8 +1252,8 @@
     .kbv-kibo-act:focus-visible { outline: none; box-shadow: var(--kb-sh-2), var(--kb-focus-halo); }
     .kbv-kibo-act .g { flex: none; display: flex; align-items: center; justify-content: center;
                        width: 26px; height: 26px; border-radius: var(--kb-r-pill);
-                       background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
-                       color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+                       background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+                       color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* ── KIBO ─────────────────────────────────────────────────────────── */
     /* El cuerpo es gel de un solo color: la PIEL (--skin). La cara sale del HP.
@@ -1657,7 +1662,7 @@
      (doble galon arriba, galon, igual, galon abajo, doble galon abajo),
      de modo que el color nunca es el unico portador del sentido. */
   .kbv-pri { display: inline-flex; flex: none;
-             color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+             color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
 
   /* ── Esfuerzo: el MEDIDOR ─────────────────────────────────────────
      Cuatro pasos de altura creciente. Es un glifo que hace de indicador,

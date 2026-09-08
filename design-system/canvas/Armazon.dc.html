@@ -86,9 +86,10 @@
 
      paleta entre 4.96 y 6.37 en los dos temas. */
 
-  --kb-face-l: 0.50;
+  --kb-frame-l: 0.965; --kb-frame-c: 0.012;
+      --kb-face-l: 0.66;
 
-  --kb-face-c: 1.5;
+  --kb-face-c: 0.15;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -239,7 +240,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -433,12 +434,12 @@
                  background: var(--kb-surface); min-width: 0; }
     .kbv-sidebar { grid-column: 1; min-width: 0; display: flex; flex-direction: column;
                    gap: var(--kb-sp-7); padding: var(--kb-sp-7) var(--kb-sp-6);
-                   background: var(--kb-canvas); border-right: 1px solid var(--kb-border); }
+                   background: oklch(from var(--kb-primary) var(--kb-frame-l) var(--kb-frame-c) h); border-right: 1px solid var(--kb-border); }
     .kbv-content { grid-column: 2; min-width: 0; display: flex; flex-direction: column; }
 
     .kbv-logo { display: flex; align-items: center; gap: var(--kb-sp-5); padding: 0 var(--kb-sp-4); }
     .kbv-logo .mark { width: 28px; height: 28px; border-radius: var(--kb-r-xs); flex: none;
-                      background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                      background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2);
                       display: flex; align-items: center; justify-content: center;
                       font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md); }
     .kbv-logo .word { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-xl);
@@ -477,7 +478,7 @@
 
     /* ── La cabecera: 72 px, y lee cinco fuentes ─────────────────────── */
     .kbv-header { height: 72px; display: flex; align-items: center; gap: var(--kb-sp-7);
-                  padding: 0 var(--kb-sp-8); background: var(--kb-canvas);
+                  padding: 0 var(--kb-sp-8); background: oklch(from var(--kb-primary) calc(var(--kb-frame-l) + 0.012) var(--kb-frame-c) h);
                   border-bottom: 1px solid var(--kb-border); flex: none; min-width: 0; }
     .kbv-header .left { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 0 1 auto; min-width: 0; }
     .kbv-header .center { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 1 1 auto; min-width: 0; justify-content: center; }

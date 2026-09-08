@@ -71,8 +71,9 @@
      Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
      contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
      blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
-  --kb-face-l: 0.50;
-  --kb-face-c: 1.5;
+  --kb-frame-l: 0.965; --kb-frame-c: 0.012;
+      --kb-face-l: 0.66;
+  --kb-face-c: 0.15;
 
   /* ---- Gamificacion ------------------------------------------------------ */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -205,7 +206,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, var(--kb-void-2));
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, var(--kb-void-2));
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, var(--kb-void-2));
-  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, var(--kb-canvas));
   --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, var(--kb-canvas));
@@ -281,9 +282,9 @@
       background: var(--face); color: var(--on-face);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
-    .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); --on-face: var(--kb-text-inverse); }
+    .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     /* El peligro no es superficie de marca: su trabajo es la urgencia. */
-    .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); --on-face: var(--kb-text-inverse); }
+    .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
@@ -330,12 +331,12 @@
     }
     .kbv-tag.tint  { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
                      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
+    .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
 
     .kbv-badge {
       display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
       min-width: 20px; height: 20px; gap: var(--kb-sp-2); padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
-      background: oklch(from var(--c, var(--kb-hp)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse);
+      background: oklch(from var(--c, var(--kb-hp)) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2);
       font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -351,12 +352,12 @@
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
       background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
+      box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
     }
     .kbv-progress.xs { height: 4px; }
     .kbv-progress.sm { height: 6px; }
     .kbv-progress.lg { height: 12px; }
-    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h);
                           transition: width var(--kb-dur-slow) var(--kb-ease-out); }
     .kbv-progress-meta { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
     .kbv-progress-meta .top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--kb-sp-5); }
@@ -451,7 +452,7 @@
                  color: transparent; cursor: pointer; }
     .kbv-check::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
-    .kbv-check.on { background: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); border-color: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
+    .kbv-check.on { background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); border-color: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
   </style>
 
@@ -530,14 +531,14 @@
     .kbv-sidebar { grid-column: 1; min-width: 0; display: flex; flex-direction: column;
                    align-items: stretch; gap: var(--kb-sp-7);
                    padding: var(--rail-side-pad, var(--kb-sp-7) var(--kb-sp-6));
-                   background: var(--kb-canvas); border-right: 1px solid var(--kb-border);
+                   background: oklch(from var(--kb-primary) var(--kb-frame-l) var(--kb-frame-c) h); border-right: 1px solid var(--kb-border);
                    box-sizing: border-box; overflow: hidden; }
     .kbv-logo { display: flex; flex-direction: var(--rail-col, row); align-items: center;
                 justify-content: var(--rail-center, flex-start); gap: var(--kb-sp-4);
                 padding: var(--rail-logo-pad, 0 var(--kb-sp-4));
                 height: var(--rail-logo-h, 36px); flex: none; }
     .kbv-logo .mark { width: 28px; height: 28px; border-radius: var(--kb-r-xs); flex: none;
-                      background: var(--kb-primary-fill); color: var(--kb-text-inverse);
+                      background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2);
                       display: flex; align-items: center; justify-content: center;
                       font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md); }
     .kbv-logo .word { display: var(--rail-hide, block); font-family: var(--kb-f-display);
@@ -574,7 +575,7 @@
     /* .smp-hover retrata el hover en la lamina; una pantalla usa el estado real. */
     .kbv-side-link:hover, .kbv-side-link.smp-hover { background: var(--kb-surface); color: var(--kb-text); }
     .kbv-side-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
-    .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); font-weight: 700; }
+    .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); font-weight: 700; }
     .kbv-side-link .kbv-badge { display: var(--rail-hide, inline-flex); flex: none; }
     .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: var(--kb-primary-ink); }
     /* La cria: un acceso agrupado bajo su productor. Sangrado y sin glifo en el
@@ -616,7 +617,7 @@
     .kbv-content { grid-column: 2; min-width: 0; display: flex; flex-direction: column;
                    position: relative; overflow: hidden; }
     .kbv-header { height: 72px; display: flex; align-items: center; gap: var(--kb-sp-7);
-                  padding: 0 var(--kb-sp-8); background: var(--kb-canvas);
+                  padding: 0 var(--kb-sp-8); background: oklch(from var(--kb-primary) calc(var(--kb-frame-l) + 0.012) var(--kb-frame-c) h);
                   border-bottom: 1px solid var(--kb-border); flex: none; min-width: 0; box-sizing: border-box; }
     .kbv-header .left   { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 0 1 auto; min-width: 0; }
     .kbv-header .center { display: flex; align-items: center; gap: var(--kb-sp-6); flex: 1 1 auto; min-width: 0; justify-content: center; }
@@ -1312,7 +1313,7 @@
                                 font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
                                 color: var(--kb-text-2); }
               .kbv-td-dot { width: 10px; height: 10px; flex: none; border-radius: var(--kb-r-pill);
-                            background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); }
+                            background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
 
               /* Barra por tramos §6.4: la energia es una escala cerrada de 5. */
               .kbv-td-seg { display: flex; gap: var(--kb-sp-2); flex: 1 1 auto; min-width: 0; }
@@ -1321,7 +1322,7 @@
                                 box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 24%, var(--kb-canvas)); }
               /* El tramo lleno va en la TINTA, no en el tono: una escala cerrada
                  es un contador, y el tono plano mide 2.88 sobre la tarjeta. */
-              .kbv-td-seg > i.on { background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+              .kbv-td-seg > i.on { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h);
                                    box-shadow: none; }
 
               .kbv-td-switch { display: flex; align-items: center; flex-wrap: wrap;

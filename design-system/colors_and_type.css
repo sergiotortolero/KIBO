@@ -79,8 +79,8 @@
      Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
      contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
      blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
-  --kb-face-l: 0.50;
-  --kb-face-c: 1.5;
+  --kb-face-l: 0.66;
+  --kb-face-c: 0.15;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -241,7 +241,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   /* Generic ink over a tint is NOT a :root token: on :root the piece's --c is
      absent, so var(--c) freezes to the fallback and every descendant inherits

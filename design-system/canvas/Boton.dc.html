@@ -86,9 +86,10 @@
 
      paleta entre 4.96 y 6.37 en los dos temas. */
 
-  --kb-face-l: 0.50;
+  --kb-frame-l: 0.965; --kb-frame-c: 0.012;
+      --kb-face-l: 0.66;
 
-  --kb-face-c: 1.5;
+  --kb-face-c: 0.15;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -239,7 +240,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -437,14 +438,14 @@
 
     /* Cara sólida: la tinta del papel. Labio: esa tinta, más honda. */
     .kbv-btn-primary, .kbv-btn-danger {
-      --face: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
+      --face: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h);
       --lip:  color-mix(in oklab, var(--c) 30%, var(--kb-void-2));
       background: var(--face); color: var(--kb-text-inverse);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
     .kbv-btn-primary { --c: var(--kb-primary); }
     .kbv-btn-danger  { --c: var(--kb-hp); }
-    .kbv-btn-primary.is-hover, .kbv-btn-danger.is-hover { background: oklch(from var(--c) calc(var(--kb-face-l) - 0.04) calc(c * var(--kb-face-c)) h); }
+    .kbv-btn-primary.is-hover, .kbv-btn-danger.is-hover { background: oklch(from var(--c) calc(var(--kb-face-l) - 0.04) var(--kb-face-c) h); }
 
     .kbv-btn-secondary {
       background: var(--kb-card); color: var(--kb-text);
