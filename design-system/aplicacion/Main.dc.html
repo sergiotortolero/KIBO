@@ -1130,11 +1130,11 @@
         <nav class="kbv-side-nav">
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">General</div>
-            <button type="button" class="{{ clase_inicio }}" onClick="{{ ir_inicio }}">
+            <button type="button" class="{{ clase_inicio }} " onClick="{{ ir_inicio }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Inicio</span>
             </button>
-            <button type="button" class="{{ clase_progreso }}" onClick="{{ ir_progreso }}">
+            <button type="button" class="{{ clase_progreso }} " onClick="{{ ir_progreso }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8h4v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Mi progreso</span>
             </button>
@@ -1142,7 +1142,7 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Tu plan</div>
-            <button type="button" class="{{ clase_tareas }}" onClick="{{ ir_tareas }}">
+            <button type="button" class="{{ clase_tareas }} " onClick="{{ ir_tareas }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
               <span class="lbl">Tareas</span>
               <span class="kbv-badge quiet">6</span>
@@ -1150,17 +1150,17 @@
             <!-- Areas y Proyectos son HERMANOS de Tareas, no crias suyas: la
                  jerarquia area › agrupador › tarea agrupa los hechos, no el
                  menu. Colgar Proyectos de Tareas dejaba a Areas sin destino. -->
-            <button type="button" class="{{ clase_areas }}" onClick="{{ ir_areas }}">
+            <button type="button" class="{{ clase_areas }} " onClick="{{ ir_areas }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Áreas</span>
               <span class="kbv-badge quiet">5</span>
             </button>
-            <button type="button" class="{{ clase_proyectos }}" onClick="{{ ir_proyectos }}">
+            <button type="button" class="{{ clase_proyectos }} " onClick="{{ ir_proyectos }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Proyectos</span>
               <span class="kbv-badge quiet">3</span>
             </button>
-            <button type="button" class="{{ clase_finanzas }}" onClick="{{ ir_finanzas }}">
+            <button type="button" class="{{ clase_finanzas }} locked" onClick="{{ ir_finanzas }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Finanzas</span>
               <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>400<span class="kbv-sr-only"> Elemento</span></span>
@@ -1170,12 +1170,12 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Tu constancia</div>
-            <button type="button" class="{{ clase_habitos }}" onClick="{{ ir_habitos }}">
+            <button type="button" class="{{ clase_habitos }} " onClick="{{ ir_habitos }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Hábitos</span>
               <span class="kbv-badge quiet">4</span>
             </button>
-            <button type="button" class="{{ clase_retos }}" onClick="{{ ir_retos }}">
+            <button type="button" class="{{ clase_retos }} " onClick="{{ ir_retos }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6l-9 9-3-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16l-4 4M5 16l3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Retos</span>
               <span class="kbv-badge" style="--c: var(--kb-hp)">2</span>
@@ -1184,34 +1184,34 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Tu bitácora</div>
-            <button type="button" class="{{ clase_salud }}" onClick="{{ ir_salud }}">
+            <button type="button" class="{{ clase_salud }} " onClick="{{ ir_salud }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Salud</span>
             </button>
             <!-- Diario y Lectura NO son premium: van sin candado y sin precio. -->
-            <button type="button" class="{{ clase_diario }}" onClick="{{ ir_diario }}">
+            <button type="button" class="{{ clase_diario }} " onClick="{{ ir_diario }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Diario</span>
             </button>
             <!-- .smp-hover retrata el estado hover en la lamina; una pantalla usa el real. -->
-            <button type="button" class="{{ clase_lectura }}" onClick="{{ ir_lectura }}">
+            <button type="button" class="{{ clase_lectura }} smp-hover" onClick="{{ ir_lectura }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 5c-2-2-5-2-8-1v15c3-1 6-1 8 1m0-15c2-2 5-2 8-1v15c-3-1-6-1-8 1m0-15v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Lectura</span>
               <span class="kbv-badge quiet">2</span>
             </button>
-            <button type="button" class="{{ clase_estudio }}" onClick="{{ ir_estudio }}">
+            <button type="button" class="{{ clase_estudio }} locked" onClick="{{ ir_estudio }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Estudio</span>
               <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>250<span class="kbv-sr-only"> Elemento</span></span>
               <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
-            <button type="button" class="{{ clase_entretenimiento }}" onClick="{{ ir_entretenimiento }}">
+            <button type="button" class="{{ clase_entretenimiento }} locked" onClick="{{ ir_entretenimiento }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8h4M3 12h4M3 16h4M17 8h4M17 12h4M17 16h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Entretenimiento</span>
               <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>150<span class="kbv-sr-only"> Elemento</span></span>
               <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
-            <button type="button" class="{{ clase_boveda }}" onClick="{{ ir_boveda }}">
+            <button type="button" class="{{ clase_boveda }} locked" onClick="{{ ir_boveda }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2V5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18a2 2 0 0 1 2-2h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Bóveda</span>
               <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>300<span class="kbv-sr-only"> Elemento</span></span>
@@ -1224,12 +1224,12 @@
                este rotulo, asi que fundirlos corrompe la ruta de sus pantallas. -->
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Tu gente</div>
-            <button type="button" class="{{ clase_amigos }}" onClick="{{ ir_amigos }}">
+            <button type="button" class="{{ clase_amigos }} " onClick="{{ ir_amigos }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 14.2c2.5 0 6 1.4 6 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Amigos</span>
               <span class="kbv-badge dot" style="--c: var(--kb-primary)"><span class="kbv-sr-only">Con novedades</span></span>
             </button>
-            <button type="button" class="{{ clase_familia }}" onClick="{{ ir_familia }}">
+            <button type="button" class="{{ clase_familia }} " onClick="{{ ir_familia }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Familia</span>
             </button>
@@ -1237,11 +1237,11 @@
 
           <div class="kbv-side-section">
             <div class="kbv-eyebrow section-name">Recompensas</div>
-            <button type="button" class="{{ clase_tienda }}" onClick="{{ ir_tienda }}">
+            <button type="button" class="{{ clase_tienda }} " onClick="{{ ir_tienda }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 9l1.5-5h15L21 9M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M3 9h18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 13a4 4 0 0 0 8 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Tienda</span>
             </button>
-            <button type="button" class="{{ clase_personalizacion }}" onClick="{{ ir_personalizacion }}">
+            <button type="button" class="{{ clase_personalizacion }} " onClick="{{ ir_personalizacion }}">
               <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Personalización</span>
             </button>
@@ -1347,7 +1347,7 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<sc-if value="{{ es_inicio }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ es_inicio }}" hint-placeholder-val="{{ true }}">
 <style>
     /* ==========================================================================
        HOY — piezas propias del tablero de widgets. Todo sale de los tokens del
@@ -5777,7 +5777,7 @@
               Hablar con KIBO
             </button>
           </div>
-          <button type="button" class="kbv-kibo-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="KIBO · abrir las acciones rápidas">
+          <button type="button" class="kbv-kibo-trigger" onClick="{{ abrir_rueda }}" aria-haspopup="menu" aria-expanded="false" aria-label="KIBO · abrir las acciones rápidas">
             <span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb live" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
           </button>
         </div>
@@ -6417,17 +6417,22 @@
   </div>
 </sc-if>
 </x-dc>
-
 <script data-dc-script data-props='{"tema":{"editor":"enum","options":["claro","oscuro"],"default":"claro"}}'>
 class Component extends DCLogic {
-  constructor(p) { super(p); this.state = { seccion: 'hoy', rueda: false }; }
+  constructor(p) { super(p); this.state = { seccion: 'inicio', rueda: false, momento: 'manana' }; }
   renderVals() {
     const TIPO = {"inicio":"real","progreso":"obra","tareas":"real","areas":"obra","proyectos":"obra","finanzas":"bloqueado","habitos":"real","retos":"obra","salud":"obra","diario":"obra","lectura":"obra","estudio":"bloqueado","entretenimiento":"bloqueado","boveda":"bloqueado","amigos":"obra","familia":"obra","tienda":"obra","personalizacion":"obra"};
+    const MOMS = ["manana","trabajo","noche"];
     const v = {};
     for (const id of Object.keys(TIPO)) {
       v['es_' + id] = this.state.seccion === id;
       v['ir_' + id] = () => this.setState({ seccion: id, rueda: false });
       v['clase_' + id] = 'kbv-side-link' + (this.state.seccion === id ? ' active' : '');
+    }
+    for (const mo of MOMS) {
+      v['es_momento_' + mo] = this.state.momento === mo;
+      v['ir_momento_' + mo] = () => this.setState({ momento: mo });
+      v['clase_momento_' + mo] = 'kbv-chip' + (this.state.momento === mo ? ' active' : '');
     }
     const tipo = TIPO[this.state.seccion];
     v.es_bloqueado = tipo === 'bloqueado';
