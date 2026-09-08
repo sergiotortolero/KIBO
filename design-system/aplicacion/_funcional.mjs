@@ -69,7 +69,7 @@ t = t.replace(/<button type="button" class="(kbv-kibo-trigger|kbv-fab)"/,
 const velo = '\n' + si('rueda_abierta', 'false',
   `  <div onClick="{{ cerrar_rueda }}" style="position:absolute; inset:0; z-index:60; background:color-mix(in oklab, var(--kb-void-2) 62%, transparent); display:flex; align-items:flex-start; justify-content:center; padding:var(--kb-sp-8); overflow:auto;">
     <div style="width:100%; max-width:var(--kb-w-page);">
-${leer('KiboQuickWheel')}
+${leer('RuedaCanonica')}
     </div>
   </div>`) + '\n';
 t = t.replace('</x-dc>', velo + '</x-dc>');

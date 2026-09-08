@@ -236,6 +236,21 @@
     animation-duration: .001ms !important; transition-duration: .001ms !important;
   }
 }
+  
+    /* rueda canonica — tomada del sistema de diseno, no reinterpretada */
+    .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
+    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
+                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
+    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
+            letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
+    .wglyph { fill: none; }
+    .whub { fill: var(--kb-card); stroke: var(--kb-border); stroke-width: 1.5; }
+    .wback { color: var(--kb-text-2); }
+    .wbacklab { fill: var(--kb-text-2); font-family: var(--kb-f-label); font-size: 12px; font-weight: 800;
+                letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
   </style>
 
   <style>
