@@ -1,32 +1,117 @@
 {
   "pages": [
-    { "id": "general", "name": "Armazón y componentes" },
-    { "id": "areas", "name": "Áreas" }
+    {
+      "id": "general",
+      "name": "Armazón y componentes"
+    },
+    {
+      "id": "areas",
+      "name": "Áreas"
+    }
   ],
   "artboards": [
-    { "file": "Main.dc.html", "page": "general", "x": 0, "y": 0, "w": 1440, "h": 900,
-      "title": "La aplicación · armazón navegable", "is_interactive": true, "expand": "fit" },
-    { "file": "Componentes.dc.html", "page": "general", "x": 1560, "y": 0, "w": 1440, "h": 3200,
-      "title": "Componentes generales", "expand": "fit" },
-
-    { "file": "AreasScreenV3.dc.html", "page": "areas", "x": 0, "y": 0, "w": 1440, "h": 6200,
-      "title": "01 · Áreas · centro de análisis", "expand": "fit" },
-    { "file": "AreasGeneralV3.dc.html", "page": "areas", "x": 1560, "y": 0, "w": 1440, "h": 6200,
-      "title": "02 · Vista general", "expand": "fit" },
-    { "file": "AreaDetailV3.dc.html", "page": "areas", "x": 3120, "y": 0, "w": 1440, "h": 6200,
-      "title": "03 · Detalle de área", "expand": "fit" },
-    { "file": "AreaProjectsV3.dc.html", "page": "areas", "x": 4680, "y": 0, "w": 1440, "h": 6200,
-      "title": "04 · Agrupadores del área", "expand": "fit" },
-    { "file": "AreaWillTab.dc.html", "page": "areas", "x": 6240, "y": 0, "w": 1440, "h": 6200,
-      "title": "05 · Voluntad · retos y hábitos", "expand": "fit" },
-    { "file": "AreaConfigV3.dc.html", "page": "areas", "x": 7800, "y": 0, "w": 1440, "h": 6200,
-      "title": "06 · Configuración del área", "expand": "fit" }
+    {
+      "file": "Main.dc.html",
+      "page": "general",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "La aplicación · armazón navegable",
+      "is_interactive": true,
+      "expand": "fit"
+    },
+    {
+      "file": "Componentes.dc.html",
+      "page": "general",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 5914,
+      "title": "Componentes generales",
+      "expand": "fit"
+    },
+    {
+      "file": "AreasScreenV3.dc.html",
+      "page": "areas",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 6157,
+      "title": "01 · Áreas · centro de análisis",
+      "expand": "fit"
+    },
+    {
+      "file": "AreasGeneralV3.dc.html",
+      "page": "areas",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 4721,
+      "title": "02 · Vista general",
+      "expand": "fit"
+    },
+    {
+      "file": "AreaDetailV3.dc.html",
+      "page": "areas",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 6332,
+      "title": "03 · Detalle de área",
+      "expand": "fit"
+    },
+    {
+      "file": "AreaProjectsV3.dc.html",
+      "page": "areas",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 7703,
+      "title": "04 · Agrupadores del área",
+      "expand": "fit"
+    },
+    {
+      "file": "AreaWillTab.dc.html",
+      "page": "areas",
+      "x": 6240,
+      "y": 0,
+      "w": 1440,
+      "h": 8165,
+      "title": "05 · Voluntad · retos y hábitos",
+      "expand": "fit"
+    },
+    {
+      "file": "AreaConfigV3.dc.html",
+      "page": "areas",
+      "x": 7800,
+      "y": 0,
+      "w": 1440,
+      "h": 7678,
+      "title": "06 · Configuración del área",
+      "expand": "fit"
+    }
   ],
   "annotations": [
-    { "id": "nota-general", "page": "general", "x": 0, "y": -170, "w": 700,
-      "text": "Armazón y componentes generales.\n\nA la izquierda, la aplicación navegable: el menú cambia de sección de verdad, el tablero de Inicio cambia por momento del día, la compuerta premium muestra su precio en Elemento y el botón de KIBO abre la rueda canónica del sistema de diseño.\n\nA la derecha, las piezas que todo módulo repite. Son trece: el chip de área, la barra de filtros, la fila de indicadores, la columna de kanban con su límite de trabajo en curso, la tarjeta de agrupador con avance derivado, y las ocho que se publicaron después —vacío, esqueleto, aviso, punto de información, escenario, modal, lista de definición y bloque de comportamiento— porque cada pantalla las estaba inventando por su cuenta." },
-    { "id": "nota-areas", "page": "areas", "x": 0, "y": -200, "w": 760,
-      "text": "Áreas — la vista más general, y la que fija el contrato de todo lo que cuelga.\n\nEl área no es un módulo con datos propios: es una propiedad de todo hecho y un centro de análisis. Lo que cuelga de ella es POLIMÓRFICO, y el prototipo lo declara: proyectos en Vigor y Comunidad, cursos y materias en Sabiduría, proyectos financieros en Riqueza, y retos y hábitos en Voluntad, que no tiene proyectos.\n\nDos cosas que conviene mirar con lupa: que el avance de un agrupador siempre se muestre derivado de sus partes (8/14 · 56%) y nunca como un porcentaje suelto; y que Comunidad, al no tener casa, no lleve el botón que va al módulo." }
+    {
+      "id": "nota-general",
+      "page": "general",
+      "x": 0,
+      "y": -180,
+      "w": 700,
+      "text": "Armazón y componentes generales.\n\nA la izquierda, la aplicación navegable: el menú cambia de sección de verdad, el tablero de Inicio cambia por momento del día, la compuerta premium muestra su precio en Elemento y el botón de KIBO abre la rueda canónica del sistema de diseño. Este artboard conserva el alto real de la app (900) porque es un visor, no una lámina.\n\nA la derecha, las trece piezas que todo módulo repite: chip de área, barra de filtros, fila de indicadores, columna de kanban con su límite de trabajo en curso, tarjeta de agrupador con avance derivado, y las ocho generales — vacío, esqueleto, aviso, punto de información, escenario, modal, lista de definición y bloque de comportamiento."
+    },
+    {
+      "id": "nota-areas",
+      "page": "areas",
+      "x": 0,
+      "y": -210,
+      "w": 780,
+      "text": "Áreas — la vista más general, y la que fija el contrato de todo lo que cuelga.\n\nEl área no es un módulo con datos propios: es una propiedad de todo hecho y un centro de análisis. Lo que cuelga de ella es POLIMÓRFICO, y el prototipo lo declara: proyectos en Vigor y Comunidad, cursos y materias en Sabiduría, proyectos financieros en Riqueza, y retos y hábitos en Voluntad, que no tiene proyectos.\n\nCada lámina crece con su contenido, así que los estados y los modales quedan apilados y comparables en vez de escondidos tras el scroll interno del armazón.\n\nDos cosas que conviene mirar con lupa: que el avance de un agrupador se muestre siempre derivado de sus partes (8/14 · 56%) y nunca como porcentaje suelto; y que Comunidad, al no tener casa, no lleve el botón que va al módulo."
+    }
   ],
-  "launch": { "view": "canvas", "page": "areas" }
+  "launch": {
+    "view": "canvas",
+    "page": "areas"
+  }
 }

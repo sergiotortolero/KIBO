@@ -264,6 +264,8 @@
                            transform: translate(-50%, -50%); }
     .kbv-btn-link:focus-visible { outline: none; border-radius: var(--kb-r-xs);
                                   box-shadow: var(--kb-focus-halo); }
+  
+
   </style>
 
   <style>
@@ -1310,6 +1312,17 @@
     .smp-bars { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
     .smp-areas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
   </style>
+<style data-lamina>
+/* Lamina de revision: este artboard es un ESPECIMEN, no la app corriendo. El
+   armazon es un visor de alto fijo con scroll interno; aqui se deja crecer para
+   que los estados y los modales queden apilados y comparables, en vez de
+   escondidos tras un scroll anidado. Va con precedencia forzada a proposito:
+   invierte una decision del armazon solo para la lamina. */
+.kb-app, .kbv-shell { height: auto !important; min-height: 900px !important; }
+.kbv-content { overflow: visible !important; height: auto !important; }
+.kbv-main { overflow: visible !important; height: auto !important; flex: none !important; }
+.kbv-side { position: sticky !important; top: 0 !important; align-self: start !important; max-height: 100vh !important; overflow-y: auto !important; }
+</style>
 </helmet>
 <!-- La lamina fija 1440x900 (es el visor, no un valor de diseno) y CLAVA los
      pasos fluidos en su valor de 1440: vw se resuelve contra el viewport de la

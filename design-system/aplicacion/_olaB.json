@@ -1,0 +1,26 @@
+[
+ {
+  "artboard": "TareasScreen",
+  "nombre": "Tareas (backlog general)",
+  "archivo": "screens-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "ProjectsScreen",
+  "nombre": "Proyectos (tablero + roadmap)",
+  "archivo": "screens-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "ProjectDetail",
+  "nombre": "Detalle de proyecto",
+  "archivo": "screens-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "ProjectConfig",
+  "nombre": "Configuración del proyecto (tab)",
+  "archivo": "screens-v2.jsx",
+  "modales": 0
+ }
+]
