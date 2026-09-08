@@ -7,24 +7,30 @@ const leer = n => { try { return fs.readFileSync(`_contenido/${n}.html`, 'utf8')
 
 // destino del menu -> contenido. 'ModuleLocked' = compuerta premium; null = en obra.
 const MAPA = [
-  { lbl: 'Hoy',             id: 'hoy',             src: 'TodayDashboard' },
+  // General
+  { lbl: 'Inicio',          id: 'inicio',          src: 'TodayDashboard' },
   { lbl: 'Mi progreso',     id: 'progreso',        src: null },
+  // Tu plan
   { lbl: 'Tareas',          id: 'tareas',          src: 'TaskDetailScreen' },
+  { lbl: 'Áreas',           id: 'areas',           src: null },
   { lbl: 'Proyectos',       id: 'proyectos',       src: null },
   { lbl: 'Finanzas',        id: 'finanzas',        src: 'ModuleLocked' },
+  // Tu constancia
   { lbl: 'Hábitos',         id: 'habitos',         src: 'HabitsScreen' },
   { lbl: 'Retos',           id: 'retos',           src: null },
+  // Tu bitácora
   { lbl: 'Salud',           id: 'salud',           src: null },
-  { lbl: 'Diario',          id: 'diario',          src: 'ModuleLocked' },
-  { lbl: 'Lectura',         id: 'lectura',         src: 'ModuleLocked' },
+  { lbl: 'Diario',          id: 'diario',          src: null },
+  { lbl: 'Lectura',         id: 'lectura',         src: null },
   { lbl: 'Estudio',         id: 'estudio',         src: 'ModuleLocked' },
-  { lbl: 'Entretenimiento', id: 'entretenimiento', src: 'EntretenimientoScreen' },
+  { lbl: 'Entretenimiento', id: 'entretenimiento', src: 'ModuleLocked' },
   { lbl: 'Bóveda',          id: 'boveda',          src: 'ModuleLocked' },
+  // Tu gente
   { lbl: 'Amigos',          id: 'amigos',          src: null },
   { lbl: 'Familia',         id: 'familia',         src: null },
+  // Recompensas
   { lbl: 'Tienda',          id: 'tienda',          src: null },
   { lbl: 'Personalización', id: 'personalizacion', src: null },
-  { lbl: 'Sergio',          id: 'perfil',          src: null },
 ];
 const clase = x => x.src === 'ModuleLocked' ? 'bloqueado' : (x.src ? 'real' : 'obra');
 

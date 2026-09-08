@@ -1,7 +1,13 @@
 {
   "artboards": [
     { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1440, "h": 900,
-      "title": "Armazón y componentes generales", "is_interactive": true, "expand": "fit" }
+      "title": "La aplicación · armazón navegable", "is_interactive": true, "expand": "fit" },
+    { "file": "Componentes.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 2200,
+      "title": "Componentes generales", "expand": "fit" }
   ],
-  "launch": { "view": "focused", "file": "Main.dc.html" }
+  "annotations": [
+    { "id": "nota-segmento-0", "x": 0, "y": -150, "w": 700,
+      "text": "Segmento 0 — componentes generales.\n\nA la izquierda, el armazón navegable: el menú cambia de sección de verdad, la compuerta premium muestra su precio en Elemento, el botón de KIBO abre su menú de acciones y la palanca de arriba cambia el tema.\n\nA la derecha, las piezas que todo módulo repite, para revisarlas una por una: el chip de área, la barra de filtros, la fila de indicadores, la columna de kanban con su límite de trabajo en curso, y la tarjeta de agrupador con su avance derivado.\n\nLa taxonomía del menú se tomó en vivo de la maqueta original: seis grupos, dieciocho destinos, cuatro de ellos premium." }
+  ],
+  "launch": { "view": "canvas" }
 }
