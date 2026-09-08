@@ -7,6 +7,14 @@
     {
       "id": "areas",
       "name": "Áreas"
+    },
+    {
+      "id": "plan",
+      "name": "Tareas y Proyectos"
+    },
+    {
+      "id": "constancia",
+      "name": "Hábitos y Retos"
     }
   ],
   "artboards": [
@@ -27,7 +35,7 @@
       "x": 1560,
       "y": 0,
       "w": 1440,
-      "h": 5914,
+      "h": 7898,
       "title": "Componentes generales",
       "expand": "fit"
     },
@@ -38,7 +46,7 @@
       "y": 0,
       "w": 1440,
       "h": 6157,
-      "title": "01 · Áreas · centro de análisis",
+      "title": "01 · Centro de análisis",
       "expand": "fit"
     },
     {
@@ -90,28 +98,104 @@
       "h": 7678,
       "title": "06 · Configuración del área",
       "expand": "fit"
+    },
+    {
+      "file": "TareasScreen.dc.html",
+      "page": "plan",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 12078,
+      "title": "01 · Tareas · backlog",
+      "expand": "fit"
+    },
+    {
+      "file": "ProjectsScreen.dc.html",
+      "page": "plan",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 7214,
+      "title": "02 · Proyectos · tablero y hoja de ruta",
+      "expand": "fit"
+    },
+    {
+      "file": "ProjectDetail.dc.html",
+      "page": "plan",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 6386,
+      "title": "03 · Detalle de proyecto",
+      "expand": "fit"
+    },
+    {
+      "file": "ProjectConfig.dc.html",
+      "page": "plan",
+      "x": 4680,
+      "y": 0,
+      "w": 1440,
+      "h": 6795,
+      "title": "04 · Configuración del proyecto",
+      "expand": "fit"
+    },
+    {
+      "file": "HabitsScreen.dc.html",
+      "page": "constancia",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 7368,
+      "title": "01 · Hábitos",
+      "expand": "fit"
+    },
+    {
+      "file": "RetosScreen.dc.html",
+      "page": "constancia",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 9459,
+      "title": "02 · Retos",
+      "expand": "fit"
     }
   ],
   "annotations": [
     {
-      "id": "nota-general",
+      "id": "n-general",
       "page": "general",
       "x": 0,
-      "y": -180,
-      "w": 700,
-      "text": "Armazón y componentes generales.\n\nA la izquierda, la aplicación navegable: el menú cambia de sección de verdad, el tablero de Inicio cambia por momento del día, la compuerta premium muestra su precio en Elemento y el botón de KIBO abre la rueda canónica del sistema de diseño. Este artboard conserva el alto real de la app (900) porque es un visor, no una lámina.\n\nA la derecha, las trece piezas que todo módulo repite: chip de área, barra de filtros, fila de indicadores, columna de kanban con su límite de trabajo en curso, tarjeta de agrupador con avance derivado, y las ocho generales — vacío, esqueleto, aviso, punto de información, escenario, modal, lista de definición y bloque de comportamiento."
+      "y": -190,
+      "w": 720,
+      "text": "Armazón y componentes generales.\n\nA la izquierda, la aplicación navegable: el menú cambia de sección, el tablero de Inicio cambia por momento del día, la compuerta premium muestra su precio en Elemento y KIBO abre la rueda canónica del sistema. Conserva el alto real de la app (900) porque es un visor, no una lámina.\n\nA la derecha, el vocabulario compartido que todas las pantallas copian: las familias base, los estados generales, la familia de formulario completa y los modificadores. Cada pieza que aparece aquí dejó de reinventarse en las pantallas."
     },
     {
-      "id": "nota-areas",
+      "id": "n-areas",
       "page": "areas",
       "x": 0,
       "y": -210,
       "w": 780,
-      "text": "Áreas — la vista más general, y la que fija el contrato de todo lo que cuelga.\n\nEl área no es un módulo con datos propios: es una propiedad de todo hecho y un centro de análisis. Lo que cuelga de ella es POLIMÓRFICO, y el prototipo lo declara: proyectos en Vigor y Comunidad, cursos y materias en Sabiduría, proyectos financieros en Riqueza, y retos y hábitos en Voluntad, que no tiene proyectos.\n\nCada lámina crece con su contenido, así que los estados y los modales quedan apilados y comparables en vez de escondidos tras el scroll interno del armazón.\n\nDos cosas que conviene mirar con lupa: que el avance de un agrupador se muestre siempre derivado de sus partes (8/14 · 56%) y nunca como porcentaje suelto; y que Comunidad, al no tener casa, no lleve el botón que va al módulo."
+      "text": "Áreas — la vista más general, y la que fija el contrato de todo lo que cuelga.\n\nEl área no es un módulo con datos propios: es una propiedad de todo hecho y un centro de análisis. Lo que cuelga de ella es POLIMÓRFICO: proyectos en Vigor y Comunidad, cursos y materias en Sabiduría, proyectos financieros en Riqueza, y retos y hábitos en Voluntad, que no tiene proyectos.\n\nMirar con lupa: que el avance de un agrupador se muestre derivado de sus partes (8/14 · 56%) y nunca como porcentaje suelto; y que Comunidad, al no tener casa, no lleve el botón que va al módulo."
+    },
+    {
+      "id": "n-plan",
+      "page": "plan",
+      "x": 0,
+      "y": -210,
+      "w": 780,
+      "text": "Tareas y Proyectos — el productor y su agrupador.\n\nLa tarea PRODUCE: es la entidad que escribe el hecho. El proyecto AGRUPA y no posee: su avance se deriva de sus tareas y jamás se guarda, por eso se muestra con sus partes a la vista. La subtarea es una parte, no una entidad.\n\nEl tablero y la línea de tiempo son dos vistas de una sola cosa, no dos módulos. Y la tarjeta de agrupador que sale de aquí es la misma que reusará Estudio, porque un curso juega el mismo papel que un proyecto."
+    },
+    {
+      "id": "n-constancia",
+      "page": "constancia",
+      "x": 0,
+      "y": -210,
+      "w": 780,
+      "text": "Hábitos y Retos — dos conceptos distintos, no variantes de uno.\n\nEl hábito se repite y acumula racha. El reto tiene plazo y dificultad, y fallar cuesta salud: la tabla real es de cinco niveles, de −8 a −50. Un reto puede convertirse en hábito, pero por un traspaso explícito entre dos entidades, nunca por un efecto colateral.\n\nNinguna de las dos calcula racha ni HP: eso vive en un solo lugar, el motor de progresión. Aquí solo se muestran."
     }
   ],
   "launch": {
     "view": "canvas",
-    "page": "areas"
+    "page": "plan"
   }
 }

@@ -1,0 +1,14 @@
+[
+ {
+  "artboard": "HabitsScreen",
+  "nombre": "Hábitos",
+  "archivo": "personal-screens.jsx",
+  "modales": 2
+ },
+ {
+  "artboard": "RetosScreen",
+  "nombre": "Retos",
+  "archivo": "personal-screens.jsx",
+  "modales": 3
+ }
+]

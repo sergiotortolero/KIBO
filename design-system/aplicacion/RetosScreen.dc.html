@@ -24,8 +24,13 @@
      El 10 % solo mide 1.11:1 sobre el lienzo. El aro interior es el que
      cumple el 3:1 de WCAG 1.4.11: medido 3.93 sobre lienzo, 3.70 sobre
      superficie, 3.47 sobre superficie-2 y 4.80 sobre el void del Elemento. */
+  --kb-halo-amt: 10%;
   --kb-focus-halo: 0 0 0 2px var(--kb-primary-hover),
-                   0 0 0 5px color-mix(in srgb, var(--kb-primary) 10%, transparent);
+                   0 0 0 5px color-mix(in srgb, var(--kb-primary) var(--kb-halo-amt), transparent);
+  /* El halo de PELIGRO es la misma receta con el matiz de peligro: lee la
+     misma cantidad, nunca un porcentaje reescrito en la pieza. */
+  --kb-danger-halo: 0 0 0 2px var(--kb-hp),
+                    0 0 0 5px color-mix(in srgb, var(--kb-hp) var(--kb-halo-amt), transparent);
 
   /* ---- Escala tipografica (9 pasos). Piso duro de legibilidad = 10px ----- */
   --kb-fs-2xs: 10px;
@@ -57,8 +62,8 @@
   --kb-border-soft:   #F0F2F6;
 
   --kb-text:         #1A1A2E;
-  --kb-text-2:       #6B7280;
-  --kb-text-3:       #6B7280;
+  --kb-text-2:       color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+  --kb-text-3:       var(--kb-text-2);   /* retirado por el estandar; alias mientras quede algun consumo */
   --kb-text-inverse: #FFFFFF;
 
   /* ---- Marca: Teal ------------------------------------------------------- */
@@ -237,7 +242,33 @@
   }
 }
   
-
+    /* rueda canonica — tomada del sistema de diseno, no reinterpretada */
+    .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
+    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
+                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
+    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
+            letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
+    .wglyph { fill: none; }
+    .whub { fill: var(--kb-card); stroke: var(--kb-border); stroke-width: 1.5; }
+    .wback { color: var(--kb-text-2); }
+    .wbacklab { fill: var(--kb-text-2); font-family: var(--kb-f-label); font-size: 12px; font-weight: 800;
+                letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
+  
+    /* Boton con papel de enlace: la semantica de un boton sin su caja. La zona
+       de toque se restituye con un ::after transparente, porque el texto solo
+       mide su linea. */
+    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+                    border: 0; height: auto; min-height: 0; padding: 0; position: relative;
+                    font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 700; }
+    .kbv-btn-link:hover { color: var(--kb-primary); text-decoration: underline; }
+    .kbv-btn-link::after { content: ""; position: absolute; left: 50%; top: 50%;
+                           width: 100%; min-width: 44px; height: 44px;
+                           transform: translate(-50%, -50%); }
+    .kbv-btn-link:focus-visible { outline: none; border-radius: var(--kb-r-xs);
+                                  box-shadow: var(--kb-focus-halo); }
   </style>
 
   <style>
@@ -252,6 +283,11 @@
     /* Nombre accesible sin dibujo: un title no nombra un span. */
     .kbv-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
                    overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    /* Un literal dentro de la prosa. No hay tercera familia: toma la de
+       etiqueta y se separa por su caja, nunca por otro tipo de letra. */
+    .kbv-code { font-family: var(--kb-f-label); font-weight: 700; font-size: var(--kb-fs-sm);
+                background: var(--kb-surface-2); color: var(--kb-text);
+                border-radius: var(--kb-r-xs); padding: 0 var(--kb-sp-3); }
 
     /* ── Boton ────────────────────────────────────────────────────────── */
     .kbv-btn {
@@ -294,6 +330,51 @@
     /* Cargando (§6.1) la define la primera pantalla que la necesite: el rotulo
        se vuelve transparente, gira un disco de 16 y el boton conserva su ancho. */
 
+    /* ── Campo ────────────────────────────────────────────────────────
+       Rotulo arriba, control, ayuda abajo. El error SUSTITUYE a la ayuda,
+       no se suma a ella, y dice como corregir el valor. */
+    .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+    .kbv-label { font-family: var(--kb-f-body); font-weight: 600; font-size: var(--kb-fs-md);
+                 color: var(--kb-text); }
+    .kbv-input { box-sizing: border-box; width: 100%; height: var(--kb-ctl-h); padding: 0 var(--kb-sp-7);
+                 background: var(--kb-card); border: 1.5px solid var(--kb-border);
+                 border-radius: var(--kb-r-md); color: var(--kb-text);
+                 font-family: var(--kb-f-body); font-weight: 500; font-size: var(--kb-fs-lg); }
+    .kbv-input::placeholder { color: var(--kb-text-2); }
+    /* La forma COMPUESTA: cuando el control es una caja que contiene piezas
+       —un buscador con su glifo y su cursor— y no un control nativo. El
+       display no baja a la base porque un campo nativo es un elemento
+       reemplazado y no admite hijos. */
+    div.kbv-input { display: flex; align-items: center; gap: var(--kb-sp-4); line-height: 1; }
+    div.kbv-input .caret { width: 1.5px; height: 18px; flex: none; background: var(--kb-text); }
+    textarea.kbv-input { height: auto; min-height: 108px; padding: var(--kb-sp-6) var(--kb-sp-7);
+                         line-height: var(--kb-lh-body); font-weight: 400; resize: vertical; }
+    /* Foco. .is-focus es el MISMO estado dibujado a mano, para el espécimen y
+       para el control compuesto que no recibe :focus-visible del navegador. */
+    .kbv-input:focus-visible,
+    .kbv-input.is-focus { outline: none; border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo); }
+    /* Error: el borde toma el matiz de peligro y el aro sale del halo de
+       peligro, que es la receta del foco con otro matiz. */
+    .kbv-input.err { border-color: var(--kb-hp); box-shadow: var(--kb-danger-halo); }
+    /* Deshabilitado: superficie hundida y borde retirado, no opacidad. */
+    .kbv-input[disabled],
+    .kbv-input.is-disabled { background: var(--kb-surface-2); border-color: transparent;
+                             color: var(--kb-text-2); cursor: not-allowed; }
+    .kbv-help  { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); color: var(--kb-text-2); }
+    .kbv-error { display: flex; align-items: center; gap: var(--kb-sp-3);
+                 font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-hp-ink); }
+    .kbv-error svg { flex: none; }
+    .kbv-fieldrow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    /* El tipo «glifo al final»: el galon lo dibuja un SVG, no una imagen de
+       fondo, para que herede el color del tema. */
+    .kbv-select { position: relative; display: flex; min-width: 0; }
+    .kbv-select select.kbv-input { -webkit-appearance: none; appearance: none; padding-right: 42px; }
+    .kbv-select > svg { position: absolute; right: var(--kb-sp-6); top: 50%; margin-top: -6px;
+                        pointer-events: none; color: var(--kb-text-2); }
+    .kbv-select.sm select.kbv-input { height: 36px; padding: 0 38px 0 var(--kb-sp-6);
+                                      font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
+    .kbv-select.sm > svg { right: var(--kb-sp-5); }
+
     /* ── Chip · etiqueta · contador ───────────────────────────────────── */
     .kbv-chip {
       position: relative; box-sizing: border-box;
@@ -319,8 +400,13 @@
       font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700;
       letter-spacing: .02em; white-space: nowrap;
     }
-    .kbv-tag.tint  { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
-                     color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    /* Las DOS recetas, escritas en la propiedad del propio elemento: ahi si
+       resuelve su --c. Lo que cambia entre temas son la cantidad y el ancla,
+       no la formula, asi que una pieza tintada sirve en claro y en oscuro. */
+    .kbv-tag.tint  { background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
+                     color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    /* Solida: relleno que CARGA texto blanco, asi que se queda en el 54 % sobre
+       el void en los dos temas — la tinta clara del tema oscuro es para texto. */
     .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
 
     .kbv-badge {
@@ -354,7 +440,7 @@
     .kbv-progress-meta .name { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
     .kbv-progress-meta .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                       font-variant-numeric: tabular-nums;
-                      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+                      color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor)); }
 
     /* ── Tarjeta ──────────────────────────────────────────────────────── */
     .kbv-card {
@@ -372,15 +458,59 @@
     .kbv-card-sub   { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
     .kbv-card-foot  { display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5);
                       padding-top: var(--kb-sp-5); border-top: 1px solid var(--kb-border-soft); }
+    /* ── Modificadores de la tarjeta ──────────────────────────────────
+       Arriba estan las densidades: cuanto MIDE. Aqui esta lo que HACE. */
+    /* Pulsable: la tarjeta entera es el destino, asi que dibujada como enlace
+       apaga tambien el color y el subrayado — el texto no es el enlace, la
+       tarjeta lo es. */
+    .kbv-card.tap { color: inherit; text-decoration: none; cursor: pointer;
+                    transition: transform var(--kb-dur-fast) var(--kb-ease-out),
+                                box-shadow var(--kb-dur-fast) var(--kb-ease-out),
+                                border-color var(--kb-dur-fast) var(--kb-ease-out); }
+    .kbv-card.tap:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2);
+                          border-color: var(--kb-border-strong); text-decoration: none; }
+    .kbv-card.tap:focus-visible { outline: none; border-color: var(--kb-primary);
+                                  box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+    /* Fila: la misma tarjeta en horizontal. Mismo relleno y mismo borde; solo
+       cambia la direccion, por eso es un modificador y no otra base. */
+    .kbv-card.row { flex-direction: row; align-items: center; gap: var(--kb-sp-5); }
+    .kbv-card.row.wrap { flex-wrap: wrap; row-gap: var(--kb-sp-4); }
+    .kbv-card.row > .grow { flex: 1 1 auto; min-width: 0; }
+    .kbv-card.row > .grow.col { display: flex; flex-direction: column; align-items: flex-start;
+                                gap: var(--kb-sp-2); }
+    /* Cerrada: la palomita ya dice que esta hecha, asi que el tachado
+       acompana y no carga el mensaje solo. */
+    .kbv-card.done .ttl,
+    .kbv-card.done .kbv-card-title { text-decoration: line-through; color: var(--kb-text-2); }
+    /* Tomada para arrastrar: la pieza se DESPEGA —sombra alta y un grado de
+       giro—. No es opacidad: una tarjeta a medio tono se lee deshabilitada. */
+    .kbv-card.dragging { border-color: var(--kb-primary-ink); box-shadow: var(--kb-sh-3);
+                         transform: rotate(-1deg); }
+    /* ── Pastilla de area · el patron compacto de R-1 ─────────────────
+       La pieza mas repetida del producto: la llevan tarea, proyecto, habito y
+       reto. Es la MISMA en claro y en oscuro porque las dos recetas se leen de
+       --kb-wash-* / --kb-ink-*, que el tema revalua. No es una etiqueta: su
+       oficio es pintar el area, por eso no se funde con .kbv-tag (§6.3). */
     .kbv-areapill {
-      display: inline-flex; align-items: center; gap: var(--kb-sp-2); align-self: flex-start;
+      display: inline-flex; align-items: center; gap: var(--kb-sp-3); align-self: flex-start;
+      box-sizing: border-box; max-width: 100%;
       height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
-      background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
-      font-size: var(--kb-fs-xs); font-weight: 700; white-space: nowrap;
+      background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
+      color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor));
+      font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700;
+      letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    /* El punto es el tono PLENO: sobre el lavado marca el area sin depender del
+       texto, y sostiene la lectura de quien no distingue el matiz de la tinta. */
+    .kbv-areapill .dot { width: 8px; height: 8px; flex: none; border-radius: var(--kb-r-pill);
+                         background: var(--c); }
 
     /* ── KPI ──────────────────────────────────────────────────────────── */
+    /* La FILA de indicadores: cuatro columnas, dos en tableta, una en telefono.
+       El numero de columnas es un modificador, no un estilo en linea. */
+    .kbv-kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .kbv-kpi-grid.cols-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .kbv-kpi-grid.cols-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
     .kbv-kpi {
       background: var(--kb-card); border: 1px solid var(--kb-border);
       border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
@@ -389,9 +519,11 @@
     .kbv-kpi .band {
       display: flex; align-items: center; gap: var(--kb-sp-3);
       padding: var(--kb-sp-4) var(--kb-sp-6);
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      /* Lavado, borde y tinta salen de la RECETA como cantidad y ancla: con
+         las cifras escritas a mano el rotulo medía 2.71 en tema oscuro. */
+      background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-wash-anchor));
+      color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor));
       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
       letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     }
@@ -401,9 +533,120 @@
                     line-height: 1; letter-spacing: -.02em; color: var(--kb-text);
                     font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: var(--kb-sp-2); }
     .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
-    .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
-    .kbv-kpi .delta.up   { color: var(--kb-primary-ink); font-weight: 700; }
-    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+    /* La comparativa se colorea por lo que SIGNIFICA, no por el signo: gastar
+       menos baja y es bueno, recaer sube y es malo. El glifo dice la direccion
+       (arriba/abajo/igual) y la clase dice el juicio (bien/mal/neutro), asi que
+       el color nunca es el unico portador del sentido. */
+    .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm);
+                      color: var(--kb-text-2); }
+    .kbv-kpi .delta.good { color: var(--kb-primary-ink); font-weight: 700; }
+    .kbv-kpi .delta.bad  { color: var(--kb-hp-ink); font-weight: 700; }
+    .kbv-kpi .delta svg  { flex: none; }
+
+    /* ── Tarjeta de agrupador ─────────────────────────────────────────
+       Un proyecto, un curso y un proyecto financiero son la MISMA forma: un
+       nombre, el area que lo pinta y un avance que se DERIVA de sus partes.
+       Por eso la cifra manda («8/14») y el porcentaje la acompana: un 56 %
+       suelto no dice de cuantas, y sin el conteo no se puede verificar. */
+    .kbv-grouper { gap: var(--kb-sp-5); }
+    .kbv-grouper .gr-top { display: flex; align-items: flex-start; justify-content: space-between;
+                           gap: var(--kb-sp-5); }
+    .kbv-grouper .gr-name { font-family: var(--kb-f-display); font-size: var(--kb-fs-lg); font-weight: 700;
+                            line-height: var(--kb-lh-snug); color: var(--kb-text); min-width: 0; }
+    /* La tira de meta se publica SUELTA: la llevan tambien la tarjeta del
+       tablero y el renglon del cronograma, que no son agrupadores. El
+       selector descendiente se conserva para no bajar su especificidad. */
+    .gr-meta,
+    .kbv-grouper .gr-meta { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap;
+                            min-width: 0; }
+    .kbv-grouper .gr-adv { display: flex; align-items: baseline;
+                           font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
+                           font-variant-numeric: tabular-nums;
+                           color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-grouper .gr-adv .of { color: var(--kb-text-2); font-weight: 600; }
+    .kbv-grouper .gr-adv .sep { color: var(--kb-border-strong); font-weight: 600;
+                                margin: 0 var(--kb-sp-3); }
+
+    /* ── Columna de kanban ────────────────────────────────────────────
+       El limite de trabajo en curso es un acuerdo, no un adorno: se lee en el
+       propio conteo («2/3») y, cuando se pasa, la columna lo AVISA con texto y
+       glifo — el color solo no puede decir «te pasaste». */
+    .kbv-kanban { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(232px, 1fr);
+                  gap: var(--kb-sp-6); overflow-x: auto; padding-bottom: var(--kb-sp-2); }
+    .kbv-kanban-col { display: flex; flex-direction: column; gap: var(--kb-sp-5); min-width: 0;
+                      box-sizing: border-box; padding: var(--kb-sp-6);
+                      background: var(--kb-surface); border: 1px solid var(--kb-border);
+                      border-radius: var(--kb-r-lg); }
+    /* La cabeza mide el piso de toque: el punto de color y el renombrar viven
+       aqui, y un campo nativo no admite el ::after con el que las demas
+       piezas del sistema restituyen la zona de 44. */
+    .kbv-kanban-col > .col-head { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0;
+                                  min-height: var(--kb-touch-min); }
+    .kbv-kanban-col .col-name { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0;
+                                flex: 1 1 auto; font-family: var(--kb-f-display); font-size: var(--kb-fs-md);
+                                font-weight: 700; color: var(--kb-text);
+                                overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-kanban-col .col-name .dot { width: 8px; height: 8px; flex: none;
+                                     border-radius: var(--kb-r-pill); background: var(--c, var(--kb-text-2)); }
+    .kbv-kanban-col .count { flex: none; font-family: var(--kb-f-display); font-size: var(--kb-fs-sm);
+                             font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text-2); }
+    .kbv-kanban-col .count.over { color: var(--kb-warn-ink); }
+    .kbv-kanban-col .col-warn { display: flex; align-items: center; gap: var(--kb-sp-3);
+                                padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-sm);
+                                background: color-mix(in oklab, var(--kb-warn) var(--kb-wash-amt), var(--kb-wash-anchor));
+                                color: var(--kb-text); font-size: var(--kb-fs-sm); font-weight: 600; }
+    .kbv-kanban-col .col-warn svg { flex: none; color: var(--kb-warn-ink); }
+    .kbv-kanban-col .col-add { display: flex; align-items: center; justify-content: center; gap: var(--kb-sp-3);
+                               min-height: var(--kb-touch-min); border-radius: var(--kb-r-sm);
+                               border: 1.5px dashed var(--kb-border-strong); background: transparent;
+                               color: var(--kb-text-2); cursor: pointer;
+                               font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; }
+    .kbv-kanban-col .col-add:hover { border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+    .kbv-kanban-col .col-add:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    /* Los dos lados del arrastre. El DESTINO cambia la linea a punteada:
+       eso se ve sin distinguir el tono. El ORIGEN se despega con sombra.
+       La linea va en la TINTA de la marca, no en el tono pleno: R-13 vale
+       tambien para el trazo mas pequeno del sistema, y sobre el lavado el
+       tono pleno se queda en 2.7 contra el piso de 3 de una senal. */
+    .kbv-kanban-col.over { border-style: dashed; border-color: var(--kb-primary-ink);
+                           background: var(--kb-primary-soft); }
+    .kbv-kanban-col.dragging { border-color: var(--kb-primary-ink); box-shadow: var(--kb-sh-3); }
+    /* Limite alcanzado: el candado acompana al conteo en la cabeza. El aviso
+       con texto lo sigue dando .col-warn — el glifo solo no dice «te pasaste». */
+    .kbv-kanban-col .col-lock { flex: none; display: flex; color: var(--kb-text-2); }
+    /* El punto de color es un CONTROL cuando la columna se edita: dibuja 14 y
+       toca 44 con una zona transparente, sin crecer el dibujo. */
+    .kbv-kanban-col .col-dot { position: relative; width: 14px; height: 14px; flex: none; padding: 0;
+                               border: 0; border-radius: var(--kb-r-pill);
+                               background: var(--c, var(--kb-text-2)); cursor: pointer; }
+    .kbv-kanban-col .col-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
+                                      width: var(--kb-touch-min); height: var(--kb-touch-min);
+                                      transform: translate(-50%, -50%); }
+    .kbv-kanban-col .col-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    /* Renombrar en sitio: ocupa el lugar exacto del nombre y hereda su letra,
+       para que el cambio sea de estado y no de composicion. Nace enfocado. */
+    .kbv-kanban-col .col-name-edit { flex: 1 1 auto; min-width: 0; box-sizing: border-box;
+                                     height: var(--kb-touch-min);
+                                     padding: 0 var(--kb-sp-5); border: 1.5px solid var(--kb-primary-ink);
+                                     border-radius: var(--kb-r-sm); background: var(--kb-card);
+                                     color: var(--kb-text); font-family: var(--kb-f-display);
+                                     font-size: var(--kb-fs-md); font-weight: 700;
+                                     box-shadow: var(--kb-focus-halo); }
+    /* La columna fantasma: no contiene nada, ofrece crear. Por eso es la misma
+       caja sin fondo y con la linea punteada del hueco. */
+    .kbv-kanban-col.add-col { align-items: center; justify-content: center; text-align: center;
+                              gap: var(--kb-sp-3); min-height: 200px; cursor: pointer;
+                              border-style: dashed; border-color: var(--kb-border-strong);
+                              background: transparent; font-family: var(--kb-f-body);
+                              -webkit-appearance: none; appearance: none; }
+    .kbv-kanban-col.add-col:hover { border-color: var(--kb-primary); }
+    .kbv-kanban-col.add-col:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-kanban-col.add-col .add-glyph { width: 36px; height: 36px; flex: none; border-radius: var(--kb-r-pill);
+                                         display: flex; align-items: center; justify-content: center;
+                                         background: var(--kb-surface-2); color: var(--kb-text-2); }
+    .kbv-kanban-col.add-col .add-label { font-family: var(--kb-f-display); font-weight: 700;
+                                         font-size: var(--kb-fs-md); color: var(--kb-text); }
+    .kbv-kanban-col.add-col .add-sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
 
     /* ── Encabezado de seccion y de pagina ────────────────────────────── */
     .kbv-section-head { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap;
@@ -413,13 +656,25 @@
     .kbv-section-head .sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
     .kbv-section-head .sh-act { flex: none; display: flex; align-items: center; gap: var(--kb-sp-4); }
 
-    /* ── Barra de herramientas ────────────────────────────────────────── */
+    /* ── Barra de filtros ─────────────────────────────────────────────
+       La fila que encabeza todo listado. Cada eje es un GRUPO con su rotulo:
+       sin el, dos hileras de chips seguidas no dicen por que estan separadas.
+       «Limpiar» cierra la fila y solo tiene sentido junto a lo que deshace. */
     .kbv-filter-bar { display: flex; align-items: center; flex-wrap: wrap; gap: var(--kb-sp-4);
+                      row-gap: var(--kb-sp-5);
                       padding: var(--kb-sp-6) var(--kb-sp-7); background: var(--kb-card);
                       border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); }
     .kbv-filter-bar .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
                            letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-filter-bar .grp { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap;
+                           row-gap: var(--kb-sp-4); min-width: 0; }
     .kbv-filter-bar .grow { flex: 1 1 auto; min-width: 0; }
+    /* La accion que cierra la fila se va al final de SU renglon, tambien
+       cuando la barra parte en dos: un separador elastico la dejaria a la
+       izquierda del segundo renglon, huerfana de lo que deshace. */
+    .kbv-filter-bar .end { margin-left: auto; }
+    .kbv-filter-bar .sep { width: 1px; align-self: stretch; margin: 0 var(--kb-sp-2);
+                           background: var(--kb-border); flex: none; }
 
     /* ── Segmentado ───────────────────────────────────────────────────── */
     .kbv-seg { display: inline-flex; gap: var(--kb-sp-2); padding: var(--kb-sp-2);
@@ -444,6 +699,193 @@
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
     .kbv-check.on { background: var(--kb-primary-fill); border-color: var(--kb-primary-fill); color: var(--kb-text-inverse); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    /* ── Estado vacio ─────────────────────────────────────────────────
+       Un glifo, el titulo de lo que falta, una linea que dice para que
+       sirve y la accion que lo llena. El hueco ya dice que esta vacio;
+       la explicacion tiene que decir otra cosa. */
+    .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                 box-sizing: border-box; gap: var(--kb-sp-5); padding: var(--kb-sp-9);
+                 border-radius: var(--kb-r-lg); border: 1.5px dashed var(--kb-border-strong);
+                 background: var(--kb-surface-2); }
+    .kbv-empty .glyph { width: 48px; height: 48px; flex: none; border-radius: var(--kb-r-pill);
+                        display: flex; align-items: center; justify-content: center;
+                        background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-empty .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl);
+                      line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    /* La explicacion va en --kb-text, no en el secundario: sobre superficie-2
+       el secundario mide 4.36 en oscuro y no llega a AA. La jerarquia contra
+       el titulo la hacen el tamano y el peso, como en R-14. */
+    .kbv-empty .desc { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                       color: var(--kb-text); max-width: 54ch; }
+    .kbv-empty .acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-sp-4); }
+    /* Dentro de una columna de kanban o de una tarjeta compacta no cabe el
+       relleno grande: baja el paso, no el contenido. */
+    .kbv-empty.compact { padding: var(--kb-sp-7); gap: var(--kb-sp-4); }
+    .kbv-empty.compact .glyph { width: 36px; height: 36px; }
+    .kbv-empty.compact .ttl { font-size: var(--kb-fs-lg); }
+    .kbv-empty.compact .desc { font-size: var(--kb-fs-sm); }
+    /* El hueco como DESTINO de arrastre: la misma senal que la columna —linea
+       de marca y lavado— para que soltar se lea igual en los dos sitios. */
+    .kbv-empty.over { border-color: var(--kb-primary-ink); background: var(--kb-primary-soft); }
+
+    /* ── Esqueleto de carga ───────────────────────────────────────────
+       La silueta del contenido mientras llega. El contenedor lleva
+       aria-busy y cada pieza aria-hidden: es dibujo, no texto, y por eso
+       no tiene par de contraste que medir. */
+    .kbv-skel { display: block; border-radius: var(--kb-r-sm); background: var(--kb-surface-2);
+                animation: kbSkelPulso 1.4s var(--kb-ease-standard) infinite; }
+    .kbv-skel.line  { height: 14px; }
+    .kbv-skel.big   { height: 26px; }
+    .kbv-skel.bar   { height: 10px; }
+    .kbv-skel.sq    { width: 26px; height: 26px; border-radius: var(--kb-r-xs); }
+    .kbv-skel.band  { height: 40px; border-radius: 0; }
+    .kbv-skel.spark { height: 34px; }
+    .kbv-skel.grow  { flex: 1 1 auto; }
+    /* La fila: la silueta de un renglon de tabla o de lista. */
+    .kbv-skel-row { display: flex; align-items: center; gap: var(--kb-sp-5); min-width: 0; }
+    @keyframes kbSkelPulso { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+    /* ── Aviso en pagina ──────────────────────────────────────────────
+       R-1, cuarto patron: fondo tintado CON glifo. El lavado y la tinta
+       leen la RECETA como cantidad y ancla; una cifra literal se mezcla
+       contra el lienzo claro cuando el tema oscuro reasigna el ancla.
+       Sobre tinte todo el texto va en --kb-text (R-14). */
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-wash-amt), var(--kb-wash-anchor));
+                  color: var(--kb-text); }
+    .kbv-notice.info  { --c: var(--kb-primary); }
+    .kbv-notice.warn  { --c: var(--kb-warn); }
+    .kbv-notice.error { --c: var(--kb-hp); }
+    .kbv-notice .glyph { flex: none; display: flex;
+                         color: color-mix(in oklab, var(--c, var(--kb-primary)) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                       line-height: var(--kb-lh-snug); }
+    .kbv-notice .sub { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); }
+    .kbv-notice .act { flex: none; display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Afordancia de explicacion ────────────────────────────────────
+       Dice COMO SE CALCULA el dato de al lado. No es la etiqueta de
+       periodo, que solo informa del rango. El panel es el inverso de la
+       pagina —se construye con --kb-text y --kb-canvas—, asi el tema
+       oscuro lo revalua y nunca queda del color del lienzo. */
+    .kbv-tip-wrap { display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap; min-width: 0; }
+    /* Dibuja 18 y TOCA 44 con una zona transparente. */
+    .kbv-tip-dot { position: relative; width: 18px; height: 18px; flex: none; padding: 0;
+                   border: 0; border-radius: var(--kb-r-pill); background: transparent;
+                   color: var(--kb-text-2); display: inline-flex; align-items: center;
+                   justify-content: center; cursor: pointer; }
+    .kbv-tip-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
+                          width: var(--kb-touch-min); height: var(--kb-touch-min);
+                          transform: translate(-50%, -50%); }
+    .kbv-tip-dot:hover { color: var(--kb-primary-ink); }
+    .kbv-tip-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-tip { max-width: 46ch; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
+               border-radius: var(--kb-r-md); background: var(--kb-text); color: var(--kb-canvas);
+               font-family: var(--kb-f-body); font-size: var(--kb-fs-sm);
+               line-height: var(--kb-lh-body); box-shadow: var(--kb-sh-3); }
+    /* La formula, dicha en su forma y no en prosa. */
+    .kbv-tip .fx { display: block; margin-top: var(--kb-sp-3); font-family: var(--kb-f-label);
+                   font-weight: 700; font-variant-numeric: tabular-nums; }
+
+    /* ── Escenario ────────────────────────────────────────────────────
+       El contenedor rotulado que envuelve un especimen dentro de un
+       artboard. El rotulo nombra el estado y se queda POR ENCIMA del
+       velo: sin el, dos estados apilados no se distinguen. */
+    .kbv-stage { position: relative; box-sizing: border-box; border-radius: var(--kb-r-md);
+                 overflow: hidden; background: var(--kb-surface); border: 1px solid var(--kb-border); }
+    .kbv-stage > .lbl { position: relative; z-index: calc(var(--kb-z-modal) + 1);
+                        display: flex; align-items: center; gap: var(--kb-sp-4);
+                        padding: var(--kb-sp-4) var(--kb-sp-7);
+                        background: var(--kb-surface-2); border-bottom: 1px solid var(--kb-border);
+                        font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                        letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text); }
+    .kbv-stage > .under { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+    .kbv-stage.h-sm { min-height: 400px; }
+    .kbv-stage.h-md { min-height: 460px; }
+    .kbv-stage.h-lg { min-height: 640px; }
+    .kbv-stage.h-xl { min-height: 720px; }
+
+    /* ── Modal §6.7 · velo → tarjeta → cabeza → cuerpo → pie ──────────
+       Solo el cuerpo hace scroll, y el ancho la decide el contenido. En un
+       artboard el velo es absoluto y se recorta al escenario; en la
+       aplicacion es fijo sobre la ventana. */
+    .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal); box-sizing: border-box;
+                      display: flex; align-items: center; justify-content: center; padding: var(--kb-sp-9);
+                      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .kbv-modal-card { width: 100%; max-width: 580px; max-height: 100%; box-sizing: border-box;
+                      display: flex; flex-direction: column; overflow: hidden;
+                      background: var(--kb-card); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-pop); }
+    .kbv-modal-card.sm   { max-width: 420px; }
+    .kbv-modal-card.lg   { max-width: 720px; }
+    .kbv-modal-card.full { max-width: 1040px; }
+    .kbv-modal-head { display: flex; align-items: flex-start; justify-content: space-between;
+                      gap: var(--kb-sp-6); padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                      border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-modal-head .id { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xl);
+                             line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                           color: var(--kb-text-2); max-width: 46ch; }
+    .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none;
+                       box-sizing: border-box; border-radius: var(--kb-r-pill);
+                       border: 1.5px solid var(--kb-border); background: var(--kb-card);
+                       color: var(--kb-text-2); display: flex; align-items: center;
+                       justify-content: center; cursor: pointer; }
+    .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--kb-sp-8) var(--kb-sp-9);
+                      display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .kbv-modal-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-5);
+                      padding: var(--kb-sp-7) var(--kb-sp-9); background: var(--kb-surface);
+                      border-top: 1px solid var(--kb-border-soft); }
+    .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Lista de definicion ──────────────────────────────────────────
+       Un termino y su explicacion: la forma con la que una pantalla
+       documenta la regla que la gobierna. */
+    .kbv-def { display: flex; flex-direction: column; gap: var(--kb-sp-5); margin: 0; }
+    .kbv-def > div { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-def dt { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                  line-height: var(--kb-lh-snug); color: var(--kb-text); }
+    .kbv-def dd { margin: 0; font-size: var(--kb-fs-md); line-height: var(--kb-lh-body);
+                  color: var(--kb-text-2); }
+    /* El termino al lado, en la misma columna de 168 que .kbv-behavior. */
+    .kbv-def.side > div { display: grid; grid-template-columns: 168px minmax(0, 1fr);
+                          column-gap: var(--kb-sp-6); align-items: baseline; }
+
+    /* ── Comportamientos no obvios ────────────────────────────────────
+       El bloque final de una pantalla: lo que hace y no se ve, para quien
+       la construya. Rotulo a la izquierda, regla a la derecha. */
+    .kbv-behavior { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                    margin: 0; padding: 0; list-style: none; }
+    .kbv-behavior > li { display: flex; align-items: baseline; gap: var(--kb-sp-6);
+                         font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+    .kbv-behavior .k { flex: 0 0 168px; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                       font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                       color: var(--kb-text-2); }
+    .kbv-behavior .v { flex: 1 1 auto; min-width: 0; }
+
+    /* Telefono: el modal es una hoja al borde inferior y las dos listas de
+       dos columnas se doblan. Mide la VENTANA, como el resto del armazon. */
+    @container kbwin (max-width: 640px) {
+      .kbv-modal-veil { padding: 0; align-items: flex-end; }
+      .kbv-modal-card, .kbv-modal-card.sm, .kbv-modal-card.lg, .kbv-modal-card.full {
+        max-width: none; border-radius: var(--kb-r-xl) var(--kb-r-xl) 0 0; }
+      /* El asidero de la hoja: 36 x 4, solo en telefono y sin marca en el HTML. */
+      .kbv-modal-card::before { content: ""; flex: none; width: 36px; height: 4px;
+        margin: var(--kb-sp-5) auto 0; border-radius: var(--kb-r-pill);
+        background: var(--kb-border-strong); }
+      .kbv-modal-foot { flex-wrap: wrap; }
+      .kbv-modal-foot .right { width: 100%; }
+      .kbv-modal-foot .right > .kbv-btn { flex: 1 1 auto; }
+      .kbv-def.side > div { grid-template-columns: minmax(0, 1fr); row-gap: var(--kb-sp-2); }
+      .kbv-behavior > li { flex-direction: column; gap: var(--kb-sp-2); }
+      .kbv-behavior .k { flex: none; }
+    }
   </style>
 
   <style>
@@ -456,6 +898,12 @@
          lienzo, sobre superficie y sobre superficie 2. */
       --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
       --kb-text-3: var(--kb-text-2);
+      /* Las DOS recetas, como CANTIDAD y ANCLA. Una pieza tintada escribe el
+         color-mix en su propia propiedad (ahi resuelve su --c) y lee de aqui
+         cuanto y contra que mezclar; el tema oscuro revalua estos cuatro y no
+         una sola clase de componente. */
+      --kb-wash-amt: 12%;   --kb-wash-anchor: var(--kb-canvas);
+      --kb-ink-amt:  54%;   --kb-ink-anchor:  var(--kb-void-2);
       --side-w: 232px;
       /* Segunda tabla de valores (tema oscuro): el ANCESTRO deriva bajo otro
          nombre y el DESCENDIENTE asigna. Un color-mix que se cite a si mismo
@@ -491,6 +939,14 @@
       /* Las dos recetas en oscuro: lavado 22 % sobre void-1, tinta 42 % sobre
          el inverso. Se reasignan aqui porque las de :root ya resolvieron su
          ancla clara y un descendiente hereda el valor, no la formula. */
+      --kb-wash-amt: 22%;   --kb-wash-anchor: var(--kb-void-1);
+      --kb-ink-amt:  42%;   --kb-ink-anchor:  var(--kb-text-inverse);
+      /* El halo se REASIGNA aqui por lo mismo que las recetas: el de :root ya
+         resolvio su teal claro y un descendiente hereda el valor, no la
+         formula. Sin esta linea el aro de foco se queda en el tono claro.
+         El de peligro no la necesita: los tonos no cambian entre temas. */
+      --kb-focus-halo: 0 0 0 2px var(--d-primary-hover),
+                       0 0 0 5px color-mix(in srgb, var(--d-primary) var(--kb-halo-amt), transparent);
       --kb-coin-soft:        color-mix(in oklab, var(--kb-coin) 22%, var(--kb-void-1));
       --kb-coin-border:      color-mix(in oklab, var(--kb-coin) 38%, var(--kb-void-1));
       --kb-primary-border:   color-mix(in oklab, var(--kb-primary) 32%, var(--kb-void-1));
@@ -534,9 +990,6 @@
     .kbv-logo .word { display: var(--rail-hide, block); font-family: var(--kb-f-display);
                       font-weight: 800; font-size: var(--kb-fs-xl); margin-left: var(--kb-sp-2);
                       letter-spacing: -.01em; color: var(--kb-text); flex: 1 1 auto; }
-    /* El control vive en los DOS estados: repliega abierto, despliega en riel. */
-    .kbv-logo .act-collapse { display: var(--rail-hide, flex); }
-    .kbv-logo .act-expand   { display: var(--rail-show, none); }
     /* Dibuja 28, toca 44: la zona crece hacia afuera, el dibujo no. */
     .kbv-icon-btn { position: relative; width: 28px; height: 28px; flex: none; border: 0; padding: 0;
                     border-radius: var(--kb-r-xs); background: transparent; color: var(--kb-text-2);
@@ -546,12 +999,50 @@
     .kbv-icon-btn:hover { background: var(--kb-surface); color: var(--kb-text); }
     .kbv-icon-btn:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
 
+    /* ── El cintillo de reto: lo unico del menu que no es un destino ───
+       Va arriba porque es lo que esta en juego HOY: la racha viva y, cuando
+       hay reto, lo que se pierde si se rompe. Es fondo tintado CON glifo (R-1):
+       la llama dice de que habla y la tinta del rol lleva la cifra. */
+    .kbv-side-streak { --c: var(--kb-streak); flex: none; width: 100%; box-sizing: border-box;
+                       display: flex; align-items: center; gap: var(--kb-sp-5);
+                       justify-content: var(--rail-center, flex-start);
+                       padding: var(--kb-sp-5) var(--kb-sp-6); text-align: left; cursor: pointer;
+                       border-radius: var(--kb-r-md);
+                       background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
+                       border: 1px solid color-mix(in oklab, var(--c) 32%, var(--kb-wash-anchor));
+                       color: var(--kb-text);
+                       transition: border-color var(--kb-dur-fast) var(--kb-ease-standard),
+                                   transform var(--kb-dur-fast) var(--kb-ease-standard); }
+    .kbv-side-streak.in-reto { --c: var(--kb-boss); }
+    .kbv-side-streak:hover { transform: translateY(-1px);
+                             border-color: color-mix(in oklab, var(--c) 54%, var(--kb-wash-anchor)); }
+    .kbv-side-streak:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-side-streak .flame { flex: none; display: flex;
+                              color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+    .kbv-side-streak .meta { display: var(--rail-hide, flex); flex-direction: column; gap: var(--kb-sp-1);
+                             min-width: 0; }
+    /* Sobre tinte, el texto toma --kb-text: la jerarquia la hacen tamano y peso
+       (R-14). Solo el rotulo y la cifra van en la tinta del rol. */
+    .kbv-side-streak .meta .label { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                                    font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                                    color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor));
+                                    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kbv-side-streak .meta .days { font-family: var(--kb-f-display); font-size: var(--kb-fs-md);
+                                   font-weight: 600; line-height: var(--kb-lh-snug); color: var(--kb-text);
+                                   font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .kbv-side-streak .meta .days strong { font-size: var(--kb-fs-xl); font-weight: 800;
+                                          letter-spacing: -.01em; margin-right: var(--kb-sp-1);
+                                          color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
+
     .kbv-side-nav { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden;
                     display: flex; flex-direction: column; gap: var(--kb-sp-5); }
     .kbv-side-section { display: flex; flex-direction: column; gap: var(--kb-sp-1); }
-    .kbv-side-section > .kbv-eyebrow { display: var(--rail-hide, block);
-                                       padding: var(--kb-sp-2) var(--kb-sp-6);
-                                       font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
+    /* El nombre del grupo: la cejilla le presta la tipografia, .section-name le
+       da su sitio en el menu. De este rotulo sale el primer nivel de la migaja,
+       asi que cada destino pertenece a UN grupo y a ninguno mas. */
+    .kbv-side-section > .section-name { display: var(--rail-hide, block);
+                                        padding: var(--kb-sp-2) var(--kb-sp-6);
+                                        font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
     /* El acceso del menu es un control sm: 36 de alto, radio sm, glifo 18, texto 13. */
     .kbv-side-link { position: relative; display: flex; align-items: center;
                      justify-content: var(--rail-center, flex-start); gap: var(--rail-gap, var(--kb-sp-5));
@@ -568,22 +1059,29 @@
     .kbv-side-link.active { background: var(--kb-primary-soft); color: var(--kb-primary-ink); font-weight: 700; }
     .kbv-side-link .kbv-badge { display: var(--rail-hide, inline-flex); flex: none; }
     .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
-    /* La cria: un acceso agrupado bajo su productor. Sangrado y sin glifo en el
-       menu abierto; en el riel el glifo es lo UNICO que la identifica, asi que
-       ahi se enciende — un acceso en blanco no es un destino. */
-    .kbv-side-link.child { padding-left: var(--rail-child-pad, 40px); font-size: var(--kb-fs-sm); }
-    .kbv-side-link.child::before { content: ""; display: var(--rail-hide, block);
-                                   position: absolute; left: 21px; top: 0; bottom: 0;
-                                   width: 1.5px; background: var(--kb-border); border-radius: var(--kb-r-pill); }
-    .kbv-side-link.child > svg { display: var(--rail-child-glyph, none); }
-    /* Candado freemium: el armazon es quien tapa, no el modulo. El candado se
-       dibuja SIEMPRE, tambien en el riel; el precio se le suma al pasar el
-       cursor y jamas lo sustituye, para que un modulo cerrado nunca lea libre. */
+    /* Candado freemium: el armazon es quien tapa, no el modulo. Un modulo
+       cerrado NUNCA se lee libre, y para eso el precio esta siempre a la vista
+       — no al pasar el cursor: un precio que hay que descubrir no es un precio.
+       En el menu abierto lo dice el importe en Elemento; en el riel, donde no
+       cabe, queda el candado como unica senal de que ese destino esta cerrado. */
     .kbv-side-link.locked > .lbl { color: var(--kb-text-2); }
-    .kbv-side-link .lock { flex: none; display: flex; color: var(--kb-text-2); }
-    .kbv-side-link .price { display: none; flex: none; }
-    .kbv-side-link.locked:hover .price,
-    .kbv-side-link.locked.smp-hover .price { display: var(--rail-hide, inline-flex); }
+    .kbv-side-link .lock { flex: none; display: var(--rail-show, none); color: var(--kb-text-2); }
+    /* El precio va desnudo, sin pastilla: metido en una caja se comia el ancho
+       del rotulo mas largo del menu y «Entretenimiento» se cortaba. El glifo
+       del Elemento y la cifra bastan para decir cuanto cuesta. */
+    .kbv-side-link .price { display: var(--rail-hide, inline-flex); flex: none; align-items: center;
+                            gap: var(--kb-sp-2); color: var(--kb-text-2);
+                            font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700;
+                            font-variant-numeric: tabular-nums; }
+    /* Los dos controles del pie del menu. No son destinos —no navegan— asi que
+       viven fuera de la navegacion y despues de ella: replegar cambia la FORMA
+       del menu y personalizar cambia su CONTENIDO. */
+    .kbv-side-tools { flex: none; display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-side-tools .kbv-btn { width: 100%; padding: var(--rail-pad, 0 var(--kb-sp-6)); }
+    .kbv-side-tools .kbv-btn > .lbl { display: var(--rail-hide, inline); }
+    .kbv-side-tools .act-collapse { display: var(--rail-hide, inline-flex); }
+    .kbv-side-tools .act-expand   { display: var(--rail-show, none); }
+
     /* El pie es un grupo del menu como cualquier otro: su nombre, "Tu cuenta",
        viaja en un rotulo solo-lectores para que la migaja lo pueda derivar. */
     .kbv-side-foot { flex: none; display: flex; flex-direction: var(--rail-col, row);
@@ -599,8 +1097,7 @@
     .rail {
       --side-w: 76px; --rail-hide: none; --rail-show: flex; --rail-center: center;
       --rail-gap: 0; --rail-pad: 0; --rail-side-pad: var(--kb-sp-7) var(--kb-sp-5);
-      --rail-child-pad: 0; --rail-child-glyph: block; --rail-col: column;
-      --rail-logo-pad: 0; --rail-logo-h: auto;
+      --rail-col: column; --rail-logo-pad: 0; --rail-logo-h: auto;
     }
 
     /* ── La cabecera y el HUD: 72 px, cinco lecturas, ninguna escritura ─ */
@@ -668,14 +1165,31 @@
       box-shadow: var(--kb-focus-halo),
                   0 0 0 8px color-mix(in srgb, var(--kb-dark-halo) 22%, transparent);
     }
-    .kbv-searchbar { display: flex; align-items: center; gap: var(--kb-sp-5); height: 36px; min-width: 0;
-                     flex: 1 1 auto; max-width: 216px; padding: 0 var(--kb-sp-6);
+    /* ── Buscar o registrar: la barra es superficie de CAPTURA ─────────
+       Desde aqui se registra un hecho sin ir al modulo — se escribe «corri 5
+       km» y el hecho queda. Por eso el rotulo dice las dos cosas y la pieza
+       las dibuja: la lupa abre el indice, la tecla mas anuncia que tambien
+       ESCRIBE. Un buscador que ademas registra, sin decirlo, no se usa. */
+    .kbv-searchbar { display: flex; align-items: center; gap: var(--kb-sp-5); height: 36px; min-width: 168px;
+                     box-sizing: border-box; flex: 1 1 auto; max-width: 296px;
+                     padding: 0 var(--kb-sp-3) 0 var(--kb-sp-6);
                      border-radius: var(--kb-r-pill); background: var(--kb-surface);
                      border: 1px solid var(--kb-border); color: var(--kb-text-2); font-size: var(--kb-fs-md);
-                     overflow: hidden; white-space: nowrap; cursor: text; }
-    .kbv-searchbar .kbd { margin-left: auto; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                     overflow: hidden; white-space: nowrap; cursor: text;
+                     transition: border-color var(--kb-dur-fast) var(--kb-ease-standard),
+                                 background var(--kb-dur-fast) var(--kb-ease-standard); }
+    .kbv-searchbar:hover { background: var(--kb-canvas); border-color: var(--kb-primary-border); }
+    .kbv-searchbar > svg { flex: none; }
+    .kbv-searchbar .ph { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .kbv-searchbar .kbd { margin-left: auto; flex: none; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
                           font-weight: 800; color: var(--kb-text-2); background: var(--kb-surface-2);
                           border-radius: var(--kb-r-xs); padding: 2px var(--kb-sp-3); }
+    /* La tecla de captura: dibuja 26 dentro de la barra, y la barra entera es
+       la zona tactil de 44 que ya declara el bloque de arriba. */
+    .kbv-searchbar .cap { flex: none; display: flex; align-items: center; justify-content: center;
+                          width: 26px; height: 26px; border-radius: var(--kb-r-pill);
+                          background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
 
     .kbv-hud-streak { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
                       padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
@@ -699,6 +1213,12 @@
     .kbv-facet { width: 14px; height: 14px; flex: none; border-radius: 3px;
                  transform: rotate(45deg); background: var(--kb-dark-core);
                  box-shadow: inset 0 0 0 1px var(--kb-dark-glint); }
+    /* El glifo del Elemento dentro de una pieza chica: se ENCOGE por escala, no
+       por otra medida, y suma su halo — sobre superficie oscura el relleno solo
+       no lo separaria de su fondo. */
+    .kbv-facet.sm { width: 10px; height: 10px; border-radius: 2px; transform: rotate(45deg) scale(.86);
+                    box-shadow: inset 0 0 0 1px var(--kb-dark-glint),
+                                0 0 0 2px color-mix(in srgb, var(--kb-dark-halo) 30%, transparent); }
     .kbv-bell { position: relative; }
     .kbv-bell .kbv-badge.dot { position: absolute; right: 3px; top: 2px; box-shadow: 0 0 0 2px var(--kb-canvas); }
 
@@ -759,17 +1279,18 @@
     @container kbwin (max-width: 1024px) {
       .kbv-shell { --side-w: 76px; --rail-hide: none; --rail-show: flex; --rail-center: center;
                    --rail-gap: 0; --rail-pad: 0; --rail-side-pad: var(--kb-sp-7) var(--kb-sp-5);
-                   --rail-child-pad: 0; --rail-child-glyph: block; --rail-col: column;
-                   --rail-logo-pad: 0; --rail-logo-h: auto; }
+                   --rail-col: column; --rail-logo-pad: 0; --rail-logo-h: auto; }
       .kbv-canvas-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .kbv-canvas-grid > .w-2, .kbv-canvas-grid > .w-3,
       .kbv-canvas-grid > .w-4 { grid-column: span 2; }
+      .kbv-kpi-grid, .kbv-kpi-grid.cols-5, .kbv-kpi-grid.cols-6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .smp-areas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     }
     @container kbwin (max-width: 768px) {
       .kbv-canvas-grid { grid-template-columns: minmax(0, 1fr); }
       .kbv-canvas-grid > .w-2, .kbv-canvas-grid > .w-3,
       .kbv-canvas-grid > .w-4 { grid-column: span 1; }
+      .kbv-kpi-grid, .kbv-kpi-grid.cols-5, .kbv-kpi-grid.cols-6 { grid-template-columns: minmax(0, 1fr); }
       .smp-areas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @container kbwin (max-width: 640px) {
@@ -779,8 +1300,7 @@
       .kbv-shell { position: relative; grid-template-columns: minmax(0, 1fr);
                    --side-w: 232px; --rail-hide: initial; --rail-show: initial;
                    --rail-center: initial; --rail-gap: initial; --rail-pad: initial;
-                   --rail-side-pad: initial; --rail-child-pad: initial;
-                   --rail-child-glyph: initial; --rail-col: initial;
+                   --rail-side-pad: initial; --rail-col: initial;
                    --rail-logo-pad: initial; --rail-logo-h: initial; }
       .kbv-content { grid-column: 1; }
       .kbv-sidebar { position: absolute; inset: 0 auto 0 0; width: var(--side-w);
@@ -802,31 +1322,62 @@
       .kbv-stat-pill { order: 5; }
       .kbv-main { padding: var(--kb-sp-7) var(--kb-sp-7) calc(var(--kb-sp-7) + 72px); }
       .kbv-tabbar { display: grid; }
-      .kbv-fab { right: var(--kb-sp-7); bottom: calc(var(--kb-sp-7) + 56px); }
+      /* Sube por encima de la barra al pulgar. La regla lleva un ancestro
+         porque la base de .kbv-kibo se declara DESPUES en la hoja: a igual
+         especificidad ganaria la ultima y el corte quedaria muerto. */
+      .kbv-shell .kbv-kibo { right: var(--kb-sp-7); bottom: calc(var(--kb-sp-7) + 56px); }
       /* Piso de 44 en todo control: aqui el dedo es el unico puntero. */
-      .kbv-side-link, .kbv-btn.sm, .kbv-chip, .kbv-seg > button,
+      .kbv-side-link, .kbv-btn.sm, .kbv-chip, .kbv-seg > button, .kbv-kibo-act,
       .kbv-hud-streak, .kbv-stat-pill { height: var(--kb-touch-min); }
       .kbv-icon-btn { width: var(--kb-touch-min); height: var(--kb-touch-min); }
     }
 
-    /* ── El FAB: la superficie de captura de KIBO ─────────────────────── */
-    /* Abre la Rueda de accion, que REGISTRA sin navegar: la captura nunca
-       cambia de pantalla. Un sector de la rueda abre el chat inmersivo con
-       KIBO, y ese si es una superficie propia: hoja a pantalla completa por
-       encima del armazon (--kb-z-overlay), no una ruta — el armazon queda
-       debajo y se vuelve a el al cerrar, sin perder la pantalla de origen. */
-    .kbv-fab { position: absolute; right: var(--kb-sp-9); bottom: var(--kb-sp-9);
-               width: 72px; height: 72px; border-radius: var(--kb-r-pill); padding: 0;
-               border: 2px solid var(--kb-primary); background: var(--kb-primary-soft);
-               box-shadow: var(--kb-sh-3); cursor: pointer; z-index: var(--kb-z-sticky);
-               display: flex; align-items: center; justify-content: center; }
-    .kbv-fab:hover { box-shadow: var(--kb-sh-4); }
-    .kbv-fab:focus-visible { outline: none; box-shadow: var(--kb-sh-3), var(--kb-focus-halo); }
-    .kbv-fab .plus { position: absolute; right: -2px; bottom: -2px; width: 26px; height: 26px;
-                     border-radius: var(--kb-r-pill); background: var(--kb-primary-fill);
-                     color: var(--kb-text-inverse); display: flex; align-items: center; justify-content: center;
-                     box-shadow: 0 0 0 2px var(--kb-surface); }
-    .kbv-fab .kbb-host { pointer-events: none; }
+    /* ── KIBO en la esquina: la mascota, no un boton ───────────────────
+       Lo que se toca es KIBO mismo. Sin disco, sin borde y sin placa: un boton
+       flotante generico lo convertia en un control con un dibujo adentro, y la
+       mascota deja de ser un personaje en cuanto se le pone un marco.
+       De el sale la rueda de acciones rapidas, que REGISTRA sin navegar — la
+       captura nunca cambia de pantalla. Un sector abre el chat inmersivo con
+       KIBO, y ese si es superficie propia: hoja a pantalla completa por encima
+       del armazon (--kb-z-overlay), no una ruta.
+       El animo mueve SOLO la cara; el cuerpo lleva --skin, que es del usuario. */
+    .kbv-kibo { position: absolute; right: var(--kb-sp-9); bottom: var(--kb-sp-9);
+                z-index: var(--kb-z-sticky); display: flex; flex-direction: column;
+                align-items: flex-end; gap: var(--kb-sp-5); }
+    .kbv-kibo-trigger { position: relative; border: 0; padding: 0; background: transparent;
+                        border-radius: var(--kb-r-pill); line-height: 0; cursor: pointer;
+                        transition: transform var(--kb-dur-base) var(--kb-ease-out); }
+    .kbv-kibo-trigger:hover { transform: translateY(-3px); }
+    .kbv-kibo-trigger:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-kibo-trigger .kbb-host { pointer-events: none; }
+
+    /* La rueda sale DE la mascota: nace en su esquina y crece hacia arriba.
+       Reposo = plegada. La abre el ensamblador; .open la deja fija para poder
+       revisarla, y el foco dentro tambien la sostiene abierta con teclado. */
+    .kbv-kibo-actions { display: flex; flex-direction: column; align-items: flex-end; gap: var(--kb-sp-4);
+                        opacity: 0; visibility: hidden; transform-origin: 100% 100%;
+                        transform: translateY(var(--kb-sp-5)) scale(.96);
+                        transition: opacity var(--kb-dur-base) var(--kb-ease-out),
+                                    transform var(--kb-dur-base) var(--kb-ease-out),
+                                    visibility 0s linear var(--kb-dur-base); }
+    .kbv-kibo:hover > .kbv-kibo-actions, .kbv-kibo:focus-within > .kbv-kibo-actions,
+    .kbv-kibo-actions.open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+    .kbv-kibo-act { position: relative; box-sizing: border-box;
+                    display: inline-flex; align-items: center; gap: var(--kb-sp-4);
+                    height: 36px; padding: 0 var(--kb-sp-6) 0 var(--kb-sp-3);
+                    border: 1px solid var(--kb-border); border-radius: var(--kb-r-pill);
+                    background: var(--kb-card); box-shadow: var(--kb-sh-2); cursor: pointer;
+                    font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600;
+                    color: var(--kb-text); white-space: nowrap; }
+    /* Dibuja 36, toca 44: con el hueco de 8 las zonas embonan sin montarse. */
+    .kbv-kibo-act::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                           height: var(--kb-touch-min); transform: translateY(-50%); }
+    .kbv-kibo-act:hover { border-color: var(--kb-border-strong); background: var(--kb-surface); }
+    .kbv-kibo-act:focus-visible { outline: none; box-shadow: var(--kb-sh-2), var(--kb-focus-halo); }
+    .kbv-kibo-act .g { flex: none; display: flex; align-items: center; justify-content: center;
+                       width: 26px; height: 26px; border-radius: var(--kb-r-pill);
+                       background: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor));
+                       color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
 
     /* ── KIBO ─────────────────────────────────────────────────────────── */
     /* El cuerpo es gel de un solo color: la PIEL (--skin). La cara sale del HP.
@@ -900,11 +1451,6 @@
     .smp-areas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
   </style>
 <style data-lamina>
-/* Lamina de revision: este artboard es un ESPECIMEN, no la app corriendo. El
-   armazon es un visor de alto fijo con scroll interno; aqui se deja crecer para
-   que los estados y los modales queden apilados y comparables, en vez de
-   escondidos tras un scroll anidado. Va con precedencia forzada a proposito:
-   invierte una decision del armazon solo para la lamina. */
 .kb-app, .kbv-shell { height: auto !important; min-height: 900px !important; }
 .kbv-content { overflow: visible !important; height: auto !important; }
 .kbv-main { overflow: visible !important; height: auto !important; flex: none !important; }
@@ -927,92 +1473,109 @@
         <div class="kbv-logo">
           <span class="mark">K</span>
           <span class="word">Kibo</span>
-          <button type="button" class="kbv-icon-btn act-collapse" aria-label="Replegar el menú">
-            <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 4v16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-          <button type="button" class="kbv-icon-btn act-expand" aria-label="Desplegar el menú">
-            <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 4v16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
         </div>
+
+        <!-- El cintillo de lo que esta en juego hoy. No es un destino: por eso
+             va antes de la navegacion y no dentro de ella. -->
+        <button type="button" class="kbv-side-streak in-reto" title="Reto activo · 23 días de racha en juego">
+          <span class="flame" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="meta">
+            <span class="label">Reto activo</span>
+            <span class="days"><strong>23</strong> días</span>
+          </span>
+        </button>
 
         <nav class="kbv-side-nav">
           <div class="kbv-side-section">
-            <div class="kbv-eyebrow">General</div>
+            <div class="kbv-eyebrow section-name">General</div>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span class="lbl">Hoy</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lbl">Inicio</span>
             </button>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8h4v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Mi progreso</span>
             </button>
           </div>
 
           <div class="kbv-side-section">
-            <div class="kbv-eyebrow">Tu plan</div>
-            <button type="button" class="kbv-side-link active" aria-current="page">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+            <div class="kbv-eyebrow section-name">Tu plan</div>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
               <span class="lbl">Tareas</span>
               <span class="kbv-badge quiet">6</span>
             </button>
-            <button type="button" class="kbv-side-link child">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <!-- Areas y Proyectos son HERMANOS de Tareas, no crias suyas: la
+                 jerarquia area › agrupador › tarea agrupa los hechos, no el
+                 menu. Colgar Proyectos de Tareas dejaba a Areas sin destino. -->
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l8.5 6.2-3.2 10H6.7l-3.2-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12l0-9M12 12l8.5-2.8M12 12l-3.2 7.2M12 12l6.3 7.2M12 12L3.5 9.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/></svg>
+              <span class="lbl">Áreas</span>
+              <span class="kbv-badge quiet">5</span>
+            </button>
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Proyectos</span>
               <span class="kbv-badge quiet">3</span>
             </button>
             <button type="button" class="kbv-side-link locked">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Finanzas</span>
-              <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+              <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>400<span class="kbv-sr-only"> Elemento</span></span>
+              <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
           </div>
 
           <div class="kbv-side-section">
-            <div class="kbv-eyebrow">Tu constancia</div>
+            <div class="kbv-eyebrow section-name">Tu constancia</div>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Hábitos</span>
               <span class="kbv-badge quiet">4</span>
             </button>
-            <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>
+            <button type="button" class="kbv-side-link active" aria-current="page">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M14 4h6v6l-9 9-3-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 16l-4 4M5 16l3 3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Retos</span>
               <span class="kbv-badge" style="--c: var(--kb-hp)">2</span>
             </button>
           </div>
 
           <div class="kbv-side-section">
-            <div class="kbv-eyebrow">Tu bitácora</div>
+            <div class="kbv-eyebrow section-name">Tu bitácora</div>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 20.5S4 15.5 4 10.2A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 8 2.2c0 5.3-8 10.3-8 10.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Salud</span>
             </button>
-            <button type="button" class="kbv-side-link locked">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <!-- Diario y Lectura NO son premium: van sin candado y sin precio. -->
+            <button type="button" class="kbv-side-link">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Diario</span>
-              <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
             </button>
-            <button type="button" class="kbv-side-link locked">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 6.5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <!-- .smp-hover retrata el estado hover en la lamina; una pantalla usa el real. -->
+            <button type="button" class="kbv-side-link smp-hover">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 5c-2-2-5-2-8-1v15c3-1 6-1 8 1m0-15c2-2 5-2 8-1v15c-3-1-6-1-8 1m0-15v15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Lectura</span>
-              <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+              <span class="kbv-badge quiet">2</span>
             </button>
-            <!-- Hover sobre un modulo bloqueado: el precio en Elemento se SUMA al candado, nunca lo sustituye (en el riel el candado es la unica senal que queda). -->
-            <button type="button" class="kbv-side-link locked smp-hover">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 9v5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <button type="button" class="kbv-side-link locked">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11.2V16c0 1.4 2.7 2.6 6 2.6s6-1.2 6-2.6v-4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 9.4V14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Estudio</span>
-              <span class="price kbv-badge quiet"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet" aria-hidden="true"></span>250<span class="kbv-sr-only"> Elemento</span></span>
-              <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+              <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>250<span class="kbv-sr-only"> Elemento</span></span>
+              <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
             <button type="button" class="kbv-side-link locked">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 8h4M3 12h4M3 16h4M17 8h4M17 12h4M17 16h4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Entretenimiento</span>
-              <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+              <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>150<span class="kbv-sr-only"> Elemento</span></span>
+              <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
             <button type="button" class="kbv-side-link locked">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M5 5a2 2 0 0 1 2-2h12v18H7a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 17h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 5a2 2 0 0 1 2-2h13v18H6a2 2 0 0 1-2-2V5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 18a2 2 0 0 1 2-2h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Bóveda</span>
-              <span class="lock"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="kbv-sr-only">Bloqueado</span></span>
+              <span class="price"><span class="kbv-sr-only">Se desbloquea con </span><span class="kbv-facet sm" aria-hidden="true"></span>300<span class="kbv-sr-only"> Elemento</span></span>
+              <span class="lock" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
           </div>
 
@@ -1020,30 +1583,44 @@
                gana y se gasta por otro. La migaja deriva su primer nivel de
                este rotulo, asi que fundirlos corrompe la ruta de sus pantallas. -->
           <div class="kbv-side-section">
-            <div class="kbv-eyebrow">Tu gente</div>
+            <div class="kbv-eyebrow section-name">Tu gente</div>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c.9-3 3-4.6 6-4.6s5.1 1.6 6 4.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 14c2.3.3 3.8 1.8 4.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="9" r="3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 14.2c2.5 0 6 1.4 6 4.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Amigos</span>
-              <span class="kbv-badge dot" style="--c: var(--kb-primary)"></span>
+              <span class="kbv-badge dot" style="--c: var(--kb-primary)"><span class="kbv-sr-only">Con novedades</span></span>
             </button>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6.5" r="2.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 20c.7-3.4 2.8-5.2 5.5-5.2s4.8 1.8 5.5 5.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="11" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 20c.4-2.2 1.6-3.4 3-3.4s2.6 1.2 3 3.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Familia</span>
             </button>
           </div>
 
           <div class="kbv-side-section">
-            <div class="kbv-eyebrow">Recompensas</div>
+            <div class="kbv-eyebrow section-name">Recompensas</div>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 8h16l-1.2 11H5.2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M3 9l1.5-5h15L21 9M3 9v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V9M3 9h18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 13a4 4 0 0 0 8 0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Tienda</span>
             </button>
             <button type="button" class="kbv-side-link">
-              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.2a8.8 8.8 0 0 0 0 17.6c1.4 0 2.1-.9 2.1-1.9 0-1.4-1.6-1.6-1.6-2.8 0-.9.7-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-3.6-4-6.3-9-6.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.2" cy="9.4" r="1.1" fill="currentColor"/><circle cx="12" cy="7.4" r="1.1" fill="currentColor"/><circle cx="16" cy="9.8" r="1.1" fill="currentColor"/></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <span class="lbl">Personalización</span>
             </button>
           </div>
         </nav>
+
+        <!-- Replegar cambia la FORMA del menu; Personalizar, su CONTENIDO. Ni
+             uno ni otro navegan, por eso van fuera de la navegacion. -->
+        <div class="kbv-side-tools">
+          <button type="button" class="kbv-btn kbv-btn-ghost sm" aria-expanded="true" aria-label="Replegar el menú">
+            <span class="act-collapse" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="act-expand" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4v16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="lbl">Replegar</span>
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-label="Personalizar el menú" title="Personalizar el menú: renombrar grupos, mover y ocultar accesos">
+            <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span class="lbl">Personalizar</span>
+          </button>
+        </div>
 
         <div class="kbv-side-foot">
           <span class="kbv-eyebrow kbv-sr-only">Tu cuenta</span>
@@ -1083,10 +1660,16 @@
           </div>
 
           <div class="center">
-            <div class="kbv-searchbar" role="button" tabindex="0">
-              <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              <span>Buscar</span>
-              <span class="kbd">Ctrl K</span>
+            <!-- Superficie de captura: desde aqui se REGISTRA un hecho sin ir
+                 al modulo — «corri 5 km» queda registrado sin salir de esta
+                 pantalla. El rotulo dice las dos cosas y la tecla mas lo dibuja. -->
+            <div class="kbv-searchbar" role="button" tabindex="0"
+                 aria-label="Buscar o registrar" aria-keyshortcuts="Control+K"
+                 title="Buscar o registrar · escribe lo que hiciste y queda registrado">
+              <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="ph">Buscar o registrar…</span>
+              <span class="kbd" aria-hidden="true">Ctrl K</span>
+              <span class="cap" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </div>
             <div class="kbv-vitals">
               <!-- KIBO lee la vida: el animo sale del HP, la piel es del usuario. -->
@@ -1124,11 +1707,1413 @@
         <!-- La region de contenido: TODA pantalla se compone dentro de .kbv-page -->
         <main class="kbv-main">
           <div class="kbv-page">
-<!-- ═══ CONTENIDO DE LA PANTALLA ═══
-     Sustituye ESTE comentario por el contenido completo: la cabecera de pagina
-     (.kbv-page-head con su migaja, su .kbv-h1 y sus acciones), las secciones,
-     los estados y los modales superpuestos. Todo dentro de .kbv-page.
-     No toques nada fuera de este hueco: el armazon es contrato compartido. -->
+<!-- ══════════════════════════════════════════════════════════════════════
+     1 · LA CABECERA
+     La migaja sale del menu: grupo «Tu constancia» › destino «Retos». De
+     Voluntad cuelgan DOS entidades hermanas —habito y reto— y ninguna es
+     variante de la otra: el habito se repite, el reto vence. La linea de
+     apoyo lo dice antes que cualquier tarjeta.
+     ══════════════════════════════════════════════════════════════════ -->
+<header class="kbv-page-head">
+  <div class="ph-id">
+    <nav class="kbv-crumb" aria-label="Ruta">
+      <a href="#">Tu constancia</a>
+      <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+      <span class="here">Retos</span>
+    </nav>
+    <div class="kbv-tip-wrap">
+      <h1 class="kbv-h1">Retos</h1>
+      <button type="button" class="kbv-tip-dot" aria-label="Cómo se calcula el daño al HP" aria-expanded="false">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.6v.6"/></svg>
+      </button>
+    </div>
+    <p class="kbv-meta">9 retos · un reto tiene plazo, dificultad y un número de fallos tolerado: pasado ese número se pierde. El hábito, en cambio, se repite y no se pierde.</p>
+  </div>
+  <div class="ph-act">
+    <button type="button" class="kbv-btn kbv-btn-secondary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M16 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 4 17.5V19"/><circle cx="10" cy="8" r="3.4"/><path d="M19 11h-4M17 9v4"/></svg>
+      Reto compartido
+    </button>
+    <button type="button" class="kbv-btn kbv-btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+      Lanzar un reto
+    </button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     2 · EL AVISO DE LA ULTIMA ACCION
+     Banda cerrable: confirma el registro, advierte del limite o anuncia la
+     perdida. R-1 cuarto patron —fondo tintado CON glifo—, nunca color solo.
+     Los tres tonos estan dibujados abajo, cada uno en su escenario.
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="kbv-notice info" role="status">
+  <span class="glyph" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.4"/></svg>
+  </span>
+  <span class="txt">
+    <span class="ttl">Día registrado en «Correr 5 km»</span>
+    <span class="sub">Van 34 de 60 días, sin un solo fallo. El XP y la racha los calcula el motor de progresión; esta pantalla solo los muestra.</span>
+  </span>
+  <span class="act">
+    <button type="button" class="kbv-btn kbv-btn-link">Deshacer</button>
+    <button type="button" class="kbv-modal-close" aria-label="Cerrar el aviso">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+  </span>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     3 · INDICADORES
+     Cuatro cifras derivadas y la escala de dificultad. La escala hace dos
+     oficios con una sola pieza: dice el DAÑO de cada nivel —la tabla real,
+     de 8 a 50 HP— y cuantos retos tienes en el. El daño lo aplica el motor
+     de progresion; aqui solo se lee.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Indicadores de tus retos">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Indicadores</div>
+      <span class="sub">Año en curso · 2026. Los de retos activos reflejan el estado de hoy.</span>
+    </div>
+    <div class="sh-act">
+      <span class="kbv-meta">2 activos · 6 cerrados</span>
+    </div>
+  </div>
+
+  <div class="kbv-kpi-grid">
+    <div class="kbv-kpi" style="--c: var(--kb-good)">
+      <span class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 16l5-5 4 4 7-7"/><path d="M16 8h4v4"/></svg>
+        Constancia
+      </span>
+      <span class="body">
+        <span class="val">98<span class="unit">%</span></span>
+        <span class="delta good">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+          45 de 46 días vividos
+        </span>
+      </span>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--kb-primary)">
+      <span class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M17 5.5h2.5A2.5 2.5 0 0 1 17 10M7 5.5H4.5A2.5 2.5 0 0 0 7 10"/><path d="M12 13v3.5M9 20h6"/></svg>
+        Tasa de éxito
+      </span>
+      <span class="body">
+        <span class="val">67<span class="unit">%</span></span>
+        <span class="delta">4 logrados de 6 cerrados</span>
+      </span>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--kb-hp)">
+      <span class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4.5-5"/></svg>
+        Dificultad media
+      </span>
+      <span class="body">
+        <span class="val">2.5<span class="unit">/ 5</span></span>
+        <span class="delta">3 de 9 en nivel 4 o 5</span>
+      </span>
+    </div>
+    <div class="kbv-kpi" style="--c: var(--kb-streak)">
+      <span class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg>
+        Días limpios
+      </span>
+      <span class="body">
+        <span class="val">34<span class="unit">días</span></span>
+        <span class="delta">mejor racha activa sin fallar</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="kbv-card">
+    <div class="kbv-card-head">
+      <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+        <div class="kbv-card-title">La escala de dificultad</div>
+        <span class="kbv-card-sub">Cinco niveles. El nivel no cambia la meta: cambia lo que te cuesta cada fallo.</span>
+      </div>
+      <span class="kbv-tag tint" style="--c: var(--kb-hp)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/><path d="M12.6 9.4l-2 3.1h3l-2 3.1"/></svg>
+        Daño por fallo
+      </span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-6)">
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">1 · Suave <span class="kbv-badge quiet">1</span><span class="kbv-sr-only">reto en este nivel</span></span>
+          <span class="val">−8 HP</span>
+        </div>
+        <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:16%"></div></div>
+      </div>
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">2 · Estándar <span class="kbv-badge quiet">2</span><span class="kbv-sr-only">retos en este nivel</span></span>
+          <span class="val">−14 HP</span>
+        </div>
+        <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:28%"></div></div>
+      </div>
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">3 · Exigente <span class="kbv-badge quiet">3</span><span class="kbv-sr-only">retos en este nivel</span></span>
+          <span class="val">−22 HP</span>
+        </div>
+        <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:44%"></div></div>
+      </div>
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">4 · Brutal <span class="kbv-badge quiet">2</span><span class="kbv-sr-only">retos en este nivel</span></span>
+          <span class="val">−34 HP</span>
+        </div>
+        <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:68%"></div></div>
+      </div>
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">5 · Extremo <span class="kbv-badge quiet">1</span><span class="kbv-sr-only">reto en este nivel</span></span>
+          <span class="val">−50 HP</span>
+        </div>
+        <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:100%"></div></div>
+      </div>
+    </div>
+    <div class="kbv-card-foot">
+      <span class="kbv-meta">El HP que se descuenta y la racha que se rompe los resuelve el motor de progresión — esta pantalla los muestra, no los calcula.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     4 · LAS PESTAÑAS
+     Cinco filtros sobre el mismo acervo. «Todos» apila las tres secciones
+     por estado; «Compartidos» es un acervo aparte —el reto de dos— y por
+     eso cierra la fila. El conteo va en el rotulo: un numero sin nombre
+     obliga a contar las tarjetas para saber que filtra.
+     ══════════════════════════════════════════════════════════════════ -->
+<div class="kbv-seg" role="tablist" aria-label="Filtrar retos por estado">
+  <button type="button" class="on" role="tab" aria-selected="true">Todos · 9</button>
+  <button type="button" role="tab" aria-selected="false">Activos · 2</button>
+  <button type="button" role="tab" aria-selected="false">Planeados · 1</button>
+  <button type="button" role="tab" aria-selected="false">Pasados · 6</button>
+  <button type="button" role="tab" aria-selected="false">Compartidos · 3</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     5 · ACTIVOS
+     La tarjeta de reto NO es la del habito: lleva plazo con fecha de
+     vencimiento, dificultad con su daño, y un margen de fallos que se
+     agota. Ninguna de las tres existe en un habito, y el habito trae racha
+     y esfuerzo, que aqui no aparecen. El area la pinta la pastilla (R-1):
+     todo reto cuelga de Voluntad, el area sin proyectos.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Retos activos">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Activos</div>
+      <span class="sub">El plazo ya corre. Un reto no se pausa: parar el reloj sería cambiar el trato.</span>
+    </div>
+    <div class="sh-act">
+      <span class="kbv-meta">2 en curso</span>
+      <button type="button" class="kbv-btn kbv-btn-secondary sm">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+        Lanzar otro
+      </button>
+    </div>
+  </div>
+
+  <div class="kbv-canvas-grid">
+
+    <!-- Reto de CORTE: el registro del dia tiene dos salidas —limpio o
+         recaida— y la recaida gasta margen. Por eso lleva dos barras: la
+         que avanza y la que se agota. -->
+    <article class="kbv-card w-2">
+      <div class="kbv-card-head">
+        <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+          <div class="kbv-card-title">Sin pantallas después de las 22:00</div>
+          <span class="kbv-card-sub">Cortar un mal hábito · vence el 4 de octubre</span>
+        </div>
+        <span class="kbv-tag tint" style="--c: var(--kb-hp)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/><path d="M12.6 9.4l-2 3.1h3l-2 3.1"/></svg>
+          Exigente · −22 HP
+        </span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+        <span class="kbv-tag">Todos los días</span>
+        <span class="kbv-meta">30 días de plazo</span>
+      </div>
+      <div class="kbv-progress-meta tone-goal">
+        <div class="top">
+          <span class="name">Día 12 de 30</span>
+          <span class="val">40 %</span>
+        </div>
+        <div class="kbv-progress" aria-hidden="true"><div class="fill" style="width:40%"></div></div>
+      </div>
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">Margen de fallos</span>
+          <span class="val">1 de 2 usado</span>
+        </div>
+        <div class="kbv-progress xs" aria-hidden="true"><div class="fill" style="width:50%"></div></div>
+      </div>
+      <div class="kbv-card-foot">
+        <span class="kbv-meta">Al cumplir: +420 XP · 120 divisa · 1 Elemento</span>
+        <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+            Recaí hoy
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-primary sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            Día limpio
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- Reto de CONSTRUCCION: lleva la promesa del traspaso a habito, que
+         NO ocurre solo — se ofrece al cerrar y se acepta a mano. -->
+    <article class="kbv-card w-2">
+      <div class="kbv-card-head">
+        <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+          <div class="kbv-card-title">Correr 5 km</div>
+          <span class="kbv-card-sub">Construir un hábito · vence el 12 de noviembre</span>
+        </div>
+        <span class="kbv-tag tint" style="--c: var(--kb-hp)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/><path d="M12.6 9.4l-2 3.1h3l-2 3.1"/></svg>
+          Estándar · −14 HP
+        </span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+        <span class="kbv-tag">3× por semana</span>
+        <span class="kbv-meta">60 días de plazo</span>
+      </div>
+      <div class="kbv-progress-meta tone-goal">
+        <div class="top">
+          <span class="name">Día 34 de 60</span>
+          <span class="val">57 %</span>
+        </div>
+        <div class="kbv-progress" aria-hidden="true"><div class="fill" style="width:57%"></div></div>
+      </div>
+      <div class="kbv-progress-meta tone-hp">
+        <div class="top">
+          <span class="name">Margen de fallos</span>
+          <span class="val">0 de 6 usado</span>
+        </div>
+        <div class="kbv-progress xs" aria-hidden="true"><div class="fill" style="width:0%"></div></div>
+      </div>
+      <div class="kbv-notice info">
+        <span class="glyph" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5"/><path d="M20 15a5 5 0 0 1-5 5H7l2.5 2.5"/></svg>
+        </span>
+        <span class="txt">
+          <span class="sub">Al cerrarse te ofrecerá pasar a hábito. El traspaso se acepta a mano: nunca ocurre solo.</span>
+        </span>
+      </div>
+      <div class="kbv-card-foot">
+        <span class="kbv-meta">Al cumplir: +680 XP · 200 divisa · 2 Elemento</span>
+        <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">Ver detalle</button>
+          <button type="button" class="kbv-btn kbv-btn-primary sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            Registrar día
+          </button>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     6 · PLANEADOS
+     Todavia no corre el plazo, asi que NO hay barra: un cero por ciento
+     sobre cero dias sugiere un atraso que no ha pasado. Lo que se dibuja
+     es la franja de arranque.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Retos planeados">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Planeados</div>
+      <span class="sub">Agendados. El daño y el margen ya están fijados; empiezan a contar el día del arranque.</span>
+    </div>
+    <div class="sh-act"><span class="kbv-meta">1 agendado</span></div>
+  </div>
+
+  <div class="kbv-canvas-grid">
+    <article class="kbv-card w-2">
+      <div class="kbv-card-head">
+        <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+          <div class="kbv-card-title">Cero azúcar añadida</div>
+          <span class="kbv-card-sub">Cortar un mal hábito · 45 días</span>
+        </div>
+        <span class="kbv-tag tint" style="--c: var(--kb-hp)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/><path d="M12.6 9.4l-2 3.1h3l-2 3.1"/></svg>
+          Brutal · −34 HP
+        </span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+        <span class="kbv-tag">Todos los días</span>
+        <span class="kbv-tag tint" style="--c: var(--kb-primary)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>
+          Inicia el 15 de septiembre · en 7 días
+        </span>
+      </div>
+      <p class="kbv-body">Tolera 9 fallos en 45 días. Aún puedes cambiar dificultad, plazo y margen: una vez que arranca, el trato queda cerrado.</p>
+      <div class="kbv-card-foot">
+        <span class="kbv-meta">Al cumplir: +540 XP · 160 divisa · 1 Elemento</span>
+        <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+          <button type="button" class="kbv-btn kbv-btn-link">Cancelar reto</button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">Editar</button>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     7 · PASADOS
+     Cerrados. La franja de resultado dice COMO termino —logrado, cerrado
+     sin cumplir, perdido— con glifo y texto: el tono acompaña, nunca
+     carga el mensaje solo. El reto perdido esta dibujado en su escenario.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Retos pasados">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Pasados</div>
+      <span class="sub">Los seis últimos. Un reto cerrado no vuelve a abrirse: para seguirlo se lanza otro, o se traspasa a hábito.</span>
+    </div>
+    <div class="sh-act">
+      <button type="button" class="kbv-btn kbv-btn-link">Ver los seis</button>
+    </div>
+  </div>
+
+  <div class="kbv-canvas-grid">
+
+    <!-- Logrado. Sin tachado: el reto ganado no es una tarea cerrada. -->
+    <article class="kbv-card w-2">
+      <div class="kbv-card-head">
+        <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+          <div class="kbv-card-title">Leer 20 minutos antes de dormir</div>
+          <span class="kbv-card-sub">Construir un hábito · cerrado el 28 de agosto</span>
+        </div>
+        <span class="kbv-tag solid" style="--c: var(--kb-good)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          Logrado
+        </span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+        <span class="kbv-tag">Todos los días</span>
+        <span class="kbv-meta">30 de 30 días · 0 fallos · Suave</span>
+      </div>
+      <div class="kbv-card-foot">
+        <span class="kbv-meta">Cobrado: +380 XP · 90 divisa · 1 Elemento</span>
+        <button type="button" class="kbv-btn kbv-btn-secondary sm">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5"/><path d="M20 15a5 5 0 0 1-5 5H7l2.5 2.5"/></svg>
+          Pasarlo a hábito
+        </button>
+      </div>
+    </article>
+
+    <!-- Cerrado sin cumplir: termino el plazo dentro del margen, pero sin
+         la meta. No es «perdido»: no hay zona critica ni HP a 10. -->
+    <article class="kbv-card w-2">
+      <div class="kbv-card-head">
+        <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+          <div class="kbv-card-title">Nada de compras impulsivas</div>
+          <span class="kbv-card-sub">Cortar un mal hábito · cerrado el 11 de agosto</span>
+        </div>
+        <span class="kbv-tag tint" style="--c: var(--kb-warn)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+          Cerrado sin cumplir
+        </span>
+      </div>
+      <div class="gr-meta">
+        <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+        <span class="kbv-tag">Entre semana</span>
+        <span class="kbv-meta">21 de 21 días · 3 de 4 fallos · Estándar</span>
+      </div>
+      <div class="kbv-card-foot">
+        <span class="kbv-meta">Sin recompensa: el plazo terminó con la meta sin cumplir. El HP quedó intacto.</span>
+        <button type="button" class="kbv-btn kbv-btn-secondary sm">Volver a lanzarlo</button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     8 · LOS ESTADOS
+     Cada estado DIBUJADO en su escenario rotulado. Lo que solo se explica
+     con palabras no se puede comparar contra nada.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Estados de la pantalla">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Los estados</div>
+      <span class="sub">Las cinco pestañas, el reto de dos, lo que pasa al registrar el día, y lo que se ve cuando no hay datos o el dato no llega.</span>
+    </div>
+  </div>
+
+  <div class="kbv-canvas-grid">
+
+    <!-- Pestaña · Todos -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Pestaña · Todos</div>
+      <div class="under">
+        <div class="kbv-seg" role="tablist" aria-label="Ejemplo de pestañas">
+          <button type="button" class="on" role="tab" aria-selected="true">Todos · 9</button>
+          <button type="button" role="tab" aria-selected="false">Activos · 2</button>
+          <button type="button" role="tab" aria-selected="false">Planeados · 1</button>
+        </div>
+        <p class="kbv-meta">Apila las tres secciones por estado, en este orden: Activos, Planeados, Pasados. Solo aquí se dibuja el hueco de «Activos» cuando está vacío — una sección vacía dentro de la vista completa se calla.</p>
+        <div class="kbv-section-head">
+          <div class="sh-id"><div class="kbv-eyebrow">Activos</div></div>
+          <div class="sh-act"><span class="kbv-meta">2</span></div>
+        </div>
+        <div class="kbv-section-head">
+          <div class="sh-id"><div class="kbv-eyebrow">Planeados</div></div>
+          <div class="sh-act"><span class="kbv-meta">1</span></div>
+        </div>
+        <div class="kbv-section-head">
+          <div class="sh-id"><div class="kbv-eyebrow">Pasados</div></div>
+          <div class="sh-act"><span class="kbv-meta">6</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña · Activos -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Pestaña · Activos</div>
+      <div class="under">
+        <div class="kbv-seg" role="tablist" aria-label="Ejemplo de pestañas">
+          <button type="button" role="tab" aria-selected="false">Todos · 9</button>
+          <button type="button" class="on" role="tab" aria-selected="true">Activos · 2</button>
+          <button type="button" role="tab" aria-selected="false">Planeados · 1</button>
+        </div>
+        <p class="kbv-meta">Una sola sección, sin su cabecera: la pestaña ya dice cuál es. Los indicadores de arriba no se filtran — miden el año completo, no la vista.</p>
+        <div class="kbv-card compact row">
+          <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+          <span class="grow col">
+            <span class="kbv-card-title">Sin pantallas después de las 22:00</span>
+            <span class="kbv-card-sub">Día 12 de 30 · 1 de 2 fallos</span>
+          </span>
+          <span class="kbv-tag tint" style="--c: var(--kb-hp)">−22 HP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña · Planeados -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Pestaña · Planeados</div>
+      <div class="under">
+        <div class="kbv-seg" role="tablist" aria-label="Ejemplo de pestañas">
+          <button type="button" role="tab" aria-selected="false">Activos · 2</button>
+          <button type="button" class="on" role="tab" aria-selected="true">Planeados · 1</button>
+          <button type="button" role="tab" aria-selected="false">Pasados · 6</button>
+        </div>
+        <p class="kbv-meta">Sin barra de avance: el plazo todavía no corre. Lo que se lee es cuándo arranca.</p>
+        <div class="kbv-card compact row">
+          <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+          <span class="grow col">
+            <span class="kbv-card-title">Cero azúcar añadida</span>
+            <span class="kbv-card-sub">Inicia el 15 de septiembre · en 7 días</span>
+          </span>
+          <span class="kbv-tag tint" style="--c: var(--kb-hp)">−34 HP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña · Pasados -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Pestaña · Pasados</div>
+      <div class="under">
+        <div class="kbv-seg" role="tablist" aria-label="Ejemplo de pestañas">
+          <button type="button" role="tab" aria-selected="false">Planeados · 1</button>
+          <button type="button" class="on" role="tab" aria-selected="true">Pasados · 6</button>
+          <button type="button" role="tab" aria-selected="false">Compartidos · 3</button>
+        </div>
+        <p class="kbv-meta">Los cerrados, del más reciente al más viejo, cada uno con su franja de resultado.</p>
+        <div class="kbv-card compact row">
+          <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+          <span class="grow col">
+            <span class="kbv-card-title">Leer 20 minutos antes de dormir</span>
+            <span class="kbv-card-sub">30 de 30 días · 0 fallos</span>
+          </span>
+          <span class="kbv-tag solid" style="--c: var(--kb-good)">Logrado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pestaña · Compartidos + propuesta pendiente -->
+    <div class="kbv-stage w-4">
+      <div class="lbl">Pestaña · Compartidos — propuesta enviada, sin aceptar</div>
+      <div class="under">
+        <div class="kbv-seg" role="tablist" aria-label="Ejemplo de pestañas">
+          <button type="button" role="tab" aria-selected="false">Pasados · 6</button>
+          <button type="button" class="on" role="tab" aria-selected="true">Compartidos · 3</button>
+        </div>
+        <div class="kbv-section-head">
+          <div class="sh-id">
+            <div class="kbv-eyebrow">Retos compartidos</div>
+            <span class="sub">Los dos registran · el HP de los dos está en juego · la recompensa de dúo se cobra al cerrar</span>
+          </div>
+          <div class="sh-act">
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+              Proponer uno
+            </button>
+          </div>
+        </div>
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Dormir antes de medianoche</div>
+              <span class="kbv-card-sub">Construir un hábito · 21 días · empieza cuando acepte</span>
+            </div>
+            <span class="kbv-tag tint" style="--c: var(--kb-warn)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg>
+              Esperando respuesta
+            </span>
+          </div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+            <span class="kbv-tag tint" style="--c: var(--area-community)">Con Iván</span>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">6 HP de cada uno en juego</span>
+          </div>
+          <div class="kbv-notice warn">
+            <span class="glyph" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 4.5h16v11H12l-5 4v-4H4z"/></svg>
+            </span>
+            <span class="txt">
+              <span class="ttl">Propuesta enviada — esperando a que Iván acepte</span>
+              <span class="sub">Nada corre todavía: ni el plazo, ni el HP, ni los fallos. Si no acepta en 7 días la propuesta se cae sola.</span>
+            </span>
+            <span class="act">
+              <button type="button" class="kbv-btn kbv-btn-link">Retirar</button>
+            </span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Compartido · ambos registraron hoy -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Compartido · los dos registraron hoy (+HP)</div>
+      <div class="under">
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Gimnasio 4 veces por semana</div>
+              <span class="kbv-card-sub">Con Marisol · día 8 de 21</span>
+            </div>
+            <span class="kbv-tag solid" style="--c: var(--kb-good)">+6 HP</span>
+          </div>
+          <div class="kbv-progress-meta tone-goal">
+            <div class="top"><span class="name">Tú · 8 días, 0 fallos</span><span class="val">38 %</span></div>
+            <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:38%"></div></div>
+          </div>
+          <div class="kbv-progress-meta tone-goal">
+            <div class="top"><span class="name">Marisol · 8 días, 1 fallo</span><span class="val">38 %</span></div>
+            <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:38%"></div></div>
+          </div>
+          <div class="kbv-notice info">
+            <span class="glyph" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.4"/></svg>
+            </span>
+            <span class="txt">
+              <span class="sub">Los dos cumplieron hoy: +6 HP para cada uno.</span>
+            </span>
+          </div>
+          <div class="kbv-card-foot">
+            <span class="kbv-meta">Registrado hoy</span>
+            <button type="button" class="kbv-btn kbv-btn-secondary sm" disabled>Ya registraste</button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Compartido · falta el otro -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Compartido · falta tu amigo (−HP en riesgo)</div>
+      <div class="under">
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">10 000 pasos diarios</div>
+              <span class="kbv-card-sub">Con Renata · día 5 de 30</span>
+            </div>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">−4 HP en riesgo</span>
+          </div>
+          <div class="kbv-progress-meta tone-goal">
+            <div class="top"><span class="name">Tú · registrado hoy</span><span class="val">17 %</span></div>
+            <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:17%"></div></div>
+          </div>
+          <div class="kbv-progress-meta tone-hp">
+            <div class="top"><span class="name">Renata · sin registrar hoy</span><span class="val">13 %</span></div>
+            <div class="kbv-progress sm" aria-hidden="true"><div class="fill" style="width:13%"></div></div>
+          </div>
+          <div class="kbv-notice warn">
+            <span class="glyph" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+            </span>
+            <span class="txt">
+              <span class="sub">Falta Renata — le avisamos. Si el día cierra sin su registro, los dos pierden 4 HP: el reto de dos se gana y se paga entre los dos.</span>
+            </span>
+          </div>
+          <div class="kbv-card-foot">
+            <span class="kbv-meta">Cierra a medianoche</span>
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">Recordarle</button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Vacio -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Vacío · ningún reto activo</div>
+      <div class="under">
+        <div class="kbv-empty">
+          <span class="glyph" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M14 4h6v6l-9 9-3-3z"/><path d="M9 16l-4 4M5 16l3 3"/></svg>
+          </span>
+          <div class="ttl">Ningún reto en pie</div>
+          <p class="desc">Un reto es un trato con fecha: si fallas más veces de las que declaraste, lo pierdes y te cuesta HP. Por eso se lanza cuando estás listo, no cuando estás animado.</p>
+          <div class="acts">
+            <button type="button" class="kbv-btn kbv-btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+              Lanzar un reto
+            </button>
+            <button type="button" class="kbv-btn kbv-btn-secondary">Ver mis hábitos</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registrado hoy · cumplido -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Registrado hoy · día cumplido</div>
+      <div class="under">
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Correr 5 km</div>
+              <span class="kbv-card-sub">Día 34 de 60 · 0 de 6 fallos</span>
+            </div>
+            <span class="kbv-tag solid" style="--c: var(--kb-good)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              Cumplido hoy
+            </span>
+          </div>
+          <div class="kbv-progress-meta tone-goal">
+            <div class="top"><span class="name">Avance</span><span class="val">57 %</span></div>
+            <div class="kbv-progress" aria-hidden="true"><div class="fill" style="width:57%"></div></div>
+          </div>
+          <div class="kbv-card-foot">
+            <span class="kbv-meta">Un registro por día. Mañana vuelve a abrirse.</span>
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg>
+              Desmarcar
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Registrado hoy · recaida -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Registrado hoy · recaída</div>
+      <div class="under">
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Sin pantallas después de las 22:00</div>
+              <span class="kbv-card-sub">Día 12 de 30 · 1 de 2 fallos</span>
+            </div>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/><path d="M12.6 9.4l-2 3.1h3l-2 3.1"/></svg>
+              Recaída hoy · −22 HP
+            </span>
+          </div>
+          <div class="kbv-progress-meta tone-hp">
+            <div class="top"><span class="name">Margen de fallos</span><span class="val">1 de 2 usado</span></div>
+            <div class="kbv-progress xs" aria-hidden="true"><div class="fill" style="width:50%"></div></div>
+          </div>
+          <div class="kbv-card-foot">
+            <span class="kbv-meta">El HP ya se descontó. Deshacer lo devuelve.</span>
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg>
+              Desmarcar
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Margen agotado -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Margen agotado · el siguiente fallo lo pierde</div>
+      <div class="under">
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Sin refresco</div>
+              <span class="kbv-card-sub">Día 41 de 60 · Extremo</span>
+            </div>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">−50 HP por fallo</span>
+          </div>
+          <div class="kbv-progress-meta tone-hp">
+            <div class="top"><span class="name">Margen de fallos</span><span class="val">5 de 5 usado</span></div>
+            <div class="kbv-progress" aria-hidden="true"><div class="fill" style="width:100%"></div></div>
+          </div>
+          <div class="kbv-notice warn">
+            <span class="glyph" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+            </span>
+            <span class="txt">
+              <span class="ttl">Sin margen: el siguiente fallo pierde el reto</span>
+              <span class="sub">Cuando la barra de fallos llega al tope pasa a la tinta de daño y se escribe lo que está en juego. El tono acompaña; el aviso es el que dice qué pasa.</span>
+            </span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Reto perdido -->
+    <div class="kbv-stage w-4">
+      <div class="lbl">Reto perdido · zona crítica y aviso de pérdida</div>
+      <div class="under">
+        <div class="kbv-notice error" role="alert">
+          <span class="glyph" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 20s-7-4.3-7-9a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 4.7-7 9-7 9z"/><path d="M12.6 9.4l-2 3.1h3l-2 3.1"/></svg>
+          </span>
+          <span class="txt">
+            <span class="ttl">Perdiste «Sin refresco»</span>
+            <span class="sub">Superaste los 5 fallos que declaraste. El reto se cierra: cobras la mitad de la recompensa y tu HP baja a 10 — zona crítica. Ni el reto ni esta pantalla mueven el HP: lo hace el motor de progresión.</span>
+          </span>
+          <span class="act">
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">Ver mi salud</button>
+          </span>
+        </div>
+        <article class="kbv-card">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Sin refresco</div>
+              <span class="kbv-card-sub">Cortar un mal hábito · perdido hoy, en el día 41 de 60</span>
+            </div>
+            <span class="kbv-tag solid" style="--c: var(--kb-hp)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              Perdido
+            </span>
+          </div>
+          <div class="gr-meta">
+            <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+            <span class="kbv-tag">Todos los días</span>
+            <span class="kbv-meta">6 de 5 fallos · Extremo</span>
+          </div>
+          <div class="kbv-progress-meta tone-hp">
+            <div class="top"><span class="name">HP tras la pérdida</span><span class="val">10 / 100</span></div>
+            <div class="kbv-progress lg" aria-hidden="true"><div class="fill" style="width:10%"></div></div>
+          </div>
+          <div class="kbv-card-foot">
+            <span class="kbv-meta">Cobrado a la mitad: +340 XP · 100 divisa · 0 Elemento</span>
+            <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+              <button type="button" class="kbv-btn kbv-btn-link">Deshacer el registro de hoy</button>
+              <button type="button" class="kbv-btn kbv-btn-secondary sm">Volver a lanzarlo</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Planeado · franja de arranque -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Reto planeado · la franja de arranque</div>
+      <div class="under">
+        <article class="kbv-card compact">
+          <div class="kbv-card-head">
+            <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+              <div class="kbv-card-title">Cero azúcar añadida</div>
+              <span class="kbv-card-sub">45 días · todos los días · 9 fallos tolerados</span>
+            </div>
+            <span class="kbv-tag tint" style="--c: var(--kb-hp)">−34 HP</span>
+          </div>
+          <div class="kbv-notice info">
+            <span class="glyph" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3.5v3M16 3.5v3"/></svg>
+            </span>
+            <span class="txt">
+              <span class="sub">Inicia el 15 de septiembre — en 7 días. Hasta entonces no cuenta días, no gasta margen y no toca tu HP.</span>
+            </span>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Pasado · logrado -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Reto pasado · logrado</div>
+      <div class="under">
+        <article class="kbv-card compact row wrap">
+          <span class="kbv-tag solid" style="--c: var(--kb-good)">Logrado</span>
+          <span class="grow col">
+            <span class="kbv-card-title">Leer 20 minutos antes de dormir</span>
+            <span class="kbv-card-sub">30 de 30 días · 0 fallos · cobrado completo</span>
+          </span>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">Pasarlo a hábito</button>
+        </article>
+      </div>
+    </div>
+
+    <!-- Pasado · cerrado sin cumplir -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Reto pasado · cerrado sin cumplir</div>
+      <div class="under">
+        <article class="kbv-card compact row wrap">
+          <span class="kbv-tag tint" style="--c: var(--kb-warn)">Sin cumplir</span>
+          <span class="grow col">
+            <span class="kbv-card-title">Nada de compras impulsivas</span>
+            <span class="kbv-card-sub">21 de 21 días · 3 de 4 fallos · sin recompensa, HP intacto</span>
+          </span>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">Volver a lanzarlo</button>
+        </article>
+      </div>
+    </div>
+
+    <!-- Traspaso -->
+    <div class="kbv-stage w-4">
+      <div class="lbl">Traspaso · el reto se entrega como hábito</div>
+      <div class="under">
+        <p class="kbv-meta">Dos entidades distintas y una entrega explícita entre ellas. El reto no «se vuelve» hábito: termina, y de él nace un hábito nuevo que ya no tiene plazo, ni dificultad, ni HP en juego — tiene periodicidad, esfuerzo, prioridad y racha. Nada de esto ocurre solo.</p>
+        <div style="display:flex;align-items:center;gap:var(--kb-sp-6);flex-wrap:wrap">
+          <article class="kbv-card compact" style="flex:1 1 260px">
+            <span class="kbv-eyebrow">Reto que termina</span>
+            <div class="kbv-card-title">Correr 5 km</div>
+            <div class="gr-meta">
+              <span class="kbv-tag tint" style="--c: var(--kb-hp)">Estándar · −14 HP</span>
+              <span class="kbv-tag">60 días</span>
+              <span class="kbv-tag">0 de 6 fallos</span>
+            </div>
+            <span class="kbv-card-sub">Cierra con el plazo cumplido. Aquí se acaba: un reto cerrado no se reabre.</span>
+          </article>
+          <span style="display:flex;align-items:center;gap:var(--kb-sp-3);color:var(--kb-text-2)">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+            <span class="kbv-eyebrow">Traspaso</span>
+          </span>
+          <article class="kbv-card compact" style="flex:1 1 260px">
+            <span class="kbv-eyebrow">Hábito que nace</span>
+            <div class="kbv-card-title">Correr 5 km</div>
+            <div class="gr-meta">
+              <span class="kbv-areapill" style="--c: var(--area-will)"><span class="dot" aria-hidden="true"></span>Voluntad</span>
+              <span class="kbv-tag">3× por semana</span>
+              <span class="kbv-tag tint" style="--c: var(--kb-streak)">Racha desde cero</span>
+            </div>
+            <span class="kbv-card-sub">Sin plazo y sin daño: fallar un día no cuesta HP, solo corta la racha. Y se puede pausar, que un reto no.</span>
+          </article>
+        </div>
+        <div class="kbv-card-foot">
+          <span class="kbv-meta">Si no aceptas, el reto queda cerrado y no nace nada.</span>
+          <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Ahora no</button>
+            <button type="button" class="kbv-btn kbv-btn-primary">Crear el hábito</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enlace profundo -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Enlace profundo · llegada desde Amigos</div>
+      <div class="under">
+        <div class="kbv-notice info">
+          <span class="glyph" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M10 13.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg>
+          </span>
+          <span class="txt">
+            <span class="ttl">Llegaste desde Amigos para retar a Marisol</span>
+            <span class="sub">La pestaña abre en Compartidos y el alta ya viene en modo dúo, con ella elegida. Llegar sin destino deja la pestaña en Todos.</span>
+          </span>
+        </div>
+        <div class="kbv-seg" role="tablist" aria-label="Ejemplo de pestañas">
+          <button type="button" role="tab" aria-selected="false">Todos · 9</button>
+          <button type="button" class="on" role="tab" aria-selected="true">Compartidos · 3</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cargando -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Cargando · la silueta de la lista</div>
+      <div class="under">
+        <div aria-busy="true" aria-label="Cargando tus retos" style="display:flex;flex-direction:column;gap:var(--kb-sp-6)">
+          <div class="kbv-kpi-grid" style="grid-template-columns:repeat(2, minmax(0, 1fr))">
+            <div class="kbv-kpi" aria-hidden="true">
+              <span class="kbv-skel band"></span>
+              <span class="body"><span class="kbv-skel big" style="width:64px"></span><span class="kbv-skel line" style="width:78%"></span></span>
+            </div>
+            <div class="kbv-kpi" aria-hidden="true">
+              <span class="kbv-skel band"></span>
+              <span class="body"><span class="kbv-skel big" style="width:52px"></span><span class="kbv-skel line" style="width:66%"></span></span>
+            </div>
+          </div>
+          <div class="kbv-card" aria-hidden="true">
+            <div class="kbv-skel-row">
+              <span class="kbv-skel line grow" style="max-width:220px"></span>
+              <span class="kbv-skel line" style="width:88px"></span>
+            </div>
+            <div class="kbv-skel-row">
+              <span class="kbv-skel line" style="width:72px"></span>
+              <span class="kbv-skel line" style="width:96px"></span>
+            </div>
+            <span class="kbv-skel bar"></span>
+            <span class="kbv-skel bar" style="width:60%"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Error · no se pudieron leer los retos</div>
+      <div class="under">
+        <div class="kbv-notice error">
+          <span class="glyph" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+          </span>
+          <span class="txt">
+            <span class="ttl">No se pudieron leer tus retos</span>
+            <span class="sub">Ves la última copia de este dispositivo, del 8 de septiembre a las 9:12. El registro del día queda bloqueado: marcar sobre una copia vieja puede gastar un margen que ya se gastó.</span>
+          </span>
+          <span class="act">
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg>
+              Reintentar
+            </button>
+          </span>
+        </div>
+        <div class="kbv-empty compact">
+          <span class="glyph" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 3l18 18"/><path d="M5 12a7 7 0 0 1 8.5-6.8M19 12a7 7 0 0 1-1.6 4.4"/></svg>
+          </span>
+          <div class="ttl">Los indicadores quedan en pausa</div>
+          <p class="desc">Se calculan con todos los retos del año; con una copia parcial darían una tasa de éxito falsa.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aviso ok -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Aviso · día registrado</div>
+      <div class="under">
+        <div class="kbv-notice info" role="status">
+          <span class="glyph" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.2 12.3l2.6 2.6 5-5.4"/></svg>
+          </span>
+          <span class="txt">
+            <span class="ttl">Día registrado. Sigue así.</span>
+            <span class="sub">Un solo registro por día, y se puede deshacer el mismo día.</span>
+          </span>
+          <span class="act">
+            <button type="button" class="kbv-btn kbv-btn-link">Deshacer</button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aviso warn -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Aviso · fallo registrado</div>
+      <div class="under">
+        <div class="kbv-notice warn" role="status">
+          <span class="glyph" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+          </span>
+          <span class="txt">
+            <span class="ttl">Fallo registrado · −22 HP</span>
+            <span class="sub">Te queda 1 de 2 fallos. Al siguiente, el reto se pierde.</span>
+          </span>
+          <span class="act">
+            <button type="button" class="kbv-btn kbv-btn-link">Deshacer</button>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Explicacion abierta -->
+    <div class="kbv-stage w-2">
+      <div class="lbl">Explicación abierta · cómo se calcula el daño</div>
+      <div class="under">
+        <div class="kbv-tip-wrap">
+          <span class="kbv-h4">Retos</span>
+          <button type="button" class="kbv-tip-dot" aria-label="Cómo se calcula el daño al HP" aria-expanded="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.6v.6"/></svg>
+          </button>
+        </div>
+        <div class="kbv-tip" role="tooltip">
+          El daño lo fija la dificultad que elegiste al lanzarlo, y se aplica una vez por fallo registrado.
+          <span class="fx">1 Suave −8 · 2 Estándar −14 · 3 Exigente −22 · 4 Brutal −34 · 5 Extremo −50</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     9 · LOS MODALES
+     Tres. El alta —que se dibuja en sus dos modos, solo y duo— y las dos
+     confirmaciones del registro del dia. Las confirmaciones NO llevan
+     boton de cerrar: obligan a elegir, y el verbo del boton repite la
+     accion. Los tres cierran con Escape y con el velo.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Modales de la pantalla">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Los modales</div>
+      <span class="sub">El alta define el trato completo antes de firmarlo: qué cuenta como fallo, cuánto cuesta cada uno y cuántos aguanta.</span>
+    </div>
+  </div>
+
+  <!-- Modal 1 · alta, modo solo -->
+  <div class="kbv-stage h-xl">
+    <div class="lbl">Modal · nuevo reto (modo solo)</div>
+    <div class="under">
+      <p class="kbv-meta">Se abre desde «Lanzar un reto» de la cabecera y desde «Lanzar otro» de la sección Activos. Nace planeado.</p>
+    </div>
+    <div class="kbv-modal-veil" role="dialog" aria-modal="true" aria-labelledby="nr-title">
+      <div class="kbv-modal-card lg">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="nr-title">Nuevo reto</div>
+            <span class="sub">Un reto tiene plazo, dificultad y precio: cada fallo te cuesta HP, y pasado el margen se pierde. Si lo que quieres es repetir algo sin riesgo, eso es un hábito.</span>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+
+          <div class="kbv-field">
+            <span class="kbv-label" id="nr-modo">Modo</span>
+            <div class="kbv-seg" role="group" aria-labelledby="nr-modo">
+              <button type="button" class="on" aria-pressed="true">Solo</button>
+              <button type="button" aria-pressed="false">Con un amigo</button>
+            </div>
+            <span class="kbv-help">En dúo, el HP de los dos entra en juego y el reto no arranca hasta que la otra persona acepta.</span>
+          </div>
+
+          <div class="kbv-field">
+            <span class="kbv-label" id="nr-tipo">Tipo de reto</span>
+            <div role="group" aria-labelledby="nr-tipo" style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+              <button type="button" class="kbv-chip active" aria-pressed="true">Cortar un mal hábito</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">Construir un hábito</button>
+            </div>
+            <span class="kbv-help">Cortar registra recaídas; construir registra días cumplidos. Solo cambia qué se registra, no lo que cuesta fallar.</span>
+          </div>
+
+          <div class="kbv-field">
+            <label style="display:flex;align-items:flex-start;gap:var(--kb-sp-5);cursor:pointer">
+              <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:var(--kb-sp-2);min-width:0">
+                <span class="kbv-label">Al terminar, ofrecerme convertirlo en hábito permanente</span>
+                <span class="kbv-help">Solo prepara la oferta. El traspaso se acepta a mano cuando el reto cierra: un hábito nuevo nunca aparece solo.</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="nr-nombre">Nombre del reto</label>
+            <input class="kbv-input" id="nr-nombre" type="text" value="Sin pantallas después de las 22:00" placeholder="Qué te comprometes a sostener" />
+            <span class="kbv-help">Se lee en la lista, en el aviso diario y en tu bitácora de salud si lo pierdes.</span>
+          </div>
+
+          <div class="kbv-fieldrow">
+            <div class="kbv-field">
+              <label class="kbv-label" for="nr-inicio">Empieza</label>
+              <input class="kbv-input" id="nr-inicio" type="date" value="2026-09-15" />
+              <span class="kbv-help">Por defecto, en siete días.</span>
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label" for="nr-dias">Duración en días</label>
+              <input class="kbv-input" id="nr-dias" type="number" value="45" min="3" max="365" />
+              <span class="kbv-help">De 3 a 365.</span>
+            </div>
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="nr-desc">Descripción</label>
+            <textarea class="kbv-input" id="nr-desc" rows="2" placeholder="Para qué lo haces">Quiero llegar a la cama sin la cabeza encendida.</textarea>
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="nr-fallo">Qué cuenta como fallo</label>
+            <textarea class="kbv-input" id="nr-fallo" rows="2" placeholder="Escríbelo hoy, que hoy no estás negociando contigo">Abrir cualquier pantalla después de las 22:00, aunque sea un minuto. La alarma del despertador no cuenta.</textarea>
+            <span class="kbv-help">Se escribe antes de arrancar, y no se puede editar con el reto en curso: es la regla contra la que te vas a medir.</span>
+          </div>
+
+          <div class="kbv-field">
+            <span class="kbv-label" id="nr-dif">Dificultad · lo que cuesta cada fallo</span>
+            <div role="group" aria-labelledby="nr-dif" style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+              <button type="button" class="kbv-chip" aria-pressed="false">1 Suave · −8 HP</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">2 Estándar · −14 HP</button>
+              <button type="button" class="kbv-chip active" aria-pressed="true">3 Exigente · −22 HP</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">4 Brutal · −34 HP</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">5 Extremo · −50 HP</button>
+            </div>
+            <span class="kbv-help">La dificultad no cambia la meta: cambia el precio de fallar y, con él, la recompensa.</span>
+          </div>
+
+          <div class="kbv-field">
+            <span class="kbv-label" id="nr-per">Periodicidad</span>
+            <div role="group" aria-labelledby="nr-per" style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+              <button type="button" class="kbv-chip active" aria-pressed="true">Todos los días</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">Entre semana</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">3× por semana</button>
+              <button type="button" class="kbv-chip" aria-pressed="false">1× por semana</button>
+            </div>
+            <span class="kbv-help">Cuantos más días exige, más paga al cumplirse.</span>
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="nr-margen">Fallos tolerados</label>
+            <input class="kbv-input" id="nr-margen" type="number" value="9" min="0" max="9" />
+            <span class="kbv-help">Tope: 20 % del plazo — 9 de 45 días. Si acortas el plazo, el margen se recorta solo hasta el nuevo tope.</span>
+          </div>
+
+          <div class="kbv-notice warn">
+            <span class="glyph" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M10.3 3.9L1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4.5M12 17.2v.4"/></svg>
+            </span>
+            <span class="txt">
+              <span class="ttl">Si superas los 9 fallos, el reto se pierde</span>
+              <span class="sub">Cobras la mitad de la recompensa y tu HP baja a 10: zona crítica. Es el trato completo, y por eso se lee antes de firmarlo.</span>
+            </span>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-6)">
+            <div class="kbv-card compact" style="flex:1 1 180px">
+              <span class="kbv-eyebrow">Cada fallo</span>
+              <span class="kbv-num" style="font-size:var(--kb-fs-2xl)">−22 HP</span>
+              <span class="kbv-card-sub">3 · Exigente</span>
+            </div>
+            <div class="kbv-card compact" style="flex:1 1 180px">
+              <span class="kbv-eyebrow">Al cumplir</span>
+              <span class="kbv-num" style="font-size:var(--kb-fs-2xl)">+540 XP</span>
+              <span class="kbv-card-sub">160 divisa · 1 Elemento</span>
+            </div>
+            <div class="kbv-card compact" style="flex:1 1 180px">
+              <span class="kbv-eyebrow">Si te pasas del margen</span>
+              <span class="kbv-num" style="font-size:var(--kb-fs-2xl)">HP a 10</span>
+              <span class="kbv-card-sub">y media recompensa</span>
+            </div>
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <span class="kbv-meta">Nace planeado, arranca el 15 de septiembre</span>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+            <button type="button" class="kbv-btn kbv-btn-primary">Lanzar reto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1 · el mismo, en modo duo -->
+  <div class="kbv-stage h-lg">
+    <div class="lbl">Modal · nuevo reto compartido (modo dúo, sin nadie elegido)</div>
+    <div class="under">
+      <p class="kbv-meta">El mismo modal: cambian el título, el subtítulo y tres campos. Sin nadie elegido y sin nombre, «Proponer reto» no está disponible.</p>
+    </div>
+    <div class="kbv-modal-veil" role="dialog" aria-modal="true" aria-labelledby="nrd-title">
+      <div class="kbv-modal-card lg">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="nrd-title">Nuevo reto compartido</div>
+            <span class="sub">Los dos registran su día y los dos pagan. El reto arranca cuando la otra persona acepta; hasta entonces es solo una propuesta.</span>
+          </div>
+          <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-modal-body">
+          <div class="kbv-field">
+            <span class="kbv-label" id="nrd-modo">Modo</span>
+            <div class="kbv-seg" role="group" aria-labelledby="nrd-modo">
+              <button type="button" aria-pressed="false">Solo</button>
+              <button type="button" class="on" aria-pressed="true">Con un amigo</button>
+            </div>
+          </div>
+
+          <div class="kbv-field">
+            <span class="kbv-label" id="nrd-quien">A quién invitas</span>
+            <div role="group" aria-labelledby="nrd-quien" style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+              <button type="button" class="kbv-chip" aria-pressed="false"><i class="dot" style="background:var(--area-community)" aria-hidden="true"></i>Marisol</button>
+              <button type="button" class="kbv-chip" aria-pressed="false"><i class="dot" style="background:var(--area-community)" aria-hidden="true"></i>Iván</button>
+              <button type="button" class="kbv-chip" aria-pressed="false"><i class="dot" style="background:var(--area-community)" aria-hidden="true"></i>Renata</button>
+              <button type="button" class="kbv-chip" aria-pressed="false"><i class="dot" style="background:var(--area-community)" aria-hidden="true"></i>Tomás</button>
+            </div>
+            <span class="kbv-help">Se envía una propuesta por persona: cada quien acepta la suya, y cada una corre por su cuenta.</span>
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="nrd-nombre">Nombre del reto</label>
+            <input class="kbv-input err" id="nrd-nombre" type="text" value="" placeholder="Qué se comprometen a sostener" aria-invalid="true" aria-describedby="nrd-nombre-err" />
+            <span class="kbv-error" id="nrd-nombre-err">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.2v.4"/></svg>
+              Ponle nombre: es lo que verán los dos cada día.
+            </span>
+          </div>
+
+          <div class="kbv-field">
+            <label class="kbv-label" for="nrd-hp">HP en juego por persona</label>
+            <input class="kbv-input" id="nrd-hp" type="number" value="6" min="1" max="20" />
+            <span class="kbv-help">De 1 a 20. Se gana o se pierde en bloque: si uno no registra, los dos pagan.</span>
+          </div>
+        </div>
+        <div class="kbv-modal-foot">
+          <span class="kbv-meta">Elige al menos a una persona.</span>
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+            <button type="button" class="kbv-btn kbv-btn-primary" disabled>Proponer reto</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2 · confirmar el hito del dia -->
+  <div class="kbv-stage h-sm">
+    <div class="lbl">Modal · ¿cumpliste el hito de hoy?</div>
+    <div class="under">
+      <p class="kbv-meta">Confirmación. Se abre desde «Registrar día» de un reto de construcción, y detiene ahí el toque: no abre el detalle del reto detrás.</p>
+    </div>
+    <div class="kbv-modal-veil" role="alertdialog" aria-modal="true" aria-labelledby="ch-title" aria-describedby="ch-body">
+      <div class="kbv-modal-card sm">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="ch-title">¿Cumpliste el hito de hoy?</div>
+            <span class="sub">Correr 5 km · día 34 de 60</span>
+          </div>
+        </div>
+        <div class="kbv-modal-body">
+          <p class="kbv-body" id="ch-body">Confirmar suma el día y cobra la recompensa. Solo hay un registro por día — y un registro falso rompe lo único que el reto mide.</p>
+        </div>
+        <div class="kbv-modal-foot">
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Aún no</button>
+            <button type="button" class="kbv-btn kbv-btn-primary">Sí, lo cumplí</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3 · deshacer el registro -->
+  <div class="kbv-stage h-sm">
+    <div class="lbl">Modal · ¿deshacer el registro de hoy?</div>
+    <div class="under">
+      <p class="kbv-meta">Confirmación destructiva. El cuerpo cambia según la marca: revierte la recaída o el día cumplido, y con la recaída devuelve también el HP.</p>
+    </div>
+    <div class="kbv-modal-veil" role="alertdialog" aria-modal="true" aria-labelledby="un-title" aria-describedby="un-body">
+      <div class="kbv-modal-card sm">
+        <div class="kbv-modal-head">
+          <div class="id">
+            <div class="title" id="un-title">¿Deshacer el registro de hoy?</div>
+            <span class="sub">Sin pantallas después de las 22:00 · recaída marcada hoy</span>
+          </div>
+        </div>
+        <div class="kbv-modal-body">
+          <p class="kbv-body" id="un-body">Se revertirá la recaída de hoy: vuelves a 0 de 2 fallos y recuperas los 22 HP. Podrás volver a registrar más tarde, y si el reto se había perdido por ese fallo, vuelve a estar activo.</p>
+        </div>
+        <div class="kbv-modal-foot">
+          <div class="right">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Conservar registro</button>
+            <button type="button" class="kbv-btn kbv-btn-danger">Sí, desmarcar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     10 · EL VOCABULARIO
+     Habito y reto cuelgan los dos de Voluntad y ahi se acaba el parecido.
+     Cada uno tiene entidad propia, campos propios y consecuencias propias.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Vocabulario de la constancia">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Dos cosas distintas</div>
+      <span class="sub">Lo único que comparten es de dónde cuelgan.</span>
+    </div>
+  </div>
+  <dl class="kbv-def side">
+    <div>
+      <dt>Voluntad</dt>
+      <dd>El área de la que cuelgan las dos, y la única sin proyectos. No guarda nada suyo: pinta lo que cuelga de ella y recibe el XP de lo que se cierra abajo.</dd>
+    </div>
+    <div>
+      <dt>Reto</dt>
+      <dd>Un trato con fecha. Tiene <strong>plazo</strong>, <strong>dificultad</strong> —que fija el daño de cada fallo— y un <strong>número de fallos tolerado</strong>. Se gana, se cierra sin cumplir o <strong>se pierde</strong>; perderlo cuesta HP. No se pausa: el plazo corre. Y cuando termina, termina.</dd>
+    </div>
+    <div>
+      <dt>Hábito</dt>
+      <dd>Algo que se repite sin fin. Tiene <strong>periodicidad</strong>, <strong>esfuerzo</strong>, <strong>prioridad</strong>, área y <strong>racha</strong>, y su recompensa nace de prioridad × esfuerzo. Fallar un día corta la racha; no cuesta HP y no se puede perder. <strong>Se puede pausar</strong>: pausado deja de contar y la racha no se rompe.</dd>
+    </div>
+    <div>
+      <dt>Dificultad</dt>
+      <dd>Cinco niveles, y lo que escala es el precio de fallar: <strong>1 Suave −8 · 2 Estándar −14 · 3 Exigente −22 · 4 Brutal −34 · 5 Extremo −50 HP</strong>. Un hábito no tiene dificultad: tiene esfuerzo, que paga, no cobra.</dd>
+    </div>
+    <div>
+      <dt>Margen de fallos</dt>
+      <dd>Los fallos que el reto aguanta, declarados al lanzarlo y topados al 20 % del plazo. Es la única cuenta que puede terminar el reto antes de tiempo, y por eso se dibuja como una barra que <strong>se agota</strong>, no como una que avanza.</dd>
+    </div>
+    <div>
+      <dt>Traspaso</dt>
+      <dd>La entrega de un reto cerrado a un hábito nuevo. Es <strong>un acto explícito</strong>, nunca un efecto colateral: el reto no se transforma, se acaba, y de él nace un hábito que ya no tiene plazo ni daño. Sin aceptación no nace nada.</dd>
+    </div>
+    <div>
+      <dt>Reto compartido</dt>
+      <dd>El mismo reto para dos personas, con el HP de las dos en juego. Vive como propuesta hasta que la otra persona acepta, y se gana o se paga en bloque.</dd>
+    </div>
+    <div>
+      <dt>Elemento</dt>
+      <dd>La moneda rara, la que desbloquea módulos. Un reto grande la paga; la divisa común y el XP los paga cualquiera.</dd>
+    </div>
+  </dl>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     11 · COMPORTAMIENTOS
+     Lo que hace y no se ve. Para quien la construya.
+     ══════════════════════════════════════════════════════════════════ -->
+<section class="kbv-section" aria-label="Comportamientos no obvios">
+  <div class="kbv-section-head">
+    <div class="sh-id">
+      <div class="kbv-eyebrow">Comportamientos</div>
+      <span class="sub">Nada de esto se deduce del dibujo.</span>
+    </div>
+  </div>
+  <ul class="kbv-behavior">
+    <li><span class="k">Registro del día</span><span class="v">Uno por día y por reto. En un reto de construcción pasa por la confirmación; en uno de corte, «Día limpio» se guarda directo y «Recaí hoy» gasta margen. Registrar <strong>siempre suma un día vivido</strong>, se haya cumplido o no.</span></li>
+    <li><span class="k">Deshacer</span><span class="v">Solo la marca de hoy, y solo el mismo día. Devuelve el día, el fallo y el HP descontado, y si el reto se había perdido por ese fallo <strong>lo devuelve a activo</strong>. Ayer ya no se toca.</span></li>
+    <li><span class="k">Pérdida</span><span class="v">Se dispara al superar el margen, no al alcanzarlo. El reto pasa a cerrado sin éxito, cobra <strong>la mitad</strong> de la recompensa y el HP queda en 10 — zona crítica. La aritmética la ejecuta el motor de progresión; esta pantalla pide el cambio y muestra el resultado.</span></li>
+    <li><span class="k">Racha y HP</span><span class="v">Ni el reto ni el hábito son dueños de esas dos cifras: <strong>se calculan en un solo lugar</strong>, el motor de progresión, y las dos pantallas las leen. Un número distinto en dos pantallas es un defecto de esa fuente, no de la vista.</span></li>
+    <li><span class="k">Traspaso a hábito</span><span class="v">Se ofrece al cerrar un reto de construcción, y solo si se marcó al lanzarlo o se pide desde la tarjeta pasada. Crea un hábito <strong>nuevo</strong> con el nombre, el área y la periodicidad del reto, con la racha en cero, y deja el reto cerrado tal como quedó. <strong>No hay conversión automática.</strong></span></li>
+    <li><span class="k">Pausa</span><span class="v">Es afordancia del hábito, no del reto: pausar un hábito deja de contarlo y <strong>no rompe la racha</strong>. Un reto no se pausa — el plazo es la mitad del trato, y detenerlo sería otro reto.</span></li>
+    <li><span class="k">Margen tope</span><span class="v">Los fallos tolerados no pueden pasar del <strong>20 % del plazo</strong>. Al acortar la duración el margen se recorta solo hasta el nuevo tope, sin avisar dos veces: el campo ya muestra el valor recortado.</span></li>
+    <li><span class="k">Qué cuenta como fallo</span><span class="v">Se escribe al lanzar y <strong>queda congelado</strong> mientras el reto corre. Editarlo a media carrera permitiría cambiar la regla después de romperla.</span></li>
+    <li><span class="k">Alta en dúo</span><span class="v">Emite <strong>una propuesta por persona</strong> invitada, salta a la pestaña Compartidos y avisa a quién se invitó. Cada propuesta vive por su cuenta: una aceptada y otra pendiente son dos retos, no uno a medias.</span></li>
+    <li><span class="k">Reto compartido</span><span class="v">El día cierra cuando los dos registran. Con los dos en regla, los dos ganan HP; si alguno falta al cerrar el día, <strong>los dos lo pagan</strong>. Nadie puede registrar por el otro.</span></li>
+    <li><span class="k">Pestañas</span><span class="v">Filtran, no vacían. «Todos» apila las tres secciones por estado y es la única vista donde el hueco de «Activos» se dibuja; en las demás, una sección sin nada simplemente no aparece. Los indicadores <strong>no se filtran</strong>: miden el año, no la vista.</span></li>
+    <li><span class="k">Enlace profundo</span><span class="v">Llegar desde Amigos abre la pestaña Compartidos; con «retar a» abre además el alta en modo dúo con esa persona elegida. Llegar sin destino deja la pantalla en Todos, con el alta cerrada.</span></li>
+    <li><span class="k">Recompensas</span><span class="v">La aritmética de XP, divisa y Elemento vive en el libro mayor de la economía, no aquí: esta pantalla <strong>muestra lo que ese cálculo devuelve</strong>. Las cifras dibujadas son muestra.</span></li>
+    <li><span class="k">Teclado</span><span class="v">Las tarjetas se recorren con Tab y se abren con Enter; los botones de registro son destinos propios dentro de la tarjeta y no la abren. Escape cierra el modal y el foco vuelve al botón que lo abrió; las dos confirmaciones no tienen botón de cerrar, y Escape en ellas equivale a la salida sin registrar.</span></li>
+  </ul>
+</section>
           </div>
         </main>
 
@@ -1142,11 +3127,36 @@
           <button type="button" class="tb"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13l9 5 9-5M3 17l9 5 9-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Más</span></button>
         </nav>
 
-        <!-- El FAB: KIBO mismo. Abre la Rueda de accion, que registra sin navegar. -->
-        <button type="button" class="kbv-fab" aria-label="Abrir la rueda de acción de KIBO">
-          <span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb live" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
-          <span class="plus" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </button>
+        <!-- KIBO, no un boton: el cuerpo de gel con su cara, y de el sale la
+             rueda de acciones rapidas. La cara la mueve el animo; el color del
+             cuerpo es --skin, una piel del usuario, y no se toca aqui. -->
+        <div class="kbv-kibo">
+          <div class="kbv-kibo-actions" role="menu" aria-label="Acciones rápidas de KIBO">
+            <button type="button" class="kbv-kibo-act" role="menuitem" style="--c: var(--kb-primary)">
+              <span class="g" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+              Anotar una tarea
+            </button>
+            <button type="button" class="kbv-kibo-act" role="menuitem" style="--c: var(--kb-streak)">
+              <span class="g" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              Marcar un hábito
+            </button>
+            <button type="button" class="kbv-kibo-act" role="menuitem" style="--c: var(--area-vigor)">
+              <span class="g" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3c2 3 4 5 4 8a4 4 0 1 1-8 0c0-3 2-5 4-8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11c.8 1.5 1.6 2.5 1.6 4a1.6 1.6 0 1 1-3.2 0c0-1.5.8-2.5 1.6-4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              Registrar salud
+            </button>
+            <button type="button" class="kbv-kibo-act" role="menuitem" style="--c: var(--area-wisdom)">
+              <span class="g" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M11 4H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              Escribir en el diario
+            </button>
+            <button type="button" class="kbv-kibo-act" role="menuitem" style="--c: var(--area-community)">
+              <span class="g" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              Hablar con KIBO
+            </button>
+          </div>
+          <button type="button" class="kbv-kibo-trigger" aria-haspopup="menu" aria-expanded="false" aria-label="KIBO · abrir las acciones rápidas">
+            <span class="kbb-host" style="width:72px;height:77px;--s:0.5143" aria-hidden="true"><span class="kbb live" data-mood="feliz"><span class="kbb-ground"></span><span class="kbb-float"><span class="kbb-body"><span class="kbb-tint"></span></span><span class="kbb-faceclip" style="--px:0;--py:-0.24"><span class="kbb-face"><span class="kbb-eyes"><span class="kbb-eye"></span><span class="kbb-eye"></span></span><span class="kbb-cheeks"><span class="kbb-cheek"></span><span class="kbb-cheek"></span></span><svg class="kbb-mouth" viewBox="-17 -10 34 24"><path d="M -4.2 1 q 2.1 2.3 4.2 0 q 2.1 2.3 4.2 0"/></svg></span></span></span></span></span>
+          </button>
+        </div>
 
       </div>
     </div>

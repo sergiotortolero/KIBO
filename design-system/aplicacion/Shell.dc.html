@@ -1449,6 +1449,28 @@
     .smp-row.done .t .n { color: var(--kb-text-2); text-decoration: line-through; }
     .smp-bars { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
     .smp-areas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+  
+    /* Asa deshabilitada: sin esta regla el asa inactiva se dibujaba identica a
+       la activa, y un estado que no se distingue no se puede comparar. */
+    .kbv-icon-btn[disabled], .kbv-icon-btn:disabled {
+      color: var(--kb-text-2); background: transparent; box-shadow: none;
+      cursor: default; opacity: .55;
+    }
+    /* Accion destructiva secundaria: el peligro es del color, no del peso. */
+    .kbv-btn-ghost.danger { color: var(--kb-hp-ink); }
+    .kbv-btn-ghost.danger:hover {
+      background: color-mix(in oklab, var(--kb-hp) var(--kb-wash-amt), var(--kb-wash-anchor));
+    }
+    .kbv-btn-ghost.danger:focus-visible { box-shadow: var(--kb-danger-halo); }
+    /* Cargando (§6.1): la primera pantalla que lo necesito ya llego. El rotulo
+       se mantiene para que el boton no cambie de ancho al entrar en curso. */
+    .kbv-btn[aria-busy="true"] { cursor: progress; pointer-events: none; }
+    .kbv-btn[aria-busy="true"] > :not(.kbv-spin) { opacity: .45; }
+    .kbv-spin { width: 16px; height: 16px; flex: none; border-radius: 50%;
+      border: 2px solid color-mix(in oklab, currentColor var(--kb-wash-amt), transparent);
+      border-top-color: currentColor; animation: kbv-spin .7s linear infinite; }
+    @keyframes kbv-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .kbv-spin { animation-duration: 2.4s; } }
   </style>
 </helmet>
 <!-- La lamina fija 1440x900 (es el visor, no un valor de diseno) y CLAVA los
