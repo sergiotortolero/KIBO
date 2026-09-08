@@ -278,7 +278,7 @@
     /* La cara lleva el color a plena fuerza y el rotulo lo decide el color,
        no el boton: sobre la marca plena el blanco mide 3.06 y la tinta 6.18. */
     .kbv-btn-primary, .kbv-btn-danger {
-      --lip: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      --lip: oklch(from var(--c) calc(var(--kb-face-l) - 0.16) var(--kb-face-c) h);
       background: var(--face); color: var(--on-face);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
