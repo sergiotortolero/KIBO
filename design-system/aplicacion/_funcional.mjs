@@ -86,7 +86,7 @@ for (let g = 0; g < 20; g++) {
   if (!mm) break;
   const tag = mm[1], mo = mm[3], ini = mm.index;
   if (!MOMENTOS.includes(mo)) MOMENTOS.push(mo);
-  const re = new RegExp('<' + tag + '\b|</' + tag + '>', 'g');
+  const re = new RegExp('<' + tag + '(?=[ >/])|</' + tag + '>', 'g');
   re.lastIndex = ini;
   let d = 0, f2 = -1, x;
   while ((x = re.exec(t))) {

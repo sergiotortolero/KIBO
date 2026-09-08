@@ -5,9 +5,13 @@
        ========================================================================== */
 
     /* La quinta variante del boton (DS 6.1), que el armazon todavia no publica. */
-    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
-                    height: auto; padding: 0; border: 0; font-size: var(--kb-fs-md);
-                    text-underline-offset: 3px; }
+    .kbv-btn-link { position: relative; background: transparent; color: var(--kb-primary-ink);
+                    box-shadow: none; height: auto; padding: 0; border: 0;
+                    font-size: var(--kb-fs-md); text-underline-offset: 3px; }
+    /* Dibuja el alto de su texto y TOCA 44: la zona es transparente y centrada,
+       nunca se agranda el dibujo del enlace (DS 4.4). */
+    .kbv-btn-link::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
+                           height: var(--kb-touch-min); transform: translateY(-50%); }
     .kbv-btn-link:hover { text-decoration: underline; }
     .kbv-btn-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .tone-boss { --c: var(--kb-boss); }
@@ -323,6 +327,42 @@
     .kbv-gal-item .sizes { font-family: var(--kb-f-display); font-size: var(--kb-fs-xs); font-weight: 700;
                            color: var(--kb-text-2); font-variant-numeric: tabular-nums; }
 
+    /* ── Los tres paneles por momento del dia ────────────────────────────
+       Hermanos marcados con data-momento; el ensamblador muestra uno y oculta
+       los otros dos. En la lamina se dibujan los tres, uno debajo del otro. */
+    .kbv-momentos { display: flex; flex-direction: column; gap: var(--kb-sp-9); }
+    .kbv-momento { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+
+    /* El saludo: la hora escoge la formula, el nombre viene del perfil. */
+    .kbv-greet { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
+    .kbv-greet-set { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+                     gap: var(--kb-sp-6); }
+    .kbv-greet-card { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+    .kbv-greet-card .say { font-family: var(--kb-f-display); font-weight: 800;
+                           font-size: var(--kb-fs-xl); line-height: var(--kb-lh-tight);
+                           letter-spacing: -.015em; color: var(--kb-text); }
+    .kbv-greet-card .when { display: flex; align-items: center; gap: var(--kb-sp-3);
+                            font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-greet-card .when svg { flex: none; color: var(--kb-text-2); }
+
+    /* ── Widget premium ──────────────────────────────────────────────────
+       No se esconde: ocupa su sitio en el tablero, apagado a la superficie
+       hundida y con su precio. Tocarlo abre la Tienda, no el widget. */
+    .kbv-widget.locked { background: var(--kb-surface-2); border-color: var(--kb-border);
+                         box-shadow: none; cursor: pointer; text-align: left;
+                         font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
+                         color: var(--kb-text); }
+    .kbv-widget.locked:hover { border-color: var(--kb-primary); }
+    .kbv-widget.locked:focus-visible { outline: none; border-color: var(--kb-primary);
+                                       box-shadow: var(--kb-focus-halo); }
+    /* Una tarjeta que ademas es boton: el agente de usuario centra sus hijos,
+       y la tarjeta necesita que se estiren a lo ancho. */
+    .kbv-widget.locked, .kbv-gal-kpi { align-items: stretch; }
+    .kbv-widget.locked .kbv-widget-inner { justify-content: space-between; }
+    .kbv-widget.locked .kbv-w-ico { background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-w-lock { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; flex: none; }
+    .kbv-w-lock .glyph { flex: none; display: flex; color: var(--kb-text-2); }
+
     /* ── El bloque de comportamiento, para quien lo construya ────────────── */
     .kbv-behavior { display: flex; flex-direction: column; gap: var(--kb-sp-4);
                     margin: 0; padding: 0; list-style: none; }
@@ -347,24 +387,24 @@
         <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
         <span>Lun 25 May</span>
       </nav>
-      <div style="display:flex; align-items:center; gap:var(--kb-sp-4)">
-        <h1 class="kbv-h1">Buenas tardes, Sergio.</h1>
+      <div class="kbv-greet">
+        <h1 class="kbv-h1">Buenas tardes, Mateo.</h1>
         <button type="button" class="kbv-icon-btn" aria-label="Cómo funciona tu tablero" aria-expanded="false">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.6v.6"/></svg>
         </button>
       </div>
     </div>
     <div class="ph-act">
-      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero">
-        <button type="button" class="on" aria-pressed="true" title="Hábitos y racha primero; el día por delante.">
+      <div class="kbv-seg" role="tablist" aria-label="Momento del día">
+        <button type="button" class="on" role="tab" id="tab-manana" aria-selected="true" aria-controls="panel-manana" data-ir-momento="manana" data-momento-inicial="1" title="Lo que arranca el día: hábitos, cronograma y cómo vas.">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4v3M5.6 9.6l2 2M18.4 9.6l-2 2M3 17h18M8 17a4 4 0 0 1 8 0"/></svg>
           Mañana
         </button>
-        <button type="button" aria-pressed="false" title="Tareas y proyectos al frente; lo demás abajo.">
+        <button type="button" role="tab" id="tab-trabajo" aria-selected="false" aria-controls="panel-trabajo" data-ir-momento="trabajo" title="Tareas, proyectos y foco.">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
           Trabajo
         </button>
-        <button type="button" aria-pressed="false" title="Cierre del día: diario, lectura y balance.">
+        <button type="button" role="tab" id="tab-noche" aria-selected="false" aria-controls="panel-noche" data-ir-momento="noche" title="El cierre: diario, lectura, pelis y cómo quedó el día.">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>
           Noche
         </button>
@@ -381,10 +421,65 @@
   </div>
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       2 · EL TABLERO EN VISTA (editing = false)
-       4 columnas x 9 filas. 15 widgets del arreglo por defecto, sin controles.
+       2 · EL TABLERO, POR MOMENTO DEL DIA (editing = false)
+       Tres juegos de widgets, no tres ordenes del mismo juego. Cada panel
+       lleva su data-momento; el ensamblador muestra el de la pestana activa.
+       En la lamina se dibujan los tres, para poder compararlos.
        ══════════════════════════════════════════════════════════════════ -->
-  <div class="kbv-canvas-grid kbv-board">
+  <div class="kbv-momentos">
+
+  <section class="kbv-momento" id="panel-manana" role="tabpanel" aria-labelledby="tab-manana" data-momento="manana">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Mañana</div>
+        <span class="sub">Lo que arranca el día: qué toca, qué vence y cómo vas antes de empezar.</span>
+      </div>
+      <div class="sh-act">
+        <span class="kbv-meta">9 widgets · 3 premium</span>
+      </div>
+    </div>
+
+    <div class="kbv-canvas-grid kbv-board">
+
+    <!-- coach · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--kb-primary)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Kibo coach</span><span class="m">lo primero de hoy</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap">Te faltan <b>dos hábitos</b> antes de las 9. Si arrancas con estiramientos sostienes la racha de <b>23 días</b>.</span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip">Empezar</button>
+            <button type="button" class="kbv-chip">Otro consejo</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- highlight · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--kb-xp)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Cómo vas hoy</span><span class="m">47 XP de 120</span></span>
+          <span class="kbv-tag tint" style="--c: var(--kb-xp)">39 %</span>
+        </div>
+        <div class="kbv-w-list">
+          <div class="kbv-w-row tone-streak" style="cursor:default">
+            <span class="t">Hábitos</span>
+            <span class="kbv-progress xs kbv-w-bar tone-streak"><span class="fill" style="width:50%"></span></span>
+            <span class="kbv-w-num">2 / 4</span>
+          </div>
+          <div class="kbv-w-row tone-xp" style="cursor:default">
+            <span class="t">Tareas</span>
+            <span class="kbv-progress xs kbv-w-bar tone-xp"><span class="fill" style="width:14%"></span></span>
+            <span class="kbv-w-num">1 / 7</span>
+          </div>
+        </div>
+      </div>
+    </article>
 
     <!-- habits · 4x1 -->
     <article class="kbv-widget kbv-card compact w-4" style="--c: var(--kb-streak)">
@@ -468,6 +563,81 @@
         </div>
       </div>
     </article>
+
+    <!-- economy · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--kb-coin)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Bolsa</span><span class="m">hoy +120</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-big">1 480 <span class="unit">Divisa</span></span>
+          <span class="kbv-w-cap"><b>12</b> en Elemento · listo para la Tienda</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- weather · 1x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked" style="--c: var(--kb-primary)" aria-label="Clima del día · widget premium · 600 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4v3M5.6 9.6l2 2M18.4 9.6l-2 2M3 17h18M8 17a4 4 0 0 1 8 0"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Clima del día</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">El pronóstico de tu ciudad y qué hábitos te convienen con él.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">600 Divisa</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- nextHabit · 1x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked" style="--c: var(--kb-streak)" aria-label="Próximo hábito · widget premium · 90 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Próximo hábito</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">El que sigue por horario, con su cuenta regresiva.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">90 Divisa</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- retoDays · 1x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked" style="--c: var(--kb-boss)" aria-label="Días de reto · widget premium · 120 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 20l6-6M14 10l6-6M14 4h6v6"/><path d="M4 4l16 16"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Días de reto</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Los días que te quedan y la línea de fallos del reto en curso.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">120 Divisa</span>
+        </span>
+      </span>
+    </button>
+
+    </div>
+  </section>
+
+  <section class="kbv-momento" id="panel-trabajo" role="tabpanel" aria-labelledby="tab-trabajo" data-momento="trabajo">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Trabajo</div>
+        <span class="sub">La jornada: lo que hay que sacar, en qué proyecto cae y con cuánto foco.</span>
+      </div>
+      <div class="sh-act">
+        <span class="kbv-meta">9 widgets · 3 premium</span>
+      </div>
+    </div>
+
+    <div class="kbv-canvas-grid kbv-board">
 
     <!-- tasks · 4x2 -->
     <article class="kbv-widget kbv-card compact w-4 h-2" style="--c: var(--kb-primary)">
@@ -577,6 +747,29 @@
       </div>
     </article>
 
+    <!-- tasksPriority · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--pri-urgent)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Por prioridad</span><span class="m">2 urgentes · 3 altas</span></span>
+          <button type="button" class="kbv-btn kbv-btn-link">Ver todas</button>
+        </div>
+        <div class="kbv-w-list">
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-wealth)">
+            <span class="kbv-pri urgent" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4v10"/><path d="M12 18.6v.4"/></svg></span>
+            <span class="t">Cerrar cliente Aurora<em>Riqueza · vence hoy</em></span>
+            <span class="kbv-areapill" style="--c: var(--area-wealth)"><i class="dot" aria-hidden="true"></i>Riqueza</span>
+          </button>
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-wisdom)">
+            <span class="kbv-pri high" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 14l6-6 6 6"/></svg></span>
+            <span class="t">Revisar módulo de reportes<em>Sabiduría · en 2 d</em></span>
+            <span class="kbv-areapill" style="--c: var(--area-wisdom)"><i class="dot" aria-hidden="true"></i>Sabiduría</span>
+          </button>
+        </div>
+      </div>
+    </article>
+
     <!-- backlog · 1x1 -->
     <article class="kbv-widget kbv-card compact" style="--c: var(--kb-text-2)">
       <div class="kbv-widget-inner">
@@ -598,6 +791,99 @@
         </div>
       </div>
     </article>
+
+    <!-- projectsActive · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--area-wisdom)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Proyectos activos</span><span class="m">2 sin avance</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-big">5 <span class="unit">en curso</span></span>
+          <span class="kbv-w-cap">1 por entregar esta semana</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- pomodoro · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--area-wisdom)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12.5" r="8"/><path d="M12 8.5v4.5l3 1.5"/><path d="M9.5 2.5h5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Pomodoro</span><span class="m">3 bloques hoy</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-big">25:00</span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip">Iniciar</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- tasksTimeline · 1x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked" style="--c: var(--kb-primary)" aria-label="Timeline de tareas · widget premium · 180 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Timeline de tareas</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Tu semana en barras: qué empieza, qué se encima y qué se pasa.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">180 Divisa</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- projectsProgress · 2x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked w-2" style="--c: var(--kb-xp)" aria-label="Avance proyectos · widget premium · 150 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Avance proyectos</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">El avance derivado de cada proyecto, uno por uno, con su porcentaje y su conteo de tareas.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">150 Divisa</span>
+          <span class="kbv-meta">Se desbloquea desde la Tienda.</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- goals · 2x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked w-2" style="--c: var(--kb-medal)" aria-label="Metas trimestrales · widget premium · 300 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Metas trimestrales</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Los objetivos del trimestre con su avance, para que el día tenga a dónde sumar.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">300 Divisa</span>
+          <span class="kbv-meta">Se desbloquea desde la Tienda.</span>
+        </span>
+      </span>
+    </button>
+
+    </div>
+  </section>
+
+  <section class="kbv-momento" id="panel-noche" role="tabpanel" aria-labelledby="tab-noche" data-momento="noche">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Noche</div>
+        <span class="sub">El cierre: qué quedó del día, qué se registra y con qué se termina.</span>
+      </div>
+      <div class="sh-act">
+        <span class="kbv-meta">17 widgets · 4 premium</span>
+      </div>
+    </div>
+
+    <div class="kbv-canvas-grid kbv-board">
 
     <!-- streak · 1x1 -->
     <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--kb-streak)">
@@ -766,6 +1052,139 @@
       </div>
     </article>
 
+    <!-- readingSession · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--area-wisdom)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12.5" r="8"/><path d="M12 8.5v4.5l3 1.5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Sesión de lectura</span><span class="m">ayer 35 min</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap">Arranca el cronómetro y anota las páginas al cerrar.</span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip">Empezar sesión</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- nextEpisode · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--kb-media)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 4.5l12 7.5-12 7.5z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Siguiente episodio</span><span class="m">42 min</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap"><b>Severance</b> · T2 E08</span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip">Marcar visto</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- moodPicker · 1x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked" style="--c: var(--area-community)" aria-label="Solo mood · widget premium · 80 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5v.5M15 9.5v.5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Solo mood</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Marcar cómo te fue con un toque, sin escribir nada.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">80 Divisa</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- prompt · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--area-community)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Prompt diario</span><span class="m">pregunta de hoy</span></span>
+          <button type="button" class="kbv-icon-btn" aria-label="Cambiar la pregunta">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.4h-4.4"/></svg>
+          </button>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap"><b>¿Qué te costó más trabajo hoy, y por qué lo hiciste de todos modos?</b></span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip">Responder</button>
+            <button type="button" class="kbv-chip">Saltar hoy</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- weekMood · 2x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked w-2" style="--c: var(--area-community)" aria-label="Mood semanal · widget premium · 150 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 16.5l5-5 4 4 8-8"/><path d="M15 7.5h5v5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Mood semanal</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Los siete días en una línea: en qué días caes y con qué coinciden.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">150 Divisa</span>
+          <span class="kbv-meta">Se desbloquea desde la Tienda.</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- photo · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--kb-media)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 8a2 2 0 0 1 2-2h2.5l1.5-2h6l1.5 2H19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.5" r="3.5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Foto del día</span><span class="m">sin subir</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap">Una imagen que represente el día de hoy.</span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip">Subir foto</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- gratitude · 1x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked" style="--c: var(--kb-medal)" aria-label="Gratitud · widget premium · 80 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Gratitud</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Una línea de algo que agradeces, y el registro de las anteriores.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">80 Divisa</span>
+        </span>
+      </span>
+    </button>
+
+    <!-- watchYear · 2x1 · premium -->
+    <button type="button" class="kbv-widget kbv-card compact locked w-2" style="--c: var(--kb-media)" aria-label="Visto este año · widget premium · 200 Divisa en la Tienda">
+      <span class="kbv-widget-inner">
+        <span class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Visto este año</span><span class="m">premium</span></span>
+        </span>
+        <span class="kbv-w-cap">Tu resumen anual: películas, series, horas y salidas al cine.</span>
+        <span class="kbv-w-lock">
+          <span class="glyph" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+          <span class="kbv-price coin">200 Divisa</span>
+          <span class="kbv-meta">Se desbloquea desde la Tienda.</span>
+        </span>
+      </span>
+    </button>
+
+    </div>
+  </section>
+
   </div>
   <!-- ══════════════════════════════════════════════════════════════════════
        3 · ESTADO · EDICION (editing = true)
@@ -776,7 +1195,7 @@
     <div class="kbv-section-head">
       <div class="sh-id">
         <div class="kbv-eyebrow">Estado · edición del tablero</div>
-        <span class="sub">Con «Editar dashboard» presionado. La cabecera cambia el botón por «Listo» en primario.</span>
+        <span class="sub">Con «Editar dashboard» presionado. La cabecera cambia el botón por «Listo» en primario, y se edita <strong>solo el momento a la vista</strong> — aquí, Mañana.</span>
       </div>
       <div class="sh-act">
         <button type="button" class="kbv-btn kbv-btn-primary sm" aria-pressed="true">
@@ -999,49 +1418,50 @@
   </section>
 
   <!-- ══════════════════════════════════════════════════════════════════════
-       5 · ESTADO · PRESET DE TABLERO
-       Tres arreglos por momento del dia. El preset REORDENA lo que ya tienes y
-       agranda un widget; nunca agrega uno que habria que comprar.
+       5 · LAS PESTANAS DE MOMENTO, EN SUS TRES ESTADOS
+       Cada pestana lleva data-ir-momento y trae SU juego de widgets. La que
+       abre la pantalla la decide el reloj y queda marcada con
+       data-momento-inicial; despues manda la ultima que el usuario toco.
        ══════════════════════════════════════════════════════════════════ -->
   <section class="kbv-section">
     <div class="kbv-section-head">
       <div class="sh-id">
-        <div class="kbv-eyebrow">Estado · preset activo y sin preset</div>
-        <span class="sub">El preset se recuerda entre sesiones y se vuelve a aplicar al abrir la pantalla.</span>
+        <div class="kbv-eyebrow">Pestañas de momento · los tres estados</div>
+        <span class="sub">La misma tira, con cada momento activo. Cambiar de pestaña cambia el juego de widgets, no su orden.</span>
       </div>
-    </div>
-    <div class="kbv-filter-bar">
-      <span class="lbl">Sin preset</span>
-      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero, ninguno activo">
-        <button type="button" aria-pressed="false">Mañana</button>
-        <button type="button" aria-pressed="false">Trabajo</button>
-        <button type="button" aria-pressed="false">Noche</button>
-      </div>
-      <span class="grow"></span>
-      <span class="kbv-meta">Orden por defecto de los 15 widgets.</span>
     </div>
     <div class="kbv-filter-bar">
       <span class="lbl">Mañana</span>
-      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero, Mañana activo">
-        <button type="button" class="on" aria-pressed="true">Mañana</button>
-        <button type="button" aria-pressed="false">Trabajo</button>
-        <button type="button" aria-pressed="false">Noche</button>
+      <div class="kbv-seg" role="tablist" aria-label="Momento del día, Mañana activo">
+        <button type="button" class="on" role="tab" aria-selected="true">Mañana</button>
+        <button type="button" role="tab" aria-selected="false">Trabajo</button>
+        <button type="button" role="tab" aria-selected="false">Noche</button>
       </div>
       <span class="grow"></span>
-      <span class="kbv-meta">Hábitos, racha, reto y cronograma al frente; <strong>Hábitos</strong> crece a 4 de ancho.</span>
+      <span class="kbv-meta">Abre sola antes de las 12:00. <strong>9 widgets</strong>, 3 de ellos premium.</span>
     </div>
     <div class="kbv-filter-bar">
       <span class="lbl">Trabajo</span>
-      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero, Trabajo activo">
-        <button type="button" aria-pressed="false">Mañana</button>
-        <button type="button" class="on" aria-pressed="true">Trabajo</button>
-        <button type="button" aria-pressed="false">Noche</button>
+      <div class="kbv-seg" role="tablist" aria-label="Momento del día, Trabajo activo">
+        <button type="button" role="tab" aria-selected="false">Mañana</button>
+        <button type="button" class="on" role="tab" aria-selected="true">Trabajo</button>
+        <button type="button" role="tab" aria-selected="false">Noche</button>
       </div>
       <span class="grow"></span>
-      <span class="kbv-meta">Tareas, proyectos, cronograma y backlog al frente; <strong>Tareas</strong> crece a 4 de ancho.</span>
+      <span class="kbv-meta">Abre sola de 12:00 a 19:00. <strong>9 widgets</strong>, 3 de ellos premium.</span>
+    </div>
+    <div class="kbv-filter-bar">
+      <span class="lbl">Noche</span>
+      <div class="kbv-seg" role="tablist" aria-label="Momento del día, Noche activo">
+        <button type="button" role="tab" aria-selected="false">Mañana</button>
+        <button type="button" role="tab" aria-selected="false">Trabajo</button>
+        <button type="button" class="on" role="tab" aria-selected="true">Noche</button>
+      </div>
+      <span class="grow"></span>
+      <span class="kbv-meta">Abre sola a partir de las 19:00. <strong>17 widgets</strong>, 4 de ellos premium.</span>
     </div>
     <div class="kbv-tip-wrap">
-      <span class="kbv-tip">Tu dashboard se acomoda solo. 4 columnas, hasta 9 filas — cada widget va de 1×1 a 4×4. Arrastra, redimensiona y explora más en la galería.</span>
+      <span class="kbv-tip">Cada momento es su propio tablero. 4 columnas, hasta 9 filas — cada widget va de 1×1 a 4×4. Arrastra, redimensiona y explora más en la galería.</span>
       <span class="kbv-meta">Ayuda del encabezado, abierta desde el punto de información.</span>
     </div>
   </section>
@@ -1054,13 +1474,13 @@
     <div class="kbv-section-head">
       <div class="sh-id">
         <div class="kbv-eyebrow">Estado · tablero vacío</div>
-        <span class="sub">Sin ningún widget en el arreglo. Ocupa el lugar de la rejilla.</span>
+        <span class="sub">Usuario nuevo, o un momento al que le quitaron todos sus widgets. Ocupa el lugar de la rejilla, dentro del panel del momento.</span>
       </div>
     </div>
     <div class="kbv-empty">
       <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg></span>
-      <span class="ttl">Tu tablero está vacío</span>
-      <span class="desc">Aquí va lo que quieres ver al abrir el día: hábitos, tareas, tu reto, lo que vence. Agrega el primero desde la galería o vuelve al arreglo con el que empezaste.</span>
+      <span class="ttl">Tu mañana está en blanco</span>
+      <span class="desc">Aquí va lo que quieres ver al abrir el día: hábitos, tu reto, lo que vence, cómo vas. Son 44 widgets en ocho categorías y 26 no cuestan nada. Agrega el primero desde la galería, o empieza con el tablero que trae Kibo.</span>
       <span class="acts">
         <button type="button" class="kbv-btn kbv-btn-primary">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
@@ -1212,4 +1632,387 @@
       <span class="kbv-price"><span class="kbv-facet" aria-hidden="true"></span>8<span class="kbv-sr-only"> </span>Elemento</span>
     </button>
   </section>
+  <!-- ══════════════════════════════════════════════════════════════════════
+       10 · GALERIA DE WIDGETS (modal sobre el tablero)
+       La abre «Explorar widgets». El indice de arriba son las ocho categorias
+       con su conteo; el cuerpo muestra UNA categoria a la vez, y es la misma
+       forma para las ocho. Lo premium se marca con su precio, no se esconde.
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Modal · explorar widgets</div>
+        <span class="sub">44 widgets en ocho categorías: 26 gratis y 18 premium. Se abre encima del tablero, sin sacarte del momento en el que estabas.</span>
+      </div>
+    </div>
+
+    <div class="kbv-stage">
+      <div class="under">
+        <div class="kbv-canvas-grid kbv-board" style="grid-auto-rows: 96px">
+          <article class="kbv-widget kbv-card compact w-2" style="--c: var(--kb-streak)">
+            <div class="kbv-widget-inner">
+              <div class="kbv-w-head">
+                <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+                <span class="kbv-w-id"><span class="n">Hábitos de hoy</span><span class="m">2 de 4 hechos</span></span>
+              </div>
+            </div>
+          </article>
+          <article class="kbv-widget kbv-card compact" style="--c: var(--kb-primary)">
+            <div class="kbv-widget-inner">
+              <div class="kbv-w-head">
+                <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></svg></span>
+                <span class="kbv-w-id"><span class="n">Cronograma</span><span class="m">1 vencido</span></span>
+              </div>
+            </div>
+          </article>
+          <article class="kbv-widget kbv-card compact" style="--c: var(--kb-coin)">
+            <div class="kbv-widget-inner">
+              <div class="kbv-w-head">
+                <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg></span>
+                <span class="kbv-w-id"><span class="n">Bolsa</span><span class="m">hoy +120</span></span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <div class="kbv-modal-veil" role="dialog" aria-modal="true" aria-labelledby="gal-title">
+        <div class="kbv-modal-card full">
+          <div class="kbv-modal-head">
+            <div class="id">
+              <div class="title" id="gal-title">Explora los widgets</div>
+              <span class="sub">Agrégalos al momento que tienes abierto — ahora, <strong>Mañana</strong>. Los premium se desbloquean en la Tienda con Divisa o con Elemento.</span>
+            </div>
+            <button type="button" class="kbv-modal-close" aria-label="Cerrar la galería">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <div class="kbv-modal-body">
+            <div class="kbv-gal-kpis">
+              <button type="button" class="kbv-kpi kbv-gal-kpi on" style="--c: var(--kb-primary)" aria-pressed="true">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Hoy</span>
+                <span class="body">
+                  <span class="desc">Coach, resumen del día, bolsa y racha.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">16</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">13</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">3</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--kb-streak)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg>Personal</span>
+                <span class="body">
+                  <span class="desc">Hábitos y retos — tu disciplina diaria.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">4</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">2</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">2</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--pri-urgent)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>Trabajo</span>
+                <span class="body">
+                  <span class="desc">Tareas y proyectos, con prioridad y plan.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">4</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">2</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">2</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--area-community)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>Diario</span>
+                <span class="body">
+                  <span class="desc">Mood, gratitud y bitácora del día.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">6</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">3</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">3</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--area-wisdom)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v14"/></svg>Lectura</span>
+                <span class="body">
+                  <span class="desc">Libro activo, sesiones y notas.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">3</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">2</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">1</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--area-will)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4"/></svg>Estudio</span>
+                <span class="body">
+                  <span class="desc">Pomodoro, cursos y próxima clase.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">3</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">1</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">2</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--kb-media)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14"/></svg>Entretenimiento</span>
+                <span class="body">
+                  <span class="desc">Pelis, series, videojuegos y el resumen anual.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">4</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">2</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">2</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+              <button type="button" class="kbv-kpi kbv-gal-kpi" style="--c: var(--area-wealth)" aria-pressed="false">
+                <span class="band"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg>Finanzas</span>
+                <span class="body">
+                  <span class="desc">Balance, gastos, presupuesto y suscripciones.</span>
+                  <span class="kbv-gal-stats">
+                    <span class="kbv-gal-stat"><span class="n">4</span><span class="l">widgets</span></span>
+                    <span class="kbv-gal-stat free"><span class="n">1</span><span class="l">gratis</span></span>
+                    <span class="kbv-gal-stat prem"><span class="n">3</span><span class="l">premium</span></span>
+                  </span>
+                </span>
+              </button>
+            </div>
+
+            <div class="kbv-section-head">
+              <div class="sh-id">
+                <div class="kbv-eyebrow">Hoy · 16 widgets</div>
+                <span class="sub">La categoría abierta. Las otras siete se ven igual: cambia el contenido, nunca la forma.</span>
+              </div>
+              <div class="sh-act">
+                <span class="kbv-meta">3 ya están en tu tablero de Mañana</span>
+              </div>
+            </div>
+
+            <div class="kbv-gal-grid">
+              <button type="button" class="kbv-gal-item" disabled="disabled" style="--c: var(--kb-primary)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+                  <span class="name">Kibo coach</span>
+                </span>
+                <span class="desc">Lo que KIBO te diría ahora mismo, según tus prioridades.</span>
+                <span class="sizes">1×1 · 2×1 · 4×2</span>
+                <span class="kbv-tag solid" style="--c: var(--kb-text-2)">Ya en tu tablero</span>
+              </button>
+              <button type="button" class="kbv-gal-item" disabled="disabled" style="--c: var(--kb-xp)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span>
+                  <span class="name">Cómo vas hoy</span>
+                </span>
+                <span class="desc">Hábitos y tareas del día, con el XP que llevas.</span>
+                <span class="sizes">1×1 · 2×1 · 4×2</span>
+                <span class="kbv-tag solid" style="--c: var(--kb-text-2)">Ya en tu tablero</span>
+              </button>
+              <button type="button" class="kbv-gal-item" disabled="disabled" style="--c: var(--kb-coin)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="8"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15"/></svg></span>
+                  <span class="name">Bolsa</span>
+                </span>
+                <span class="desc">Tu Divisa y tu Elemento. Grande: los movimientos recientes.</span>
+                <span class="sizes">1×1 · 2×1 · 4×2</span>
+                <span class="kbv-tag solid" style="--c: var(--kb-text-2)">Ya en tu tablero</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-streak)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+                  <span class="name">Racha global</span>
+                </span>
+                <span class="desc">Días seguidos, protectores disponibles y tu récord.</span>
+                <span class="sizes">1×1 · 2×1 · 4×2</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-boss)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span>
+                  <span class="name">Reto activo</span>
+                </span>
+                <span class="desc">El reto en curso y el día en el que vas.</span>
+                <span class="sizes">1×1 · 2×1 · 4×1</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-streak)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+                  <span class="name">Hábitos de hoy</span>
+                </span>
+                <span class="desc">Tarjeta por hábito con su horario, su XP y su casilla.</span>
+                <span class="sizes">1×1 · 2×2 · 4×1 · 4×2</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-primary)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+                  <span class="name">Tareas de hoy</span>
+                </span>
+                <span class="desc">Lista priorizada; en 4×2 se abre en tablero por estatus.</span>
+                <span class="sizes">1×1 · 2×2 · 4×2 · 4×3</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-primary)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></svg></span>
+                  <span class="name">Cronograma</span>
+                </span>
+                <span class="desc">Lo que vence pronto, del mismo cronograma de Proyectos.</span>
+                <span class="sizes">1×1 · 2×1 · 2×2 · 4×1</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--area-wisdom)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+                  <span class="name">Proyectos</span>
+                </span>
+                <span class="desc">En curso, con el avance derivado de sus tareas.</span>
+                <span class="sizes">1×1 · 2×1 · 2×2 · 4×1</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-text-2)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+                  <span class="name">Backlog</span>
+                </span>
+                <span class="desc">Cuánto hay abierto y en qué momento cae.</span>
+                <span class="sizes">1×1 · 2×1 · 2×2</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-medal)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 8l4 4 4-7 4 7 4-4-2 11H6z"/></svg></span>
+                  <span class="name">Prestigio</span>
+                </span>
+                <span class="desc">Tu rango con el nombre de la familia que elegiste.</span>
+                <span class="sizes">1×1 · 2×1</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-coin)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 16.5l6.5-6.5 4 4L21 7"/><path d="M15 7h6v6"/></svg></span>
+                  <span class="name">De dónde salieron</span>
+                </span>
+                <span class="desc">Qué te está pagando: hábitos, tareas o retos.</span>
+                <span class="sizes">1×1 · 2×1 · 2×2</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-primary)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+                  <span class="name">Personalización</span>
+                </span>
+                <span class="desc">Atajo a KIBO, tu carta, prestigios y divisas.</span>
+                <span class="sizes">1×1 · 2×1</span>
+                <span class="kbv-tag tint" style="--c: var(--kb-primary)">Gratis</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-boss)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 20l6-6M14 10l6-6M14 4h6v6"/><path d="M4 4l16 16"/></svg></span>
+                  <span class="name">Panel de combate</span>
+                </span>
+                <span class="desc">Métricas de reto avanzadas y bitácora de daño.</span>
+                <span class="sizes">1×1 · 4×2</span>
+                <span class="kbv-price"><span class="kbv-facet" aria-hidden="true"></span>200 Elemento · Tienda</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-primary)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4v3M5.6 9.6l2 2M18.4 9.6l-2 2M3 17h18M8 17a4 4 0 0 1 8 0"/></svg></span>
+                  <span class="name">Clima del día</span>
+                </span>
+                <span class="desc">Pronóstico y qué hábitos te convienen con él.</span>
+                <span class="sizes">1×1 · 4×2</span>
+                <span class="kbv-price coin">600 Divisa · Tienda</span>
+              </button>
+              <button type="button" class="kbv-gal-item" style="--c: var(--kb-medal)">
+                <span class="top">
+                  <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span>
+                  <span class="name">Metas trimestrales</span>
+                </span>
+                <span class="desc">Objetivos de largo plazo con su avance visual.</span>
+                <span class="sizes">1×1 · 4×2</span>
+                <span class="kbv-price coin">300 Divisa · Tienda</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="kbv-modal-foot">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Restaurar el tablero por defecto</button>
+            <div class="right">
+              <button type="button" class="kbv-btn kbv-btn-secondary">Ir a la Tienda</button>
+              <button type="button" class="kbv-btn kbv-btn-primary">Listo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       11 · EL SALUDO · LAS TRES VARIANTES
+       Un mismo encabezado con tres formulas. El reloj que escoge el saludo es
+       EL MISMO que escoge la pestana inicial: una regla, dos consecuencias.
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Saludo contextual · mañana · tarde · noche</div>
+        <span class="sub">La hora escoge la fórmula, el perfil pone el nombre y la migaja lleva el grupo del menú y el día. Nunca se saluda genérico.</span>
+      </div>
+    </div>
+    <div class="kbv-greet-set">
+      <div class="kbv-card compact kbv-greet-card">
+        <span class="when">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4v3M5.6 9.6l2 2M18.4 9.6l-2 2M3 17h18M8 17a4 4 0 0 1 8 0"/></svg>
+          00:00 — 11:59 · abre en Mañana
+        </span>
+        <span class="say">Buenos días, Mateo.</span>
+        <span class="kbv-meta">General · Lun 25 May</span>
+      </div>
+      <div class="kbv-card compact kbv-greet-card">
+        <span class="when">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.2 5.2l1.4 1.4M17.4 17.4l1.4 1.4M18.8 5.2l-1.4 1.4M6.6 17.4l-1.4 1.4"/></svg>
+          12:00 — 18:59 · abre en Trabajo
+        </span>
+        <span class="say">Buenas tardes, Mateo.</span>
+        <span class="kbv-meta">General · Lun 25 May</span>
+      </div>
+      <div class="kbv-card compact kbv-greet-card">
+        <span class="when">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>
+          19:00 — 23:59 · abre en Noche
+        </span>
+        <span class="say">Buenas noches, Mateo.</span>
+        <span class="kbv-meta">General · Lun 25 May</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       12 · COMPORTAMIENTO
+       Lo que el dibujo no puede decir. Una linea por comportamiento no obvio.
+       ══════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Comportamiento</div>
+        <span class="sub">Para quien lo construya. Nada de esto se deduce del dibujo.</span>
+      </div>
+    </div>
+    <ul class="kbv-behavior">
+      <li><span class="k">Saludo</span><span class="v">Tres fórmulas por hora local del dispositivo: <strong>&lt; 12:00</strong> «Buenos días», <strong>12:00 – 18:59</strong> «Buenas tardes», <strong>≥ 19:00</strong> «Buenas noches». El nombre es el del perfil y se corta al primer nombre. Sin nombre en el perfil, el saludo va solo, nunca con un genérico como «Hola, usuario».</span></li>
+      <li><span class="k">Pestaña inicial</span><span class="v">El mismo reloj escoge el momento con el que abre la pantalla, y esa pestaña llega marcada con <strong>data-momento-inicial</strong>. A partir de ahí manda la última que el usuario tocó en la sesión; al día siguiente vuelve a decidir el reloj.</span></li>
+      <li><span class="k">Cambiar de pestaña</span><span class="v">Cambia el <strong>juego</strong> de widgets, no su orden: cada momento guarda sus propios widgets, tamaños y posiciones. Añadir un widget en Mañana no lo pone en Noche. El cambio es inmediato y no recarga los datos ya leídos.</span></li>
+      <li><span class="k">Arrastrar un widget</span><span class="v">Solo en modo edición. El origen baja a opacidad y toma el borde de marca; el destino se marca con contorno punteado a 4 px. Soltar sobre otro widget los <strong>intercambia</strong>; soltar en un hueco lo mueve. El orden se guarda al soltar, por momento, sin botón de confirmar.</span></li>
+      <li><span class="k">Tocar un widget premium</span><span class="v">No abre el widget: abre la Tienda posicionada en esa pieza, con su precio en Divisa o en Elemento. Al volver comprado, el widget toma el sitio donde se tocó, en el momento donde se tocó, con su tamaño por defecto.</span></li>
+      <li><span class="k">Explorar widgets</span><span class="v">Abre la galería encima del tablero. Elegir uno gratis lo agrega al <strong>momento a la vista</strong> en el primer hueco libre; elegir uno premium lleva a la Tienda. Lo que ya está puesto se muestra deshabilitado con «Ya en tu tablero», no se oculta.</span></li>
+      <li><span class="k">Editar dashboard</span><span class="v">Convierte la rejilla en modo edición <strong>solo del momento a la vista</strong>: cada tile gana su barra con asa, tamaño y quitar; el contenido deja de ser tocable; aparecen los huecos de «Agregar» y la compra de fila. El botón de la cabecera pasa a «Listo» en primario.</span></li>
+      <li><span class="k">Capacidad</span><span class="v">4 columnas y hasta 9 filas por momento; cada widget va de 1×1 a 4×4. La fila 10 en adelante se compra con Elemento, y la compra aplica al momento donde se hizo.</span></li>
+      <li><span class="k">Tablero vacío</span><span class="v">Un momento sin widgets no dibuja rejilla vacía: dibuja la invitación, con la galería como acción principal y el tablero por defecto de Kibo como salida.</span></li>
+      <li><span class="k">Teclado</span><span class="v">Las tres pestañas son una tira de <strong>tab</strong>: flechas para moverse, Home y End a los extremos. En edición, el asa mueve el widget con las flechas y confirma con Enter, para que reordenar no dependa del arrastre.</span></li>
+    </ul>
+  </section>
+
 <!-- ANCLA-4 -->

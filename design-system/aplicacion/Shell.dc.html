@@ -57,8 +57,8 @@
   --kb-border-soft:   #F0F2F6;
 
   --kb-text:         #1A1A2E;
-  --kb-text-2:       #6B7280;
-  --kb-text-3:       #6B7280;
+  --kb-text-2:       color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
+  --kb-text-3:       var(--kb-text-2);   /* retirado por el estandar; alias mientras quede algun consumo */
   --kb-text-inverse: #FFFFFF;
 
   /* ---- Marca: Teal ------------------------------------------------------- */
