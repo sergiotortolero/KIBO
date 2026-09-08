@@ -239,7 +239,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -563,18 +563,19 @@
 
   <div class="pane">
     <div class="head">
-      <div class="eyebrow">Las dos recetas</div>
-      <div class="use">Cualquier matiz produce su lavado y su tinta; no se escribe un color nuevo.</div>
+      <div class="eyebrow">Las tres recetas</div>
+      <div class="use">Cualquier matiz produce su lavado, su tinta y su cara; no se escribe un color nuevo.</div>
     </div>
     <div class="g5">
       <sc-for list="{{hues}}" as="h" hint-placeholder-count="5">
         <div class="col">
           <div class="wash ink" style="--c: var({{h.tok}}); padding: var(--kb-sp-5) var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-xs); font-weight: 700">{{h.name}}</div>
+          <div style="--c: var({{h.tok}}); background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); padding: var(--kb-sp-5) var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-xs); font-weight: 700">{{h.name}}</div>
           <div class="tok">{{h.tok}}</div>
         </div>
       </sc-for>
     </div>
-    <div class="rule">Lavado = el matiz al <strong>12 %</strong> sobre el lienzo. Tinta = el matiz al <strong>54 %</strong> sobre <code>--kb-void-2</code>. La tinta pasa AA sobre blanco, sobre su lavado y como relleno con texto blanco encima.</div>
+    <div class="rule"><strong>Lavado</strong> = el matiz al 12&nbsp;% sobre el lienzo. <strong>Tinta</strong> = el matiz al 54&nbsp;% sobre <code>--kb-void-2</code>, y es para TEXTO sobre ese lavado. <strong>Cara</strong> = el matiz a <code>--kb-face-l</code> de luminosidad con su croma multiplicado por <code>--kb-face-c</code>, y es para todo relleno sólido. Una cara no se mezcla contra el negro: esa mezcla baja luminosidad y croma a la vez, y por eso apagaba el color. Medido con rótulo blanco encima de la cara, toda la paleta en los dos temas: de <strong>4.96</strong> a <strong>6.37</strong>.</div>
   </div>
 
   <div class="pane theme-src" style="gap: var(--kb-sp-8)">

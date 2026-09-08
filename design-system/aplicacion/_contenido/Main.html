@@ -1394,7 +1394,7 @@
                                 font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
                                 color: var(--kb-text-2); }
               .kbv-td-dot { width: 10px; height: 10px; flex: none; border-radius: var(--kb-r-pill);
-                            background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+                            background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); }
 
               /* Barra por tramos §6.4: la energia es una escala cerrada de 5. */
               .kbv-td-seg { display: flex; gap: var(--kb-sp-2); flex: 1 1 auto; min-width: 0; }
@@ -1403,7 +1403,7 @@
                                 box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 24%, var(--kb-canvas)); }
               /* El tramo lleno va en la TINTA, no en el tono: una escala cerrada
                  es un contador, y el tono plano mide 2.88 sobre la tarjeta. */
-              .kbv-td-seg > i.on { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+              .kbv-td-seg > i.on { background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
                                    box-shadow: none; }
 
               .kbv-td-switch { display: flex; align-items: center; flex-wrap: wrap;

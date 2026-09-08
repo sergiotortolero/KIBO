@@ -239,7 +239,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -562,7 +562,7 @@
       font-weight:700; color: var(--kb-primary-ink); }
     .flag { font-family: var(--kb-f-label); font-weight:800; font-size: 9px; letter-spacing:.08em; text-transform:uppercase;
       padding:2px 6px; border-radius: var(--kb-r-pill); color: var(--kb-text-inverse);
-      background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+      background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); }
 
     .chan { display:grid; grid-template-columns: auto 1fr; gap: var(--kb-sp-4) var(--kb-sp-6); align-items:baseline; }
     .chan .k { font-family: var(--kb-f-label); font-weight:800; font-size: var(--kb-fs-2xs); letter-spacing:.06em;

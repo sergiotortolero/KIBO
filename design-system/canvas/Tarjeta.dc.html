@@ -239,7 +239,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -460,7 +460,7 @@
     .kbv-slab {
       display: flex; align-items: center; padding: 0 var(--kb-sp-5); height: 28px;
       border-radius: var(--kb-r-xs);
-      background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
       color: var(--kb-text-inverse); font-size: var(--kb-fs-xs); font-weight: 700;
     }
     /* Acento 4 — fondo tintado con glifo. Nota o aviso. */

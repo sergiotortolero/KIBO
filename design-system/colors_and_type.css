@@ -241,7 +241,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
 
   /* Generic ink over a tint is NOT a :root token: on :root the piece's --c is
      absent, so var(--c) freezes to the fallback and every descendant inherits

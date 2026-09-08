@@ -205,7 +205,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, var(--kb-void-2));
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, var(--kb-void-2));
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, var(--kb-void-2));
-  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
 
   --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, var(--kb-canvas));
   --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, var(--kb-canvas));
@@ -340,7 +340,7 @@
                      color: color-mix(in oklab, var(--c) var(--kb-ink-amt), var(--kb-ink-anchor)); }
     /* Solida: relleno que CARGA texto blanco, asi que se queda en el 54 % sobre
        el void en los dos temas — la tinta clara del tema oscuro es para texto. */
-    .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
+    .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
 
     .kbv-badge {
       display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;

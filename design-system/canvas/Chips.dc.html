@@ -239,7 +239,7 @@
   --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
   --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
   --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
-  --kb-primary-fill:    color-mix(in oklab, var(--kb-primary) 54%, #12121F);
+  --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
      --c que declare la pieza, asi que sirve igual para un area, una rareza o un
@@ -446,7 +446,7 @@
       white-space: nowrap;
     }
     .kbv-tag.tint { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .kbv-tag.solid { background: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); color: var(--kb-text-inverse); }
+    .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
 
     /* .kbv-badge — se cuenta. Escala cerrada. */
     .kbv-badge {
