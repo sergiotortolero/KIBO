@@ -1,0 +1,1068 @@
+<style>
+    /* Las familias que esta pantalla compone y que el armazon no trae consigo:
+       el campo (§6.2), el modal (§6.7) y las formas propias del habito. Cada
+       valor es un token; el color entra por las dos recetas, lavado y tinta. */
+
+    /* ── Campo ─────────────────────────────────────────────────────────── */
+    .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+    .kbv-label { font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+    .kbv-label .opt { font-weight: 400; color: var(--kb-text-2); }
+    .kbv-input {
+      width: 100%; box-sizing: border-box; height: var(--kb-ctl-h);
+      background: var(--kb-card); border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-md);
+      padding: 0 var(--kb-sp-7); display: flex; align-items: center; gap: var(--kb-sp-4);
+      font: 500 var(--kb-fs-lg)/1 var(--kb-f-body); color: var(--kb-text);
+    }
+    .kbv-input.sm { height: 36px; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
+    .kbv-input.ph { color: var(--kb-text-2); font-weight: 400; }
+    .kbv-input.is-focus { border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo); }
+    .kbv-input.is-off { background: var(--kb-surface-2); color: var(--kb-text-2); }
+    .kbv-input .caret { width: 1.5px; height: 18px; flex: none; background: var(--kb-text); }
+    .kbv-input-row { position: relative; display: flex; align-items: center; min-width: 0; }
+    .kbv-input-row .lead { position: absolute; left: var(--kb-sp-6); display: inline-flex;
+                           color: var(--kb-text-2); pointer-events: none; }
+    .kbv-input-row.has-lead .kbv-input { padding-left: 42px; }
+    .kbv-input-row.sm .lead { left: var(--kb-sp-5); }
+    .kbv-input-row.sm.has-lead .kbv-input { padding-left: 34px; }
+    .kbv-help { font-size: var(--kb-fs-sm); line-height: 1.45; color: var(--kb-text-2); }
+
+    /* Conmutador: 46 x 26, la zona de toque llega a 44 por el ::after. */
+    .kbv-switch { position: relative; width: 46px; height: 26px; flex: none; box-sizing: border-box;
+                  border: 0; padding: 3px; border-radius: var(--kb-r-pill);
+                  background: var(--kb-border-strong); display: inline-flex; align-items: center; cursor: pointer; }
+    .kbv-switch::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
+                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
+    .kbv-switch.on { background: var(--kb-primary-fill); justify-content: flex-end; }
+    .kbv-switch i { display: block; width: 20px; height: 20px; border-radius: var(--kb-r-pill);
+                    background: var(--kb-text-inverse); box-shadow: var(--kb-sh-1); }
+    .kbv-switch:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+    /* ── Modal ─────────────────────────────────────────────────────────── */
+    .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal);
+                      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                      display: flex; align-items: center; justify-content: center;
+                      padding: var(--kb-sp-9); box-sizing: border-box; }
+    .kbv-modal-card { background: var(--kb-card); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-pop);
+                      max-width: 580px; width: 100%; max-height: 100%; box-sizing: border-box;
+                      display: flex; flex-direction: column; overflow: hidden; }
+    .kbv-modal-card.sm { max-width: 420px; }
+    .kbv-modal-card.lg { max-width: 720px; }
+    .kbv-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--kb-sp-6);
+                      padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                      border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl); font-weight: 800;
+                             line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); color: var(--kb-text-2);
+                           margin-top: var(--kb-sp-2); max-width: 46ch; }
+    .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none; box-sizing: border-box;
+                       border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-pill);
+                       background: var(--kb-card); color: var(--kb-text-2); cursor: pointer;
+                       display: flex; align-items: center; justify-content: center; }
+    .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-modal-body { padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column;
+                      gap: var(--kb-sp-7); overflow-y: auto; }
+    .kbv-modal-foot { display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5);
+                      padding: var(--kb-sp-7) var(--kb-sp-9); background: var(--kb-surface);
+                      border-top: 1px solid var(--kb-border-soft); flex-wrap: wrap; }
+    .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); margin-left: auto; }
+    /* El escenario existe para que el velo cubra ESTA pantalla y no el visor. */
+    .kbv-stage { position: relative; overflow: hidden; border-radius: var(--kb-r-lg);
+                 border: 1px solid var(--kb-border); background: var(--kb-surface); }
+    .kbv-stage .under { padding: var(--kb-sp-8); display: flex; flex-direction: column;
+                        gap: var(--kb-sp-6); filter: saturate(.55); }
+
+    /* ── Rotulo de estado: separa un estado del anterior sin competir ──── */
+    .kbv-flag { display: flex; align-items: baseline; gap: var(--kb-sp-5); flex-wrap: wrap;
+                padding-top: var(--kb-sp-8); border-top: 1px dashed var(--kb-border-strong); }
+
+    /* ── Lo de hoy: la tarjeta de check ───────────────────────────────── */
+    .kbv-habit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .kbv-habit { display: flex; align-items: flex-start; gap: var(--kb-sp-6); box-sizing: border-box;
+                 padding: var(--kb-sp-6); background: var(--kb-card);
+                 border: 1px solid var(--kb-border); border-radius: var(--kb-r-md); }
+    .kbv-habit:hover { border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-2); }
+    .kbv-habit.done { background: color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
+                      border-color: var(--kb-primary-border); }
+    .kbv-habit .hb-body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+    .kbv-habit .hb-top { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; }
+    .kbv-habit .hb-ico { width: 26px; height: 26px; flex: none; border-radius: var(--kb-r-xs);
+                         display: flex; align-items: center; justify-content: center;
+                         background: color-mix(in oklab, var(--area-will) 12%, var(--kb-canvas));
+                         color: var(--area-will-ink); }
+    .kbv-habit .hb-name { flex: 1 1 auto; min-width: 0; font-size: var(--kb-fs-md); font-weight: 700;
+                          color: var(--kb-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kbv-habit .hb-streak { flex: none; display: inline-flex; align-items: center; gap: var(--kb-sp-2);
+                            font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                            font-variant-numeric: tabular-nums; color: var(--kb-streak-ink); }
+    .kbv-habit .hb-streak.none { font-family: var(--kb-f-body); font-weight: 400; color: var(--kb-text-2); }
+    .kbv-habit .hb-foot { display: flex; align-items: center; gap: var(--kb-sp-5); flex-wrap: wrap;
+                          font-size: var(--kb-fs-xs); color: var(--kb-text-2); }
+    .kbv-habit .hb-when { display: inline-flex; align-items: center; gap: var(--kb-sp-2); }
+    .kbv-habit .hb-pay { margin-left: auto; display: inline-flex; align-items: center; gap: var(--kb-sp-3);
+                         font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xs);
+                         font-variant-numeric: tabular-nums; color: var(--kb-primary-ink); }
+    .kbv-habit .hb-pay .coin { display: inline-flex; align-items: center; gap: var(--kb-sp-1); color: var(--kb-coin-ink); }
+
+    /* La semana: siete celdas. Hoy se marca con un aro, no con otro color. */
+    .kbv-week { display: flex; gap: var(--kb-sp-2); }
+    .kbv-week .d { width: 22px; height: 20px; box-sizing: border-box; border-radius: var(--kb-r-xs);
+                   display: flex; align-items: center; justify-content: center;
+                   background: var(--kb-surface-2); color: var(--kb-text-2);
+                   font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800; }
+    .kbv-week .d.on { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+    .kbv-week .d.next { background: var(--kb-card); box-shadow: inset 0 0 0 1px var(--kb-border); }
+    .kbv-week .d.today { box-shadow: inset 0 0 0 1.5px var(--kb-primary-fill); }
+
+    /* ── Patron semanal: barras verticales, la cifra siempre encima ───── */
+    .kbv-daybars { display: flex; align-items: flex-end; gap: var(--kb-sp-5); }
+    .kbv-daybars .col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column;
+                        align-items: center; gap: var(--kb-sp-3); }
+    .kbv-daybars .num { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                        font-variant-numeric: tabular-nums; color: var(--kb-primary-ink); }
+    .kbv-daybars .num i { font-style: normal; font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
+    .kbv-daybars .track { width: 100%; height: 132px; border-radius: var(--kb-r-sm);
+                          display: flex; align-items: flex-end;
+                          background: color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
+                          box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--kb-primary) 24%, var(--kb-canvas)); }
+    .kbv-daybars .fill { width: 100%; border-radius: var(--kb-r-sm); background: var(--kb-primary); }
+    .kbv-daybars .col.best .fill { background: var(--kb-primary-fill); }
+    .kbv-daybars .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                        letter-spacing: .09em; color: var(--kb-text-2); }
+    .kbv-daybars .col.best .lbl { color: var(--kb-primary-ink); }
+
+    .kbv-indlist { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+    .kbv-ind { display: flex; flex-direction: column; gap: var(--kb-sp-1);
+               padding-bottom: var(--kb-sp-6); border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-ind:last-child { padding-bottom: 0; border-bottom: 0; }
+    .kbv-ind .v { display: flex; align-items: center; gap: var(--kb-sp-3);
+                  font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl); font-weight: 800;
+                  line-height: 1; font-variant-numeric: tabular-nums; color: var(--kb-text); }
+    .kbv-ind .v .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); }
+    .kbv-ind .l { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+
+    /* ── El gestor: definir, ordenar, pausar y borrar. Nunca marcar. ──── */
+    .kbv-hm { display: flex; flex-direction: column; }
+    .kbv-hm-row { display: grid; box-sizing: border-box;
+                  grid-template-columns: 24px minmax(0, 2.4fr) 1.25fr 92px 116px 136px 80px;
+                  align-items: center; gap: var(--kb-sp-5);
+                  padding: var(--kb-sp-4) var(--kb-sp-6); min-height: var(--kb-touch-min);
+                  border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-hm-row:last-child { border-bottom: 0; }
+    .kbv-hm-row:hover { background: var(--kb-surface); }
+    .kbv-hm-row.head { min-height: 0; padding-top: var(--kb-sp-5); padding-bottom: var(--kb-sp-5);
+                       background: var(--kb-surface); border-bottom: 1px solid var(--kb-border);
+                       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                       letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-hm-row.dragging { background: var(--kb-card); border-radius: var(--kb-r-sm);
+                           border-bottom-color: transparent; box-shadow: var(--kb-sh-3); }
+    .kbv-hm-drop { height: 2px; margin: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill); background: var(--kb-primary); }
+    .kbv-hm .grip { display: flex; color: var(--kb-text-2); cursor: grab; }
+    .kbv-hm .grip.off { color: var(--kb-border-strong); cursor: default; }
+    .kbv-hm .name { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0;
+                    border: 0; padding: 0; background: none; text-align: left; cursor: pointer; }
+    .kbv-hm .name .ico { width: 24px; height: 24px; flex: none; border-radius: var(--kb-r-xs);
+                         display: flex; align-items: center; justify-content: center;
+                         background: color-mix(in oklab, var(--area-will) 12%, var(--kb-canvas));
+                         color: var(--area-will-ink); }
+    .kbv-hm .name .id { min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-1); }
+    .kbv-hm .name .t { font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 700; color: var(--kb-text);
+                       white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .kbv-hm .name:hover .t { color: var(--kb-primary-ink); text-decoration: underline; text-underline-offset: 3px; }
+    .kbv-hm .name:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); border-radius: var(--kb-r-xs); }
+    .kbv-hm .cad { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-hm .streak { display: inline-flex; align-items: center; gap: var(--kb-sp-2);
+                      font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                      font-variant-numeric: tabular-nums; color: var(--kb-streak-ink); }
+    .kbv-hm .streak.none { font-family: var(--kb-f-body); font-weight: 400; color: var(--kb-text-2); }
+    .kbv-hm .pay { display: inline-flex; align-items: center; gap: var(--kb-sp-4);
+                   font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                   font-variant-numeric: tabular-nums; color: var(--kb-text); }
+    .kbv-hm .pay .coin { display: inline-flex; align-items: center; gap: var(--kb-sp-1); color: var(--kb-coin-ink); }
+    .kbv-hm .state { display: flex; align-items: center; gap: var(--kb-sp-4); }
+    .kbv-hm .state .l { font-size: var(--kb-fs-xs); color: var(--kb-text-2); }
+    .kbv-hm .acts { display: flex; align-items: center; justify-content: flex-end; gap: var(--kb-sp-2); }
+    .kbv-hm .acts .danger:hover { background: var(--kb-hp-soft); color: var(--kb-hp-ink); }
+    .kbv-hm-row.paused .name .t, .kbv-hm-row.paused .cad,
+    .kbv-hm-row.paused .pay { color: var(--kb-text-2); }
+    .kbv-hm-row.paused .name .ico { background: var(--kb-surface-2); color: var(--kb-text-2); }
+
+    /* ── Estados de datos: vacio, cargando, error ─────────────────────── */
+    .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                 gap: var(--kb-sp-5); padding: var(--kb-sp-9); box-sizing: border-box;
+                 background: var(--kb-surface-2); border: 1.5px dashed var(--kb-border-strong);
+                 border-radius: var(--kb-r-lg); }
+    .kbv-empty .ico { width: 48px; height: 48px; border-radius: var(--kb-r-md);
+                      display: flex; align-items: center; justify-content: center;
+                      background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-empty .t { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 700; color: var(--kb-text); }
+    .kbv-empty .d { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 46ch; }
+    .kbv-skel { border-radius: var(--kb-r-sm); background: var(--kb-surface-2); color: transparent; }
+    /* Fondo tintado con glifo (R-1): el color nunca va solo. */
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-6); box-sizing: border-box;
+                  padding: var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+                  border: 1px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas)); }
+    .kbv-notice .g { flex: none; display: flex;
+                     color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+    .kbv-notice .body { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+    .kbv-notice .t { font-size: var(--kb-fs-md); font-weight: 700; color: var(--kb-text); }
+    .kbv-notice .d { font-size: var(--kb-fs-md); color: var(--kb-text); }
+
+    /* ── Ficha del habito: heroe, cifras y la rejilla de 30 dias ──────── */
+    .kbv-hero-habit { display: flex; align-items: center; gap: var(--kb-sp-7); flex-wrap: wrap;
+                      padding: var(--kb-sp-7); border-radius: var(--kb-r-md); box-sizing: border-box;
+                      background: color-mix(in oklab, var(--area-will) 12%, var(--kb-canvas));
+                      border: 1px solid color-mix(in oklab, var(--area-will) 32%, var(--kb-canvas)); }
+    .kbv-hero-habit .ico { width: 52px; height: 52px; flex: none; border-radius: var(--kb-r-md);
+                           display: flex; align-items: center; justify-content: center;
+                           background: var(--kb-card); color: var(--area-will-ink); }
+    .kbv-hero-habit .big { display: flex; align-items: center; gap: var(--kb-sp-4);
+                           font-family: var(--kb-f-display); font-size: var(--kb-fs-3xl); font-weight: 800;
+                           line-height: 1; color: var(--kb-text); font-variant-numeric: tabular-nums; }
+    .kbv-hero-habit .big svg { color: var(--kb-streak-ink); }
+    .kbv-hero-habit .cap { font-size: var(--kb-fs-sm); color: var(--kb-text); }
+    .kbv-statset { display: flex; gap: var(--kb-sp-9); flex-wrap: wrap; margin-left: auto; }
+    .kbv-statset .s { display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-statset .v { font-family: var(--kb-f-display); font-size: var(--kb-fs-xl); font-weight: 800;
+                      line-height: 1; color: var(--kb-text); font-variant-numeric: tabular-nums; }
+    .kbv-statset .v small { font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+    .kbv-statset .l { font-size: var(--kb-fs-xs); color: var(--kb-text); }
+    .kbv-monthgrid { display: grid; grid-template-columns: repeat(15, minmax(0, 1fr)); gap: var(--kb-sp-3); }
+    .kbv-monthgrid .d { aspect-ratio: 1; border-radius: var(--kb-r-xs); background: var(--kb-surface-2); }
+    .kbv-monthgrid .d.on { background: var(--kb-primary-fill); }
+    .kbv-monthgrid .d.today { background: var(--kb-card); box-shadow: inset 0 0 0 2px var(--kb-primary-fill); }
+    .kbv-legend { display: flex; align-items: center; gap: var(--kb-sp-7); flex-wrap: wrap;
+                  font-size: var(--kb-fs-xs); color: var(--kb-text-2); }
+    .kbv-legend span { display: inline-flex; align-items: center; gap: var(--kb-sp-3); }
+    .kbv-legend .k { width: 12px; height: 12px; border-radius: 3px; flex: none; background: var(--kb-surface-2); }
+    .kbv-legend .k.on { background: var(--kb-primary-fill); }
+    .kbv-legend .k.today { background: var(--kb-card); box-shadow: inset 0 0 0 2px var(--kb-primary-fill); }
+
+    /* Rejilla de formulario: dos columnas como maximo (§6.2). */
+    .kbv-formgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-7); }
+    .kbv-formgrid .span-2 { grid-column: span 2; }
+    .kbv-daypick { display: flex; gap: var(--kb-sp-3); flex-wrap: wrap; }
+    .kbv-daypick .kbv-chip { width: 44px; padding: 0; justify-content: center; }
+
+    /* Bloque de cierre: lo que el constructor no puede leer del dibujo. */
+    .kbv-spec { display: flex; flex-direction: column; gap: var(--kb-sp-4); }
+    .kbv-spec .r { display: flex; align-items: baseline; gap: var(--kb-sp-5); font-size: var(--kb-fs-md);
+                   color: var(--kb-text); padding-bottom: var(--kb-sp-4);
+                   border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-spec .r:last-child { border-bottom: 0; padding-bottom: 0; }
+    .kbv-spec .k { flex: none; width: 148px; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                   font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+
+    @container kbwin (max-width: 1024px) {
+      .kbv-habit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .kbv-hm-row { grid-template-columns: 24px minmax(0, 2fr) 1fr 88px 108px 128px 76px; }
+    }
+    @container kbwin (max-width: 640px) {
+      .kbv-habit-grid { grid-template-columns: minmax(0, 1fr); }
+      .kbv-formgrid { grid-template-columns: minmax(0, 1fr); }
+      .kbv-formgrid .span-2 { grid-column: span 1; }
+      /* La tabla se vuelve ficha: la rejilla de siete columnas no cabe en 360. */
+      .kbv-hm-row { grid-template-columns: 24px minmax(0, 1fr) auto; row-gap: var(--kb-sp-4); }
+      .kbv-hm-row.head { display: none; }
+      .kbv-hm .cad, .kbv-hm .streak, .kbv-hm .pay { grid-column: 2; }
+      .kbv-modal-veil { align-items: flex-end; padding: 0; }
+      .kbv-modal-card, .kbv-modal-card.sm, .kbv-modal-card.lg { max-width: none;
+        border-radius: var(--kb-r-xl) var(--kb-r-xl) 0 0; }
+    }
+  </style>
+
+  <!-- ══ Cabecera de pagina ═══════════════════════════════════════════ -->
+  <header class="kbv-page-head">
+    <div class="ph-id">
+      <nav class="kbv-crumb" aria-label="Ruta">
+        <a href="#tu-constancia">Tu constancia</a>
+        <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <span class="here">Hábitos</span>
+      </nav>
+      <div style="display:flex; align-items:center; gap:var(--kb-sp-5); flex-wrap:wrap">
+        <h1 class="kbv-h1">Hábitos.</h1>
+        <span class="kbv-areapill" style="--c: var(--area-will)">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l2.2 5.6L20 9.5l-4.2 4 1 5.8-4.8-2.8-4.8 2.8 1-5.8-4.2-4 5.8-.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Voluntad
+        </span>
+      </div>
+      <p class="kbv-body kbv-prose" style="color:var(--kb-text-2)">Tu disciplina diaria. Cada check suma XP y Divisa a Voluntad. Los malos hábitos no van aquí — se combaten en Retos.</p>
+    </div>
+    <div class="ph-act">
+      <button type="button" class="kbv-btn kbv-btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor"/><path d="M12 11.2v5" fill="none" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="7.9" r="1.05" fill="currentColor" stroke="none"/></svg>
+        Cómo se paga un hábito
+      </button>
+      <button type="button" class="kbv-btn kbv-btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Nuevo hábito
+      </button>
+    </div>
+  </header>
+
+  <!-- ══ KPIs ════════════════════════════════════════════════════════ -->
+  <div class="kbv-canvas-grid">
+    <article class="kbv-kpi" style="--c: var(--kb-primary)">
+      <div class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Hechos hoy
+      </div>
+      <div class="body">
+        <div class="val">2<span class="unit">/5</span></div>
+        <div class="delta up">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.5l1.9 5.2 5.2 1.9-5.2 1.9L12 17.7l-1.9-5.2L4.9 10.6l5.2-1.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          +18 XP · +4 de Divisa
+        </div>
+      </div>
+    </article>
+    <article class="kbv-kpi" style="--c: var(--kb-streak)">
+      <div class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Racha más larga
+      </div>
+      <div class="body">
+        <div class="val">21<span class="unit">días</span></div>
+        <div class="delta">en «Diario nocturno»</div>
+      </div>
+    </article>
+    <article class="kbv-kpi" style="--c: var(--kb-streak)">
+      <div class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 18V9M10 18V5M16 18v-6M21 18H3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Racha promedio
+      </div>
+      <div class="body">
+        <div class="val">10<span class="unit">días</span></div>
+        <div class="delta">en 6 hábitos</div>
+      </div>
+    </article>
+    <article class="kbv-kpi" style="--c: var(--area-will)">
+      <div class="band">
+        <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Cumplimiento semanal
+      </div>
+      <div class="body">
+        <div class="val">79<span class="unit">%</span></div>
+        <div class="delta up">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          +8 pts vs. semana anterior
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <!-- ══ Lo de hoy: la accion, antes que cualquier analisis ══════════ -->
+  <section class="kbv-section" aria-labelledby="h-hoy">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <h2 class="kbv-h3" id="h-hoy">Lo de hoy</h2>
+        <span class="sub">2 de 5 cumplidos · los pausados no piden check</span>
+      </div>
+      <div class="sh-act" style="width:200px">
+        <div class="kbv-progress-meta tone-xp" style="width:100%">
+          <div class="top"><span class="name">XP de hoy</span><span class="val">18 / 86</span></div>
+          <span class="kbv-progress"><span class="fill" style="width:21%"></span></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kbv-habit-grid">
+      <article class="kbv-habit done">
+        <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Desmarcar «Tomar 2 L de agua»">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="3.2" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="hb-body">
+          <div class="hb-top">
+            <span class="hb-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3.5s6 6.4 6 10.2A6 6 0 0 1 6 13.7C6 9.9 12 3.5 12 3.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="hb-name">Tomar 2 L de agua</span>
+            <span class="hb-streak">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              14 d
+            </span>
+          </div>
+          <div class="kbv-week" role="img" aria-label="Semana: lunes a jueves cumplidos, hoy es jueves">
+            <span class="d on">L</span><span class="d on">M</span><span class="d on">X</span><span class="d on today">J</span><span class="d next">V</span><span class="d next">S</span><span class="d next">D</span>
+          </div>
+          <div class="hb-foot">
+            <span class="hb-when"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M12 7.5v5l3 1.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Sin horario</span>
+            <span class="hb-pay">+6 XP<span class="coin"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>1</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-habit done">
+        <button type="button" class="kbv-check on" aria-pressed="true" aria-label="Desmarcar «Estiramientos AM»">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="3.2" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="hb-body">
+          <div class="hb-top">
+            <span class="hb-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 20.5S4 15.5 4 10.2A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 8 2.2c0 5.3-8 10.3-8 10.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="hb-name">Estiramientos AM</span>
+            <span class="hb-streak">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              8 d
+            </span>
+          </div>
+          <div class="kbv-week" role="img" aria-label="Semana: lunes y martes cumplidos, miércoles fallido, hoy jueves cumplido">
+            <span class="d on">L</span><span class="d on">M</span><span class="d">X</span><span class="d on today">J</span><span class="d next">V</span><span class="d next">S</span><span class="d next">D</span>
+          </div>
+          <div class="hb-foot">
+            <span class="hb-when"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M12 7.5v5l3 1.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> 07:00 — 09:00</span>
+            <span class="hb-pay">+12 XP<span class="coin"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>3</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-habit">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Diario nocturno» como hecho"></button>
+        <div class="hb-body">
+          <div class="hb-top">
+            <span class="hb-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="hb-name">Diario nocturno</span>
+            <span class="hb-streak">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              21 d
+            </span>
+          </div>
+          <div class="kbv-week" role="img" aria-label="Semana: lunes a miércoles cumplidos, hoy jueves pendiente">
+            <span class="d on">L</span><span class="d on">M</span><span class="d on">X</span><span class="d today">J</span><span class="d next">V</span><span class="d next">S</span><span class="d next">D</span>
+          </div>
+          <div class="hb-foot">
+            <span class="hb-when"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M12 7.5v5l3 1.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> 22:30</span>
+            <span class="hb-pay">+16 XP<span class="coin"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>5</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-habit">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Llamar a un ser querido» como hecho"></button>
+        <div class="hb-body">
+          <div class="hb-top">
+            <span class="hb-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="9.5" cy="8" r="3.2" fill="none" stroke="currentColor"/><path d="M3.5 19.5a6 6 0 0 1 12 0" fill="none" stroke="currentColor" stroke-linecap="round"/><path d="M16.5 5.4a3.2 3.2 0 0 1 0 5.2M18 13.4a5.6 5.6 0 0 1 3 4.6" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+            <span class="hb-name">Llamar a un ser querido</span>
+            <span class="hb-streak">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              4 d
+            </span>
+          </div>
+          <div class="kbv-week" role="img" aria-label="Semana: lunes y miércoles cumplidos, hoy jueves pendiente">
+            <span class="d on">L</span><span class="d">M</span><span class="d on">X</span><span class="d today">J</span><span class="d next">V</span><span class="d next">S</span><span class="d next">D</span>
+          </div>
+          <div class="hb-foot">
+            <span class="hb-when"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="4" y="5.5" width="16" height="14" rx="2" fill="none" stroke="currentColor"/><path d="M4 10h16M9 3.5v4M15 3.5v4" fill="none" stroke="currentColor" stroke-linecap="round"/></svg> 3× por semana</span>
+            <span class="hb-pay">+16 XP<span class="coin"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>5</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-habit">
+        <button type="button" class="kbv-check" aria-pressed="false" aria-label="Marcar «Sin azúcar añadida» como hecho"></button>
+        <div class="hb-body">
+          <div class="hb-top">
+            <span class="hb-ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M6.2 6.2l11.6 11.6" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+            <span class="hb-name">Sin azúcar añadida</span>
+            <span class="hb-streak none">sin racha</span>
+          </div>
+          <div class="kbv-week" role="img" aria-label="Semana: lunes fallido, martes cumplido, miércoles fallido, hoy jueves pendiente">
+            <span class="d">L</span><span class="d on">M</span><span class="d">X</span><span class="d today">J</span><span class="d next">V</span><span class="d next">S</span><span class="d next">D</span>
+          </div>
+          <div class="hb-foot">
+            <span class="kbv-tag tint" style="--c: var(--kb-boss)">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor"/></svg>
+              Nació de un reto
+            </span>
+            <span class="hb-pay">+36 XP<span class="coin"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>13</span></span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══ Patrones ════════════════════════════════════════════════════ -->
+  <section class="kbv-section" aria-labelledby="h-patron">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <h2 class="kbv-h3" id="h-patron">Tu patrón</h2>
+        <span class="sub">En qué días cumples más · promedio de las últimas 8 semanas</span>
+      </div>
+      <div class="sh-act">
+        <span class="kbv-tag tint" style="--c: var(--kb-primary)">Mejor día: lunes</span>
+      </div>
+    </div>
+    <div class="kbv-canvas-grid">
+      <div class="kbv-card w-3">
+        <div class="kbv-card-head">
+          <div>
+            <div class="kbv-card-title">Cumplimiento por día</div>
+            <div class="kbv-card-sub">Porcentaje de hábitos cumplidos en cada día de la semana</div>
+          </div>
+        </div>
+        <div class="kbv-daybars">
+          <div class="col best">
+            <span class="num">94<i>%</i></span>
+            <div class="track"><span class="fill" style="height:94%"></span></div>
+            <span class="lbl">L</span>
+          </div>
+          <div class="col">
+            <span class="num">81<i>%</i></span>
+            <div class="track"><span class="fill" style="height:81%"></span></div>
+            <span class="lbl">M</span>
+          </div>
+          <div class="col">
+            <span class="num">78<i>%</i></span>
+            <div class="track"><span class="fill" style="height:78%"></span></div>
+            <span class="lbl">X</span>
+          </div>
+          <div class="col">
+            <span class="num">83<i>%</i></span>
+            <div class="track"><span class="fill" style="height:83%"></span></div>
+            <span class="lbl">J</span>
+          </div>
+          <div class="col">
+            <span class="num">52<i>%</i></span>
+            <div class="track"><span class="fill" style="height:52%"></span></div>
+            <span class="lbl">V</span>
+          </div>
+          <div class="col">
+            <span class="num">76<i>%</i></span>
+            <div class="track"><span class="fill" style="height:76%"></span></div>
+            <span class="lbl">S</span>
+          </div>
+          <div class="col">
+            <span class="num">64<i>%</i></span>
+            <div class="track"><span class="fill" style="height:64%"></span></div>
+            <span class="lbl">D</span>
+          </div>
+        </div>
+        <div class="kbv-card-foot">
+          <span class="kbv-meta">El viernes es el día que más se te cae: 52 % frente al 94 % del lunes.</span>
+        </div>
+      </div>
+
+      <div class="kbv-card">
+        <div class="kbv-card-head"><div class="kbv-card-title">De un vistazo</div></div>
+        <div class="kbv-indlist">
+          <div class="kbv-ind">
+            <span class="v">6</span>
+            <span class="l">hábitos definidos · 5 activos</span>
+          </div>
+          <div class="kbv-ind">
+            <span class="v">79<span class="unit">%</span></span>
+            <span class="l">cumplimiento semanal</span>
+          </div>
+          <div class="kbv-ind">
+            <span class="v">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none;color:var(--kb-boss-ink)"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor"/></svg>
+              1
+            </span>
+            <span class="l">viene de un reto</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ El gestor ═══════════════════════════════════════════════════ -->
+  <section class="kbv-section" aria-labelledby="h-gestor">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <h2 class="kbv-h3" id="h-gestor">Mis hábitos</h2>
+        <span class="sub">5 activos de 6 · aquí se definen; marcarlos es cosa de arriba</span>
+      </div>
+      <div class="sh-act">
+        <button type="button" class="kbv-btn kbv-btn-primary sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.8" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Nuevo hábito
+        </button>
+      </div>
+    </div>
+
+    <div class="kbv-filter-bar">
+      <div class="kbv-input-row sm has-lead grow">
+        <span class="lead" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor"/><path d="M15.6 15.6L20 20" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+        <span class="kbv-input sm ph" role="searchbox" aria-label="Buscar un hábito por nombre o cadencia" tabindex="0">Buscar por nombre o cadencia</span>
+      </div>
+      <span class="lbl">Orden</span>
+      <div class="kbv-seg" role="tablist" aria-label="Orden de la lista">
+        <button type="button" class="on" role="tab" aria-selected="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M8 7h12M8 12h12M8 17h12" fill="none" stroke="currentColor" stroke-linecap="round"/><circle cx="4.2" cy="7" r="1.2" fill="currentColor"/><circle cx="4.2" cy="12" r="1.2" fill="currentColor"/><circle cx="4.2" cy="17" r="1.2" fill="currentColor"/></svg>
+          Mi orden
+        </button>
+        <button type="button" role="tab" aria-selected="false">Nombre</button>
+        <button type="button" role="tab" aria-selected="false">Racha</button>
+        <button type="button" role="tab" aria-selected="false">Cadencia</button>
+      </div>
+    </div>
+
+    <div class="kbv-card flush">
+      <div class="kbv-hm" role="table" aria-label="Mis hábitos">
+        <div class="kbv-hm-row head" role="row">
+          <span role="columnheader"><span class="kbv-sr-only">Reordenar</span></span>
+          <span role="columnheader">Hábito</span>
+          <span role="columnheader">Cadencia</span>
+          <span role="columnheader">Racha</span>
+          <span role="columnheader">Paga</span>
+          <span role="columnheader">Estado</span>
+          <span role="columnheader"><span class="kbv-sr-only">Acciones</span></span>
+        </div>
+
+        <div class="kbv-hm-row" role="row" draggable="true">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Tomar 2 L de agua»" title="Arrastra para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name" title="Editar este hábito">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3.5s6 6.4 6 10.2A6 6 0 0 1 6 13.7C6 9.9 12 3.5 12 3.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Tomar 2 L de agua</span></span>
+          </button>
+          <span class="cad">Sin horario</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            14 d
+          </span>
+          <span class="pay">+6 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>1</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true" title="Pausar: deja de pedirte el check y no rompe la racha"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Tomar 2 L de agua»" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Tomar 2 L de agua»" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+
+        <div class="kbv-hm-row" role="row" draggable="true">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Estiramientos AM»" title="Arrastra para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name" title="Editar este hábito">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 20.5S4 15.5 4 10.2A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 8 2.2c0 5.3-8 10.3-8 10.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Estiramientos AM</span></span>
+          </button>
+          <span class="cad">07:00 — 09:00</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            8 d
+          </span>
+          <span class="pay">+12 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>3</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true" title="Pausar: deja de pedirte el check y no rompe la racha"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Estiramientos AM»" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Estiramientos AM»" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+
+        <div class="kbv-hm-row" role="row" draggable="true">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Diario nocturno»" title="Arrastra para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name" title="Editar este hábito">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Diario nocturno</span></span>
+          </button>
+          <span class="cad">22:30</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            21 d
+          </span>
+          <span class="pay">+16 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>5</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true" title="Pausar: deja de pedirte el check y no rompe la racha"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Diario nocturno»" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Diario nocturno»" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+
+        <div class="kbv-hm-row" role="row" draggable="true">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Llamar a un ser querido»" title="Arrastra para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name" title="Editar este hábito">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="9.5" cy="8" r="3.2" fill="none" stroke="currentColor"/><path d="M3.5 19.5a6 6 0 0 1 12 0" fill="none" stroke="currentColor" stroke-linecap="round"/><path d="M16.5 5.4a3.2 3.2 0 0 1 0 5.2M18 13.4a5.6 5.6 0 0 1 3 4.6" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+            <span class="id"><span class="t">Llamar a un ser querido</span></span>
+          </button>
+          <span class="cad">3× por semana</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            4 d
+          </span>
+          <span class="pay">+16 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>5</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true" title="Pausar: deja de pedirte el check y no rompe la racha"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Llamar a un ser querido»" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Llamar a un ser querido»" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+
+        <!-- Sin racha + nacido de un reto: las dos senales conviven en la fila. -->
+        <div class="kbv-hm-row" role="row" draggable="true">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Sin azúcar añadida»" title="Arrastra para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name" title="Editar este hábito">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M6.2 6.2l11.6 11.6" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+            <span class="id">
+              <span class="t">Sin azúcar añadida</span>
+              <span class="kbv-tag tint" style="--c: var(--kb-boss)">
+                <svg width="11" height="11" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor"/></svg>
+                Nació de un reto
+              </span>
+            </span>
+          </button>
+          <span class="cad">Todo el día</span>
+          <span class="streak none">sin racha</span>
+          <span class="pay">+36 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>13</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true" title="Pausar: deja de pedirte el check y no rompe la racha"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Sin azúcar añadida»" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Sin azúcar añadida»" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+
+        <!-- Pausado: fuera de «Lo de hoy», conserva su racha. -->
+        <div class="kbv-hm-row paused" role="row" draggable="true">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Sin redes después de las 22 h»" title="Arrastra para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name" title="Editar este hábito">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Sin redes después de las 22 h</span></span>
+          </button>
+          <span class="cad">22:00 — 24:00</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            12 d
+          </span>
+          <span class="pay">+28 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>10</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch" aria-pressed="false" title="Reactivar: vuelve a pedirte el check"><i></i></button>
+            <span class="l">Pausado</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Sin redes después de las 22 h»" title="Editar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Sin redes después de las 22 h»" title="Eliminar"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ESTADOS ═════════════════════════════════════════════════════
+       Cada estado se dibuja aqui abajo, bajo su rotulo. Es el mismo
+       artboard: lo que cambia es de que datos viene la pantalla. -->
+
+  <section class="kbv-section">
+    <div class="kbv-flag">
+      <span class="kbv-eyebrow">Estado · búsqueda sin resultados</span>
+      <span class="kbv-meta">El gestor con un texto que no coincide con ningún hábito. El buscador conserva lo escrito y el botón de alta queda a la mano.</span>
+    </div>
+    <div class="kbv-filter-bar">
+      <div class="kbv-input-row sm has-lead grow">
+        <span class="lead" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor"/><path d="M15.6 15.6L20 20" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+        <span class="kbv-input sm is-focus" role="searchbox" aria-label="Buscar un hábito" tabindex="0">yoga<span class="caret"></span></span>
+      </div>
+      <span class="lbl">Orden</span>
+      <div class="kbv-seg">
+        <button type="button" class="on">Mi orden</button>
+        <button type="button">Nombre</button>
+        <button type="button">Racha</button>
+        <button type="button">Cadencia</button>
+      </div>
+    </div>
+    <div class="kbv-card flush">
+      <div class="kbv-hm">
+        <div class="kbv-hm-row head">
+          <span><span class="kbv-sr-only">Reordenar</span></span>
+          <span>Hábito</span>
+          <span>Cadencia</span>
+          <span>Racha</span>
+          <span>Paga</span>
+          <span>Estado</span>
+          <span><span class="kbv-sr-only">Acciones</span></span>
+        </div>
+      </div>
+      <div class="kbv-empty" style="border:0; border-radius:0">
+        <span class="ico" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor"/><path d="M15.6 15.6L20 20" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+        <span class="t">Nada con «yoga»</span>
+        <span class="d">Prueba otro nombre o crea el hábito.</span>
+        <button type="button" class="kbv-btn kbv-btn-primary sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.8" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Crear «yoga» como hábito
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="kbv-section">
+    <div class="kbv-flag">
+      <span class="kbv-eyebrow">Estado · reordenar deshabilitado</span>
+      <span class="kbv-meta">Con un orden calculado (Nombre, Racha o Cadencia) o con una búsqueda activa, el arrastre se apaga: el orden que se ve no es el orden que se guarda.</span>
+    </div>
+    <div class="kbv-filter-bar">
+      <div class="kbv-input-row sm has-lead grow">
+        <span class="lead" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><circle cx="11" cy="11" r="6.2" fill="none" stroke="currentColor"/><path d="M15.6 15.6L20 20" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+        <span class="kbv-input sm ph" role="searchbox" aria-label="Buscar un hábito" tabindex="0">Buscar por nombre o cadencia</span>
+      </div>
+      <span class="lbl">Orden</span>
+      <div class="kbv-seg">
+        <button type="button">Mi orden</button>
+        <button type="button">Nombre</button>
+        <button type="button" class="on">Racha</button>
+        <button type="button">Cadencia</button>
+      </div>
+    </div>
+    <div class="kbv-notice" style="--c: var(--kb-warn)">
+      <span class="g" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor"/><path d="M12 7.5v5.5" fill="none" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="16.4" r="1.05" fill="currentColor" stroke="none"/></svg></span>
+      <div class="body">
+        <span class="t">El arrastre está apagado</span>
+        <span class="d">Estás viendo la lista ordenada por racha. Vuelve a «Mi orden» para reacomodar tus hábitos.</span>
+      </div>
+    </div>
+    <div class="kbv-card flush">
+      <div class="kbv-hm">
+        <div class="kbv-hm-row">
+          <span class="grip off" aria-disabled="true" title="Vuelve a «Mi orden» para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Diario nocturno</span></span>
+          </button>
+          <span class="cad">22:30</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            21 d
+          </span>
+          <span class="pay">+16 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>5</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Diario nocturno»"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Diario nocturno»"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+        <div class="kbv-hm-row">
+          <span class="grip off" aria-disabled="true" title="Vuelve a «Mi orden» para reordenar">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3.5s6 6.4 6 10.2A6 6 0 0 1 6 13.7C6 9.9 12 3.5 12 3.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Tomar 2 L de agua</span></span>
+          </button>
+          <span class="cad">Sin horario</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            14 d
+          </span>
+          <span class="pay">+6 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>1</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts">
+            <button type="button" class="kbv-icon-btn" aria-label="Editar «Tomar 2 L de agua»"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="kbv-icon-btn danger" aria-label="Eliminar «Tomar 2 L de agua»"><svg width="15" height="15" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4.5 7h15M9.5 7V5.2a1.2 1.2 0 0 1 1.2-1.2h2.6a1.2 1.2 0 0 1 1.2 1.2V7M6.5 7l.9 12a2 2 0 0 0 2 1.9h5.2a2 2 0 0 0 2-1.9l.9-12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kbv-section">
+    <div class="kbv-flag">
+      <span class="kbv-eyebrow">Estado · fila en arrastre</span>
+      <span class="kbv-meta">La fila tomada se levanta con sombra y la línea de marca señala dónde va a caer. Solo ocurre en «Mi orden» y sin búsqueda.</span>
+    </div>
+    <div class="kbv-card flush">
+      <div class="kbv-hm">
+        <div class="kbv-hm-row">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Tomar 2 L de agua»">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3.5s6 6.4 6 10.2A6 6 0 0 1 6 13.7C6 9.9 12 3.5 12 3.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Tomar 2 L de agua</span></span>
+          </button>
+          <span class="cad">Sin horario</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            14 d
+          </span>
+          <span class="pay">+6 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>1</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts"></span>
+        </div>
+
+        <div class="kbv-hm-drop" role="presentation"></div>
+
+        <div class="kbv-hm-row dragging" role="row" aria-grabbed="true">
+          <span class="grip" style="cursor:grabbing" role="button" tabindex="0" aria-label="Moviendo «Diario nocturno»">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Diario nocturno</span></span>
+          </button>
+          <span class="cad">22:30</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            21 d
+          </span>
+          <span class="pay">+16 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>5</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts"></span>
+        </div>
+
+        <div class="kbv-hm-row">
+          <span class="grip" role="button" tabindex="0" aria-label="Reordenar «Estiramientos AM»">
+            <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.4" fill="currentColor"/><circle cx="15" cy="6" r="1.4" fill="currentColor"/><circle cx="9" cy="12" r="1.4" fill="currentColor"/><circle cx="15" cy="12" r="1.4" fill="currentColor"/><circle cx="9" cy="18" r="1.4" fill="currentColor"/><circle cx="15" cy="18" r="1.4" fill="currentColor"/></svg>
+          </span>
+          <button type="button" class="name">
+            <span class="ico" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 20.5S4 15.5 4 10.2A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 8 2.2c0 5.3-8 10.3-8 10.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="id"><span class="t">Estiramientos AM</span></span>
+          </button>
+          <span class="cad">07:00 — 09:00</span>
+          <span class="streak">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            8 d
+          </span>
+          <span class="pay">+12 XP<span class="coin"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>3</span></span>
+          <span class="state">
+            <button type="button" class="kbv-switch on" aria-pressed="true"><i></i></button>
+            <span class="l">Activo</span>
+          </span>
+          <span class="acts"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kbv-section">
+    <div class="kbv-flag">
+      <span class="kbv-eyebrow">Estado · vacío</span>
+      <span class="kbv-meta">Sin ningún hábito definido: los KPIs se apagan con una raya en el lugar de la cifra y la pantalla entera se reduce a una sola invitación.</span>
+    </div>
+    <div class="kbv-canvas-grid">
+      <article class="kbv-kpi" style="--c: var(--kb-primary)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Hechos hoy
+        </div>
+        <div class="body"><div class="val" style="color:var(--kb-text-2)">—</div><div class="delta">Aún sin hábitos</div></div>
+      </article>
+      <article class="kbv-kpi" style="--c: var(--kb-streak)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Racha más larga
+        </div>
+        <div class="body"><div class="val" style="color:var(--kb-text-2)">—</div><div class="delta">Aún sin hábitos</div></div>
+      </article>
+      <article class="kbv-kpi" style="--c: var(--kb-streak)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 18V9M10 18V5M16 18v-6M21 18H3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Racha promedio
+        </div>
+        <div class="body"><div class="val" style="color:var(--kb-text-2)">—</div><div class="delta">Aún sin hábitos</div></div>
+      </article>
+      <article class="kbv-kpi" style="--c: var(--area-will)">
+        <div class="band">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cumplimiento semanal
+        </div>
+        <div class="body"><div class="val" style="color:var(--kb-text-2)">—</div><div class="delta">Aún sin hábitos</div></div>
+      </article>
+    </div>
+    <div class="kbv-empty">
+      <span class="ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="t">Todavía no tienes hábitos</span>
+      <span class="d">Un hábito es algo pequeño que repites. Empieza con uno solo: cada check te cura, suma XP y Divisa a Voluntad, y enciende tu racha.</span>
+      <button type="button" class="kbv-btn kbv-btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Crear mi primer hábito
+      </button>
+    </div>
+  </section>
+
+  <section class="kbv-section">
+    <div class="kbv-flag">
+      <span class="kbv-eyebrow">Estado · cargando</span>
+      <span class="kbv-meta">La silueta conserva la forma de lo que va a llegar: cuatro KPIs y las tarjetas del día. Nada de texto en gris, nada que se lea a medias.</span>
+    </div>
+    <div aria-hidden="true">
+      <div class="kbv-canvas-grid" style="margin-bottom:var(--kb-sp-8)">
+        <article class="kbv-kpi"><div class="band" style="background:var(--kb-surface-2); border-bottom-color:var(--kb-border); color:transparent">·</div><div class="body"><span class="kbv-skel" style="width:64px; height:26px"></span><span class="kbv-skel" style="width:110px; height:12px"></span></div></article>
+        <article class="kbv-kpi"><div class="band" style="background:var(--kb-surface-2); border-bottom-color:var(--kb-border); color:transparent">·</div><div class="body"><span class="kbv-skel" style="width:78px; height:26px"></span><span class="kbv-skel" style="width:96px; height:12px"></span></div></article>
+        <article class="kbv-kpi"><div class="band" style="background:var(--kb-surface-2); border-bottom-color:var(--kb-border); color:transparent">·</div><div class="body"><span class="kbv-skel" style="width:70px; height:26px"></span><span class="kbv-skel" style="width:88px; height:12px"></span></div></article>
+        <article class="kbv-kpi"><div class="band" style="background:var(--kb-surface-2); border-bottom-color:var(--kb-border); color:transparent">·</div><div class="body"><span class="kbv-skel" style="width:58px; height:26px"></span><span class="kbv-skel" style="width:120px; height:12px"></span></div></article>
+      </div>
+      <div class="kbv-habit-grid">
+        <article class="kbv-habit">
+          <span class="kbv-skel" style="width:22px; height:22px; border-radius:var(--kb-r-xs); flex:none"></span>
+          <div class="hb-body">
+            <span class="kbv-skel" style="width:70%; height:14px"></span>
+            <div class="kbv-week"><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span></div>
+            <span class="kbv-skel" style="width:45%; height:11px"></span>
+          </div>
+        </article>
+        <article class="kbv-habit">
+          <span class="kbv-skel" style="width:22px; height:22px; border-radius:var(--kb-r-xs); flex:none"></span>
+          <div class="hb-body">
+            <span class="kbv-skel" style="width:58%; height:14px"></span>
+            <div class="kbv-week"><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span></div>
+            <span class="kbv-skel" style="width:52%; height:11px"></span>
+          </div>
+        </article>
+        <article class="kbv-habit">
+          <span class="kbv-skel" style="width:22px; height:22px; border-radius:var(--kb-r-xs); flex:none"></span>
+          <div class="hb-body">
+            <span class="kbv-skel" style="width:64%; height:14px"></span>
+            <div class="kbv-week"><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span><span class="d kbv-skel"></span></div>
+            <span class="kbv-skel" style="width:40%; height:11px"></span>
+          </div>
+        </article>
+      </div>
+    </div>
+    <span class="kbv-sr-only" role="status">Cargando tus hábitos…</span>
+  </section>
+
+  <section class="kbv-section">
+    <div class="kbv-flag">
+      <span class="kbv-eyebrow">Estado · error al cargar</span>
+      <span class="kbv-meta">Lo que ya está marcado en el dispositivo no se pierde: se avisa que la lista no llegó y se ofrece reintentar. El error nunca se dibuja como una lista vacía.</span>
+    </div>
+    <div class="kbv-notice" style="--c: var(--kb-hp)">
+      <span class="g" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 4.2l9.2 15.6H2.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10v4.2" fill="none" stroke="currentColor" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1.05" fill="currentColor" stroke="none"/></svg></span>
+      <div class="body">
+        <span class="t">No pudimos traer tus hábitos</span>
+        <span class="d">Los checks que hiciste hoy están guardados en este dispositivo y se sincronizan solos cuando vuelva la conexión.</span>
+        <div style="display:flex; gap:var(--kb-sp-4); flex-wrap:wrap; padding-top:var(--kb-sp-3)">
+          <button type="button" class="kbv-btn kbv-btn-secondary sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M4 9a5 5 0 0 1 5-5h8l-2.5-2.5M20 15a5 5 0 0 1-5 5H7l2.5 2.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Reintentar
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-ghost sm">Ver los de este dispositivo</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLOT-C -->

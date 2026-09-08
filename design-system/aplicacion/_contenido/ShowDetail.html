@@ -1,0 +1,821 @@
+<!-- ═══ DETALLE DE PELI / SERIE ═══ La ficha de un titulo: progreso, rating,
+     horas, donde verlo y el cuaderno de reflexiones. -->
+
+<style>
+  /* Dos familias del sistema que esta pantalla estrena, levantadas literales
+     de sus laminas del canvas (Campo.dc.html §6.2 · Modal.dc.html §6.7). */
+  .kbv-field { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
+  .kbv-label { font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text); }
+  .kbv-label .opt { font-weight: 400; color: var(--kb-text-2); }
+  .kbv-input {
+    width: 100%; box-sizing: border-box; height: var(--kb-ctl-h);
+    background: var(--kb-card); border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-md);
+    padding: 0 var(--kb-sp-7); display: flex; align-items: center;
+    font: 500 var(--kb-fs-lg)/1 var(--kb-f-body); color: var(--kb-text);
+  }
+  .kbv-input.ph { color: var(--kb-text-2); font-weight: 400; }
+  .kbv-input.is-focus { border-color: var(--kb-primary); box-shadow: var(--kb-focus-halo); }
+  .kbv-area { height: auto; min-height: 108px; padding: var(--kb-sp-6) var(--kb-sp-7); display: block;
+              line-height: var(--kb-lh-body); font-weight: 400; }
+  .kbv-help { font-size: var(--kb-fs-sm); line-height: 1.45; color: var(--kb-text-2); }
+
+  .kbv-modal-veil {
+    position: absolute; inset: 0; z-index: var(--kb-z-modal);
+    background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+    backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+    display: flex; align-items: center; justify-content: center;
+    padding: var(--kb-sp-9); box-sizing: border-box;
+  }
+  .kbv-modal-card {
+    background: var(--kb-card); border-radius: var(--kb-r-xl); max-width: 580px; width: 100%;
+    max-height: 100%; display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: var(--kb-sh-pop); box-sizing: border-box;
+  }
+  .kbv-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--kb-sp-6);
+                    padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7); border-bottom: 1px solid var(--kb-border-soft); }
+  .kbv-modal-head .title { font-family: var(--kb-f-display); font-size: var(--kb-fs-2xl); font-weight: 800;
+                           line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+  .kbv-modal-head .sub { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 46ch; }
+  .kbv-modal-head .hd-id { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+  .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); border-radius: var(--kb-r-pill);
+                     border: 1.5px solid var(--kb-border); background: var(--kb-card); color: var(--kb-text-2);
+                     display: flex; align-items: center; justify-content: center; flex: none; cursor: pointer;
+                     box-sizing: border-box; }
+  .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  .kbv-modal-body { padding: var(--kb-sp-8) var(--kb-sp-9); display: flex; flex-direction: column;
+                    gap: var(--kb-sp-7); overflow-y: auto; flex: 1 1 auto; }
+  .kbv-modal-foot { display: flex; justify-content: space-between; align-items: center; gap: var(--kb-sp-5);
+                    padding: var(--kb-sp-7) var(--kb-sp-9); border-top: 1px solid var(--kb-border-soft);
+                    background: var(--kb-surface); }
+  .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+  .kbv-modal-veil.sheet { align-items: flex-end; padding: 0; }
+  .kbv-modal-veil.sheet .kbv-modal-card { max-width: none; border-radius: var(--kb-r-xl) var(--kb-r-xl) 0 0; }
+  .kbv-modal-card .grab { width: 36px; height: 4px; border-radius: var(--kb-r-pill);
+                          background: var(--kb-border-strong); margin: var(--kb-sp-4) auto 0; }
+
+  /* ── Vocabulario del titulo: solo lo que esta pantalla necesita ────── */
+  .kbv-show-hd { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+  .kbv-show-tags { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
+  .kbv-show-hero { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: var(--kb-sp-8); align-items: start; }
+  .kbv-show-cover { height: 180px; border-radius: var(--kb-r-md); box-sizing: border-box; overflow: hidden;
+                    padding: var(--kb-sp-5); display: flex; flex-direction: column; justify-content: space-between;
+                    background: linear-gradient(150deg, color-mix(in oklab, var(--kb-media) 54%, var(--kb-void-2)), var(--kb-void-2));
+                    color: var(--kb-text-inverse); box-shadow: var(--kb-sh-2); }
+  .kbv-show-cover .ttl { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
+                         line-height: var(--kb-lh-tight); letter-spacing: .02em; text-transform: uppercase; }
+  .kbv-show-blocks { display: grid; grid-template-columns: repeat(auto-fit, minmax(196px, 1fr)); gap: var(--kb-sp-8); }
+  .kbv-show-block { display: flex; flex-direction: column; gap: var(--kb-sp-4); min-width: 0; }
+  .kbv-show-fig { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xl); line-height: 1;
+                  letter-spacing: -.02em; color: var(--kb-text); font-variant-numeric: tabular-nums;
+                  display: flex; align-items: baseline; gap: var(--kb-sp-3); }
+  .kbv-show-fig .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
+  .kbv-show-fig .none { color: var(--kb-text-2); }
+
+  /* El rating es un medidor: dibuja 26 y toca 44, sin margenes por pieza. */
+  .kbv-show-stars { display: flex; align-items: center; }
+  .kbv-show-star { width: var(--kb-touch-min); height: var(--kb-touch-min); padding: 0; border: 0;
+                   background: none; cursor: pointer; border-radius: var(--kb-r-pill);
+                   display: flex; align-items: center; justify-content: center; }
+  .kbv-show-star:hover { background: var(--kb-surface-2); }
+  .kbv-show-star:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+
+  .kbv-show-plats { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kb-sp-5); }
+  .kbv-show-plat { display: inline-flex; align-items: center; gap: var(--kb-sp-3); }
+  .kbv-show-plat .price { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                          font-variant-numeric: tabular-nums; color: var(--kb-text); }
+  .kbv-show-plat .price .per { font-weight: 600; font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+
+  .kbv-show-seasons { display: flex; flex-direction: column; gap: var(--kb-sp-8); }
+  .kbv-show-season { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+  .kbv-show-season-head { display: flex; align-items: baseline; justify-content: space-between;
+                          gap: var(--kb-sp-6); flex-wrap: wrap; }
+  .kbv-show-eps { display: flex; flex-wrap: wrap; gap: var(--kb-sp-4); }
+  .kbv-show-ep { box-sizing: border-box; min-width: 54px; height: var(--kb-touch-min); padding: 0 var(--kb-sp-5);
+                 display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-2);
+                 border: 1.5px solid var(--kb-border); border-radius: var(--kb-r-sm); background: var(--kb-card);
+                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                 font-variant-numeric: tabular-nums; color: var(--kb-text-2); cursor: pointer;
+                 transition: border-color var(--kb-dur-fast), background var(--kb-dur-fast), color var(--kb-dur-fast); }
+  .kbv-show-ep:hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
+  .kbv-show-ep.watched { background: var(--kb-primary-soft); border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+  .kbv-show-ep.next { border-style: dashed; border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+  .kbv-show-ep:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+  .kbv-show-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kb-sp-6); }
+  .kbv-show-legend .kbv-meta { display: inline-flex; align-items: center; gap: var(--kb-sp-3); }
+  .kbv-show-key { width: 14px; height: 14px; flex: none; border-radius: var(--kb-r-xs);
+                  border: 1.5px solid var(--kb-border); background: var(--kb-card); box-sizing: border-box; }
+  .kbv-show-key.watched { background: var(--kb-primary-soft); border-color: var(--kb-primary); }
+  .kbv-show-key.next { border-style: dashed; border-color: var(--kb-primary); }
+
+  /* Nota: lavado del rol con su glifo — el color solo nunca es el mensaje. */
+  .kbv-show-notes { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+  .kbv-show-note { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--kb-sp-5);
+                   padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                   background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+  .kbv-show-note .gl { display: flex; padding-top: 2px; color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+  .kbv-show-note .bd { display: flex; flex-direction: column; gap: var(--kb-sp-4); min-width: 0; }
+  .kbv-show-note .hd { display: flex; align-items: center; justify-content: space-between;
+                       gap: var(--kb-sp-5); flex-wrap: wrap; }
+  .kbv-show-note .tx { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+  .kbv-show-note .wh { font-family: var(--kb-f-label); font-size: var(--kb-fs-xs); font-weight: 700;
+                       letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text); }
+
+  .kbv-show-composer { display: flex; flex-direction: column; gap: var(--kb-sp-6);
+                       padding: var(--kb-sp-7); background: var(--kb-surface); border-radius: var(--kb-r-md); }
+  .kbv-show-composer .act { display: flex; align-items: center; justify-content: flex-end; gap: var(--kb-sp-4); }
+  .kbv-show-checkrow { display: flex; align-items: center; gap: var(--kb-sp-5);
+                       min-height: var(--kb-touch-min); cursor: pointer; }
+
+  .kbv-show-empty { display: flex; flex-direction: column; align-items: center; gap: var(--kb-sp-5);
+                    padding: var(--kb-sp-9); text-align: center; border-radius: var(--kb-r-lg);
+                    border: 1.5px dashed var(--kb-border-strong); background: var(--kb-surface-2); }
+  .kbv-show-empty .ti { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl); color: var(--kb-text-2); }
+  .kbv-show-empty .tx { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 44ch; }
+
+  .kbv-show-notice { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--kb-sp-6);
+                     padding: var(--kb-sp-8); border-radius: var(--kb-r-lg);
+                     background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
+  .kbv-show-notice .gl { display: flex; color: color-mix(in oklab, var(--c) 74%, var(--kb-void-2)); }
+  .kbv-show-notice .bd { display: flex; flex-direction: column; gap: var(--kb-sp-5); min-width: 0; }
+  .kbv-show-notice .ti { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl); color: var(--kb-text); }
+  .kbv-show-notice .tx { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); max-width: 62ch; }
+  .kbv-show-notice .act { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
+
+  /* Esqueleto: el texto va transparente y el bloque late. Con movimiento
+     reducido el latido se apaga por la regla del armazon. */
+  .kbv-skel { background: color-mix(in oklab, var(--kb-surface-2) 82%, var(--kb-border-strong));
+              border-radius: var(--kb-r-sm); color: transparent; animation: kbvSkel 1.4s var(--kb-ease-standard) infinite; }
+  .kbv-skel.pill { border-radius: var(--kb-r-pill); }
+  @keyframes kbvSkel { 0%, 100% { opacity: .6; } 50% { opacity: 1; } }
+
+  /* Rotulos de los casos: discretos, no compiten con la pantalla. */
+  .kbv-show-cases { display: flex; flex-direction: column; gap: var(--kb-sp-9); }
+  .kbv-show-case { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+  .kbv-show-label { display: flex; align-items: center; gap: var(--kb-sp-5); font-family: var(--kb-f-label);
+                    font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em;
+                    text-transform: uppercase; color: var(--kb-text-2); }
+  .kbv-show-label::after { content: ""; flex: 1 1 auto; height: 1px; background: var(--kb-border); }
+  .kbv-show-stage { position: relative; overflow: hidden; border-radius: var(--kb-r-lg);
+                    border: 1px solid var(--kb-border); background: var(--kb-surface); }
+  .kbv-show-stage .under { padding: var(--kb-sp-8); display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+  .kbv-show-grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+  .kbv-show-cell { display: flex; flex-direction: column; align-items: flex-start; gap: var(--kb-sp-4); }
+
+  .kbv-show-beh { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--kb-sp-5); }
+  .kbv-show-beh li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: var(--kb-sp-5);
+                     align-items: start; font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
+  .kbv-show-beh .gl { display: flex; padding-top: 3px; color: var(--kb-primary-ink); }
+
+  @container kbwin (max-width: 768px) {
+    .kbv-show-hero { grid-template-columns: minmax(0, 1fr); }
+    .kbv-show-grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+
+<!-- ── 1 · La cabecera de pagina ─────────────────────────────────────── -->
+<header class="kbv-page-head">
+  <div class="ph-id">
+    <nav class="kbv-crumb" aria-label="Dónde estoy">
+      <a href="#">Tu bitácora</a>
+      <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <a href="#">Entretenimiento</a>
+      <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="here" aria-current="page">Severance</span>
+    </nav>
+    <div class="kbv-show-tags">
+      <span class="kbv-areapill" style="--c: var(--kb-media)">
+        <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M8.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Serie
+      </span>
+      <span class="kbv-tag tint" style="--c: var(--kb-primary)">
+        <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M8 5.5l10 6.5-10 6.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Viendo
+      </span>
+      <span class="kbv-tag">T2 · E7 de 19</span>
+    </div>
+    <h1 class="kbv-h1">Severance</h1>
+    <p class="kbv-body">Apple TV+ · 2 temporadas · 19 episodios · Ciencia ficción</p>
+  </div>
+  <div class="ph-act">
+    <button type="button" class="kbv-btn kbv-btn-ghost">
+      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M11 5l-7 7 7 7M4 12h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Volver a Entretenimiento
+    </button>
+    <button type="button" class="kbv-btn kbv-btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Editar
+    </button>
+    <button type="button" class="kbv-btn kbv-btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Marcar siguiente ep<span class="kbv-sr-only">: temporada 2, episodio 8</span>
+    </button>
+  </div>
+</header>
+
+<!-- ── 2 · Hero compacto: portada y los cuatro bloques de lectura ────── -->
+<section class="kbv-card roomy" aria-label="Resumen del título">
+  <div class="kbv-show-hero">
+    <div class="kbv-show-cover" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="ttl">Severance</span>
+    </div>
+    <div class="kbv-show-blocks">
+
+      <div class="kbv-show-block">
+        <span class="kbv-eyebrow">Progreso</span>
+        <div class="kbv-show-fig">T2 · E7 <span class="unit">de 19</span></div>
+        <div class="kbv-progress-meta tone-progress">
+          <div class="kbv-progress sm"><span class="fill" style="width:84%"></span></div>
+          <div class="top"><span class="name">16 episodios vistos</span><span class="val">84 %</span></div>
+        </div>
+      </div>
+
+      <div class="kbv-show-block">
+        <span class="kbv-eyebrow">Rating</span>
+        <div class="kbv-show-stars" role="group" aria-label="Calificar de 1 a 5 estrellas">
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="1 estrella"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="2 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="3 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="4 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="5 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+        </div>
+        <span class="kbv-meta">Tu calificación: 5 de 5</span>
+      </div>
+
+      <div class="kbv-show-block">
+        <span class="kbv-eyebrow">Horas</span>
+        <div class="kbv-show-fig">17 <span class="unit">h</span></div>
+        <span class="kbv-meta">Derivadas de lo visto · ≈ 64 min por episodio</span>
+      </div>
+
+      <div class="kbv-show-block">
+        <span class="kbv-eyebrow">Disponible en</span>
+        <div class="kbv-show-plats">
+          <span class="kbv-show-plat">
+            <span class="kbv-tag">
+              <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 21h8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Apple TV+
+            </span>
+            <span class="price">$179<span class="per">/mes</span></span>
+          </span>
+        </div>
+        <span class="kbv-meta">Es el precio de la suscripción, no del título</span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── 3 · Temporadas y episodios (solo series) ──────────────────────── -->
+<section class="kbv-card">
+  <div class="kbv-card-head">
+    <div class="kbv-show-hd">
+      <h2 class="kbv-card-title">Temporadas y episodios</h2>
+      <p class="kbv-card-sub">Toca un episodio para marcarlo como visto y anotar una reflexión</p>
+    </div>
+    <div class="kbv-show-legend">
+      <span class="kbv-meta"><span class="kbv-show-key watched" aria-hidden="true"></span>Visto</span>
+      <span class="kbv-meta"><span class="kbv-show-key next" aria-hidden="true"></span>Siguiente</span>
+      <span class="kbv-meta"><span class="kbv-show-key" aria-hidden="true"></span>Pendiente</span>
+    </div>
+  </div>
+
+  <div class="kbv-show-seasons">
+    <div class="kbv-show-season">
+      <div class="kbv-show-season-head">
+        <h3 class="kbv-h4">Temporada 1</h3>
+        <span class="kbv-meta">9 de 9 episodios · 100 %</span>
+      </div>
+      <div class="kbv-show-eps" role="group" aria-label="Episodios de la temporada 1">
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 1, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E1</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 2, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E2</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 3, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E3</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 4, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E4</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 5, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E5</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 6, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E6</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 7, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E7</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 8, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E8</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 1, episodio 9, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E9</button>
+      </div>
+    </div>
+
+    <div class="kbv-show-season">
+      <div class="kbv-show-season-head">
+        <h3 class="kbv-h4">Temporada 2</h3>
+        <span class="kbv-meta">7 de 10 episodios · 70 %</span>
+      </div>
+      <div class="kbv-show-eps" role="group" aria-label="Episodios de la temporada 2">
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 1, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E1</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 2, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E2</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 3, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E3</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 4, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E4</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 5, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E5</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 6, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E6</button>
+        <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 7, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E7</button>
+        <button type="button" class="kbv-show-ep next" aria-pressed="false" aria-label="Temporada 2, episodio 8, el siguiente"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M8 5.5l10 6.5-10 6.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E8</button>
+        <button type="button" class="kbv-show-ep" aria-pressed="false" aria-label="Temporada 2, episodio 9, pendiente">E9</button>
+        <button type="button" class="kbv-show-ep" aria-pressed="false" aria-label="Temporada 2, episodio 10, pendiente">E10</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 4 · Comentarios y reflexiones ─────────────────────────────────── -->
+<section class="kbv-card">
+  <div class="kbv-card-head">
+    <div class="kbv-show-hd">
+      <h2 class="kbv-card-title">Comentarios y reflexiones</h2>
+      <p class="kbv-card-sub">2 notas · la más reciente primero</p>
+    </div>
+    <button type="button" class="kbv-btn kbv-btn-secondary sm">
+      <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Nueva reflexión
+    </button>
+  </div>
+
+  <div class="kbv-show-notes">
+    <div class="kbv-show-note" style="--c: var(--area-community)">
+      <span class="gl" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="bd">
+        <div class="hd">
+          <span class="kbv-tag solid" style="--c: var(--area-community)">Opinión</span>
+          <span class="wh">T2 · E1 — 15 may 2026</span>
+        </div>
+        <p class="tx">Visualmente impecable. El sonido es protagonista. Cinco estrellas sin duda.</p>
+      </div>
+    </div>
+
+    <div class="kbv-show-note" style="--c: var(--kb-primary)">
+      <span class="gl" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <div class="bd">
+        <div class="hd">
+          <span class="kbv-tag solid" style="--c: var(--kb-primary)">Reflexión</span>
+          <span class="wh">T1 · E5 — 22 abr 2026</span>
+        </div>
+        <p class="tx">La forma en que muestra el aislamiento corporativo me hizo pensar en cómo separo «trabajo» y «vida» yo mismo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     LOS ESTADOS Y LOS MODALES. De aquí abajo ya no es la pantalla viva:
+     es el mismo artboard mostrando cada estado que el expediente enumera.
+     ═════════════════════════════════════════════════════════════════════ -->
+<div class="kbv-show-cases">
+
+  <!-- Estado · Película -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · Película — sin temporadas, con «Marcar como vista»</div>
+    <header class="kbv-page-head">
+      <div class="ph-id">
+        <div class="kbv-show-tags">
+          <span class="kbv-areapill" style="--c: var(--kb-media)">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9l1.4-4.6 14.6-1.4L20.4 7.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Película
+          </span>
+          <span class="kbv-tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 4h12v16l-6-4-6 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Wishlist
+          </span>
+        </div>
+        <h2 class="kbv-h1">Anora</h2>
+        <p class="kbv-body">Drama · 139 min · 2024</p>
+      </div>
+      <div class="ph-act">
+        <button type="button" class="kbv-btn kbv-btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M11 5l-7 7 7 7M4 12h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Volver a Entretenimiento
+        </button>
+        <button type="button" class="kbv-btn kbv-btn-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Editar
+        </button>
+        <button type="button" class="kbv-btn kbv-btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Marcar como vista
+        </button>
+      </div>
+    </header>
+    <section class="kbv-card roomy" aria-label="Resumen de la película">
+      <div class="kbv-show-hero">
+        <div class="kbv-show-cover" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 9h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9l1.4-4.6 14.6-1.4L20.4 7.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="ttl">Anora</span>
+        </div>
+        <div class="kbv-show-blocks">
+          <div class="kbv-show-block">
+            <span class="kbv-eyebrow">Rating</span>
+            <div class="kbv-show-stars" role="group" aria-label="Calificar de 1 a 5 estrellas">
+              <button type="button" class="kbv-show-star" aria-pressed="false" aria-label="1 estrella"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="none" stroke="var(--kb-text-2)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="kbv-show-star" aria-pressed="false" aria-label="2 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="none" stroke="var(--kb-text-2)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="kbv-show-star" aria-pressed="false" aria-label="3 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="none" stroke="var(--kb-text-2)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="kbv-show-star" aria-pressed="false" aria-label="4 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="none" stroke="var(--kb-text-2)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+              <button type="button" class="kbv-show-star" aria-pressed="false" aria-label="5 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="none" stroke="var(--kb-text-2)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+            </div>
+            <span class="kbv-meta">Sin calificar — se califica al verla</span>
+          </div>
+          <div class="kbv-show-block">
+            <span class="kbv-eyebrow">Horas</span>
+            <div class="kbv-show-fig"><span class="none">—</span></div>
+            <span class="kbv-meta">Aún no la ves · dura 2 h 19 min</span>
+          </div>
+          <div class="kbv-show-block">
+            <span class="kbv-eyebrow">Disponible en</span>
+            <div class="kbv-show-plats">
+              <span class="kbv-show-plat">
+                <span class="kbv-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M4 5h16v13H4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 18v3h6v-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Cines
+                </span>
+                <span class="price">~$80<span class="per">/boleto</span></span>
+              </span>
+            </div>
+            <span class="kbv-meta">Solo en sala por ahora</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Estado · Los cuatro estados del título -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · Del título — cuál es la acción primaria en cada uno</div>
+    <div class="kbv-show-grid4">
+      <div class="kbv-card compact">
+        <span class="kbv-tag tint" style="--c: var(--kb-primary)">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M8 5.5l10 6.5-10 6.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Viendo
+        </span>
+        <p class="kbv-meta">Serie en curso. La primaria es «Marcar siguiente ep» y la ficha conserva T · E.</p>
+      </div>
+      <div class="kbv-card compact">
+        <span class="kbv-tag tint" style="--c: var(--kb-good)">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Visto
+        </span>
+        <p class="kbv-meta">Ya terminado. Sin acción primaria: quedan «Editar» y el cuaderno.</p>
+      </div>
+      <div class="kbv-card compact">
+        <span class="kbv-tag tint" style="--c: var(--kb-warn)">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M9 5v14M15 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          En pausa
+        </span>
+        <p class="kbv-meta">Se dejó a medias. La primaria vuelve a ser «Marcar siguiente ep» desde donde quedó.</p>
+      </div>
+      <div class="kbv-card compact">
+        <span class="kbv-tag">
+          <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M6 4h12v16l-6-4-6 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Wishlist
+        </span>
+        <p class="kbv-meta">Aún no empieza. La primaria es «Marcar como vista» en película, «Empezar» en serie.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado · Compositor abierto -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · Compositor de reflexión abierto (cerrado es el de arriba)</div>
+    <section class="kbv-card">
+      <div class="kbv-card-head">
+        <div class="kbv-show-hd">
+          <h2 class="kbv-card-title">Comentarios y reflexiones</h2>
+          <p class="kbv-card-sub">Escribiendo una nota nueva</p>
+        </div>
+      </div>
+      <div class="kbv-show-composer">
+        <div class="kbv-field">
+          <label class="kbv-label">Tu reflexión</label>
+          <div class="kbv-input kbv-area is-focus">Los dos primeros capítulos de la temporada me dejaron pensando en qué parte de mi semana funciona en piloto automático.</div>
+          <div class="kbv-help">Se guarda etiquetada como T2 · E7. En una película se etiqueta «Reflexión».</div>
+        </div>
+        <div class="act">
+          <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+          <button type="button" class="kbv-btn kbv-btn-primary">Guardar reflexión</button>
+        </div>
+      </div>
+      <div class="kbv-show-notes">
+        <div class="kbv-show-note" style="--c: var(--area-community)">
+          <span class="gl" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H9l-4 4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <div class="bd">
+            <div class="hd">
+              <span class="kbv-tag solid" style="--c: var(--area-community)">Opinión</span>
+              <span class="wh">T2 · E1 — 15 may 2026</span>
+            </div>
+            <p class="tx">Visualmente impecable. El sonido es protagonista. Cinco estrellas sin duda.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Estado · Vacío -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · Sin reflexiones</div>
+    <section class="kbv-card">
+      <div class="kbv-card-head">
+        <div class="kbv-show-hd">
+          <h2 class="kbv-card-title">Comentarios y reflexiones</h2>
+          <p class="kbv-card-sub">Todavía no hay notas de este título</p>
+        </div>
+        <button type="button" class="kbv-btn kbv-btn-secondary sm">
+          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Nueva reflexión
+        </button>
+      </div>
+      <div class="kbv-show-empty">
+        <span class="gl" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" stroke-width="1.8" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="ti">Sin reflexiones</div>
+        <p class="tx">Cuando algo te marque, déjalo escrito.</p>
+        <button type="button" class="kbv-btn kbv-btn-secondary sm">Escribir la primera</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Estado · Los episodios, uno por uno -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · Episodio — visto, siguiente, pendiente y con foco</div>
+    <div class="kbv-card compact">
+      <div class="kbv-show-grid4">
+        <div class="kbv-show-cell">
+          <button type="button" class="kbv-show-ep watched" aria-pressed="true" aria-label="Temporada 2, episodio 5, visto"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="3" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E5</button>
+          <span class="kbv-meta">Visto — lavado de marca y palomita. Suma a las horas y al porcentaje.</span>
+        </div>
+        <div class="kbv-show-cell">
+          <button type="button" class="kbv-show-ep next" aria-pressed="false" aria-label="Temporada 2, episodio 8, el siguiente"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M8 5.5l10 6.5-10 6.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>E8</button>
+          <span class="kbv-meta">Siguiente — contorno punteado. Es el que toma «Marcar siguiente ep».</span>
+        </div>
+        <div class="kbv-show-cell">
+          <button type="button" class="kbv-show-ep" aria-pressed="false" aria-label="Temporada 2, episodio 9, pendiente">E9</button>
+          <span class="kbv-meta">Pendiente — tócalo para abrir el modal de marcado.</span>
+        </div>
+        <div class="kbv-show-cell">
+          <button type="button" class="kbv-show-ep" aria-pressed="false" aria-label="Temporada 2, episodio 10, pendiente" style="box-shadow: var(--kb-focus-halo)">E10</button>
+          <span class="kbv-meta">Con foco — un solo aro, el del sistema, también con teclado.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado · Cargando -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · Cargando</div>
+    <section class="kbv-card roomy" aria-busy="true" aria-label="Cargando el título">
+      <div class="kbv-show-hero">
+        <div class="kbv-skel" style="height:180px"></div>
+        <div class="kbv-show-blocks">
+          <div class="kbv-show-block">
+            <span class="kbv-skel" style="width:72px; height:10px"></span>
+            <span class="kbv-skel" style="width:132px; height:22px"></span>
+            <span class="kbv-skel pill" style="width:100%; height:6px"></span>
+          </div>
+          <div class="kbv-show-block">
+            <span class="kbv-skel" style="width:56px; height:10px"></span>
+            <span class="kbv-skel" style="width:150px; height:26px"></span>
+            <span class="kbv-skel" style="width:96px; height:10px"></span>
+          </div>
+          <div class="kbv-show-block">
+            <span class="kbv-skel" style="width:48px; height:10px"></span>
+            <span class="kbv-skel" style="width:74px; height:22px"></span>
+            <span class="kbv-skel" style="width:120px; height:10px"></span>
+          </div>
+          <div class="kbv-show-block">
+            <span class="kbv-skel" style="width:88px; height:10px"></span>
+            <span class="kbv-skel pill" style="width:140px; height:22px"></span>
+            <span class="kbv-skel" style="width:110px; height:10px"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="kbv-card" aria-hidden="true">
+      <div class="kbv-card-head">
+        <div class="kbv-show-hd">
+          <span class="kbv-skel" style="width:220px; height:18px"></span>
+          <span class="kbv-skel" style="width:300px; height:12px"></span>
+        </div>
+      </div>
+      <div class="kbv-show-eps">
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+        <span class="kbv-skel" style="width:54px; height:44px"></span>
+      </div>
+    </section>
+  </div>
+
+  <!-- Estado · Error -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Estado · No cargó</div>
+    <section class="kbv-card" aria-label="Error al cargar">
+      <div class="kbv-show-notice" style="--c: var(--kb-hp)" role="alert">
+        <span class="gl" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 4.2l8.6 15.1H3.4z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10.2v3.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16.6h.01" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        <div class="bd">
+          <div class="ti">No pudimos cargar la ficha</div>
+          <p class="tx">Revisa tu conexión y vuelve a intentar. Lo que ya marcaste como visto y tus reflexiones están a salvo.</p>
+          <div class="act">
+            <button type="button" class="kbv-btn kbv-btn-secondary sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.4-5.7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 3.5V9h-5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Reintentar
+            </button>
+            <button type="button" class="kbv-btn kbv-btn-ghost sm">Volver a Entretenimiento</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal · Marcar episodio, sobre esta misma pantalla -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Modal · Marcar episodio, sobre esta pantalla</div>
+    <div class="kbv-show-stage" style="height:560px">
+      <div class="under" aria-hidden="true">
+        <div class="kbv-show-tags">
+          <span class="kbv-areapill" style="--c: var(--kb-media)">Serie</span>
+          <span class="kbv-tag tint" style="--c: var(--kb-primary)">Viendo</span>
+        </div>
+        <h2 class="kbv-h2">Severance</h2>
+        <div class="kbv-card">
+          <div class="kbv-card-head">
+            <div class="kbv-show-hd">
+              <div class="kbv-card-title">Temporadas y episodios</div>
+              <div class="kbv-card-sub">Toca un episodio para marcarlo como visto y anotar una reflexión</div>
+            </div>
+          </div>
+          <div class="kbv-show-eps">
+            <span class="kbv-show-ep watched">E1</span>
+            <span class="kbv-show-ep watched">E2</span>
+            <span class="kbv-show-ep watched">E3</span>
+            <span class="kbv-show-ep watched">E4</span>
+            <span class="kbv-show-ep watched">E5</span>
+            <span class="kbv-show-ep watched">E6</span>
+            <span class="kbv-show-ep watched">E7</span>
+            <span class="kbv-show-ep next">E8</span>
+            <span class="kbv-show-ep">E9</span>
+            <span class="kbv-show-ep">E10</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="kbv-modal-veil" role="dialog" aria-modal="true" aria-label="Marcar T2 · E8 como visto">
+        <div class="kbv-modal-card">
+          <div class="kbv-modal-head">
+            <div class="hd-id">
+              <div class="title">Marcar T2 · E8 como visto</div>
+              <div class="sub">Suma un episodio a tu progreso y sus minutos a las horas del título.</div>
+            </div>
+            <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+              <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="kbv-modal-body">
+            <div class="kbv-show-note" style="--c: var(--kb-primary)">
+              <span class="gl" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 5.5l10 6.5-10 6.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <div class="bd">
+                <div class="hd">
+                  <span class="wh">Temporada 2 · Episodio 8</span>
+                  <span class="wh">≈ 64 min</span>
+                </div>
+                <p class="tx">Al guardarlo, el título avanza a T2 · E9 y el porcentaje de la temporada pasa de 70 % a 80 %.</p>
+              </div>
+            </div>
+            <div class="kbv-show-checkrow">
+              <span class="kbv-check on" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="3" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="kbv-label">Anotar una reflexión de este episodio</span>
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label">Tu reflexión <span class="opt">(opcional)</span></label>
+              <div class="kbv-input kbv-area ph">Qué te marcó, ideas que dejó, conexiones con tu vida…</div>
+              <div class="kbv-help">Se etiqueta con T2 · E8 y se antepone a tus notas del título.</div>
+            </div>
+          </div>
+          <div class="kbv-modal-foot">
+            <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+            <div class="right">
+              <button type="button" class="kbv-btn kbv-btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Marcar visto
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal · el mismo, en teléfono -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Modal · El mismo en teléfono — hoja inferior, primaria a todo lo ancho</div>
+    <div class="kbv-show-stage" style="height:560px; max-width:390px">
+      <div class="under" aria-hidden="true" style="padding: var(--kb-sp-6)">
+        <h2 class="kbv-h3">Severance</h2>
+        <div class="kbv-card compact">
+          <div class="kbv-card-title" style="font-size: var(--kb-fs-lg)">Temporada 2</div>
+          <div class="kbv-show-eps">
+            <span class="kbv-show-ep watched">E5</span>
+            <span class="kbv-show-ep watched">E6</span>
+            <span class="kbv-show-ep watched">E7</span>
+            <span class="kbv-show-ep next">E8</span>
+          </div>
+        </div>
+      </div>
+      <div class="kbv-modal-veil sheet" role="dialog" aria-modal="true" aria-label="Marcar T2 · E8 como visto">
+        <div class="kbv-modal-card">
+          <span class="grab" aria-hidden="true"></span>
+          <div class="kbv-modal-head" style="padding: var(--kb-sp-6) var(--kb-sp-7) var(--kb-sp-5)">
+            <div class="hd-id">
+              <div class="title" style="font-size: var(--kb-fs-xl)">Marcar T2 · E8 como visto</div>
+              <div class="sub">Suma un episodio y sus minutos.</div>
+            </div>
+            <button type="button" class="kbv-modal-close" aria-label="Cerrar">
+              <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <div class="kbv-modal-body" style="padding: var(--kb-sp-6) var(--kb-sp-7)">
+            <div class="kbv-show-checkrow">
+              <span class="kbv-check on" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="3" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span class="kbv-label">Anotar una reflexión</span>
+            </div>
+            <div class="kbv-field">
+              <label class="kbv-label">Tu reflexión <span class="opt">(opcional)</span></label>
+              <div class="kbv-input kbv-area ph">Qué te marcó, ideas que dejó…</div>
+            </div>
+          </div>
+          <div class="kbv-modal-foot" style="padding: var(--kb-sp-6) var(--kb-sp-7); flex-direction: column; align-items: stretch; gap: var(--kb-sp-4)">
+            <button type="button" class="kbv-btn kbv-btn-primary" style="width:100%">Marcar visto</button>
+            <button type="button" class="kbv-btn kbv-btn-ghost" style="width:100%">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comportamiento -->
+  <div class="kbv-show-case">
+    <div class="kbv-show-label">Comportamiento</div>
+    <section class="kbv-card roomy">
+      <div class="kbv-card-head">
+        <div class="kbv-show-hd">
+          <h2 class="kbv-card-title">Lo que no se ve en el dibujo</h2>
+          <p class="kbv-card-sub">Una línea por comportamiento, para quien lo construya</p>
+        </div>
+      </div>
+      <ul class="kbv-show-beh">
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Volver</strong> — el botón fantasma y la migaja llevan al mismo destino: la lista de Entretenimiento, con su filtro y su orden como estaban.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Calificar</strong> — tocar la estrella n fija el rating en n al instante, sin confirmar, y el cambio viaja de vuelta a la lista. Las estrellas son un medidor, no texto: su piso de contraste es 3:1.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Marcar siguiente ep</strong> — toma el episodio punteado, lo marca visto y avanza T · E. En película la misma posición dice «Marcar como vista» y cierra el título.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Tocar un episodio</strong> — abre el modal de marcado; con la casilla activa guarda además la reflexión etiquetada T · E. Volver a tocar uno ya visto lo desmarca.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Nueva reflexión</strong> — abre el compositor en línea. «Cancelar» limpia el texto y lo cierra; «Guardar reflexión» antepone la nota a la lista, etiquetada T{n} · E{n} en serie o «Reflexión» en película.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Guardar en reposo</strong> — mientras el texto esté vacío el botón va deshabilitado (superficie 2 y texto 2, nunca opacidad), no invisible.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Todo lo agregado se deriva</strong> — el porcentaje de cada temporada, el 84 % del título y las 17 horas se calculan de los episodios marcados; ninguno se guarda como dato propio.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Cada episodio marcado es un hecho</strong> — lleva su área encima, como todo hecho de Kibo; el área es un eje del registro, nunca un destino al que se navegue desde aquí.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>El precio no compra</strong> — la plataforma y su precio son informativos: es el costo de la suscripción, no del título, y desde aquí no se contrata nada.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>El modal</strong> — se cierra con Escape, con el velo y con su botón de 44 px; el foco queda atrapado dentro mientras está abierto y vuelve al episodio al cerrar. En teléfono es hoja inferior.</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Una sola primaria por vista</strong> — la de la cabecera. Dentro de las tarjetas todo es secundario o fantasma, incluida «Nueva reflexión».</span>
+        </li>
+        <li>
+          <span class="gl" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M5 12h12M12 7l5 5-5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <span><strong>Movimiento reducido</strong> — el esqueleto deja de latir y las barras dejan de animarse; KIBO conserva su tempo, como manda el armazón.</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+</div>

@@ -1,0 +1,1215 @@
+<style>
+    /* ==========================================================================
+       HOY — piezas propias del tablero de widgets. Todo sale de los tokens del
+       helmet; aqui no se escribe un solo color.
+       ========================================================================== */
+
+    /* La quinta variante del boton (DS 6.1), que el armazon todavia no publica. */
+    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+                    height: auto; padding: 0; border: 0; font-size: var(--kb-fs-md);
+                    text-underline-offset: 3px; }
+    .kbv-btn-link:hover { text-decoration: underline; }
+    .kbv-btn-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .tone-boss { --c: var(--kb-boss); }
+    .tone-coin { --c: var(--kb-coin); }
+    .tone-media { --c: var(--kb-media); }
+
+    /* ── El tablero: la rejilla del armazon con su alto de fila declarado ─── */
+    .kbv-board { grid-auto-rows: 152px; }
+    .kbv-board > .h-2 { grid-row: span 2; }
+    .kbv-widget { position: relative; min-width: 0; }
+    .kbv-widget.link { cursor: pointer; text-align: left; font-family: var(--kb-f-body);
+                       font-size: var(--kb-fs-md); transition: transform var(--kb-dur-fast) var(--kb-ease-standard),
+                       box-shadow var(--kb-dur-fast) var(--kb-ease-standard); }
+    .kbv-widget.link:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2); }
+    .kbv-widget.link:focus-visible { outline: none; border-color: var(--kb-primary);
+                                     box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+    .kbv-widget-inner { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                        flex: 1 1 auto; min-height: 0; min-width: 0; }
+
+    .kbv-w-head { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; flex: none; }
+    .kbv-w-ico { width: 26px; height: 26px; border-radius: var(--kb-r-xs); flex: none;
+                 display: flex; align-items: center; justify-content: center;
+                 background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+                 color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+    .kbv-w-id { display: flex; flex-direction: column; gap: var(--kb-sp-1); min-width: 0; flex: 1 1 auto; }
+    .kbv-w-id .n { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                   line-height: var(--kb-lh-tight); color: var(--kb-text);
+                   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-w-id .m { font-size: var(--kb-fs-xs); color: var(--kb-text-2);
+                   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-w-body { flex: 1 1 auto; min-height: 0; min-width: 0; display: flex;
+                  flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-w-list { display: flex; flex-direction: column; gap: var(--kb-sp-1); min-width: 0; }
+
+    /* Toda fila del tablero mide 44: es destino, no adorno. */
+    .kbv-w-row { display: flex; align-items: center; gap: var(--kb-sp-4); width: 100%;
+                 min-height: var(--kb-touch-min); box-sizing: border-box; padding: 0 var(--kb-sp-4);
+                 border: 0; border-radius: var(--kb-r-sm); background: transparent;
+                 font-family: var(--kb-f-body); color: var(--kb-text); text-align: left; cursor: pointer; }
+    .kbv-w-row:hover { background: var(--kb-surface); }
+    .kbv-w-row:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-w-row .t { flex: 1 1 auto; min-width: 0; font-size: var(--kb-fs-sm); font-weight: 600;
+                    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-w-row .t em { display: block; font-style: normal; font-weight: 400;
+                       font-size: var(--kb-fs-xs); color: var(--kb-text-2);
+                       overflow: hidden; text-overflow: ellipsis; }
+    .kbv-w-dot { width: 8px; height: 8px; border-radius: var(--kb-r-pill); flex: none;
+                 background: color-mix(in oklab, var(--rc, var(--kb-primary)) 62%, var(--kb-void-2)); }
+    .kbv-w-av { width: 22px; height: 22px; border-radius: var(--kb-r-pill); flex: none;
+                display: flex; align-items: center; justify-content: center;
+                background: color-mix(in oklab, var(--rc, var(--kb-primary)) 14%, var(--kb-canvas));
+                color: color-mix(in oklab, var(--rc, var(--kb-primary)) 54%, var(--kb-void-2));
+                font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-xs); }
+    .kbv-w-when { flex: none; font-family: var(--kb-f-display); font-weight: 700;
+                  font-size: var(--kb-fs-xs); font-variant-numeric: tabular-nums; color: var(--kb-text-2); }
+    .kbv-w-when.soon { color: var(--kb-warn-ink); }
+    .kbv-w-when.late { color: var(--kb-hp-ink); }
+    .kbv-w-num { flex: none; font-family: var(--kb-f-display); font-weight: 700;
+                 font-size: var(--kb-fs-sm); font-variant-numeric: tabular-nums; color: var(--kb-text); }
+    .kbv-w-num.xp { color: var(--kb-primary-ink); }
+    .kbv-w-bar { flex: 0 0 62px; }
+    .kbv-w-hero { flex: 1 1 auto; display: flex; flex-direction: column;
+                  justify-content: center; gap: var(--kb-sp-3); }
+    .kbv-w-big { display: flex; align-items: baseline; gap: var(--kb-sp-2);
+                 font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-3xl);
+                 line-height: 1; letter-spacing: -.02em; color: var(--kb-text);
+                 font-variant-numeric: tabular-nums; }
+    .kbv-w-big .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
+    .kbv-w-cap { font-size: var(--kb-fs-xs); color: var(--kb-text-2); }
+    .kbv-w-cap b { color: var(--kb-text); font-weight: 700; }
+    .kbv-w-chips { display: flex; flex-wrap: wrap; gap: var(--kb-sp-2); }
+    .kbv-w-chips .kbv-chip { height: 28px; font-size: var(--kb-fs-xs); padding: 0 var(--kb-sp-5); }
+    .kbv-w-shields { display: flex; gap: var(--kb-sp-2); color: var(--kb-streak-ink); }
+    .kbv-w-cover { width: 34px; height: 46px; flex: none; border-radius: var(--kb-r-xs);
+                   background: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
+                   box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 40%, var(--kb-canvas));
+                   display: flex; align-items: center; justify-content: center;
+                   color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-w-media { display: flex; align-items: center; gap: var(--kb-sp-5); min-width: 0; }
+
+    /* Habitos: tarjeta por habito, casilla de 22 que toca 44. */
+    .kbv-habits { display: grid; grid-template-columns: repeat(auto-fill, minmax(216px, 1fr));
+                  gap: var(--kb-sp-4); }
+    .kbv-habit { display: flex; align-items: center; gap: var(--kb-sp-5); min-height: 58px;
+                 box-sizing: border-box; padding: var(--kb-sp-4) var(--kb-sp-5); border-radius: var(--kb-r-md);
+                 background: var(--kb-surface); border: 1px solid var(--kb-border-soft); min-width: 0; }
+    .kbv-habit .t { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-1); }
+    .kbv-habit .n { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text);
+                    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-habit .h { font-size: var(--kb-fs-xs); color: var(--kb-text-2);
+                    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-habit.done { background: var(--kb-primary-soft); border-color: var(--kb-primary-border); }
+    .kbv-habit.done .n { color: var(--kb-text-2); text-decoration: line-through; }
+
+    /* Prioridad y energia: glifos medidores, en la tinta de su rol (R-13). */
+    .kbv-pri { flex: none; display: flex;
+               color: color-mix(in oklab, var(--c, var(--pri-medium)) 54%, var(--kb-void-2)); }
+    .kbv-pri.urgent { --c: var(--pri-urgent); }
+    .kbv-pri.high   { --c: var(--pri-high); }
+    .kbv-pri.medium { --c: var(--pri-medium); }
+    .kbv-pri.low    { --c: var(--pri-low); }
+    .kbv-energy { flex: none; display: flex; align-items: flex-end; gap: 2px; height: 12px; }
+    .kbv-energy i { width: 3px; border-radius: var(--kb-r-pill); background: var(--kb-border-strong); }
+    .kbv-energy i.on { background: var(--kb-text-2); }
+    .kbv-energy i:nth-child(1) { height: 5px; }
+    .kbv-energy i:nth-child(2) { height: 7px; }
+    .kbv-energy i:nth-child(3) { height: 9px; }
+    .kbv-energy i:nth-child(4) { height: 12px; }
+
+    /* Tareas 4x2: lista priorizada + kanban mini. */
+    .kbv-w-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+                   gap: var(--kb-sp-7); flex: 1 1 auto; min-height: 0; }
+    .kbv-w-col { display: flex; flex-direction: column; gap: var(--kb-sp-3); min-width: 0; }
+    .kbv-w-coltitle { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                      letter-spacing: .09em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-kan { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-4);
+               flex: 1 1 auto; min-height: 0; }
+    .kbv-kan-col { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0;
+                   padding: var(--kb-sp-4); border-radius: var(--kb-r-sm); background: var(--kb-surface); }
+    .kbv-kan-head { display: flex; align-items: center; gap: var(--kb-sp-3); min-width: 0; }
+    .kbv-kan-head .nm { flex: 1 1 auto; min-width: 0; font-family: var(--kb-f-label);
+                        font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .06em;
+                        text-transform: uppercase; color: var(--kb-text-2);
+                        overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-kan-item { display: flex; align-items: center; gap: var(--kb-sp-3); width: 100%;
+                    min-height: var(--kb-touch-min); box-sizing: border-box; padding: 0 var(--kb-sp-4);
+                    border: 0; border-radius: var(--kb-r-xs); background: var(--kb-card);
+                    box-shadow: var(--kb-sh-1); cursor: pointer; text-align: left;
+                    font-family: var(--kb-f-body); color: var(--kb-text); }
+    .kbv-kan-item:hover { box-shadow: var(--kb-sh-2); }
+    .kbv-kan-item:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-kan-item span { flex: 1 1 auto; min-width: 0; font-size: var(--kb-fs-xs); font-weight: 600;
+                         line-height: var(--kb-lh-snug); overflow: hidden; text-overflow: ellipsis; }
+
+    /* ── Modo edicion ────────────────────────────────────────────────────── */
+    .kbv-widget-bar { display: flex; align-items: center; gap: var(--kb-sp-3); flex: none;
+                      padding: var(--kb-sp-2) var(--kb-sp-3); background: var(--kb-surface-2);
+                      border-bottom: 1px solid var(--kb-border); }
+    .kbv-widget-bar .kbv-btn.sm { padding: 0 var(--kb-sp-5); }
+    .kbv-widget-bar .grow { flex: 1 1 auto; }
+    .kbv-widget.editable .kbv-widget-inner { padding: var(--kb-sp-6); pointer-events: none; }
+    .kbv-widget.editable { cursor: grab; }
+    .kbv-widget.dragging { opacity: .55; border-color: var(--kb-primary); box-shadow: var(--kb-sh-3); cursor: grabbing; }
+    .kbv-widget.dropzone { outline: 2px dashed var(--kb-primary); outline-offset: 4px; }
+    .kbv-grip { cursor: grab; color: var(--kb-text-2); }
+    .kbv-remove { color: var(--kb-hp-ink); }
+    .kbv-remove:hover { background: var(--kb-hp-soft); color: var(--kb-hp-ink); }
+
+    .kbv-slot-empty { display: flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
+                      min-height: 152px; box-sizing: border-box; border-radius: var(--kb-r-lg);
+                      border: 1.5px dashed var(--kb-border-strong); background: var(--kb-surface-2);
+                      color: var(--kb-text-2); font-family: var(--kb-f-display); font-weight: 700;
+                      font-size: var(--kb-fs-md); cursor: pointer; }
+    .kbv-slot-empty:hover { border-color: var(--kb-primary); background: var(--kb-primary-soft);
+                            color: var(--kb-primary-ink); }
+    .kbv-slot-empty:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-slot-empty.locked { cursor: default; border-style: solid; border-color: var(--kb-border); }
+
+    .kbv-row-unlock { grid-column: 1 / -1; display: flex; align-items: center; gap: var(--kb-sp-6);
+                      box-sizing: border-box; min-height: var(--kb-touch-min);
+                      padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-lg);
+                      border: 1.5px dashed var(--kb-border-strong); background: var(--kb-surface-2);
+                      font-family: var(--kb-f-body); text-align: left; cursor: pointer; }
+    .kbv-row-unlock:hover { border-color: var(--kb-primary); }
+    .kbv-row-unlock:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-row-unlock .glyph { width: 34px; height: 34px; flex: none; border-radius: var(--kb-r-pill);
+                             display: flex; align-items: center; justify-content: center;
+                             background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-row-unlock .info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-1); }
+    .kbv-row-unlock .name { font-family: var(--kb-f-display); font-weight: 700;
+                            font-size: var(--kb-fs-md); color: var(--kb-text); }
+    .kbv-row-unlock .sub { font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
+    .kbv-row-unlock .sub b { color: var(--kb-text); font-weight: 700; }
+
+    /* Precio: la Divisa en su lavado, el Elemento en su vacio con halo. */
+    .kbv-price { display: inline-flex; align-items: center; gap: var(--kb-sp-3); flex: none;
+                 height: 30px; box-sizing: border-box; padding: 0 var(--kb-sp-5);
+                 border-radius: var(--kb-r-pill); background: var(--kb-void-1); color: var(--kb-dark-glint);
+                 box-shadow: 0 0 0 2px color-mix(in srgb, var(--kb-dark-halo) 26%, transparent);
+                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
+                 font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .kbv-price.coin { background: var(--kb-coin-soft); color: var(--kb-coin-ink);
+                      box-shadow: inset 0 0 0 1px var(--kb-coin-border); }
+
+    /* ── Estados de datos ────────────────────────────────────────────────── */
+    .kbv-empty { display: flex; flex-direction: column; align-items: center; text-align: center;
+                 gap: var(--kb-sp-5); padding: var(--kb-sp-9); border-radius: var(--kb-r-lg);
+                 border: 1.5px dashed var(--kb-border-strong); background: var(--kb-surface-2); }
+    .kbv-empty .glyph { width: 48px; height: 48px; border-radius: var(--kb-r-pill); flex: none;
+                        display: flex; align-items: center; justify-content: center;
+                        background: var(--kb-card); color: var(--kb-text-2); }
+    .kbv-empty .ttl { font-family: var(--kb-f-display); font-weight: 700;
+                      font-size: var(--kb-fs-xl); color: var(--kb-text); }
+    .kbv-empty .desc { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 54ch; }
+    .kbv-empty .acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--kb-sp-4); }
+
+    .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
+                  padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
+                  background: color-mix(in oklab, var(--c, var(--kb-hp)) 10%, var(--kb-canvas));
+                  color: var(--kb-text); }
+    .kbv-notice .glyph { flex: none; display: flex;
+                         color: color-mix(in oklab, var(--c, var(--kb-hp)) 54%, var(--kb-void-2)); }
+    .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
+    .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md); }
+    .kbv-notice .sub { font-size: var(--kb-fs-sm); }
+
+    .kbv-skel { border-radius: var(--kb-r-sm); background: var(--kb-surface-2);
+                animation: kbSkelPulso 1.4s var(--kb-ease-standard) infinite; }
+    .kbv-skel.line { height: 14px; }
+    .kbv-skel.bar { height: 10px; }
+    .kbv-skel.sq { width: 26px; height: 26px; border-radius: var(--kb-r-xs); }
+    .kbv-skel.grow { flex: 1 1 auto; }
+    @keyframes kbSkelPulso { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+
+    /* ── Ayuda, popover de tamano, velo y escenario ──────────────────────── */
+    .kbv-tip { max-width: 320px; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
+               border-radius: var(--kb-r-md); background: var(--kb-void-2); color: var(--kb-text-inverse);
+               font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); box-shadow: var(--kb-sh-3); }
+    .kbv-tip-wrap { display: flex; align-items: center; gap: var(--kb-sp-5); }
+
+    .kbv-sizepicker { width: 244px; box-sizing: border-box; padding: var(--kb-sp-5);
+                      display: flex; flex-direction: column; gap: var(--kb-sp-2);
+                      background: var(--kb-card); border: 1px solid var(--kb-border);
+                      border-radius: var(--kb-r-md); box-shadow: var(--kb-sh-3); }
+    .kbv-sizepicker.float { position: absolute; z-index: var(--kb-z-popover); }
+    .kbv-sizepicker .head { padding: 0 var(--kb-sp-3); font-family: var(--kb-f-label);
+                            font-size: var(--kb-fs-2xs); font-weight: 800; letter-spacing: .09em;
+                            text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-size-opt { display: flex; align-items: center; gap: var(--kb-sp-5); width: 100%;
+                    min-height: var(--kb-touch-min); box-sizing: border-box; padding: 0 var(--kb-sp-3);
+                    border: 0; border-radius: var(--kb-r-sm); background: transparent;
+                    font-family: var(--kb-f-body); color: var(--kb-text); text-align: left; cursor: pointer; }
+    .kbv-size-opt:hover { background: var(--kb-surface); }
+    .kbv-size-opt:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-size-opt.on { background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-size-opt .prev { flex: none; border-radius: 3px;
+                          background: color-mix(in oklab, var(--kb-primary) 26%, var(--kb-canvas));
+                          box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--kb-primary) 48%, var(--kb-canvas)); }
+    .kbv-size-opt .dim { flex: none; width: 36px; font-family: var(--kb-f-display); font-weight: 700;
+                         font-size: var(--kb-fs-sm); font-variant-numeric: tabular-nums; }
+    .kbv-size-opt .nm { flex: 1 1 auto; font-size: var(--kb-fs-sm); }
+    .kbv-size-opt .tick { flex: none; display: flex; color: var(--kb-primary-ink); }
+
+    .kbv-stage { position: relative; border-radius: var(--kb-r-md); overflow: hidden;
+                 background: var(--kb-surface); border: 1px solid var(--kb-border); }
+    .kbv-stage .under { padding: var(--kb-sp-7); display: flex; flex-direction: column; gap: var(--kb-sp-6); }
+
+    .kbv-modal-veil { position: absolute; inset: 0; z-index: var(--kb-z-modal); box-sizing: border-box;
+                      display: flex; align-items: center; justify-content: center; padding: var(--kb-sp-9);
+                      background: color-mix(in srgb, var(--kb-text) 55%, transparent);
+                      backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+    .kbv-modal-card { width: 100%; max-width: 580px; max-height: 100%; box-sizing: border-box;
+                      display: flex; flex-direction: column; overflow: hidden;
+                      background: var(--kb-card); border-radius: var(--kb-r-xl); box-shadow: var(--kb-sh-pop); }
+    .kbv-modal-card.sm { max-width: 420px; }
+    .kbv-modal-card.lg { max-width: 720px; }
+    .kbv-modal-card.full { max-width: 1040px; }
+    .kbv-modal-head { display: flex; align-items: flex-start; justify-content: space-between;
+                      gap: var(--kb-sp-6); padding: var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);
+                      border-bottom: 1px solid var(--kb-border-soft); }
+    .kbv-modal-head .title { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xl);
+                             line-height: var(--kb-lh-snug); letter-spacing: -.01em; color: var(--kb-text); }
+    .kbv-modal-head .sub { font-size: var(--kb-fs-md); color: var(--kb-text-2); max-width: 46ch; }
+    .kbv-modal-head .id { display: flex; flex-direction: column; gap: var(--kb-sp-2); min-width: 0; }
+    .kbv-modal-close { width: var(--kb-touch-min); height: var(--kb-touch-min); flex: none;
+                       box-sizing: border-box; border-radius: var(--kb-r-pill);
+                       border: 1.5px solid var(--kb-border); background: var(--kb-card);
+                       color: var(--kb-text-2); display: flex; align-items: center;
+                       justify-content: center; cursor: pointer; }
+    .kbv-modal-close:hover { background: var(--kb-surface); color: var(--kb-text); }
+    .kbv-modal-close:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-modal-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: var(--kb-sp-8) var(--kb-sp-9);
+                      display: flex; flex-direction: column; gap: var(--kb-sp-7); }
+    .kbv-modal-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--kb-sp-5);
+                      padding: var(--kb-sp-7) var(--kb-sp-9); background: var(--kb-surface);
+                      border-top: 1px solid var(--kb-border-soft); }
+    .kbv-modal-foot .right { display: flex; align-items: center; gap: var(--kb-sp-4); }
+
+    /* ── Galeria de widgets ──────────────────────────────────────────────── */
+    .kbv-gal-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-5); }
+    .kbv-gal-kpi { padding: 0; text-align: left; cursor: pointer; font-family: var(--kb-f-body);
+                   border: 1px solid var(--kb-border); }
+    .kbv-gal-kpi:hover { box-shadow: var(--kb-sh-2); }
+    .kbv-gal-kpi:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
+    .kbv-gal-kpi.on { border-color: color-mix(in oklab, var(--c) 52%, var(--kb-canvas));
+                      box-shadow: var(--kb-sh-2); }
+    .kbv-gal-kpi .desc { font-size: var(--kb-fs-xs); color: var(--kb-text-2); line-height: var(--kb-lh-snug); }
+    .kbv-gal-stats { display: flex; flex-wrap: wrap; gap: var(--kb-sp-6); }
+    .kbv-gal-stat { display: flex; flex-direction: column; }
+    .kbv-gal-stat .n { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
+                       line-height: 1.1; color: var(--kb-text); font-variant-numeric: tabular-nums; }
+    .kbv-gal-stat .l { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
+                       letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text-2); }
+    .kbv-gal-stat.free .n { color: var(--kb-primary-ink); }
+    .kbv-gal-stat.prem .n { color: var(--kb-dark-edge); }
+
+    .kbv-gal-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--kb-sp-6); }
+    .kbv-gal-item { display: flex; flex-direction: column; align-items: flex-start; gap: var(--kb-sp-4);
+                    box-sizing: border-box; min-height: 168px; padding: var(--kb-sp-6);
+                    background: var(--kb-card); border: 1px solid var(--kb-border);
+                    border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
+                    font-family: var(--kb-f-body); text-align: left; cursor: pointer; }
+    .kbv-gal-item:hover { transform: translateY(-1px); box-shadow: var(--kb-sh-2); }
+    .kbv-gal-item:focus-visible { outline: none; border-color: var(--kb-primary);
+                                  box-shadow: var(--kb-sh-1), var(--kb-focus-halo); }
+    .kbv-gal-item[disabled] { background: var(--kb-surface-2); border-color: transparent;
+                              box-shadow: none; cursor: default; transform: none; }
+    .kbv-gal-item .top { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; width: 100%; }
+    .kbv-gal-item .name { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
+                          color: var(--kb-text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kbv-gal-item .desc { flex: 1 1 auto; font-size: var(--kb-fs-sm); color: var(--kb-text-2);
+                          line-height: var(--kb-lh-snug); }
+    .kbv-gal-item .sizes { font-family: var(--kb-f-display); font-size: var(--kb-fs-xs); font-weight: 700;
+                           color: var(--kb-text-2); font-variant-numeric: tabular-nums; }
+
+    /* ── El bloque de comportamiento, para quien lo construya ────────────── */
+    .kbv-behavior { display: flex; flex-direction: column; gap: var(--kb-sp-4);
+                    margin: 0; padding: 0; list-style: none; }
+    .kbv-behavior > li { display: flex; align-items: baseline; gap: var(--kb-sp-6);
+                         font-size: var(--kb-fs-md); color: var(--kb-text); line-height: var(--kb-lh-body); }
+    .kbv-behavior .k { flex: 0 0 168px; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
+                       font-weight: 800; letter-spacing: .09em; text-transform: uppercase;
+                       color: var(--kb-text-2); }
+    .kbv-behavior .v { flex: 1 1 auto; min-width: 0; }
+  </style>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       1 · CABECERA DE PAGINA
+       La migaja deriva del menu: grupo «General» → destino «Hoy» → el dia.
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="kbv-page-head">
+    <div class="ph-id">
+      <nav class="kbv-crumb" aria-label="Ruta">
+        <a href="#">General</a>
+        <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+        <span class="here">Hoy</span>
+        <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M9 5l7 7-7 7"/></svg></span>
+        <span>Lun 25 May</span>
+      </nav>
+      <div style="display:flex; align-items:center; gap:var(--kb-sp-4)">
+        <h1 class="kbv-h1">Buenas tardes, Sergio.</h1>
+        <button type="button" class="kbv-icon-btn" aria-label="Cómo funciona tu tablero" aria-expanded="false">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11.5v5"/><path d="M12 7.6v.6"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="ph-act">
+      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero">
+        <button type="button" class="on" aria-pressed="true" title="Hábitos y racha primero; el día por delante.">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 4v3M5.6 9.6l2 2M18.4 9.6l-2 2M3 17h18M8 17a4 4 0 0 1 8 0"/></svg>
+          Mañana
+        </button>
+        <button type="button" aria-pressed="false" title="Tareas y proyectos al frente; lo demás abajo.">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+          Trabajo
+        </button>
+        <button type="button" aria-pressed="false" title="Cierre del día: diario, lectura y balance.">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>
+          Noche
+        </button>
+      </div>
+      <button type="button" class="kbv-btn kbv-btn-secondary sm">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+        Explorar widgets
+      </button>
+      <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-pressed="false">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>
+        Editar dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       2 · EL TABLERO EN VISTA (editing = false)
+       4 columnas x 9 filas. 15 widgets del arreglo por defecto, sin controles.
+       ══════════════════════════════════════════════════════════════════ -->
+  <div class="kbv-canvas-grid kbv-board">
+
+    <!-- habits · 4x1 -->
+    <article class="kbv-widget kbv-card compact w-4" style="--c: var(--kb-streak)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Hábitos de hoy</span><span class="m">2 de 4 hechos</span></span>
+          <span class="kbv-tag tint" style="--c: var(--kb-xp)">+25 / 47 XP</span>
+          <button type="button" class="kbv-btn kbv-btn-link">Ver los 6</button>
+          <button type="button" class="kbv-icon-btn" aria-label="Nuevo hábito">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <div class="kbv-habits">
+          <div class="kbv-habit done">
+            <span class="kbv-check on" role="checkbox" aria-checked="true" tabindex="0" aria-label="Tomar 2 L de agua"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+            <span class="t"><span class="n">Tomar 2 L de agua</span><span class="h">Cualquier hora</span></span>
+            <span class="kbv-w-num xp">+10</span>
+          </div>
+          <div class="kbv-habit done">
+            <span class="kbv-check on" role="checkbox" aria-checked="true" tabindex="0" aria-label="No redes después de 22 h"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+            <span class="t"><span class="n">No redes después de 22 h</span><span class="h">22:00 — 24:00</span></span>
+            <span class="kbv-w-num xp">+15</span>
+          </div>
+          <div class="kbv-habit">
+            <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0" aria-label="Estiramientos AM"></span>
+            <span class="t"><span class="n">Estiramientos AM</span><span class="h">07:00 — 09:00</span></span>
+            <span class="kbv-w-num xp">+10</span>
+          </div>
+          <div class="kbv-habit">
+            <span class="kbv-check" role="checkbox" aria-checked="false" tabindex="0" aria-label="Diario nocturno"></span>
+            <span class="t"><span class="n">Diario nocturno</span><span class="h">22:30</span></span>
+            <span class="kbv-w-num xp">+12</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- reto · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--kb-boss)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Procrastinación nocturna</span><span class="m">Sin pantalla después de las 22:00, 30 días</span></span>
+          <span class="kbv-tag tint" style="--c: var(--kb-boss)">Día 21 / 30</span>
+        </div>
+        <div class="kbv-w-body">
+          <div class="kbv-progress-meta tone-boss">
+            <div class="top">
+              <span class="name">Avance del reto</span>
+              <span class="val">70 %</span>
+            </div>
+            <span class="kbv-progress tone-boss"><span class="fill" style="width:70%"></span></span>
+          </div>
+          <div class="kbv-w-cap">Fallas <b>1 / 2</b> permitidas &nbsp;·&nbsp; recompensa <b>+450 XP</b></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- crono · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--kb-primary)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Cronograma</span><span class="m">1 vencido</span></span>
+          <button type="button" class="kbv-icon-btn" aria-label="Abrir el cronograma">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="kbv-w-list">
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-wealth)">
+            <i class="kbv-w-dot" aria-hidden="true"></i>
+            <span class="t">Cerrar cliente Aurora</span>
+            <span class="kbv-w-when late">2 d tarde</span>
+          </button>
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-vigor)">
+            <i class="kbv-w-dot" aria-hidden="true"></i>
+            <span class="t">Maratón otoño 2026</span>
+            <span class="kbv-w-when soon">mañana</span>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- tasks · 4x2 -->
+    <article class="kbv-widget kbv-card compact w-4 h-2" style="--c: var(--kb-primary)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Tareas de hoy</span><span class="m">6 pendientes · 1 hecha</span></span>
+          <button type="button" class="kbv-btn kbv-btn-link">Ver todas</button>
+        </div>
+        <div class="kbv-w-split">
+          <div class="kbv-w-col">
+            <span class="kbv-w-coltitle">Priorizadas</span>
+            <div class="kbv-w-list">
+              <button type="button" class="kbv-w-row">
+                <span class="kbv-pri urgent" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6M6 19l6-6 6 6"/></svg></span>
+                <span class="t">Cerrar propuesta Aurora<span class="kbv-sr-only"> · prioridad urgente</span></span>
+                <span class="kbv-energy" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></span>
+              </button>
+              <button type="button" class="kbv-w-row">
+                <span class="kbv-pri high" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+                <span class="t">Correr 5 km zona 2<span class="kbv-sr-only"> · prioridad alta</span></span>
+                <span class="kbv-energy" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i><i></i></span>
+              </button>
+              <button type="button" class="kbv-w-row">
+                <span class="kbv-pri high" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span>
+                <span class="t">Leer cap. 3 de Hábitos atómicos<span class="kbv-sr-only"> · prioridad alta</span></span>
+                <span class="kbv-energy" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i></span>
+              </button>
+              <button type="button" class="kbv-w-row">
+                <span class="kbv-pri medium" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 12h12"/></svg></span>
+                <span class="t">Llamar a mamá<span class="kbv-sr-only"> · prioridad media</span></span>
+                <span class="kbv-energy" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span>
+              </button>
+              <button type="button" class="kbv-w-row">
+                <span class="kbv-pri low" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg></span>
+                <span class="t">Revisar gastos de la semana<span class="kbv-sr-only"> · prioridad baja</span></span>
+                <span class="kbv-energy" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i><i></i></span>
+              </button>
+            </div>
+          </div>
+          <div class="kbv-w-col">
+            <span class="kbv-w-coltitle">Kanban</span>
+            <div class="kbv-kan">
+              <div class="kbv-kan-col">
+                <div class="kbv-kan-head">
+                  <i class="kbv-w-dot" style="--rc: var(--pri-vlow)" aria-hidden="true"></i>
+                  <span class="nm">Por hacer</span>
+                  <span class="kbv-badge quiet">3</span>
+                </div>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri urgent" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 13l6-6 6 6M6 19l6-6 6 6"/></svg></span><span>Cerrar propuesta Aurora</span></button>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri high" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span><span>Correr 5 km zona 2</span></button>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri medium" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 12h12"/></svg></span><span>Llamar a mamá</span></button>
+              </div>
+              <div class="kbv-kan-col">
+                <div class="kbv-kan-head">
+                  <i class="kbv-w-dot" style="--rc: var(--kb-coin)" aria-hidden="true"></i>
+                  <span class="nm">En curso</span>
+                  <span class="kbv-badge quiet">2</span>
+                </div>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri high" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 15l6-6 6 6"/></svg></span><span>Leer cap. 3</span></button>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri low" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg></span><span>Revisar gastos</span></button>
+              </div>
+              <div class="kbv-kan-col">
+                <div class="kbv-kan-head">
+                  <i class="kbv-w-dot" style="--rc: var(--kb-hp)" aria-hidden="true"></i>
+                  <span class="nm">Bloqueado</span>
+                  <span class="kbv-badge quiet">1</span>
+                </div>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri medium" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 12h12"/></svg></span><span>Esperar respuesta Beta</span></button>
+              </div>
+              <div class="kbv-kan-col">
+                <div class="kbv-kan-head">
+                  <i class="kbv-w-dot" style="--rc: var(--kb-primary)" aria-hidden="true"></i>
+                  <span class="nm">Hecho</span>
+                  <span class="kbv-badge quiet">1</span>
+                </div>
+                <button type="button" class="kbv-kan-item"><span class="kbv-pri medium" aria-hidden="true"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M6 12h12"/></svg></span><span>Meditar 10 min</span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- proyectos · 2x1 -->
+    <article class="kbv-widget kbv-card compact w-2" style="--c: var(--area-wisdom)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Proyectos</span><span class="m">5 en curso · 46 % medio</span></span>
+          <button type="button" class="kbv-icon-btn" aria-label="Ver todos los proyectos">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M4 12h15M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+        <div class="kbv-w-list">
+          <button type="button" class="kbv-w-row tone-xp">
+            <span class="t">Curso System Design</span>
+            <span class="kbv-progress xs kbv-w-bar tone-xp"><span class="fill" style="width:72%"></span></span>
+            <span class="kbv-w-num">72 %</span>
+          </button>
+          <button type="button" class="kbv-w-row tone-xp">
+            <span class="t">Maratón otoño 2026</span>
+            <span class="kbv-progress xs kbv-w-bar tone-xp"><span class="fill" style="width:38%"></span></span>
+            <span class="kbv-w-num">38 %</span>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- backlog · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--kb-text-2)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Backlog</span><span class="m">18 abiertas</span></span>
+        </div>
+        <div class="kbv-w-list">
+          <button type="button" class="kbv-w-row">
+            <i class="kbv-w-dot" aria-hidden="true"></i>
+            <span class="t">Hoy</span>
+            <span class="kbv-w-num">7</span>
+          </button>
+          <button type="button" class="kbv-w-row">
+            <i class="kbv-w-dot" aria-hidden="true"></i>
+            <span class="t">Esta semana</span>
+            <span class="kbv-w-num">6</span>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- streak · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--kb-streak)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Racha global</span><span class="m">récord 41</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-big">23 <span class="unit">días</span></span>
+          <span class="kbv-w-cap">2 protectores disponibles</span>
+          <span class="kbv-w-shields" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg>
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <!-- escuela · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--area-wisdom)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4"/><path d="M22 9v5"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Escuela</span><span class="m">4 materias · 3 sin calificar</span></span>
+        </div>
+        <div class="kbv-w-list">
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-wisdom)">
+            <i class="kbv-w-dot" aria-hidden="true"></i>
+            <span class="t">Estadística<em>Proyecto final</em></span>
+            <span class="kbv-w-when soon">en 2 d</span>
+          </button>
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-will)">
+            <i class="kbv-w-dot" aria-hidden="true"></i>
+            <span class="t">Ética<em>Ensayo 2</em></span>
+            <span class="kbv-w-when">en 5 d</span>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- familia · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--area-community)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Familia</span><span class="m">2 por aprobar</span></span>
+        </div>
+        <div class="kbv-w-list">
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-community)">
+            <span class="kbv-w-av" aria-hidden="true">M</span>
+            <span class="t">Sacar la basura</span>
+            <span class="kbv-w-num xp">+20</span>
+          </button>
+          <button type="button" class="kbv-w-row" style="--rc: var(--area-community)">
+            <span class="kbv-w-av" aria-hidden="true">D</span>
+            <span class="t">Tarea de mate</span>
+            <span class="kbv-w-num xp">+35</span>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <!-- prestigio · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--kb-medal)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 8l4 4 4-7 4 7 4-4-2 11H6z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Prestigio</span><span class="m">P8 · Almirante</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-big">62 <span class="unit">/ 100</span></span>
+          <span class="kbv-w-cap">nivel · te faltan 38 para <b>Almirante de Galaxias</b></span>
+          <span class="kbv-progress xs tone-xp"><span class="fill" style="width:62%"></span></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- origen · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--kb-coin)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M3 16.5l6.5-6.5 4 4L21 7"/><path d="M15 7h6v6"/></svg></span>
+          <span class="kbv-w-id"><span class="n">De dónde salieron</span><span class="m">355 en Divisa · top 2</span></span>
+        </div>
+        <div class="kbv-w-list">
+          <div class="kbv-w-row tone-streak" style="cursor:default">
+            <span class="t">Hábitos</span>
+            <span class="kbv-progress xs kbv-w-bar tone-streak"><span class="fill" style="width:59%"></span></span>
+            <span class="kbv-w-num">210</span>
+          </div>
+          <div class="kbv-w-row tone-xp" style="cursor:default">
+            <span class="t">Tareas</span>
+            <span class="kbv-progress xs kbv-w-bar tone-xp"><span class="fill" style="width:41%"></span></span>
+            <span class="kbv-w-num">145</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- diario · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--area-community)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Diario del día</span><span class="m">sin registrar</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap">¿Cómo te fue hoy?</span>
+          <div class="kbv-w-chips">
+            <button type="button" class="kbv-chip" aria-label="Muy bien"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0"/><path d="M9 9.5v.5M15 9.5v.5"/></svg></button>
+            <button type="button" class="kbv-chip" aria-label="Normal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.5 15h7"/><path d="M9 9.5v.5M15 9.5v.5"/></svg></button>
+            <button type="button" class="kbv-chip" aria-label="Mal"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><path d="M8.5 16a4.5 4.5 0 0 1 7 0"/><path d="M9 9.5v.5M15 9.5v.5"/></svg></button>
+            <button type="button" class="kbv-chip">Escribir</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- lectura · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--area-wisdom)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v14"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Lectura activa</span><span class="m">James Clear · 320 pp</span></span>
+        </div>
+        <div class="kbv-w-media">
+          <span class="kbv-w-cover" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/></svg></span>
+          <span class="kbv-w-hero">
+            <span class="kbv-w-cap"><b>Hábitos atómicos</b></span>
+            <span class="kbv-progress xs tone-xp"><span class="fill" style="width:46%"></span></span>
+            <span class="kbv-w-cap">p. 148 de 320 · 46 %</span>
+          </span>
+        </div>
+      </div>
+    </article>
+
+    <!-- watch · 1x1 -->
+    <article class="kbv-widget kbv-card compact link" role="button" tabindex="0" style="--c: var(--kb-media)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Pelis y series</span><span class="m">2 episodios pendientes</span></span>
+        </div>
+        <div class="kbv-w-hero">
+          <span class="kbv-w-cap"><b>Severance</b></span>
+          <span class="kbv-w-cap">T2 · E08 — Sweet Vitriol</span>
+          <span class="kbv-tag tint" style="--c: var(--kb-media)">Viendo</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- personalizar · 1x1 -->
+    <article class="kbv-widget kbv-card compact" style="--c: var(--kb-primary)">
+      <div class="kbv-widget-inner">
+        <div class="kbv-w-head">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/></svg></span>
+          <span class="kbv-w-id"><span class="n">Personalización</span><span class="m">cómo se ve todo lo tuyo</span></span>
+        </div>
+        <div class="kbv-w-chips">
+          <button type="button" class="kbv-chip">KIBO</button>
+          <button type="button" class="kbv-chip">Carta</button>
+          <button type="button" class="kbv-chip">Prestigio</button>
+          <button type="button" class="kbv-chip">Divisas</button>
+        </div>
+      </div>
+    </article>
+
+  </div>
+  <!-- ══════════════════════════════════════════════════════════════════════
+       3 · ESTADO · EDICION (editing = true)
+       Cada tile gana su barra: agarradera, tamano y quitar. Aparecen los slots
+       libres y la compra de fila. El contenido del widget deja de ser tocable.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · edición del tablero</div>
+        <span class="sub">Con «Editar dashboard» presionado. La cabecera cambia el botón por «Listo» en primario.</span>
+      </div>
+      <div class="sh-act">
+        <button type="button" class="kbv-btn kbv-btn-primary sm" aria-pressed="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          Listo
+        </button>
+      </div>
+    </div>
+
+    <div class="kbv-canvas-grid kbv-board">
+
+      <article class="kbv-widget kbv-card flush editable w-4" style="--c: var(--kb-streak)" draggable="true">
+        <div class="kbv-widget-bar">
+          <button type="button" class="kbv-icon-btn kbv-grip" aria-label="Mover Hábitos de hoy">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-haspopup="dialog" aria-expanded="false">
+            4×1
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <span class="grow"></span>
+          <button type="button" class="kbv-icon-btn kbv-remove" aria-label="Quitar Hábitos de hoy del dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Hábitos de hoy</span><span class="m">2 de 4 hechos</span></span>
+            <span class="kbv-tag tint" style="--c: var(--kb-xp)">+25 / 47 XP</span>
+          </div>
+          <div class="kbv-habits">
+            <div class="kbv-habit done">
+              <span class="kbv-check on" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+              <span class="t"><span class="n">Tomar 2 L de agua</span><span class="h">Cualquier hora</span></span>
+              <span class="kbv-w-num xp">+10</span>
+            </div>
+            <div class="kbv-habit done">
+              <span class="kbv-check on" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
+              <span class="t"><span class="n">No redes después de 22 h</span><span class="h">22:00 — 24:00</span></span>
+              <span class="kbv-w-num xp">+15</span>
+            </div>
+            <div class="kbv-habit">
+              <span class="kbv-check" aria-hidden="true"></span>
+              <span class="t"><span class="n">Estiramientos AM</span><span class="h">07:00 — 09:00</span></span>
+              <span class="kbv-w-num xp">+10</span>
+            </div>
+            <div class="kbv-habit">
+              <span class="kbv-check" aria-hidden="true"></span>
+              <span class="t"><span class="n">Diario nocturno</span><span class="h">22:30</span></span>
+              <span class="kbv-w-num xp">+12</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-widget kbv-card flush editable w-2" style="--c: var(--kb-boss)" draggable="true">
+        <div class="kbv-widget-bar">
+          <button type="button" class="kbv-icon-btn kbv-grip" aria-label="Mover Reto activo">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-haspopup="dialog" aria-expanded="false">
+            2×1
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <span class="grow"></span>
+          <button type="button" class="kbv-icon-btn kbv-remove" aria-label="Quitar Reto activo del dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Procrastinación nocturna</span><span class="m">Día 21 de 30</span></span>
+          </div>
+          <span class="kbv-progress tone-boss"><span class="fill" style="width:70%"></span></span>
+        </div>
+      </article>
+
+      <article class="kbv-widget kbv-card flush editable w-2" style="--c: var(--kb-primary)" draggable="true">
+        <div class="kbv-widget-bar">
+          <button type="button" class="kbv-icon-btn kbv-grip" aria-label="Mover Cronograma">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-haspopup="dialog" aria-expanded="false">
+            2×1
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <span class="grow"></span>
+          <button type="button" class="kbv-icon-btn kbv-remove" aria-label="Quitar Cronograma del dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Cronograma</span><span class="m">1 vencido</span></span>
+          </div>
+          <div class="kbv-w-list">
+            <div class="kbv-w-row" style="--rc: var(--area-wealth)">
+              <i class="kbv-w-dot" aria-hidden="true"></i>
+              <span class="t">Cerrar cliente Aurora</span>
+              <span class="kbv-w-when late">2 d tarde</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-widget kbv-card flush editable" style="--c: var(--kb-text-2)" draggable="true">
+        <div class="kbv-widget-bar">
+          <button type="button" class="kbv-icon-btn kbv-grip" aria-label="Mover Backlog">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-haspopup="dialog" aria-expanded="false">1×1</button>
+          <span class="grow"></span>
+          <button type="button" class="kbv-icon-btn kbv-remove" aria-label="Quitar Backlog del dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Backlog</span><span class="m">18 abiertas</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="kbv-widget kbv-card flush editable" style="--c: var(--kb-streak)" draggable="true">
+        <div class="kbv-widget-bar">
+          <button type="button" class="kbv-icon-btn kbv-grip" aria-label="Mover Racha global">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><circle cx="9" cy="6" r="1.5" fill="currentColor"/><circle cx="15" cy="6" r="1.5" fill="currentColor"/><circle cx="9" cy="12" r="1.5" fill="currentColor"/><circle cx="15" cy="12" r="1.5" fill="currentColor"/><circle cx="9" cy="18" r="1.5" fill="currentColor"/><circle cx="15" cy="18" r="1.5" fill="currentColor"/></svg>
+          </button>
+          <button type="button" class="kbv-btn kbv-btn-secondary sm" aria-haspopup="dialog" aria-expanded="false">1×1</button>
+          <span class="grow"></span>
+          <button type="button" class="kbv-icon-btn kbv-remove" aria-label="Quitar Racha global del dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Racha global</span><span class="m">23 días</span></span>
+          </div>
+        </div>
+      </article>
+
+      <button type="button" class="kbv-slot-empty" aria-label="Slot disponible · agregar widget">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+        Agregar
+      </button>
+      <button type="button" class="kbv-slot-empty" aria-label="Slot disponible · agregar widget">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+        Agregar
+      </button>
+      <button type="button" class="kbv-slot-empty" aria-label="Slot disponible · agregar widget">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg>
+        Agregar
+      </button>
+
+      <button type="button" class="kbv-row-unlock">
+        <span class="glyph" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 5v14M5 12h14"/></svg></span>
+        <span class="info">
+          <span class="name">Desbloquear fila adicional</span>
+          <span class="sub">Tienes <b>9</b> filas · <b>8</b> slots libres. Cada fila te da 4 slots más para widgets.</span>
+        </span>
+        <span class="kbv-price"><span class="kbv-facet" aria-hidden="true"></span>8<span class="kbv-sr-only"> </span>Elemento</span>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       4 · ESTADO · ARRASTRE EN CURSO
+       El origen se atenua y toma el borde de marca; el destino se marca con
+       contorno punteado a 4 px de separacion. El orden se reescribe al soltar.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · arrastre en curso</div>
+        <span class="sub">Solo en edición. Soltar sobre otro widget los intercambia de posición en el arreglo.</span>
+      </div>
+    </div>
+    <div class="kbv-canvas-grid kbv-board" style="grid-auto-rows: 120px">
+      <article class="kbv-widget kbv-card compact editable dragging" style="--c: var(--kb-streak)" aria-grabbed="true">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Racha global</span><span class="m">arrastrando</span></span>
+          </div>
+          <span class="kbv-w-cap">Origen del movimiento</span>
+        </div>
+      </article>
+      <article class="kbv-widget kbv-card compact editable" style="--c: var(--kb-text-2)">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Backlog</span><span class="m">18 abiertas</span></span>
+          </div>
+        </div>
+      </article>
+      <article class="kbv-widget kbv-card compact editable dropzone" style="--c: var(--area-wisdom)">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M2 9l10-4 10 4-10 4z"/><path d="M6 11v4c0 1.5 3 3 6 3s6-1.5 6-3v-4"/><path d="M22 9v5"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Escuela</span><span class="m">destino</span></span>
+          </div>
+          <span class="kbv-w-cap">Suelta aquí para intercambiar</span>
+        </div>
+      </article>
+      <article class="kbv-widget kbv-card compact editable" style="--c: var(--area-community)">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 3l8 3v6c0 5-4 8-8 9-4-1-8-4-8-9V6l8-3z"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Familia</span><span class="m">2 por aprobar</span></span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       5 · ESTADO · PRESET DE TABLERO
+       Tres arreglos por momento del dia. El preset REORDENA lo que ya tienes y
+       agranda un widget; nunca agrega uno que habria que comprar.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · preset activo y sin preset</div>
+        <span class="sub">El preset se recuerda entre sesiones y se vuelve a aplicar al abrir la pantalla.</span>
+      </div>
+    </div>
+    <div class="kbv-filter-bar">
+      <span class="lbl">Sin preset</span>
+      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero, ninguno activo">
+        <button type="button" aria-pressed="false">Mañana</button>
+        <button type="button" aria-pressed="false">Trabajo</button>
+        <button type="button" aria-pressed="false">Noche</button>
+      </div>
+      <span class="grow"></span>
+      <span class="kbv-meta">Orden por defecto de los 15 widgets.</span>
+    </div>
+    <div class="kbv-filter-bar">
+      <span class="lbl">Mañana</span>
+      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero, Mañana activo">
+        <button type="button" class="on" aria-pressed="true">Mañana</button>
+        <button type="button" aria-pressed="false">Trabajo</button>
+        <button type="button" aria-pressed="false">Noche</button>
+      </div>
+      <span class="grow"></span>
+      <span class="kbv-meta">Hábitos, racha, reto y cronograma al frente; <strong>Hábitos</strong> crece a 4 de ancho.</span>
+    </div>
+    <div class="kbv-filter-bar">
+      <span class="lbl">Trabajo</span>
+      <div class="kbv-seg" role="group" aria-label="Arreglo del tablero, Trabajo activo">
+        <button type="button" aria-pressed="false">Mañana</button>
+        <button type="button" class="on" aria-pressed="true">Trabajo</button>
+        <button type="button" aria-pressed="false">Noche</button>
+      </div>
+      <span class="grow"></span>
+      <span class="kbv-meta">Tareas, proyectos, cronograma y backlog al frente; <strong>Tareas</strong> crece a 4 de ancho.</span>
+    </div>
+    <div class="kbv-tip-wrap">
+      <span class="kbv-tip">Tu dashboard se acomoda solo. 4 columnas, hasta 9 filas — cada widget va de 1×1 a 4×4. Arrastra, redimensiona y explora más en la galería.</span>
+      <span class="kbv-meta">Ayuda del encabezado, abierta desde el punto de información.</span>
+    </div>
+  </section>
+  <!-- ══════════════════════════════════════════════════════════════════════
+       6 · ESTADO · TABLERO VACIO
+       El usuario quito todos sus widgets. La rejilla no se dibuja: se dibuja
+       la salida, con la galeria como accion principal.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · tablero vacío</div>
+        <span class="sub">Sin ningún widget en el arreglo. Ocupa el lugar de la rejilla.</span>
+      </div>
+    </div>
+    <div class="kbv-empty">
+      <span class="glyph" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><rect x="3" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.6"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.6"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.6"/></svg></span>
+      <span class="ttl">Tu tablero está vacío</span>
+      <span class="desc">Aquí va lo que quieres ver al abrir el día: hábitos, tareas, tu reto, lo que vence. Agrega el primero desde la galería o vuelve al arreglo con el que empezaste.</span>
+      <span class="acts">
+        <button type="button" class="kbv-btn kbv-btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M5 8h14l-1 12H6z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+          Explorar widgets
+        </button>
+        <button type="button" class="kbv-btn kbv-btn-ghost">Restaurar el tablero por defecto</button>
+      </span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       7 · ESTADO · CARGANDO
+       La rejilla ya conoce su forma: el esqueleto respeta el tamano de cada
+       widget para que nada salte cuando llegan los datos.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section" aria-busy="true">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · cargando</div>
+        <span class="sub">Mientras el motor de progresión responde. El esqueleto conserva el tamaño declarado de cada widget.</span>
+      </div>
+    </div>
+    <div class="kbv-canvas-grid kbv-board" style="grid-auto-rows: 120px">
+      <span class="kbv-sr-only">Cargando tu tablero</span>
+      <div class="kbv-widget kbv-card compact w-2">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-skel sq"></span>
+            <span class="kbv-w-id"><span class="kbv-skel line" style="width:56%"></span></span>
+          </div>
+          <span class="kbv-skel bar"></span>
+          <span class="kbv-skel bar" style="width:72%"></span>
+        </div>
+      </div>
+      <div class="kbv-widget kbv-card compact">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-skel sq"></span>
+            <span class="kbv-w-id"><span class="kbv-skel line" style="width:70%"></span></span>
+          </div>
+          <span class="kbv-skel bar"></span>
+        </div>
+      </div>
+      <div class="kbv-widget kbv-card compact">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-skel sq"></span>
+            <span class="kbv-w-id"><span class="kbv-skel line" style="width:64%"></span></span>
+          </div>
+          <span class="kbv-skel bar"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       8 · ESTADO · ERROR
+       Dos alturas: el widget que no pudo leer su fuente sigue en su sitio con
+       su reintento; si falla el arreglo entero, el aviso va sobre la rejilla.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · error</div>
+        <span class="sub">Un widget que no pudo leer su fuente, y la caída del arreglo completo.</span>
+      </div>
+    </div>
+    <div class="kbv-notice" style="--c: var(--kb-hp)">
+      <span class="glyph" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10v4"/><path d="M12 16.6v.4"/></svg></span>
+      <span class="txt">
+        <span class="ttl">No pudimos cargar tu arreglo de widgets</span>
+        <span class="sub">Se muestra el arreglo por defecto. Tus widgets y sus tamaños siguen guardados; nada se perdió.</span>
+      </span>
+      <button type="button" class="kbv-btn kbv-btn-secondary sm">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.4-5.7"/><path d="M20 4v4.4h-4.4"/></svg>
+        Reintentar
+      </button>
+    </div>
+    <div class="kbv-canvas-grid kbv-board" style="grid-auto-rows: 120px">
+      <article class="kbv-widget kbv-card compact w-2" style="--c: var(--kb-primary)">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Tareas de hoy</span><span class="m">sin datos</span></span>
+          </div>
+          <div class="kbv-notice" style="--c: var(--kb-hp); padding: var(--kb-sp-5) var(--kb-sp-6)">
+            <span class="glyph" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 4.5l8.5 15h-17z"/><path d="M12 10v4"/><path d="M12 16.6v.4"/></svg></span>
+            <span class="txt">
+              <span class="sub">No pudimos leer tus tareas.</span>
+              <button type="button" class="kbv-btn kbv-btn-link">Reintentar</button>
+            </span>
+          </div>
+        </div>
+      </article>
+      <article class="kbv-widget kbv-card compact" style="--c: var(--kb-streak)">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M12 2c1 2 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-3-1 1-3 3-3 6a5 5 0 0 0 10 0c0-4-3-6-5-10z"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Racha global</span><span class="m">récord 41</span></span>
+          </div>
+          <span class="kbv-w-big">23 <span class="unit">días</span></span>
+        </div>
+      </article>
+      <article class="kbv-widget kbv-card compact" style="--c: var(--kb-medal)">
+        <div class="kbv-widget-inner">
+          <div class="kbv-w-head">
+            <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M4 8l4 4 4-7 4 7 4-4-2 11H6z"/></svg></span>
+            <span class="kbv-w-id"><span class="n">Prestigio</span><span class="m">P8 · Almirante</span></span>
+          </div>
+          <span class="kbv-w-big">62 <span class="unit">/ 100</span></span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       9 · ESTADO · BLOQUEADO POR PREMIUM
+       Lo premium en esta pantalla es la CAPACIDAD y el catalogo, nunca el
+       modulo: el tablero sigue completo, lo que se compra es mas sitio.
+       ══════════════════════════════════════════════════════════════════ -->
+  <section class="kbv-section">
+    <div class="kbv-section-head">
+      <div class="sh-id">
+        <div class="kbv-eyebrow">Estado · bloqueado por premium</div>
+        <span class="sub">Sin capacidad libre: la fila 10 y los widgets del catálogo se pagan en Elemento o en Divisa.</span>
+      </div>
+    </div>
+    <div class="kbv-canvas-grid kbv-board" style="grid-auto-rows: 120px">
+      <div class="kbv-slot-empty locked" aria-disabled="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg>
+        Fila 10 · bloqueada
+      </div>
+      <article class="kbv-gal-item w-2" aria-disabled="true" style="--c: var(--kb-boss)">
+        <span class="top">
+          <span class="kbv-w-ico" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></span>
+          <span class="name">Panel de combate</span>
+        </span>
+        <span class="desc">Métricas de reto avanzadas y bitácora de daño.</span>
+        <span class="sizes">Tamaños 1×1 · 4×2</span>
+        <span class="kbv-price"><span class="kbv-facet" aria-hidden="true"></span>200 Elemento · Tienda</span>
+      </article>
+    </div>
+    <button type="button" class="kbv-row-unlock">
+      <span class="glyph" aria-hidden="true"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3"/><rect x="4.5" y="11" width="15" height="9" rx="2"/></svg></span>
+      <span class="info">
+        <span class="name">Desbloquear fila adicional</span>
+        <span class="sub">Tienes <b>9</b> filas · <b>0</b> slots libres. Cada fila te da 4 slots más para widgets.</span>
+      </span>
+      <span class="kbv-price"><span class="kbv-facet" aria-hidden="true"></span>8<span class="kbv-sr-only"> </span>Elemento</span>
+    </button>
+  </section>
+<!-- ANCLA-4 -->

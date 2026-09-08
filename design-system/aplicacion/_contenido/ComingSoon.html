@@ -1,0 +1,236 @@
+<!-- ═══ SECCION EN CONSTRUCCION (stub) ═══
+                 Relleno de los destinos del menu que aun no tienen vista, y respaldo
+                 del enrutador cuando el modulo real no esta cargado. No lee ni escribe
+                 nada del nucleo: por eso no tiene vacio, ni carga, ni error. -->
+
+            <!-- La migaja deriva del grupo del menu; el titulo lo pone la ruta. -->
+            <header class="kbv-page-head">
+              <div class="ph-id">
+                <nav class="kbv-crumb" aria-label="Ruta">
+                  <a href="#tu-gente">Tu gente</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="here">Familia</span>
+                </nav>
+                <h1 class="kbv-h1" style="margin:0">Familia</h1>
+              </div>
+              <div class="ph-act">
+                <button type="button" class="kbv-btn kbv-btn-ghost">
+                  <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M20 12H4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Volver a Hoy
+                </button>
+              </div>
+            </header>
+
+            <!-- ── ESTADO 1 · mensaje propio ──────────────────────────────── -->
+            <section class="kbv-section">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <div class="kbv-eyebrow">Estado · mensaje propio</div>
+                  <div class="sub">La ruta declara su copia y esta sustituye a la del sistema. Es lo que se ve hoy en las nueve rutas.</div>
+                </div>
+              </div>
+              <div class="kbv-card roomy">
+                <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--kb-sp-7); padding:var(--kb-sp-9) 0">
+                  <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:64px; height:64px; border-radius:var(--kb-r-lg); background:var(--kb-primary-soft); color:var(--kb-primary-ink)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="1.8" style="display:block;flex:none"><circle cx="9" cy="6.5" r="2.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 20c.7-3.4 2.8-5.2 5.5-5.2s4.8 1.8 5.5 5.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="11" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 20c.4-2.2 1.6-3.4 3-3.4s2.6 1.2 3 3.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                  <p class="kbv-h4" style="margin:0; max-width:46ch">Misiones, mesada y aprobaciones.</p>
+                  <span class="kbv-tag tint" style="--c: var(--kb-primary)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Próximo sprint
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <!-- ── ESTADO 2 · mensaje por defecto ─────────────────────────── -->
+            <section class="kbv-section">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <div class="kbv-eyebrow">Estado · mensaje por defecto</div>
+                  <div class="sub">La ruta no declara copia, o el módulo real no cargó y el enrutador dibuja el respaldo. Misma cabecera de página; sólo cambia el mensaje.</div>
+                </div>
+              </div>
+              <div class="kbv-card roomy">
+                <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--kb-sp-7); padding:var(--kb-sp-9) 0">
+                  <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:64px; height:64px; border-radius:var(--kb-r-lg); background:var(--kb-primary-soft); color:var(--kb-primary-ink)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="1.8" style="display:block;flex:none"><path d="M12 3.5l1.9 4.6 4.6 1.9-4.6 1.9L12 16.5l-1.9-4.6L5.5 10l4.6-1.9z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </span>
+                  <p class="kbv-h4" style="margin:0; max-width:46ch">Esta sección llega en el próximo sprint. Mientras tanto, todo lo importante vive en tu Hoy.</p>
+                  <span class="kbv-tag tint" style="--c: var(--kb-primary)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3.5 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Próximo sprint
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <!-- ── CATALOGO · las nueve rutas que caen en el stub ─────────── -->
+            <section class="kbv-section">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <div class="kbv-eyebrow">Catálogo · las nueve rutas que caen aquí</div>
+                  <div class="sub">No se dibuja en la pantalla: es la copia que cada ruta le pasa al stub. La lista se vacía sola conforme cada módulo llega.</div>
+                </div>
+              </div>
+              <div class="kbv-card flush">
+                <div style="display:flex; flex-direction:column">
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M4 20V10M10 20V4M16 20v-8M22 20H2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Mi progreso</span>
+                      <span class="kbv-meta">Indicadores personales y prestigio.</span>
+                    </span>
+                    <span class="kbv-tag">General</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 19c.9-3 3-4.6 6-4.6s5.1 1.6 6 4.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="9" r="2.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 14c2.3.3 3.8 1.8 4.5 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Amigos</span>
+                      <span class="kbv-meta">Tu círculo social en Kibo.</span>
+                    </span>
+                    <span class="kbv-tag">Tu gente</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 3.2a8.8 8.8 0 0 0 0 17.6c1.4 0 2.1-.9 2.1-1.9 0-1.4-1.6-1.6-1.6-2.8 0-.9.7-1.6 1.7-1.6H16a5 5 0 0 0 5-5c0-3.6-4-6.3-9-6.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="8.2" cy="9.4" r="1.1" fill="currentColor"/><circle cx="12" cy="7.4" r="1.1" fill="currentColor"/><circle cx="16" cy="9.8" r="1.1" fill="currentColor"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Personalización</span>
+                      <span class="kbv-meta">Tu KIBO, tu carta, tus prestigios y tus dos monedas.</span>
+                    </span>
+                    <span class="kbv-tag">Recompensas</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-primary-soft); color:var(--kb-primary-ink)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="9" cy="6.5" r="2.8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 20c.7-3.4 2.8-5.2 5.5-5.2s4.8 1.8 5.5 5.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="17.5" cy="11" r="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.5 20c.4-2.2 1.6-3.4 3-3.4s2.6 1.2 3 3.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Familia</span>
+                      <span class="kbv-meta">Misiones, mesada y aprobaciones.</span>
+                    </span>
+                    <span class="kbv-tag tint" style="--c: var(--kb-primary)">En pantalla</span>
+                    <span class="kbv-tag">Tu gente</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M8 6h13M8 12h13M8 18h13" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="4" cy="6" r="1.2" fill="currentColor"/><circle cx="4" cy="12" r="1.2" fill="currentColor"/><circle cx="4" cy="18" r="1.2" fill="currentColor"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Tarea</span>
+                      <span class="kbv-meta">Detalle de la tarea.</span>
+                    </span>
+                    <span class="kbv-tag">Ruta de detalle</span>
+                    <span class="kbv-tag">Tu plan</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M12 20.5S4 15.5 4 10.2A4.2 4.2 0 0 1 12 8a4.2 4.2 0 0 1 8 2.2c0 5.3-8 10.3-8 10.3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Salud</span>
+                      <span class="kbv-meta">Tu cuerpo, signos vitales y expediente médico.</span>
+                    </span>
+                    <span class="kbv-tag">Tu bitácora</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><path d="M5 5a2 2 0 0 1 2-2h12v18H7a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 17h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Bóveda</span>
+                      <span class="kbv-meta">Tu archivo de vida en Markdown.</span>
+                    </span>
+                    <span class="kbv-tag">
+                      <svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Se desbloquea antes
+                    </span>
+                    <span class="kbv-tag">Tu bitácora</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3v2.4M12 18.6V21M21 12h-2.4M5.4 12H3M18.4 5.6l-1.7 1.7M7.3 16.7l-1.7 1.7M18.4 18.4l-1.7-1.7M7.3 7.3L5.6 5.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Configuración</span>
+                      <span class="kbv-meta">Preferencias e integraciones.</span>
+                    </span>
+                    <span class="kbv-tag">Tu cuenta</span>
+                  </div>
+
+                  <div style="display:flex; align-items:center; gap:var(--kb-sp-6); padding:var(--kb-sp-6) var(--kb-sp-7); border-top:1px solid var(--kb-border-soft)">
+                    <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; flex:none; width:32px; height:32px; border-radius:var(--kb-r-xs); background:var(--kb-surface-2); color:var(--kb-text-2)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="8" r="3.4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 20c1-3.6 3.8-5.5 7.5-5.5s6.5 1.9 7.5 5.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </span>
+                    <span style="display:flex; flex-direction:column; gap:var(--kb-sp-1); flex:1 1 auto; min-width:0">
+                      <span class="kbv-h4">Cuenta</span>
+                      <span class="kbv-meta">Identidad, plan y datos.</span>
+                    </span>
+                    <span class="kbv-tag">Tu cuenta</span>
+                  </div>
+
+                </div>
+              </div>
+            </section>
+
+            <!-- ── COMPORTAMIENTO · para quien la construya ───────────────── -->
+            <section class="kbv-section">
+              <div class="kbv-section-head">
+                <div class="sh-id">
+                  <div class="kbv-eyebrow">Comportamiento</div>
+                  <div class="sub">Lo que no se ve en el dibujo.</div>
+                </div>
+              </div>
+              <div class="kbv-card">
+                <ul style="margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:var(--kb-sp-5)">
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">La pantalla es informativa: no lee ni escribe nada del núcleo, y su única acción es «Volver a Hoy», que navega al destino del menú.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">El título lo pone la ruta y la migaja se deriva del grupo del menú donde vive ese destino; el stub no inventa ninguno de los dos.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">El mensaje es opcional: si la ruta declara copia propia, esa copia sustituye a la del sistema; si no la declara, se dibuja la copia por defecto. Nunca queda vacío.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">También es el respaldo del enrutador: si el módulo real no está cargado, esta pantalla ocupa su lugar con la copia por defecto en vez de dejar la región en blanco.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">Lo premium se resuelve antes que el stub: si el destino está bloqueado, el armazón dibuja la compuerta y esta pantalla no llega a verse.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">No tiene estados de datos: no carga, no falla y no se vacía, porque no consulta nada. Los dos de arriba son todos los que existen.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">La etiqueta «Próximo sprint» es constante y no promete fecha: es la misma en las nueve rutas y no se calcula.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">El menú deja marcado el destino que el usuario eligió: el stub no es un desvío, así que la ruta activa no cambia mientras se ve.</span>
+                  </li>
+                  <li style="display:flex; align-items:flex-start; gap:var(--kb-sp-5)">
+                    <span aria-hidden="true" style="display:flex; flex:none; color:var(--kb-text-2); padding-top:var(--kb-sp-2)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    <span class="kbv-body">Cada módulo que llega borra su renglón del catálogo: cuando el catálogo queda vacío, la pantalla se retira del enrutador y sólo queda como respaldo defensivo.</span>
+                  </li>
+                </ul>
+              </div>
+            </section>

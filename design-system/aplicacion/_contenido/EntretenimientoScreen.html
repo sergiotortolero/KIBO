@@ -1,0 +1,820 @@
+<!-- ══ Cabecera de pagina ══ -->
+            <header class="kbv-page-head">
+              <div class="ph-id">
+                <nav class="kbv-crumb" aria-label="Ruta">
+                  <a href="#tu-bitacora">Tu bitácora</a>
+                  <span class="sep" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" style="display:block;flex:none"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                  <span class="here" aria-current="page">Entretenimiento</span>
+                </nav>
+                <div style="display:flex;align-items:center;gap:var(--kb-sp-5)">
+                  <h1 class="kbv-h1">Entretenimiento.</h1>
+                  <button type="button" class="kbv-icon-btn" aria-label="Qué guarda esta pantalla" title="Pelis y series — todo en un mismo registro. Rating, comentarios y reflexiones, sin depender de apps externas.">
+                    <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor"/><path d="M12 11v5M12 7.5v.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="ph-act">
+                <button type="button" class="kbv-btn kbv-btn-secondary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Agregar a lista
+                </button>
+                <button type="button" class="kbv-btn kbv-btn-primary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Registrar vista
+                </button>
+              </div>
+            </header>
+
+            <!-- ══ Periodo de los indicadores ══ -->
+            <div class="kbv-filter-bar">
+              <span class="lbl" id="lbl-periodo">Indicadores por periodo</span>
+              <div class="kbv-seg" role="group" aria-labelledby="lbl-periodo">
+                <button type="button" class="on" aria-pressed="true">Este año</button>
+                <button type="button" aria-pressed="false">Personalizado</button>
+                <button type="button" aria-pressed="false">Todo el tiempo</button>
+              </div>
+              <span class="grow"></span>
+              <span class="kbv-meta" style="display:inline-flex;align-items:center;gap:var(--kb-sp-3)">
+                <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Año activo · 2026
+              </span>
+            </div>
+
+            <!-- ══ Los seis indicadores ══ -->
+            <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-6)" role="list" aria-label="Indicadores del periodo">
+              <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px" role="listitem">
+                <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M8 5.5v13l10-6.5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>En curso</div>
+                <div class="body">
+                  <span class="val">2</span>
+                  <span class="delta">3 series · 3 pelis en total</span>
+                </div>
+              </div>
+              <div class="kbv-kpi" style="--c: var(--kb-primary);flex:1 1 168px" role="listitem">
+                <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Terminados</div>
+                <div class="body">
+                  <span class="val">2</span>
+                  <span class="delta up"><svg width="13" height="13" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>+1 vs. 2025</span>
+                </div>
+              </div>
+              <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px" role="listitem">
+                <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Episodios vistos</div>
+                <div class="body">
+                  <span class="val">46</span>
+                  <span class="delta">acumulados</span>
+                </div>
+              </div>
+              <div class="kbv-kpi" style="--c: var(--kb-medal);flex:1 1 168px" role="listitem">
+                <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>Rating promedio</div>
+                <div class="body">
+                  <span class="val">4.8<span class="unit">/5</span></span>
+                  <span class="delta">de tus 4 calificados</span>
+                </div>
+              </div>
+              <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px" role="listitem">
+                <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M12 7v5.2l3.4 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Horas totales</div>
+                <div class="body">
+                  <span class="val">41<span class="unit">h</span></span>
+                  <span class="delta">en pantalla</span>
+                </div>
+              </div>
+              <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px" role="listitem">
+                <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M4 8.5V7a1.5 1.5 0 0 1 1.5-1.5h13A1.5 1.5 0 0 1 20 7v1.5a3.5 3.5 0 0 0 0 7V17a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17v-1.5a3.5 3.5 0 0 0 0-7z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Veces al cine</div>
+                <div class="body">
+                  <span class="val">1</span>
+                  <span class="delta">este año</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ══ Filtros: estado y tipo ══ -->
+            <div class="kbv-filter-bar">
+              <span class="lbl" id="lbl-estado">Estado</span>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)" role="group" aria-labelledby="lbl-estado">
+                <button type="button" class="kbv-chip active" aria-pressed="true">Todos <span class="kbv-badge quiet">6</span></button>
+                <button type="button" class="kbv-chip" aria-pressed="false">Viendo <span class="kbv-badge quiet">2</span></button>
+                <button type="button" class="kbv-chip" aria-pressed="false">Vistos <span class="kbv-badge quiet">2</span></button>
+                <button type="button" class="kbv-chip" aria-pressed="false">En pausa <span class="kbv-badge quiet">1</span></button>
+                <button type="button" class="kbv-chip" aria-pressed="false">Wishlist <span class="kbv-badge quiet">1</span></button>
+              </div>
+              <span style="width:1px;height:24px;flex:none;background:var(--kb-border)" aria-hidden="true"></span>
+              <span class="lbl" id="lbl-tipo">Tipo</span>
+              <div class="kbv-seg" role="group" aria-labelledby="lbl-tipo">
+                <button type="button" class="on" aria-pressed="true">Todo</button>
+                <button type="button" aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Series</button>
+                <button type="button" aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Pelis</button>
+              </div>
+              <span class="grow"></span>
+              <span class="kbv-meta">6 títulos</span>
+            </div>
+
+            <!-- ══ La rejilla del registro ══ -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(248px, 1fr));gap:var(--kb-sp-7)" role="list" aria-label="Tu registro">
+
+              <article class="kbv-card flush" role="listitem">
+                <button type="button" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);border:0;text-align:left;cursor:pointer;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 44%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                  <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Serie</span>
+                  <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">Severance<span class="kbv-sr-only"> — abrir el detalle</span></span>
+                </button>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2)">
+                    <span class="kbv-card-title">Severance</span>
+                    <span class="kbv-card-sub">Apple TV+ · 2 temporadas · 19 ep</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-5)">
+                    <span class="kbv-tag tint" style="--c: var(--kb-media)">Viendo</span>
+                    <span style="display:inline-flex;align-items:center;gap:var(--kb-sp-1);color:var(--kb-coin-ink)">
+                      <span class="kbv-sr-only">Calificación 5 de 5</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--kb-sp-5)">
+                    <span class="kbv-num" style="font-size:var(--kb-fs-sm);flex:none">T2 · E7</span>
+                    <span class="kbv-progress xs" style="--c: var(--kb-media);flex:1 1 auto" role="img" aria-label="17 de 19 episodios"><span class="fill" style="width:89%"></span></span>
+                    <span class="kbv-num" style="font-size:var(--kb-fs-sm);flex:none;color:var(--kb-text-2)">17/19</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-3)">
+                    <span class="kbv-tag" title="Apple TV+ · $179/mes">Apple TV+</span>
+                  </div>
+                </div>
+                <div class="kbv-card-foot" style="justify-content:flex-start;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-7) var(--kb-sp-7)">
+                  <button type="button" class="kbv-btn sm kbv-btn-secondary" title="Registrar capítulo visto">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Capítulo
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Calificar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.4 15.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Calificar
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Comentar o dejar una reflexión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Comentar
+                  </button>
+                </div>
+              </article>
+
+              <article class="kbv-card flush" role="listitem">
+                <button type="button" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);border:0;text-align:left;cursor:pointer;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 30%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                  <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Peli</span>
+                  <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">Dune: Parte Dos<span class="kbv-sr-only"> — abrir el detalle</span></span>
+                </button>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2)">
+                    <span class="kbv-card-title">Dune: Parte Dos</span>
+                    <span class="kbv-card-sub">Sci-fi · 166 min · vista el 20 abr 2026</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-5)">
+                    <span class="kbv-tag tint" style="--c: var(--kb-primary)">Visto</span>
+                    <span style="display:inline-flex;align-items:center;gap:var(--kb-sp-1);color:var(--kb-coin-ink)">
+                      <span class="kbv-sr-only">Calificación 5 de 5</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                    </span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-3)">
+                    <span class="kbv-tag" title="Max · $149/mes">Max</span>
+                    <span class="kbv-tag" title="Prime · $99/mes">Prime</span>
+                  </div>
+                </div>
+                <div class="kbv-card-foot" style="justify-content:flex-start;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-7) var(--kb-sp-7)">
+                  <button type="button" class="kbv-btn sm kbv-btn-secondary" title="Marcar como vista">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Vista
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Calificar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.4 15.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Calificar
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Comentar o dejar una reflexión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Comentar
+                  </button>
+                </div>
+              </article>
+
+              <article class="kbv-card flush" role="listitem">
+                <button type="button" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);border:0;text-align:left;cursor:pointer;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 38%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                  <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Serie</span>
+                  <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">The Bear<span class="kbv-sr-only"> — abrir el detalle</span></span>
+                </button>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2)">
+                    <span class="kbv-card-title">The Bear</span>
+                    <span class="kbv-card-sub">FX · 3 temporadas · 28 ep</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-5)">
+                    <span class="kbv-tag tint" style="--c: var(--kb-media)">Viendo</span>
+                    <span style="display:inline-flex;align-items:center;gap:var(--kb-sp-1);color:var(--kb-coin-ink)">
+                      <span class="kbv-sr-only">Calificación 5 de 5</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                    </span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--kb-sp-5)">
+                    <span class="kbv-num" style="font-size:var(--kb-fs-sm);flex:none">T3 · E4</span>
+                    <span class="kbv-progress xs" style="--c: var(--kb-media);flex:1 1 auto" role="img" aria-label="24 de 28 episodios"><span class="fill" style="width:86%"></span></span>
+                    <span class="kbv-num" style="font-size:var(--kb-fs-sm);flex:none;color:var(--kb-text-2)">24/28</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-3)">
+                    <span class="kbv-tag" title="Disney+ · $199/mes">Disney+</span>
+                  </div>
+                </div>
+                <div class="kbv-card-foot" style="justify-content:flex-start;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-7) var(--kb-sp-7)">
+                  <button type="button" class="kbv-btn sm kbv-btn-secondary" title="Registrar capítulo visto">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Capítulo
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Calificar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.4 15.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Calificar
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Comentar o dejar una reflexión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Comentar
+                  </button>
+                </div>
+              </article>
+
+              <article class="kbv-card flush" role="listitem">
+                <button type="button" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);border:0;text-align:left;cursor:pointer;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 24%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                  <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Peli</span>
+                  <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">Past Lives<span class="kbv-sr-only"> — abrir el detalle</span></span>
+                </button>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2)">
+                    <span class="kbv-card-title">Past Lives</span>
+                    <span class="kbv-card-sub">Drama · 105 min · vista el 10 mar 2026</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-5)">
+                    <span class="kbv-tag tint" style="--c: var(--kb-primary)">Visto</span>
+                    <span style="display:inline-flex;align-items:center;gap:var(--kb-sp-1);color:var(--kb-coin-ink)">
+                      <span class="kbv-sr-only">Calificación 4 de 5</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>
+                      <span style="display:flex;color:var(--kb-text-2)"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="none" stroke="currentColor" stroke-linejoin="round"/></svg></span>
+                    </span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-3)">
+                    <span class="kbv-tag" title="Mubi · $199/mes">Mubi</span>
+                  </div>
+                </div>
+                <div class="kbv-card-foot" style="justify-content:flex-start;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-7) var(--kb-sp-7)">
+                  <button type="button" class="kbv-btn sm kbv-btn-secondary" title="Marcar como vista">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Vista
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Calificar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.4 15.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Calificar
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Comentar o dejar una reflexión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Comentar
+                  </button>
+                </div>
+              </article>
+
+              <!-- Sin rating: la fila de estado NO deja hueco, lo dice con palabras. -->
+              <article class="kbv-card flush" role="listitem">
+                <button type="button" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);border:0;text-align:left;cursor:pointer;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 34%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                  <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Serie</span>
+                  <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">Andor<span class="kbv-sr-only"> — abrir el detalle</span></span>
+                </button>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2)">
+                    <span class="kbv-card-title">Andor</span>
+                    <span class="kbv-card-sub">Star Wars · 1 temporada · 12 ep</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-5)">
+                    <span class="kbv-tag tint" style="--c: var(--kb-warn)">En pausa</span>
+                    <span class="kbv-meta">Sin calificar</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:var(--kb-sp-5)">
+                    <span class="kbv-num" style="font-size:var(--kb-fs-sm);flex:none">T1 · E5</span>
+                    <span class="kbv-progress xs" style="--c: var(--kb-warn);flex:1 1 auto" role="img" aria-label="5 de 12 episodios"><span class="fill" style="width:42%"></span></span>
+                    <span class="kbv-num" style="font-size:var(--kb-fs-sm);flex:none;color:var(--kb-text-2)">5/12</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-3)">
+                    <span class="kbv-tag" title="Disney+ · $199/mes">Disney+</span>
+                  </div>
+                </div>
+                <div class="kbv-card-foot" style="justify-content:flex-start;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-7) var(--kb-sp-7)">
+                  <button type="button" class="kbv-btn sm kbv-btn-secondary" title="Registrar capítulo visto">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Capítulo
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Calificar">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.4 15.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Calificar
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Comentar o dejar una reflexión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Comentar
+                  </button>
+                </div>
+              </article>
+
+              <article class="kbv-card flush" role="listitem">
+                <button type="button" style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);border:0;text-align:left;cursor:pointer;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 18%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                  <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Peli</span>
+                  <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">Anora<span class="kbv-sr-only"> — abrir el detalle</span></span>
+                </button>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-2)">
+                    <span class="kbv-card-title">Anora</span>
+                    <span class="kbv-card-sub">Drama · 139 min · aún sin ver</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-5)">
+                    <span class="kbv-tag">Wishlist</span>
+                    <span class="kbv-meta">Sin calificar</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-3)">
+                    <span class="kbv-tag" title="Cines · ~$80 por boleto">Cines</span>
+                  </div>
+                </div>
+                <div class="kbv-card-foot" style="justify-content:flex-start;gap:var(--kb-sp-4);padding:var(--kb-sp-5) var(--kb-sp-7) var(--kb-sp-7)">
+                  <button type="button" class="kbv-btn sm kbv-btn-secondary" title="Marcar como vista">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Vista
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" disabled title="Se califica cuando la marques como vista">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M18.4 15.4l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Calificar
+                  </button>
+                  <button type="button" class="kbv-btn sm kbv-btn-ghost" title="Comentar o dejar una reflexión">
+                    <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M4 20h4L18 10a2.83 2.83 0 0 0-4-4L4 16z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Comentar
+                  </button>
+                </div>
+              </article>
+
+            </div>
+
+            <!-- ══ ESTADO · periodo «Todo el tiempo» ══ -->
+            <section class="kbv-section" aria-label="Estado: periodo Todo el tiempo">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Estado — periodo «Todo el tiempo»</span>
+                <span class="kbv-meta">Cambia la nota del periodo y la leyenda de «Veces al cine». Las cifras se recalculan; la rejilla no se filtra.</span>
+              </div>
+              <div class="kbv-filter-bar">
+                <span class="lbl" id="lbl-periodo-todo">Indicadores por periodo</span>
+                <div class="kbv-seg" role="group" aria-labelledby="lbl-periodo-todo">
+                  <button type="button" aria-pressed="false">Este año</button>
+                  <button type="button" aria-pressed="false">Personalizado</button>
+                  <button type="button" class="on" aria-pressed="true">Todo el tiempo</button>
+                </div>
+                <span class="grow"></span>
+                <span class="kbv-meta" style="display:inline-flex;align-items:center;gap:var(--kb-sp-3)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Histórico completo
+                </span>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-6)">
+                <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px">
+                  <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M4 8.5V7a1.5 1.5 0 0 1 1.5-1.5h13A1.5 1.5 0 0 1 20 7v1.5a3.5 3.5 0 0 0 0 7V17a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17v-1.5a3.5 3.5 0 0 0 0-7z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Veces al cine</div>
+                  <div class="body">
+                    <span class="val">9</span>
+                    <span class="delta">en total</span>
+                  </div>
+                </div>
+                <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px">
+                  <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M12 7v5.2l3.4 2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Horas totales</div>
+                  <div class="body">
+                    <span class="val">318<span class="unit">h</span></span>
+                    <span class="delta">en pantalla</span>
+                  </div>
+                </div>
+                <div class="kbv-kpi" style="--c: var(--kb-medal);flex:1 1 168px">
+                  <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg>Rating promedio</div>
+                  <div class="body">
+                    <span class="val">4.3<span class="unit">/5</span></span>
+                    <span class="delta">de tus 61 calificados</span>
+                  </div>
+                </div>
+                <!-- Cifra sin dato en el periodo: la raya ocupa el lugar de la cifra. -->
+                <div class="kbv-kpi" style="--c: var(--kb-primary);flex:1 1 168px">
+                  <div class="band"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.6" aria-hidden="true" style="display:block;flex:none"><path d="M5 12.5l4.5 4.5L19 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Terminados</div>
+                  <div class="body">
+                    <span class="val" style="color:var(--kb-text-2)">—</span>
+                    <span class="delta">sin comparativa histórica</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ ESTADO · vacío por filtro ══ -->
+            <section class="kbv-section" aria-label="Estado: sin resultados">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Estado — vacío</span>
+                <span class="kbv-meta">El filtro deja la rejilla sin títulos. El vacío nombra el filtro que lo causó y ofrece la salida.</span>
+              </div>
+              <div class="kbv-filter-bar">
+                <span class="lbl" id="lbl-estado-vacio">Estado</span>
+                <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)" role="group" aria-labelledby="lbl-estado-vacio">
+                  <button type="button" class="kbv-chip" aria-pressed="false">Todos <span class="kbv-badge quiet">6</span></button>
+                  <button type="button" class="kbv-chip" aria-pressed="false">Viendo <span class="kbv-badge quiet">2</span></button>
+                  <button type="button" class="kbv-chip active" aria-pressed="true">Vistos <span class="kbv-badge quiet">2</span></button>
+                  <button type="button" class="kbv-chip" aria-pressed="false">En pausa <span class="kbv-badge quiet">1</span></button>
+                  <button type="button" class="kbv-chip" aria-pressed="false">Wishlist <span class="kbv-badge quiet">1</span></button>
+                </div>
+                <span style="width:1px;height:24px;flex:none;background:var(--kb-border)" aria-hidden="true"></span>
+                <span class="lbl" id="lbl-tipo-vacio">Tipo</span>
+                <div class="kbv-seg" role="group" aria-labelledby="lbl-tipo-vacio">
+                  <button type="button" aria-pressed="false">Todo</button>
+                  <button type="button" class="on" aria-pressed="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Series</button>
+                  <button type="button" aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Pelis</button>
+                </div>
+                <span class="grow"></span>
+                <span class="kbv-meta">0 títulos</span>
+              </div>
+              <div class="kbv-card roomy" style="align-items:center;text-align:center;gap:var(--kb-sp-6);background:var(--kb-surface-2);border-style:dashed;border-color:var(--kb-border-strong);box-shadow:none">
+                <span style="display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:var(--kb-r-pill);background:var(--kb-canvas);color:var(--kb-text-2)">
+                  <svg width="26" height="26" viewBox="0 0 24 24" stroke-width="1.8" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 13.5h6" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>
+                </span>
+                <span class="kbv-h4" style="color:var(--kb-text-2)">No tienes series terminadas todavía.</span>
+                <p class="kbv-body kbv-prose" style="color:var(--kb-text-2)">Las dos que ves ahora siguen en curso. Cuando termines una, aparece aquí con su rating y sus horas.</p>
+                <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--kb-sp-4)">
+                  <button type="button" class="kbv-btn kbv-btn-secondary">Quitar los filtros</button>
+                  <button type="button" class="kbv-btn kbv-btn-ghost">
+                    <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" aria-hidden="true" style="display:block;flex:none"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Agregar a lista
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ ESTADO · cargando ══ -->
+            <section class="kbv-section" aria-label="Estado: cargando">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Estado — cargando</span>
+                <span class="kbv-meta">El esqueleto conserva la caja de cada pieza para que nada salte al llegar el dato. Sin texto: el aviso va al lector de pantalla.</span>
+              </div>
+              <span class="kbv-sr-only" role="status">Cargando tu registro de entretenimiento.</span>
+              <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-6)" aria-hidden="true">
+                <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px">
+                  <div class="band"><span style="display:block;width:84px;height:8px;border-radius:var(--kb-r-pill);background:color-mix(in oklab, var(--kb-media) 30%, var(--kb-canvas))"></span></div>
+                  <div class="body">
+                    <span style="display:block;width:52px;height:24px;border-radius:var(--kb-r-xs);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:104px;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+                <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px">
+                  <div class="band"><span style="display:block;width:96px;height:8px;border-radius:var(--kb-r-pill);background:color-mix(in oklab, var(--kb-media) 30%, var(--kb-canvas))"></span></div>
+                  <div class="body">
+                    <span style="display:block;width:40px;height:24px;border-radius:var(--kb-r-xs);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:88px;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+                <div class="kbv-kpi" style="--c: var(--kb-media);flex:1 1 168px">
+                  <div class="band"><span style="display:block;width:72px;height:8px;border-radius:var(--kb-r-pill);background:color-mix(in oklab, var(--kb-media) 30%, var(--kb-canvas))"></span></div>
+                  <div class="body">
+                    <span style="display:block;width:64px;height:24px;border-radius:var(--kb-r-xs);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:96px;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(248px, 1fr));gap:var(--kb-sp-7)" aria-hidden="true">
+                <div class="kbv-card flush">
+                  <span style="display:block;min-height:136px;background:var(--kb-surface-2)"></span>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                    <span style="display:block;width:62%;height:14px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:88%;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:100%;height:8px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:44%;height:22px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+                <div class="kbv-card flush">
+                  <span style="display:block;min-height:136px;background:var(--kb-surface-2)"></span>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                    <span style="display:block;width:52%;height:14px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:76%;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:100%;height:8px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:38%;height:22px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+                <div class="kbv-card flush">
+                  <span style="display:block;min-height:136px;background:var(--kb-surface-2)"></span>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                    <span style="display:block;width:70%;height:14px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:64%;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:100%;height:8px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:50%;height:22px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+                <div class="kbv-card flush">
+                  <span style="display:block;min-height:136px;background:var(--kb-surface-2)"></span>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                    <span style="display:block;width:58%;height:14px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:82%;height:10px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:100%;height:8px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                    <span style="display:block;width:42%;height:22px;border-radius:var(--kb-r-pill);background:var(--kb-surface-2)"></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ ESTADO · error de carga ══ -->
+            <section class="kbv-section" aria-label="Estado: error de carga">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Estado — error</span>
+                <span class="kbv-meta">Fondo tintado con glifo (R-1): el color nunca va solo. El texto queda en la tinta principal y la salida es reintentar.</span>
+              </div>
+              <div class="kbv-card roomy" style="flex-direction:row;align-items:flex-start;gap:var(--kb-sp-7);background:color-mix(in oklab, var(--kb-hp) 12%, var(--kb-canvas));border-color:color-mix(in oklab, var(--kb-hp) 32%, var(--kb-canvas))" role="alert">
+                <span style="display:flex;flex:none;color:var(--kb-hp-ink)">
+                  <svg width="24" height="24" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M12 4.5L21 19.5H3z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 10v4M12 16.6v.2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);min-width:0">
+                  <span class="kbv-h4">No pudimos traer tu registro.</span>
+                  <p class="kbv-body kbv-prose">Lo que registres mientras tanto se guarda en este dispositivo y se sube en cuanto vuelva la conexión. Nada se pierde.</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)">
+                    <button type="button" class="kbv-btn kbv-btn-secondary">
+                      <svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M20 12a8 8 0 1 1-2.3-5.6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v4.5h-4.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      Reintentar
+                    </button>
+                    <button type="button" class="kbv-btn kbv-btn-ghost">Ver lo guardado sin conexión</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ ESTADO · bloqueado ══ -->
+            <section class="kbv-section" aria-label="Estado: módulo bloqueado">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Estado — bloqueado (compuerta del armazón)</span>
+                <span class="kbv-meta">La compuerta vive en el armazón, no en el módulo: la pantalla no cambia, el armazón la sustituye por esta tarjeta. Sigue mostrando su identidad y qué se gana al abrirla.</span>
+              </div>
+              <div class="kbv-card roomy" style="align-items:center;text-align:center;gap:var(--kb-sp-7)">
+                <span style="display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:var(--kb-r-pill);background:var(--kb-primary-soft);color:var(--kb-primary-ink)">
+                  <svg width="26" height="26" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><path d="M7 11V8a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><rect x="4.5" y="11" width="15" height="9" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="kbv-h3">Entretenimiento todavía no está abierto.</span>
+                <p class="kbv-body kbv-prose" style="color:var(--kb-text-2)">Tu registro de pelis y series, con rating, episodios y horas en pantalla. Se abre una vez y queda tuyo para siempre.</p>
+                <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:var(--kb-sp-4)">
+                  <button type="button" class="kbv-btn kbv-btn-primary">
+                    <span class="kbv-facet" aria-hidden="true"></span>
+                    Abrir por 250 Elemento
+                  </button>
+                  <button type="button" class="kbv-btn kbv-btn-ghost">Ver qué incluye</button>
+                </div>
+                <span class="kbv-meta">Tienes 12 Elemento. El Elemento se gana logrando y también se compra; nunca compra ventaja.</span>
+              </div>
+            </section>
+
+            <!-- ══ AFORDANCIA · foco y estado presionado de la tarjeta ══ -->
+            <section class="kbv-section" aria-label="Afordancia: foco en la tarjeta">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Afordancia — foco</span>
+                <span class="kbv-meta">La tarjeta NO es el destino: lo es su portada, que se dibuja con el aro de foco. Las tres acciones rápidas del pie son destinos aparte y por eso no hay que detener ningún clic.</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(248px, 1fr));gap:var(--kb-sp-7)">
+                <article class="kbv-card flush">
+                  <span style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);box-sizing:border-box;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 44%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%);box-shadow:var(--kb-focus-halo)">
+                    <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Serie</span>
+                    <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">Severance</span>
+                  </span>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                    <span class="kbv-card-title">Severance</span>
+                    <span class="kbv-card-sub">Portada enfocada · Entrar abre el detalle</span>
+                  </div>
+                </article>
+                <article class="kbv-card flush">
+                  <span style="display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);width:100%;min-height:136px;padding:var(--kb-sp-6);box-sizing:border-box;color:var(--kb-text-inverse);background:linear-gradient(140deg, color-mix(in oklab, var(--kb-media) 38%, var(--kb-void-2)) 0%, var(--kb-void-2) 100%)">
+                    <span class="kbv-tag"><svg width="12" height="12" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Serie</span>
+                    <span style="font-family:var(--kb-f-display);font-weight:800;font-size:var(--kb-fs-2xl);line-height:var(--kb-lh-tight);letter-spacing:-.01em;text-transform:uppercase">The Bear</span>
+                  </span>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-5);padding:var(--kb-sp-7)">
+                    <span class="kbv-card-title">The Bear</span>
+                    <span class="kbv-card-sub">Reposo · la tarjeta sube 1 px al pasar el cursor</span>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <!-- ══ MODAL · Registrar vista ══ -->
+            <section class="kbv-section" aria-label="Modal: registrar vista">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Modal — Registrar vista (580)</span>
+                <span class="kbv-meta">Lo que abre el botón primario de la cabecera. Un formulario de seis campos entra en el ancho por defecto. Se dibuja con el campo de episodio en error para fijar la anatomía del error.</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;padding:var(--kb-sp-9);border-radius:var(--kb-r-lg);background:color-mix(in srgb, var(--kb-text) 55%, transparent)">
+                <div class="kbv-card" style="width:100%;max-width:580px;padding:0;gap:0;border-radius:var(--kb-r-xl);box-shadow:var(--kb-sh-pop)" role="dialog" aria-modal="true" aria-labelledby="mod-vista-t">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);padding:var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);border-bottom:1px solid var(--kb-border-soft)">
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3);min-width:0">
+                      <span class="kbv-h3" id="mod-vista-t" style="font-size:var(--kb-fs-2xl)">Registrar vista</span>
+                      <span class="kbv-card-sub" style="max-width:46ch">Un episodio, una peli o una función de cine. Suma a tus horas y a tu racha del día.</span>
+                    </div>
+                    <button type="button" class="kbv-icon-btn" aria-label="Cerrar" style="width:44px;height:44px;border-radius:var(--kb-r-pill);border:1.5px solid var(--kb-border)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-7);padding:var(--kb-sp-8) var(--kb-sp-9)">
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                      <label for="mv-titulo" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Título</label>
+                      <span style="position:relative;display:flex;align-items:center">
+                        <input id="mv-titulo" type="text" value="Severance" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 42px 0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text)">
+                        <span style="position:absolute;right:var(--kb-sp-6);display:flex;color:var(--kb-text-2)" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.2" style="display:block;flex:none"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor"/><path d="M16.5 16.5L21 21" fill="none" stroke="currentColor" stroke-linecap="round"/></svg></span>
+                      </span>
+                      <span class="kbv-meta">Busca en tu lista; si no está, se agrega al guardar.</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--kb-sp-6)">
+                      <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                        <label for="mv-temporada" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Temporada</label>
+                        <input id="mv-temporada" type="text" value="2" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text)">
+                        <span class="kbv-meta">De 1 a 2.</span>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                        <label for="mv-episodio" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Episodio</label>
+                        <input id="mv-episodio" type="text" value="14" aria-invalid="true" aria-describedby="mv-episodio-err" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-hp);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text);box-shadow:0 0 0 5px color-mix(in srgb, var(--kb-hp) 10%, transparent)">
+                        <span id="mv-episodio-err" style="display:flex;align-items:center;gap:var(--kb-sp-3);font-size:var(--kb-fs-sm);font-weight:600;color:var(--kb-hp-ink)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor"/><path d="M12 7.6v5M12 15.8v.2" fill="none" stroke="currentColor" stroke-linecap="round"/></svg>
+                          La temporada 2 llega al episodio 9.
+                        </span>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                      <label for="mv-fecha" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Fecha</label>
+                      <span style="position:relative;display:flex;align-items:center">
+                        <input id="mv-fecha" type="text" value="Hoy · 7 sep 2026" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 42px 0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text)">
+                        <span style="position:absolute;right:var(--kb-sp-6);display:flex;color:var(--kb-text-2)" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><rect x="3.5" y="5" width="17" height="15" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                      </span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-4)">
+                      <span style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)" id="mv-plat">Dónde la viste</span>
+                      <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)" role="group" aria-labelledby="mv-plat">
+                        <button type="button" class="kbv-chip active" aria-pressed="true">Apple TV+ · $179/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Disney+ · $199/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Max · $149/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Cines · ~$80/boleto</button>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-4)">
+                      <span style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)" id="mv-rate">Calificación <span class="kbv-meta" style="font-weight:400">(opcional)</span></span>
+                      <div style="display:flex;align-items:center;gap:var(--kb-sp-3)" role="group" aria-labelledby="mv-rate">
+                        <button type="button" aria-label="1 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                        <button type="button" aria-label="2 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                        <button type="button" aria-label="3 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                        <button type="button" aria-label="4 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                        <button type="button" aria-label="5 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-text-2)"><svg width="26" height="26" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="none" stroke="currentColor" stroke-linejoin="round"/></svg></button>
+                        <span class="kbv-num" style="font-size:var(--kb-fs-sm);color:var(--kb-text-2)">4 de 5</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                      <label for="mv-nota" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Comentario <span class="kbv-meta" style="font-weight:400">(opcional)</span></label>
+                      <textarea id="mv-nota" rows="3" style="width:100%;min-height:108px;box-sizing:border-box;padding:var(--kb-sp-6) var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:400;line-height:var(--kb-lh-body);color:var(--kb-text);resize:vertical" placeholder="Lo que te dejó, en una línea."></textarea>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-4);padding:var(--kb-sp-7) var(--kb-sp-9);background:var(--kb-surface);border-top:1px solid var(--kb-border-soft)">
+                    <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                    <div style="display:flex;align-items:center;gap:var(--kb-sp-4)">
+                      <button type="button" class="kbv-btn kbv-btn-secondary">Guardar y seguir</button>
+                      <button type="button" class="kbv-btn kbv-btn-primary">Registrar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ MODAL · Agregar a lista ══ -->
+            <section class="kbv-section" aria-label="Modal: agregar a lista">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Modal — Agregar a lista (580)</span>
+                <span class="kbv-meta">Lo que abre el botón secundario de la cabecera. Da de alta el título sin registrar todavía ninguna vista.</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;padding:var(--kb-sp-9);border-radius:var(--kb-r-lg);background:color-mix(in srgb, var(--kb-text) 55%, transparent)">
+                <div class="kbv-card" style="width:100%;max-width:580px;padding:0;gap:0;border-radius:var(--kb-r-xl);box-shadow:var(--kb-sh-pop)" role="dialog" aria-modal="true" aria-labelledby="mod-lista-t">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:var(--kb-sp-6);padding:var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);border-bottom:1px solid var(--kb-border-soft)">
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3);min-width:0">
+                      <span class="kbv-h3" id="mod-lista-t" style="font-size:var(--kb-fs-2xl)">Agregar a lista</span>
+                      <span class="kbv-card-sub" style="max-width:46ch">Guárdalo ahora y decide después. Nada aquí depende de una app externa.</span>
+                    </div>
+                    <button type="button" class="kbv-icon-btn" aria-label="Cerrar" style="width:44px;height:44px;border-radius:var(--kb-r-pill);border:1.5px solid var(--kb-border)">
+                      <svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2.2" aria-hidden="true" style="display:block;flex:none"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-7);padding:var(--kb-sp-8) var(--kb-sp-9)">
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                      <label for="ml-titulo" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Título</label>
+                      <input id="ml-titulo" type="text" value="Shogun" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-primary);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text);box-shadow:var(--kb-focus-halo)">
+                      <span class="kbv-meta">Campo con el foco puesto: aro de marca al 10 %.</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-4)">
+                      <span style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)" id="ml-tipo">Tipo</span>
+                      <div class="kbv-seg" role="group" aria-labelledby="ml-tipo">
+                        <button type="button" class="on" aria-pressed="true"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="7" width="18" height="12.5" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 3.5L12 7l4-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Serie</button>
+                        <button type="button" aria-pressed="false"><svg width="14" height="14" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true" style="display:block;flex:none"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 9.5h18M3 14.5h18M8.5 5v14M15.5 5v14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>Peli</button>
+                      </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));gap:var(--kb-sp-6)">
+                      <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                        <label for="ml-temporadas" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Temporadas</label>
+                        <input id="ml-temporadas" type="text" value="1" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text)">
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3)">
+                        <label for="ml-episodios" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Episodios en total</label>
+                        <input id="ml-episodios" type="text" value="10" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text)">
+                        <span class="kbv-meta">Sirve para la barra de avance; se puede corregir luego.</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-4)">
+                      <span style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)" id="ml-estado">Estado inicial</span>
+                      <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)" role="group" aria-labelledby="ml-estado">
+                        <button type="button" class="kbv-chip active" aria-pressed="true">Wishlist</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Viendo</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Visto</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">En pausa</button>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-4)">
+                      <span style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)" id="ml-plat">Plataformas donde está</span>
+                      <div style="display:flex;flex-wrap:wrap;gap:var(--kb-sp-4)" role="group" aria-labelledby="ml-plat">
+                        <button type="button" class="kbv-chip" aria-pressed="false">Apple TV+ · $179/mes</button>
+                        <button type="button" class="kbv-chip active" aria-pressed="true">Disney+ · $199/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Max · $149/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Prime · $99/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Mubi · $199/mes</button>
+                        <button type="button" class="kbv-chip" aria-pressed="false">Cines · ~$80/boleto</button>
+                      </div>
+                      <span class="kbv-meta">El precio es tuyo, no de la plataforma: alimenta lo que gastas al mes en ver cosas.</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-4);padding:var(--kb-sp-7) var(--kb-sp-9);background:var(--kb-surface);border-top:1px solid var(--kb-border-soft)">
+                    <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                    <button type="button" class="kbv-btn kbv-btn-primary">Agregar</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ MODAL · Calificar ══ -->
+            <section class="kbv-section" aria-label="Modal: calificar">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Modal — Calificar (420)</span>
+                <span class="kbv-meta">Lo que abre la acción rápida «Calificar» de una tarjeta. Una sola decisión, dos botones: por eso el ancho chico.</span>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;padding:var(--kb-sp-9);border-radius:var(--kb-r-lg);background:color-mix(in srgb, var(--kb-text) 55%, transparent)">
+                <div class="kbv-card" style="width:100%;max-width:420px;padding:0;gap:0;border-radius:var(--kb-r-xl);box-shadow:var(--kb-sh-pop)" role="dialog" aria-modal="true" aria-labelledby="mod-rate-t">
+                  <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3);padding:var(--kb-sp-8) var(--kb-sp-9) var(--kb-sp-7);border-bottom:1px solid var(--kb-border-soft)">
+                    <span class="kbv-h3" id="mod-rate-t" style="font-size:var(--kb-fs-2xl)">¿Qué tal estuvo Andor?</span>
+                    <span class="kbv-card-sub" style="max-width:46ch">Tu calificación entra al promedio del periodo y viaja al detalle del título.</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:var(--kb-sp-6);padding:var(--kb-sp-8) var(--kb-sp-9)">
+                    <div style="display:flex;align-items:center;gap:var(--kb-sp-3)" role="group" aria-label="Calificación de 1 a 5">
+                      <button type="button" aria-label="1 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                      <button type="button" aria-label="2 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                      <button type="button" aria-label="3 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-coin-ink)"><svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="currentColor"/></svg></button>
+                      <button type="button" aria-label="4 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-text-2)"><svg width="30" height="30" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="none" stroke="currentColor" stroke-linejoin="round"/></svg></button>
+                      <button type="button" aria-label="5 de 5" style="display:flex;align-items:center;justify-content:center;width:var(--kb-touch-min);height:var(--kb-touch-min);padding:0;border:0;background:none;cursor:pointer;color:var(--kb-text-2)"><svg width="30" height="30" viewBox="0 0 24 24" stroke-width="1.7" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.7 5.5 6 .9-4.35 4.2 1.03 6L12 17.3l-5.38 2.9 1.03-6L3.3 10l6-.9z" fill="none" stroke="currentColor" stroke-linejoin="round"/></svg></button>
+                    </div>
+                    <span class="kbv-num">3 de 5 — «Buena, pero se me fue»</span>
+                    <div style="display:flex;flex-direction:column;gap:var(--kb-sp-3);width:100%">
+                      <label for="mr-nota" style="font-size:var(--kb-fs-md);font-weight:600;color:var(--kb-text)">Una línea <span class="kbv-meta" style="font-weight:400">(opcional)</span></label>
+                      <input id="mr-nota" type="text" style="width:100%;height:var(--kb-ctl-h);box-sizing:border-box;padding:0 var(--kb-sp-7);background:var(--kb-card);border:1.5px solid var(--kb-border);border-radius:var(--kb-r-md);font-family:var(--kb-f-body);font-size:var(--kb-fs-lg);font-weight:500;color:var(--kb-text)" placeholder="Por qué esa calificación">
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--kb-sp-4);padding:var(--kb-sp-7) var(--kb-sp-9);background:var(--kb-surface);border-top:1px solid var(--kb-border-soft)">
+                    <button type="button" class="kbv-btn kbv-btn-ghost">Cancelar</button>
+                    <button type="button" class="kbv-btn kbv-btn-primary">Guardar calificación</button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ══ Comportamiento ══ -->
+            <section class="kbv-section" aria-label="Comportamiento">
+              <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--kb-sp-5);padding-top:var(--kb-sp-8);border-top:1px dashed var(--kb-border-strong)">
+                <span class="kbv-eyebrow">Comportamiento</span>
+                <span class="kbv-meta">Lo que no se ve en el dibujo, para quien la construya.</span>
+              </div>
+              <div class="kbv-card roomy">
+                <ul class="kbv-body" style="display:flex;flex-direction:column;gap:var(--kb-sp-5);margin:0;padding-left:var(--kb-sp-8)">
+                  <li>Los dos filtros se cruzan: estado Y tipo. Los conteos de los chips salen del total, no del resultado filtrado, y por eso no cambian al filtrar.</li>
+                  <li>El periodo solo manda sobre los seis indicadores; nunca filtra la rejilla. Cambia la nota del periodo y la leyenda de «Veces al cine» (este año · en el periodo · en total).</li>
+                  <li>«Personalizado» abre el selector de rango; hasta que se elige, los indicadores siguen mostrando el periodo anterior.</li>
+                  <li>La portada es el destino: abre el detalle del título, que sustituye a esta pantalla. La tarjeta entera NO es un botón, así las tres acciones del pie no tienen que detener el clic.</li>
+                  <li>Acción rápida por tipo: «Capítulo» en una serie avanza un episodio y recalcula la barra; «Vista» en una peli la pasa a Visto y sella la fecha.</li>
+                  <li>«Calificar» abre el modal de 420. Guardar actualiza la tarjeta, el promedio del periodo y el detalle del título — el rating vive en un solo lugar.</li>
+                  <li>«Comentar» lleva al cuaderno del detalle con el compositor ya abierto.</li>
+                  <li>«Calificar» va deshabilitado mientras el título esté en Wishlist: no se califica lo que no se ha visto.</li>
+                  <li>La barra de episodios se DERIVA de temporada, episodio y total; no se guarda. Solo aparece en series con avance registrado.</li>
+                  <li>Sin rating no se dibujan estrellas: la fila lo dice con palabras («Sin calificar») en lugar de dejar el hueco.</li>
+                  <li>Las estrellas son un medidor, no texto decorativo: la calificación va además como texto para el lector de pantalla.</li>
+                  <li>Cada plataforma lleva su precio mensual en el título emergente y en los modales; de ahí sale lo que gastas al mes en ver cosas.</li>
+                  <li>Registrar una vista es un hecho: suma horas, cuenta para la racha del día y se le puede poner área — el área es un eje del hecho, no un destino de este módulo.</li>
+                  <li>Los tres modales cierran con Escape, con clic en el velo y con su botón; mientras están abiertos el foco queda atrapado dentro.</li>
+                  <li>«Guardar y seguir» deja el modal abierto y limpio para registrar el siguiente episodio de un tirón.</li>
+                  <li>Si la carga falla, lo que registres se queda en el dispositivo y sube solo al volver la conexión.</li>
+                  <li>La compuerta premium la pone el armazón antes de montar la pantalla; el módulo no sabe que existe.</li>
+                </ul>
+              </div>
+            </section>
