@@ -1,0 +1,38 @@
+[
+ {
+  "artboard": "AreasScreenV3",
+  "nombre": "Áreas · Centro de análisis (orquestador)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreasGeneralV3",
+  "nombre": "Áreas · Vista general (balance, patrones, prioridades)",
+  "archivo": "areas-v2.jsx",
+  "modales": 0
+ },
+ {
+  "artboard": "AreaDetailV3",
+  "nombre": "Detalle de área (Progreso · Proyectos · Configuración)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaProjectsV3",
+  "nombre": "Pestaña Proyectos del área (jerarquía hacia abajo)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaWillTab",
+  "nombre": "Pestaña Voluntad · Retos y hábitos (homologada 1:1)",
+  "archivo": "areas-v2.jsx",
+  "modales": 1
+ },
+ {
+  "artboard": "AreaConfigV3",
+  "nombre": "Pestaña Configuración del área",
+  "archivo": "areas-v2.jsx",
+  "modales": 0
+ }
+]
