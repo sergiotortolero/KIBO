@@ -1,7 +1,8 @@
-# Kibo Design System — The Recipe · v1.5
+# Kibo Design System — The Recipe · v1.6
 
 | Version | Date | What changed | Why |
 |---|---|---|---|
+| v1.6 | 2026-09-08 | The **cara** recipe is built in oklch: a solid fill lowers its lightness while **raising** its chroma, and keeps a white label. `--kb-face-l` and `--kb-face-c` (`colors_and_type.css`) carry the two numbers | Mixing a hue toward the void lowers lightness **and** chroma at once, which is what made every filled surface read muddy — and a full-strength hue carries no white label at all (1.80–3.96 across the palette). Depth with chroma gives both: white measures 4.96–6.37 across the whole palette in both themes, and the progress fill against its track rises from 2.72 to 4.43, closing the debt v1.5 had to declare |
 | v1.5 | 2026-09-08 | A third recipe, **cara** (§2.1): a solid fill carries its hue at full strength and the label on it is the ink anchor, not white. The button, the counter pill, the checked box, the progress fill and the active destination move to it (§6.1) | The ink recipe was being used for solid fills as well as for text, so every filled surface showed a darkened version of its own colour — the brand never appeared on the surfaces that carry it, and the HP red read as wine. Measured across the palette: white on a full-strength hue ranges 1.80–3.96 and clears nothing; the ink anchor ranges 4.77–10.52 |
 | v1.4 | 2026-09-05 | KIBO's expression system enters the recipe (§6.10): the brow-follows-eye technique with its composed transform, the blush-on-body per-mood rule, and the per-mood eye-shape table for the eight moods | The specimen carries the mascot's eight expressions; the recipe now states them so a building agent reproduces the face — brow, blush and eye shape — without re-deriving it from the card |
 | v1.3 | 2026-08-24 | Data visualization (§6.9) and gamification (§6.10) close the vocabulary; the system is complete. Records the two recipe findings and the new token families | The last two families the old DS covered are re-expressed in the new standard, themeable by channel. What remains is content, not system |
@@ -72,11 +73,13 @@ Every tinted surface and every piece of text on colour in Kibo comes from exactl
 |---|---|---|
 | **Lavado** (wash — a tinted background) | `color-mix(in oklab, <hue> 12%, var(--kb-canvas))` | `color-mix(in oklab, <hue> 22%, var(--kb-void-1))` |
 | **Tinta** (ink — text on a wash, and hairlines) | `color-mix(in oklab, <hue> 54%, var(--kb-void-2))` | `color-mix(in oklab, <hue> 42%, var(--kb-text-inverse))` |
-| **Cara** (face — a solid fill that IS its colour) | `<hue>`, label in `var(--kb-void-2)` | `<hue>`, label in `var(--kb-void-2)` |
+| **Cara** (face — a solid fill that IS its colour) | `oklch(from <hue> var(--kb-face-l) calc(c * var(--kb-face-c)) h)`, label `--kb-text-inverse` | identical — the face does not change with the theme |
 
-**The colour rules; the label adapts.** A solid fill shows its hue at full strength — the brand button is the brand, the HP pill is HP — and what changes is the text on top. Measured on the full-strength hue: white ranges **1.80** (Divisa) to **3.96** (HP) and clears nothing, while the ink anchor ranges **4.77** (HP) to **10.52** (Divisa). A face is never the ink: an ink face is a darkened version of the colour, which is what made the interface read opaque and the HP red read as wine.
+**Depth comes from chroma, not from black.** `--kb-face-l: 0.50` and `--kb-face-c: 1.5`: the face keeps its hue, drops to a fixed lightness and **multiplies its chroma**. Mixing toward `--kb-void-2` lowers lightness and chroma together, which is what made every filled surface read muddy; lowering lightness while raising chroma reads deep and saturated instead.
 
-**The one exception is peligro**, which keeps an ink face and a white label (**6.24**): its job is urgency, not identity, and dark text on red contradicts it.
+The white label is what the two numbers are chosen for. Measured across the palette with `--kb-text-inverse` on the face, **in both themes**: Voluntad **4.96**, brand **4.98**, Vigor **5.00**, HP **5.19**, Comunidad **5.74**, racha **5.79**, Riqueza **6.07**, Divisa **6.10**, Sabiduría **6.37**. Every one clears AA. A hue at full strength carries no white label at all — it ranges 1.80 (Divisa) to 3.96 (HP) — and an ink face carries white but is the muddy version of the colour.
+
+**The face is the same in both themes.** Because the lightness is fixed rather than derived, the button, the counter pill and the active destination are the same colour in light and in dark, and only the surfaces around them change.
 
 `<hue>` is any token in the palette: an area, a priority, a gamification colour, the brand. The ink anchor is **`--kb-void-2`** (`:88`), a token — never a hand-written near-black.
 
@@ -333,17 +336,17 @@ The button family is already the proven pattern in this codebase: base plus modi
 
 | Variant | Class | Face | Text | Lip / border | Line |
 |---|---|---|---|---|---|
-| Primario | `.kbv-btn-primary` | **cara**: `--kb-primary` | `--kb-void-2` | `--kb-elev-hard` at the ink of the hue + `--kb-sh-1` | `:207-213` |
+| Primario | `.kbv-btn-primary` | **cara** of `--kb-primary` | `--kb-text-inverse` | `--kb-elev-hard` at the ink of the hue + `--kb-sh-1` | `:207-213` |
 | Secundario | `.kbv-btn-secondary` | `--kb-card` | `--kb-text` | `border-color: --kb-border-strong` + `--kb-sh-1` | `:226-231` |
 | Fantasma | `.kbv-btn-ghost` | transparent | `--kb-primary-ink` | none | `:215-224` |
-| Peligro | `.kbv-btn-danger` | ink of `--kb-hp` (74 %) | `--kb-text-inverse` | as primario, with `--kb-hp` | `:245-249` |
+| Peligro | `.kbv-btn-danger` | **cara** of `--kb-hp` | `--kb-text-inverse` | as primario, with `--kb-hp` | `:245-249` |
 | Enlace | `.kbv-btn-link` | transparent | `--kb-primary-ink` | none; `height: auto`, `--kb-fs-md`, underline offset 3 | `:233-243` |
 
-**The solid face is the colour itself** (§2.1, cara). The lip below it is the ink of the same hue, so the button keeps its edge where the face is light. Hover darkens the face toward the void at 88 %. Measured: the void label on the brand face **6.18:1** in light and **9.38:1** in dark.
+**The solid face is the cara of its hue** (§2.1). The lip below it is the ink of the same hue, so the button keeps its edge. Hover drops the face 0.04 in lightness and keeps its chroma. Measured: the white label on the brand face **4.98:1**, in both themes.
 
 **The same rule governs every filled piece of the system**, so there is one convention and not two: the counter pill `.kbv-badge`, the checked box `.kbv-check.on`, the progress fill `.kbv-progress .fill`, and the active destination `.kbv-side-link.active`. Each carries its hue and puts the label in the ink anchor.
 
-**Declared debt.** The progress fill against its own track measures **2.72** in light theme, under the 3.0 floor for a non-text piece. It cannot be lifted while the fill carries the brand: a mid-luminance hue on a light card would need a track below 0.077 relative luminance to reach 3:1, which is a near-black groove. The component boundary is carried instead by the track ring, which reads the ink recipe and measures 7.7 against the card.
+**The progress fill is a face too**, and that is what closed the debt the earlier draft had to declare: a full-strength brand fill measured **2.72** against its own track, under the 3.0 floor, and no lighter track could lift it. The face is deep enough to measure **4.43** against the same track, so the filled portion is legible as filled. The track keeps its ring, which reads the ink recipe and measures 7.7 against the card.
 
 **Six states, in every variant.** reposo · hover · foco (`--kb-focus-halo`) · **presionado** (`translateY(2px)`, the lip collapses — the gesture is the height it loses) · **deshabilitado** (`--kb-surface-2` background, `--kb-text-2` text, no lip, no shadow — **not opacity**) · **cargando** (label goes transparent, a 16 px spinner in the variant's own colour, **the button keeps the label's width**).
 

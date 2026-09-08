@@ -76,9 +76,19 @@
 
   /* ---- Brand: Teal · progreso sereno ------------------------------------ */
   --kb-primary:       #1CA4A0;
-  --kb-primary-hover: #178F8B;
-  --kb-primary-soft:  #E4F4F3;
-  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+  --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
+  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
+  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+
+  /* La cara de un relleno solido: profundidad CON croma, nunca mezcla contra
+
+     el negro, que apaga luminosidad y croma a la vez. Rotulo blanco: toda la
+
+     paleta entre 4.96 y 6.37 en los dos temas. */
+
+  --kb-face-l: 0.50;
+
+  --kb-face-c: 1.5;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -427,14 +437,14 @@
 
     /* Cara sólida: la tinta del papel. Labio: esa tinta, más honda. */
     .kbv-btn-primary, .kbv-btn-danger {
-      --face: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      --face: oklch(from var(--c) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
       --lip:  color-mix(in oklab, var(--c) 30%, var(--kb-void-2));
       background: var(--face); color: var(--kb-text-inverse);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
     .kbv-btn-primary { --c: var(--kb-primary); }
     .kbv-btn-danger  { --c: var(--kb-hp); }
-    .kbv-btn-primary.is-hover, .kbv-btn-danger.is-hover { background: color-mix(in oklab, var(--face) 78%, var(--c)); }
+    .kbv-btn-primary.is-hover, .kbv-btn-danger.is-hover { background: oklch(from var(--c) calc(var(--kb-face-l) - 0.04) calc(c * var(--kb-face-c)) h); }
 
     .kbv-btn-secondary {
       background: var(--kb-card); color: var(--kb-text);

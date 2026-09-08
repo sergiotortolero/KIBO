@@ -75,6 +75,13 @@
   --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
   --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
 
+  /* ---- La receta de cara: profundidad CON croma ---------------------------
+     Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
+     contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
+     blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
+  --kb-face-l: 0.50;
+  --kb-face-c: 1.5;
+
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
   --kb-xp:        #1CA4A0;   /* mirrors --kb-primary */

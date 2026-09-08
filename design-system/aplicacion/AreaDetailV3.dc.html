@@ -67,6 +67,13 @@
   --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
   --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
 
+  /* ---- La receta de cara: profundidad CON croma ---------------------------
+     Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
+     contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
+     blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
+  --kb-face-l: 0.50;
+  --kb-face-c: 1.5;
+
   /* ---- Gamificacion ------------------------------------------------------ */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
   --kb-xp:        #1CA4A0;
@@ -307,10 +314,9 @@
       background: var(--face); color: var(--on-face);
       box-shadow: var(--kb-elev-hard) var(--lip), var(--kb-sh-1);
     }
-    .kbv-btn-primary { --c: var(--kb-primary); --face: var(--c); --on-face: var(--kb-void-2); }
+    .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); --on-face: var(--kb-text-inverse); }
     /* El peligro no es superficie de marca: su trabajo es la urgencia. */
-    .kbv-btn-danger  { --c: var(--kb-hp); --on-face: var(--kb-text-inverse);
-                       --face: color-mix(in oklab, var(--c) 74%, var(--kb-void-2)); }
+    .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); --on-face: var(--kb-text-inverse); }
     .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
@@ -367,7 +373,7 @@
     .kbv-badge {
       display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
       min-width: 20px; height: 20px; gap: var(--kb-sp-2); padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
-      background: var(--c, var(--kb-hp)); color: var(--kb-void-2);
+      background: oklch(from var(--c, var(--kb-hp)) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse);
       font-family: var(--kb-f-display); font-size: var(--kb-fs-2xs); font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -388,7 +394,7 @@
     .kbv-progress.xs { height: 4px; }
     .kbv-progress.sm { height: 6px; }
     .kbv-progress.lg { height: 12px; }
-    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary));
+    .kbv-progress .fill { display: block; height: 100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) calc(c * var(--kb-face-c)) h);
                           transition: width var(--kb-dur-slow) var(--kb-ease-out); }
     .kbv-progress-meta { display: flex; flex-direction: column; gap: var(--kb-sp-3); }
     .kbv-progress-meta .top { display: flex; justify-content: space-between; align-items: baseline; gap: var(--kb-sp-5); }
@@ -569,7 +575,7 @@
                  color: transparent; cursor: pointer; }
     .kbv-check::after { content: ""; position: absolute; left: 50%; top: 50%; width: var(--kb-touch-min);
                         height: var(--kb-touch-min); transform: translate(-50%, -50%); }
-    .kbv-check.on { background: var(--kb-primary); border-color: var(--kb-primary); color: var(--kb-void-2); }
+    .kbv-check.on { background: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); border-color: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); }
     .kbv-check:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
   </style>
 
@@ -735,9 +741,9 @@
     /* .smp-hover retrata el hover en la lamina; una pantalla usa el estado real. */
     .kbv-side-link:hover, .kbv-side-link.smp-hover { background: var(--kb-surface); color: var(--kb-text); }
     .kbv-side-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
-    .kbv-side-link.active { background: var(--kb-primary); color: var(--kb-void-2); font-weight: 700; }
+    .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) calc(c * var(--kb-face-c)) h); color: var(--kb-text-inverse); font-weight: 700; }
     .kbv-side-link .kbv-badge { display: var(--rail-hide, inline-flex); flex: none; }
-    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-canvas); color: var(--kb-primary-ink); }
+    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: var(--kb-primary-ink); }
     /* Candado freemium: el armazon es quien tapa, no el modulo. Un modulo
        cerrado NUNCA se lee libre, y para eso el precio esta siempre a la vista
        — no al pasar el cursor: un precio que hay que descubrir no es un precio.
