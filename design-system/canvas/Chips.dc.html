@@ -7,6 +7,7 @@
 <body>
 <x-dc>
 <helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
 /* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
    sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
@@ -23,8 +24,6 @@
    defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
    Those are DEPRECATED — build against the tokens below. See README "reconcile".
    ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ---- Type families. TWO families: display+label share Jakarta ---------- */
@@ -90,6 +89,8 @@
       --kb-face-l: 0.66;
 
   --kb-face-c: 0.15;
+  --kb-wash-l: 0.90;  --kb-wash-c: 0.045;
+  --kb-ink-l:  0.38;  --kb-ink-c:  0.06;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -411,13 +412,13 @@
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
       --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.055;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
       background: var(--kb-canvas); color: var(--kb-text);
     }
     /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
-    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
-    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+    .wash { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .ink { color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
   </style>
   <style>
     /* .kbv-chip — se toca. Alto 36, el mismo del control sm. */
@@ -433,7 +434,7 @@
     }
     .kbv-chip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: var(--kb-touch-min); transform: translateY(-50%); }
     .kbv-chip.is-hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
-    .kbv-chip.active { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-chip.active { border-color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-chip.is-focus { box-shadow: var(--kb-focus-halo); }
     .kbv-chip.is-off { background: var(--kb-surface-2); border-color: var(--kb-border); color: var(--kb-text-2); cursor: not-allowed; }
     .kbv-chip .dot { width: 8px; height: 8px; border-radius: var(--kb-r-pill); flex-shrink: 0; }
@@ -446,7 +447,7 @@
       font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em;
       white-space: nowrap;
     }
-    .kbv-tag.tint { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.tint { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
 
     /* .kbv-badge — se cuenta. Escala cerrada. */

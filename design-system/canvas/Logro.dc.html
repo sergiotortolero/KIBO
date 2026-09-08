@@ -7,6 +7,7 @@
 <body>
 <x-dc>
 <helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
 /* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
    sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
@@ -23,8 +24,6 @@
    defaults (green/turquoise :root, Geist fonts, indigo onboarding gradients).
    Those are DEPRECATED — build against the tokens below. See README "reconcile".
    ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ---- Type families. TWO families: display+label share Jakarta ---------- */
@@ -77,19 +76,17 @@
   /* ---- Brand: Teal · progreso sereno ------------------------------------ */
   --kb-primary:       #1CA4A0;
   --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
-  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
-  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+  --kb-primary-soft:  oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-primary-ink:   oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
 
-  /* La cara de un relleno solido: profundidad CON croma, nunca mezcla contra
-
-     el negro, que apaga luminosidad y croma a la vez. Rotulo blanco: toda la
-
-     paleta entre 4.96 y 6.37 en los dos temas. */
-
+  /* Los numeros de las cuatro recetas: lavado, tinta, cara y armazon fijan
+     luminosidad y croma, y lo unico que viaja es el matiz. El rotulo de una
+     cara va en --kb-void-2: a esa luminosidad el blanco no pasa (4.57 el mejor,
+     3.34 el rojo) y la tinta oscura mide entre 5.66 y 6.79. */
   --kb-frame-l: 0.965; --kb-frame-c: 0.012;
-      --kb-face-l: 0.66;
-
-  --kb-face-c: 0.15;
+  --kb-face-l:  0.66;  --kb-face-c:  0.15;
+  --kb-wash-l:  0.90;  --kb-wash-c:  0.045;
+  --kb-ink-l:   0.38;  --kb-ink-c:   0.06;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -220,44 +217,35 @@
    No repetir un hex a mano: cada tinta se deriva de su propio color.
    ========================================================================== */
 :root {
-  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
-  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
-  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
-  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
-  --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
-  --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
-  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+  --kb-streak-ink:   oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-coin-ink:     oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-hp-ink:       oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-boss-ink:     oklch(from var(--kb-boss) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-gem-ink:      oklch(from var(--kb-gem) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-good-ink:     oklch(from var(--kb-good) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 
-  /* Tinta de las 5 áreas · texto y relleno legibles.
-     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
-     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
-     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
-     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
-     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
-     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
-  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
-  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
-  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
-  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
-  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  /* Tinta de las 5 áreas. La receta fija luminosidad y croma y lo unico que
+     viaja es el matiz, asi que las cinco miden igual sobre su propio lavado. */
+  --area-vigor-ink:     oklch(from var(--area-vigor) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wisdom-ink:    oklch(from var(--area-wisdom) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wealth-ink:    oklch(from var(--area-wealth) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-will-ink:      oklch(from var(--area-will) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
-  /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
-     --c que declare la pieza, asi que sirve igual para un area, una rareza o un
-     material. 54% es el porcentaje calibrado: pasa AA sobre blanco, sobre el
-     tinte al 7% y al 16%, y admite texto blanco encima cuando es relleno.
-     Sustituye las mezclas al 72-76% con var(--kb-text), que en matices claros
-     (amarillo, cyan, teal, naranja) se quedan entre 2.9 y 4.3:1. */
-  --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
+  /* Tinta para CUALQUIER matiz: se resuelve en el punto de uso con el --c que
+     declare la pieza, asi vale igual para un area, una rareza o un material. */
+  --kb-ink-on-tint: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
 
   /* Lavados y bordes derivados */
-  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
-  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
-  --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
-  --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
-  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
-  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
-  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+  --kb-coin-soft:      oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-coin-border:    oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-gem-soft:       oklch(from var(--kb-gem) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-gem-border:     oklch(from var(--kb-gem) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-primary-border: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-community-soft:   oklch(from var(--area-community) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-community-border: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 }
 
 /* Breakpoints (constants — @media can't read var()):
@@ -410,14 +398,15 @@
       --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
-      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      --kb-primary-soft: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+      --kb-primary-ink:  oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.055;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
       background: var(--kb-canvas); color: var(--kb-text);
     }
     /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
-    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
-    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+    .wash { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .ink { color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
   </style>
 
   <style>
@@ -450,7 +439,7 @@
     /* Anclas semanticas de datos (duras). La marca fina usa la tinta al 54%. */
     --kb-gain:     var(--kb-good);
     --kb-loss:     var(--kb-hp);
-    --kb-gain-ink: color-mix(in oklab, var(--kb-good) 54%, var(--kb-void-2));
+    --kb-gain-ink: oklch(from var(--kb-good) var(--kb-ink-l) var(--kb-ink-c) h);
     --kb-loss-ink: var(--kb-hp-ink);
 
     /* MATERIALES de emblema - escalera ordinal de 9 tiers. El tinte es token
@@ -497,10 +486,10 @@
 
     .legend { display:flex; flex-wrap:wrap; gap: var(--kb-sp-5) var(--kb-sp-6); }
     .legend .item { display:inline-flex; align-items:center; gap: var(--kb-sp-3); font-size: var(--kb-fs-sm); color: var(--kb-text); }
-    .legend .dot { width:12px; height:12px; border-radius:999px; flex:none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+    .legend .dot { width:12px; height:12px; border-radius:999px; flex:none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kb-void-2) 12%, transparent); }
 
     .catcell { display:flex; flex-direction:column; gap: var(--kb-sp-3); }
-    .catcell .chip { height:44px; border-radius: var(--kb-r-md); box-shadow: inset 0 0 0 1px rgba(0,0,0,.10); }
+    .catcell .chip { height:44px; border-radius: var(--kb-r-md); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kb-void-2) 10%, transparent); }
     .catcell .nm { font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text); }
     .catcell code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text-2); }
 
@@ -513,7 +502,7 @@
     .emblem { width:64px; height:74px; display:flex; align-items:center; justify-content:center;
       clip-path: polygon(50% 100%, 8% 76%, 0 0, 100% 0, 92% 76%);
       font-family: var(--kb-f-display); font-weight:800; font-size:20px;
-      filter: drop-shadow(0 2px 3px rgba(20,30,50,.2)); }
+      filter: drop-shadow(0 2px 3px color-mix(in srgb, var(--kb-void-2) 20%, transparent)); }
     .matcell { display:flex; flex-direction:column; align-items:center; gap: var(--kb-sp-3); }
     .matcell .nm { font-size: var(--kb-fs-xs); font-weight:700; color: var(--kb-text); }
     .matcell code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text-2); }
@@ -521,15 +510,15 @@
     .rar { display:inline-flex; align-items:center; gap: var(--kb-sp-3); height:26px; padding:0 var(--kb-sp-5);
       border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-weight:800; font-size: var(--kb-fs-2xs);
       letter-spacing:.06em; text-transform:uppercase;
-      background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 30%, var(--kb-canvas)); }
-    .rar .dot { width:8px; height:8px; border-radius:999px; background: var(--c); }
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
+      box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
+    .rar .dot { width:8px; height:8px; border-radius:999px; background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
 
     .flamechip { display:flex; flex-direction:column; align-items:center; gap: var(--kb-sp-2); }
     .flamechip .disc { width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
-      background: color-mix(in oklab, var(--c) 16%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 34%, var(--kb-border)); }
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .flamechip .lbl { font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text); }
     .flamechip .day { font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
 
@@ -544,8 +533,8 @@
       border:1px solid var(--kb-border); border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
       padding: var(--kb-sp-6); }
     .ach .ico { flex:none; width:38px; height:38px; border-radius: var(--kb-r-sm); display:grid; place-items:center;
-      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
-      background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas)); }
+      color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
     .ach .bd { flex:1; min-width:0; display:flex; flex-direction:column; gap: var(--kb-sp-2); }
     .ach .nm { font-family: var(--kb-f-display); font-weight:700; font-size: var(--kb-fs-md); color: var(--kb-text); display:flex; align-items:center; gap: var(--kb-sp-3); }
     .ach .ds { font-size: var(--kb-fs-sm); color: var(--kb-text-2); line-height: var(--kb-lh-snug); }
@@ -554,15 +543,15 @@
     .ach.locked .ico { color: var(--kb-text-2); background: var(--kb-card); }
     .ach.locked .nm, .ach.locked .ds { color: var(--kb-text-2); }
     .progrow { display:flex; align-items:center; gap: var(--kb-sp-4); }
-    .pbar { flex:1; height:6px; border-radius: var(--kb-r-pill); background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 24%, var(--kb-canvas)); overflow:hidden; }
-    .pbar > span { display:block; height:100%; border-radius: var(--kb-r-pill); background: var(--c); }
+    .pbar { flex:1; height:6px; border-radius: var(--kb-r-pill); background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); overflow:hidden; }
+    .pbar > span { display:block; height:100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
     .pnum { font-family: var(--kb-f-display); font-weight:700; font-variant-numeric: tabular-nums;
-      font-size: var(--kb-fs-sm); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+      font-size: var(--kb-fs-sm); color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .earned { display:inline-flex; align-items:center; gap: var(--kb-sp-2); font-size: var(--kb-fs-2xs);
       font-weight:700; color: var(--kb-primary-ink); }
     .flag { font-family: var(--kb-f-label); font-weight:800; font-size: 9px; letter-spacing:.08em; text-transform:uppercase;
-      padding:2px 6px; border-radius: var(--kb-r-pill); color: var(--kb-text-inverse);
+      padding:2px 6px; border-radius: var(--kb-r-pill); color: var(--kb-void-2);
       background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
 
     .chan { display:grid; grid-template-columns: auto 1fr; gap: var(--kb-sp-4) var(--kb-sp-6); align-items:baseline; }
@@ -577,23 +566,23 @@
     .milestones { display:flex; align-items:flex-start; gap:0; }
     .mnode { flex:1; display:flex; flex-direction:column; align-items:center; gap: var(--kb-sp-3); position:relative; padding-top: var(--kb-sp-2); }
     .mnode .bead { width:22px; height:22px; border-radius:999px; z-index:1;
-      background: color-mix(in oklab, var(--c) 20%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 2px var(--c); }
-    .mnode.on .bead { background: var(--c); box-shadow: inset 0 0 0 2px var(--c); }
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      box-shadow: inset 0 0 0 2px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
+    .mnode.on .bead { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); box-shadow: inset 0 0 0 2px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .mnode .ml { font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text); text-align:center; }
     .mnode .md { font-size: var(--kb-fs-2xs); color: var(--kb-text-2); text-align:center; }
     .mnode::before { content:""; position:absolute; top:12px; left:-50%; width:100%; height:3px; background: var(--kb-border-strong); z-index:0; }
     .mnode:first-child::before { display:none; }
     .content-mark { display:inline-flex; align-items:center; gap:5px; font-size: var(--kb-fs-2xs); font-weight:700;
       color: var(--kb-warn-ink); }
-    .content-mark::before { content:""; width:7px; height:7px; border-radius:2px; background: var(--kb-warn); flex:none; }
+    .content-mark::before { content:""; width:7px; height:7px; border-radius:2px; background: oklch(from var(--kb-warn) var(--kb-face-l) var(--kb-face-c) h); flex:none; }
   </style>
   <style>
-    .ab { --kb-warn-ink: color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2)); }
+    .ab { --kb-warn-ink: oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h); }
   </style>
 </helmet>
 <div class="ab">
-<div class="hd"><div class="eyebrow">Gamificaci&oacute;n &middot; 03</div><div class="h1">Tarjeta de logro</div><div class="one">Una tarjeta, tres estados, cuatro grados. Y la ruta de progresi&oacute;n como l&iacute;nea de hitos.</div></div><div class="pane"><div class="head"><div class="eyebrow">Anatom&iacute;a</div><div class="use">Una forma can&oacute;nica para todo logro.</div></div><div class="g2" style="align-items:center"><div class="ach" style="--c:var(--kb-rarity-epico)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-epico)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Centuri&oacute;n</div><div class="ds">Cierra 100 tareas.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="col" style="gap:var(--kb-sp-3)"><div class="one" style="margin:0"><strong>Glifo</strong> en la tinta del grado, sobre su lavado.</div><div class="one" style="margin:0"><strong>Cuerpo</strong> &mdash; nombre en display, descripci&oacute;n en secundario.</div><div class="one" style="margin:0"><strong>Costado</strong> &mdash; el grado de rareza, o la fecha si ya se gan&oacute;.</div></div></div></div><div class="pane"><div class="head"><div class="eyebrow">Estados</div><div class="use">Ganado &middot; en progreso &middot; bloqueado.</div></div><div class="col" style="gap:var(--kb-sp-5)"><div class="ach" style="--c:var(--kb-rarity-legendario)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-legendario)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Sin excusas</div><div class="ds">Un mes completo sin fallar un h&aacute;bito.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-raro)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-raro)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Maratonista</div><div class="ds">Alcanza una racha de 100 d&iacute;as.</div><div class="progrow" style="--c:var(--kb-rarity-raro)"><span class="pbar"><span style="width:60%"></span></span><span class="pnum">60 / 100</span></div></div><div class="side"><span class="rar" style="--c:var(--kb-rarity-raro);height:22px"><span class="dot"></span>Raro</span></div></div><div class="ach locked" style="--c:var(--kb-rarity-epico)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-epico)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Centuri&oacute;n</div><div class="ds">Cierra 100 tareas.</div></div><div class="side"><span class="rar" style="--c:var(--kb-text-2);height:22px;box-shadow:inset 0 0 0 1px var(--kb-border-strong);background:var(--kb-card);color:var(--kb-text-2)">Bloqueado</span></div></div></div><div class="rule">En progreso lleva su <strong>barra</strong> con la cifra en la tinta del grado; bloqueado cae a <strong>--kb-surface-2</strong> y texto secundario, sin sombra &mdash; nunca por opacidad.</div></div><div class="pane"><div class="head"><div class="eyebrow">Los cuatro grados</div><div class="use">El acento entra por --c; la tarjeta no cambia de forma.</div></div><div class="col" style="gap:var(--kb-sp-5)"><div class="ach" style="--c:var(--kb-rarity-comun)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-comun)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Primeros pasos</div><div class="ds">Crea tu primera &aacute;rea de vida.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-raro)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-raro)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Madrugador</div><div class="ds">Completa 10 h&aacute;bitos antes de las 7&nbsp;am.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-epico)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-epico)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Centuri&oacute;n</div><div class="ds">Cierra 100 tareas.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-legendario)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="var(--kb-rarity-legendario)" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Coleccionista</div><div class="ds">Desbloquea los 15 prestigios.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div></div></div><div class="pane"><div class="head"><div class="eyebrow">Ruta de progresi&oacute;n</div><div class="use">Niveles y prestigio como una l&iacute;nea de hitos.</div></div><div class="milestones"><div class="mnode on" style="--c:var(--kb-mat-1)"><span class="bead"></span><span class="ml">Nv. 1</span><span class="md">Bronce</span></div><div class="mnode on" style="--c:var(--kb-mat-2)"><span class="bead"></span><span class="ml">Nv. 25</span><span class="md">Plata</span></div><div class="mnode on" style="--c:var(--kb-mat-3)"><span class="bead"></span><span class="ml">Nv. 50</span><span class="md">Oro</span></div><div class="mnode " style="--c:var(--kb-mat-6)"><span class="bead"></span><span class="ml">Nv. 75</span><span class="md">Diamante</span></div><div class="mnode " style="--c:var(--kb-mat-8)"><span class="bead"></span><span class="ml">Nv. 100</span><span class="md">Rub&iacute;</span></div><div class="mnode " style="--c:var(--kb-rarity-legendario)"><span class="bead"></span><span class="ml">Prestigio</span><span class="md">16 grados</span></div></div><div class="content-mark" style="margin-top:var(--kb-sp-6)">Los grados y sus nombres son contenido &mdash; muestra representativa.</div><div class="rule">Cien niveles suben por los nueve materiales (un salto cada cinco); al 100 se abre el <strong>prestigio</strong>, diecis&eacute;is grados que reinician el nivel y suben el escal&oacute;n. Es una <strong>forma</strong> &mdash; la l&iacute;nea de hitos &mdash;, no el cat&aacute;logo de cu&aacute;les existen.</div></div><div class="pane"><div class="head"><div class="eyebrow">L&iacute;mite del encargo</div><div class="use">Nueve tarjetas de gamificaci&oacute;n, una forma.</div></div><div class="one" style="margin:0">Rango, logro, trofeo del mes, estandarte de reto y racha compart&iacute;an cinco tarjetas distintas. Aqu&iacute; son la <strong>tarjeta de logro</strong> con su grado y su estado &mdash; el resto es contenido que la llena.</div></div>
+<div class="hd"><div class="eyebrow">Gamificaci&oacute;n &middot; 03</div><div class="h1">Tarjeta de logro</div><div class="one">Una tarjeta, tres estados, cuatro grados. Y la ruta de progresi&oacute;n como l&iacute;nea de hitos.</div></div><div class="pane"><div class="head"><div class="eyebrow">Anatom&iacute;a</div><div class="use">Una forma can&oacute;nica para todo logro.</div></div><div class="g2" style="align-items:center"><div class="ach" style="--c:var(--kb-rarity-epico)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Centuri&oacute;n</div><div class="ds">Cierra 100 tareas.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="col" style="gap:var(--kb-sp-3)"><div class="one" style="margin:0"><strong>Glifo</strong> en la tinta del grado, sobre su lavado.</div><div class="one" style="margin:0"><strong>Cuerpo</strong> &mdash; nombre en display, descripci&oacute;n en secundario.</div><div class="one" style="margin:0"><strong>Costado</strong> &mdash; el grado de rareza, o la fecha si ya se gan&oacute;.</div></div></div></div><div class="pane"><div class="head"><div class="eyebrow">Estados</div><div class="use">Ganado &middot; en progreso &middot; bloqueado.</div></div><div class="col" style="gap:var(--kb-sp-5)"><div class="ach" style="--c:var(--kb-rarity-legendario)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Sin excusas</div><div class="ds">Un mes completo sin fallar un h&aacute;bito.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-raro)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Maratonista</div><div class="ds">Alcanza una racha de 100 d&iacute;as.</div><div class="progrow" style="--c:var(--kb-rarity-raro)"><span class="pbar"><span style="width:60%"></span></span><span class="pnum">60 / 100</span></div></div><div class="side"><span class="rar" style="--c:var(--kb-rarity-raro);height:22px"><span class="dot"></span>Raro</span></div></div><div class="ach locked" style="--c:var(--kb-rarity-epico)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Centuri&oacute;n</div><div class="ds">Cierra 100 tareas.</div></div><div class="side"><span class="rar" style="--c:var(--kb-text-2);height:22px;box-shadow:inset 0 0 0 1px var(--kb-border-strong);background:var(--kb-card);color:var(--kb-text-2)">Bloqueado</span></div></div></div><div class="rule">En progreso lleva su <strong>barra</strong> con la cifra en la tinta del grado; bloqueado cae a <strong>--kb-surface-2</strong> y texto secundario, sin sombra &mdash; nunca por opacidad.</div></div><div class="pane"><div class="head"><div class="eyebrow">Los cuatro grados</div><div class="use">El acento entra por --c; la tarjeta no cambia de forma.</div></div><div class="col" style="gap:var(--kb-sp-5)"><div class="ach" style="--c:var(--kb-rarity-comun)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Primeros pasos</div><div class="ds">Crea tu primera &aacute;rea de vida.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-raro)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Madrugador</div><div class="ds">Completa 10 h&aacute;bitos antes de las 7&nbsp;am.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-epico)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Centuri&oacute;n</div><div class="ds">Cierra 100 tareas.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div><div class="ach" style="--c:var(--kb-rarity-legendario)"><span class="ico"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17.8 5.9 20.4l1.5-6.8L2.2 9l6.9-.7z"/></svg></span><div class="bd"><div class="nm">Coleccionista</div><div class="ds">Desbloquea los 15 prestigios.</div></div><div class="side"><span class="earned"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> 24 May</span></div></div></div></div><div class="pane"><div class="head"><div class="eyebrow">Ruta de progresi&oacute;n</div><div class="use">Niveles y prestigio como una l&iacute;nea de hitos.</div></div><div class="milestones"><div class="mnode on" style="--c:var(--kb-mat-1)"><span class="bead"></span><span class="ml">Nv. 1</span><span class="md">Bronce</span></div><div class="mnode on" style="--c:var(--kb-mat-2)"><span class="bead"></span><span class="ml">Nv. 25</span><span class="md">Plata</span></div><div class="mnode on" style="--c:var(--kb-mat-3)"><span class="bead"></span><span class="ml">Nv. 50</span><span class="md">Oro</span></div><div class="mnode " style="--c:var(--kb-mat-6)"><span class="bead"></span><span class="ml">Nv. 75</span><span class="md">Diamante</span></div><div class="mnode " style="--c:var(--kb-mat-8)"><span class="bead"></span><span class="ml">Nv. 100</span><span class="md">Rub&iacute;</span></div><div class="mnode " style="--c:var(--kb-rarity-legendario)"><span class="bead"></span><span class="ml">Prestigio</span><span class="md">16 grados</span></div></div><div class="content-mark" style="margin-top:var(--kb-sp-6)">Los grados y sus nombres son contenido &mdash; muestra representativa.</div><div class="rule">Cien niveles suben por los nueve materiales (un salto cada cinco); al 100 se abre el <strong>prestigio</strong>, diecis&eacute;is grados que reinician el nivel y suben el escal&oacute;n. Es una <strong>forma</strong> &mdash; la l&iacute;nea de hitos &mdash;, no el cat&aacute;logo de cu&aacute;les existen.</div></div><div class="pane"><div class="head"><div class="eyebrow">L&iacute;mite del encargo</div><div class="use">Nueve tarjetas de gamificaci&oacute;n, una forma.</div></div><div class="one" style="margin:0">Rango, logro, trofeo del mes, estandarte de reto y racha compart&iacute;an cinco tarjetas distintas. Aqu&iacute; son la <strong>tarjeta de logro</strong> con su grado y su estado &mdash; el resto es contenido que la llena.</div></div>
 </div>
 
 </x-dc>

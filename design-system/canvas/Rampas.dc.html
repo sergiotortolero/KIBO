@@ -7,6 +7,7 @@
 <body>
 <x-dc>
 <helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
 /* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
    sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
@@ -24,7 +25,6 @@
    Those are DEPRECATED — build against the tokens below. See README "reconcile".
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ---- Type families. TWO families: display+label share Jakarta ---------- */
@@ -77,8 +77,8 @@
   /* ---- Brand: Teal · progreso sereno ------------------------------------ */
   --kb-primary:       #1CA4A0;
   --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
-  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
-  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+  --kb-primary-soft:  oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-primary-ink:   oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
 
   /* La cara de un relleno solido: profundidad CON croma, nunca mezcla contra
 
@@ -90,6 +90,11 @@
       --kb-face-l: 0.66;
 
   --kb-face-c: 0.15;
+
+  /* Lavado y tinta: los otros cuatro numeros de la receta. El matiz es lo
+     unico que viaja; el tema oscuro los revalua en .theme-dark. */
+  --kb-wash-l: 0.90;  --kb-wash-c: 0.045;
+  --kb-ink-l:  0.38;  --kb-ink-c:  0.06;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -220,26 +225,21 @@
    No repetir un hex a mano: cada tinta se deriva de su propio color.
    ========================================================================== */
 :root {
-  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
-  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
-  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
-  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-streak-ink:   oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-coin-ink:     oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-hp-ink:       oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-boss-ink:     oklch(from var(--kb-boss) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
   --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
-  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+  --kb-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 
-  /* Tinta de las 5 áreas · texto y relleno legibles.
-     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
-     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
-     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
-     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
-     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
-     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
-  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
-  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
-  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
-  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
-  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  /* Tinta de las 5 áreas: la misma receta que el resto. La más apretada sobre
+     su propio lavado es Riqueza, 5.35:1. */
+  --area-vigor-ink:     oklch(from var(--area-vigor) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wisdom-ink:    oklch(from var(--area-wisdom) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wealth-ink:    oklch(from var(--area-wealth) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-will-ink:      oklch(from var(--area-will) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
@@ -251,13 +251,13 @@
   --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
 
   /* Lavados y bordes derivados */
-  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
-  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-coin-soft:      oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-coin-border:    oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
   --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
-  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
-  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
-  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+  --kb-primary-border: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-community-soft:   oklch(from var(--area-community) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-community-border: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 }
 
 /* Breakpoints (constants — @media can't read var()):
@@ -410,14 +410,15 @@
       --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
-      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.055;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
+      --kb-primary-soft: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+      --kb-primary-ink:  oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
       background: var(--kb-canvas); color: var(--kb-text);
     }
     /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
-    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
-    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+    .wash { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .ink { color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
   </style>
 
   <style>
@@ -451,7 +452,7 @@
     --kb-gain:     var(--kb-good);
     --kb-loss:     var(--kb-hp);
     --kb-gain-ink: color-mix(in oklab, var(--kb-good) 54%, var(--kb-void-2));
-    --kb-loss-ink: var(--kb-hp-ink);
+    --kb-loss-ink: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h);
 
     /* MATERIALES de emblema - escalera ordinal de 9 tiers. El tinte es token
        (viaja por temas); el troquel del escudo y el ornamento son asset.
@@ -497,10 +498,10 @@
 
     .legend { display:flex; flex-wrap:wrap; gap: var(--kb-sp-5) var(--kb-sp-6); }
     .legend .item { display:inline-flex; align-items:center; gap: var(--kb-sp-3); font-size: var(--kb-fs-sm); color: var(--kb-text); }
-    .legend .dot { width:12px; height:12px; border-radius:999px; flex:none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.12); }
+    .legend .dot { width:12px; height:12px; border-radius:999px; flex:none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kb-void-2) 12%, transparent); }
 
     .catcell { display:flex; flex-direction:column; gap: var(--kb-sp-3); }
-    .catcell .chip { height:44px; border-radius: var(--kb-r-md); box-shadow: inset 0 0 0 1px rgba(0,0,0,.10); }
+    .catcell .chip { height:44px; border-radius: var(--kb-r-md); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--kb-void-2) 10%, transparent); }
     .catcell .nm { font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text); }
     .catcell code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text-2); }
 
@@ -513,7 +514,7 @@
     .emblem { width:64px; height:74px; display:flex; align-items:center; justify-content:center;
       clip-path: polygon(50% 100%, 8% 76%, 0 0, 100% 0, 92% 76%);
       font-family: var(--kb-f-display); font-weight:800; font-size:20px;
-      filter: drop-shadow(0 2px 3px rgba(20,30,50,.2)); }
+      filter: drop-shadow(0 2px 3px color-mix(in srgb, var(--kb-void-2) 20%, transparent)); }
     .matcell { display:flex; flex-direction:column; align-items:center; gap: var(--kb-sp-3); }
     .matcell .nm { font-size: var(--kb-fs-xs); font-weight:700; color: var(--kb-text); }
     .matcell code { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text-2); }
@@ -521,15 +522,15 @@
     .rar { display:inline-flex; align-items:center; gap: var(--kb-sp-3); height:26px; padding:0 var(--kb-sp-5);
       border-radius: var(--kb-r-pill); font-family: var(--kb-f-label); font-weight:800; font-size: var(--kb-fs-2xs);
       letter-spacing:.06em; text-transform:uppercase;
-      background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 30%, var(--kb-canvas)); }
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
+      box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .rar .dot { width:8px; height:8px; border-radius:999px; background: var(--c); }
 
     .flamechip { display:flex; flex-direction:column; align-items:center; gap: var(--kb-sp-2); }
     .flamechip .disc { width:44px; height:44px; border-radius:999px; display:grid; place-items:center;
-      background: color-mix(in oklab, var(--c) 16%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 34%, var(--kb-border)); }
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .flamechip .lbl { font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text); }
     .flamechip .day { font-size: var(--kb-fs-2xs); color: var(--kb-text-2); }
 
@@ -537,15 +538,15 @@
       padding:6px var(--kb-sp-6); border-radius: var(--kb-r-pill); background: var(--kb-surface);
       border:1px solid var(--kb-border); font-family: var(--kb-f-display); font-weight:700;
       font-size: var(--kb-fs-md); font-variant-numeric: tabular-nums; color: var(--kb-text); }
-    .pill.coin { color: var(--kb-coin-ink); }
+    .pill.coin { color: oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h); }
     .pill.elem { color: var(--kb-dark-edge); }
 
     .ach { display:flex; align-items:flex-start; gap: var(--kb-sp-5); background: var(--kb-card);
       border:1px solid var(--kb-border); border-radius: var(--kb-r-lg); box-shadow: var(--kb-sh-1);
       padding: var(--kb-sp-6); }
     .ach .ico { flex:none; width:38px; height:38px; border-radius: var(--kb-r-sm); display:grid; place-items:center;
-      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
-      background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas)); }
+      color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
     .ach .bd { flex:1; min-width:0; display:flex; flex-direction:column; gap: var(--kb-sp-2); }
     .ach .nm { font-family: var(--kb-f-display); font-weight:700; font-size: var(--kb-fs-md); color: var(--kb-text); display:flex; align-items:center; gap: var(--kb-sp-3); }
     .ach .ds { font-size: var(--kb-fs-sm); color: var(--kb-text-2); line-height: var(--kb-lh-snug); }
@@ -554,30 +555,30 @@
     .ach.locked .ico { color: var(--kb-text-2); background: var(--kb-card); }
     .ach.locked .nm, .ach.locked .ds { color: var(--kb-text-2); }
     .progrow { display:flex; align-items:center; gap: var(--kb-sp-4); }
-    .pbar { flex:1; height:6px; border-radius: var(--kb-r-pill); background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
-      box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 24%, var(--kb-canvas)); overflow:hidden; }
-    .pbar > span { display:block; height:100%; border-radius: var(--kb-r-pill); background: var(--c); }
+    .pbar { flex:1; height:6px; border-radius: var(--kb-r-pill); background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); overflow:hidden; }
+    .pbar > span { display:block; height:100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
     .pnum { font-family: var(--kb-f-display); font-weight:700; font-variant-numeric: tabular-nums;
-      font-size: var(--kb-fs-sm); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+      font-size: var(--kb-fs-sm); color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .earned { display:inline-flex; align-items:center; gap: var(--kb-sp-2); font-size: var(--kb-fs-2xs);
-      font-weight:700; color: var(--kb-primary-ink); }
+      font-weight:700; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .flag { font-family: var(--kb-f-label); font-weight:800; font-size: 9px; letter-spacing:.08em; text-transform:uppercase;
-      padding:2px 6px; border-radius: var(--kb-r-pill); color: var(--kb-text-inverse);
+      padding:2px 6px; border-radius: var(--kb-r-pill); color: var(--kb-void-2);
       background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
 
     .chan { display:grid; grid-template-columns: auto 1fr; gap: var(--kb-sp-4) var(--kb-sp-6); align-items:baseline; }
     .chan .k { font-family: var(--kb-f-label); font-weight:800; font-size: var(--kb-fs-2xs); letter-spacing:.06em;
       text-transform:uppercase; color: var(--kb-text-2); white-space:nowrap; }
     .chan .v { font-size: var(--kb-fs-sm); color: var(--kb-text); line-height:1.5; }
-    .token { color: var(--kb-primary-ink); font-weight:700; }
-    .asset { color: var(--area-community-ink); font-weight:700; }
-    .hard  { color: var(--kb-hp-ink); font-weight:700; }
-    .free  { color: var(--kb-primary-ink); font-weight:700; }
+    .token { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); font-weight:700; }
+    .asset { color: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h); font-weight:700; }
+    .hard  { color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); font-weight:700; }
+    .free  { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); font-weight:700; }
 
     .milestones { display:flex; align-items:flex-start; gap:0; }
     .mnode { flex:1; display:flex; flex-direction:column; align-items:center; gap: var(--kb-sp-3); position:relative; padding-top: var(--kb-sp-2); }
     .mnode .bead { width:22px; height:22px; border-radius:999px; z-index:1;
-      background: color-mix(in oklab, var(--c) 20%, var(--kb-canvas));
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
       box-shadow: inset 0 0 0 2px var(--c); }
     .mnode.on .bead { background: var(--c); box-shadow: inset 0 0 0 2px var(--c); }
     .mnode .ml { font-size: var(--kb-fs-2xs); font-weight:700; color: var(--kb-text); text-align:center; }
@@ -585,11 +586,8 @@
     .mnode::before { content:""; position:absolute; top:12px; left:-50%; width:100%; height:3px; background: var(--kb-border-strong); z-index:0; }
     .mnode:first-child::before { display:none; }
     .content-mark { display:inline-flex; align-items:center; gap:5px; font-size: var(--kb-fs-2xs); font-weight:700;
-      color: var(--kb-warn-ink); }
+      color: oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h); }
     .content-mark::before { content:""; width:7px; height:7px; border-radius:2px; background: var(--kb-warn); flex:none; }
-  </style>
-  <style>
-    .ab { --kb-warn-ink: color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2)); }
   </style>
 </helmet>
 <div class="ab">

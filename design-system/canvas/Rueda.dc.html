@@ -7,6 +7,7 @@
 <body>
 <x-dc>
 <helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
 /* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
    sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
@@ -24,7 +25,6 @@
    Those are DEPRECATED — build against the tokens below. See README "reconcile".
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ---- Type families. TWO families: display+label share Jakarta ---------- */
@@ -349,6 +349,12 @@
     .ab {
       --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
       --kb-text-3: var(--kb-text-2);
+      /* Las tres recetas por luminosidad y croma, mas la cantidad y el ancla
+         que leen los escalones graduados. El tema oscuro revalua las ocho. */
+      --kb-wash-l: 0.90;  --kb-wash-c: 0.045;
+      --kb-ink-l:  0.38;  --kb-ink-c:  0.06;
+      --kb-wash-amt: 12%;   --kb-wash-anchor: var(--kb-canvas);
+      --kb-ink-amt:  54%;   --kb-ink-anchor:  var(--kb-void-2);
       padding: var(--kb-sp-9) 40px 40px; display: flex; flex-direction: column;
       gap: var(--kb-sp-9); background: var(--kb-surface); min-height: 100%; box-sizing: border-box;
     }
@@ -411,16 +417,18 @@
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
       --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.055;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
+      --kb-wash-amt: 22%;   --kb-wash-anchor: var(--kb-void-1);
+      --kb-ink-amt:  42%;   --kb-ink-anchor:  var(--kb-text-inverse);
       background: var(--kb-canvas); color: var(--kb-text);
     }
     /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
-    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
-    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+    .wash, .wash-dk { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .ink, .ink-dk { color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
   </style>
   <style>
-    .ab { --kb-warn-ink: color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2)); }
+    .ab { --kb-warn-ink: oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* Tarjeta — .kbv-card */
     .kbv-card { background: var(--kb-card); border: 1px solid var(--kb-border);
@@ -437,9 +445,9 @@
 
     /* Banda de encabezado (R-1, tarjeta grande) */
     .banda { display: flex; align-items: center; gap: var(--kb-sp-3); padding: var(--kb-sp-4) var(--kb-sp-6);
-             background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
-             border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-canvas));
-             color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+             background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+             border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-wash-anchor));
+             color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
              font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
              letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
     .banda .amt { margin-left: auto; }
@@ -447,20 +455,20 @@
     /* Pastilla de area (R-1, compacto) */
     .pastilla { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
                 padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill); align-self: flex-start;
-                background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
-                color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+                background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+                color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
                 font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
 
     /* Chip · etiqueta · contador */
     .kbv-chip { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
                 padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-pill); border: 1.5px solid var(--kb-border);
                 background: var(--kb-card); font-size: var(--kb-fs-md); font-weight: 600; color: var(--kb-text-2); }
-    .kbv-chip.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-chip.on { border-color: var(--kb-primary); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tag { display: inline-flex; align-items: center; gap: var(--kb-sp-3); height: 22px;
                padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
                font-size: var(--kb-fs-xs); font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
     .kbv-tag.neutral { background: var(--kb-surface-2); color: var(--kb-text); }
-    .kbv-tag.tint { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.tint { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
     .kbv-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px;
                  padding: 0 var(--kb-sp-3); border-radius: var(--kb-r-pill);
@@ -470,17 +478,17 @@
 
     /* Barra de progreso — .kbv-progress */
     .kbv-progress { height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
-                    background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-                    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c, var(--kb-primary)) 24%, var(--kb-canvas)); }
+                    background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
+                    box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-progress.sm { height: 6px; } .kbv-progress.xs { height: 4px; } .kbv-progress.lg { height: 12px; }
-    .kbv-progress .fill { height: 100%; border-radius: var(--kb-r-pill); background: var(--c, var(--kb-primary)); }
+    .kbv-progress .fill { height: 100%; border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); }
     .kbv-progress.seg { display: flex; gap: var(--kb-sp-2); background: none; box-shadow: none; overflow: visible; }
     .kbv-progress.seg > i { flex: 1; height: 100%; border-radius: var(--kb-r-pill);
-                            background: color-mix(in oklab, var(--c) 14%, var(--kb-canvas));
-                            box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 26%, var(--kb-canvas)); }
-    .kbv-progress.seg > i.on { background: var(--c); box-shadow: none; }
+                            background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+                            box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
+    .kbv-progress.seg > i.on { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); box-shadow: none; }
     .barfig { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
-              font-variant-numeric: tabular-nums; color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+              font-variant-numeric: tabular-nums; color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* KPI — .kbv-kpi */
     .kbv-kpi { background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg);
@@ -491,8 +499,8 @@
                     display: flex; align-items: baseline; gap: var(--kb-sp-2); }
     .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
     .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
-    .kbv-kpi .delta.up { color: var(--kb-primary-ink); font-weight: 700; }
-    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+    .kbv-kpi .delta.up { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); font-weight: 700; }
+    .kbv-kpi .delta.down { color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); font-weight: 700; }
 
     /* Boton — .kbv-btn */
     .kbv-btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--kb-sp-4);
@@ -500,17 +508,17 @@
                border: 1.5px solid transparent; cursor: pointer; line-height: 1;
                font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-lg); }
     .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-md); }
-    .kbv-btn-primary { background: var(--kb-primary-fill); color: var(--kb-text-inverse);
-                       box-shadow: 0 2px 0 color-mix(in oklab, var(--kb-primary) 30%, var(--kb-void-2)), var(--kb-sh-1); }
+    .kbv-btn-primary { background: var(--kb-primary-fill); color: var(--kb-void-2);
+                       box-shadow: 0 2px 0 oklch(from var(--kb-primary) calc(var(--kb-face-l) - 0.16) var(--kb-face-c) h), var(--kb-sh-1); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text); border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
-    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); }
+    .kbv-btn-ghost { background: transparent; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* Medidor de esfuerzo (RateRow 1-5) */
     .rate { display: inline-flex; align-items: center; gap: 3px; }
     .rate > i { width: 12px; height: 6px; border-radius: var(--kb-r-pill);
-                background: color-mix(in oklab, var(--c) 16%, var(--kb-canvas));
-                box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--c) 28%, var(--kb-canvas)); }
-    .rate > i.on { background: var(--c); box-shadow: none; }
+                background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+                box-shadow: inset 0 0 0 1px oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
+    .rate > i.on { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); box-shadow: none; }
 
     /* Metadato de campo (par etiqueta/valor) */
     .kv { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
@@ -524,7 +532,7 @@
                  padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
                  font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
                  font-variant-numeric: tabular-nums; }
-    .stat-pill.coin { background: var(--kb-coin-soft); border: 1px solid var(--kb-coin-border); color: var(--kb-coin-ink); }
+    .stat-pill.coin { background: oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h); border: 1px solid color-mix(in oklab, var(--kb-coin) 38%, var(--kb-wash-anchor)); color: oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h); }
     .stat-pill.elem { background: var(--kb-void-1); border: 1px solid var(--kb-dark-facet); color: var(--kb-dark-glint);
                       box-shadow: 0 0 0 3px color-mix(in srgb, var(--kb-dark-halo) 22%, transparent); }
     .gem { width: 14px; height: 14px; flex: none; border-radius: 3px; transform: rotate(45deg);
@@ -546,11 +554,11 @@
     .g3d { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--kb-sp-7); }
 
     .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
-    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
-                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
-    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
-    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wsec .wfill { fill: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-wash-anchor));
+                       stroke: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-wash-anchor)); }
+    .wsec { --ink: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
             letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
     .wglyph { fill: none; }
@@ -585,7 +593,7 @@
                 letter-spacing: .04em; text-anchor: middle; text-transform: uppercase; }
 
     .namepill { display: inline-flex; align-items: center; gap: var(--kb-sp-4); height: 36px; padding: 0 var(--kb-sp-6);
-                border-radius: var(--kb-r-pill); background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                border-radius: var(--kb-r-pill); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
                 font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md); }
 
     .legend { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
@@ -620,7 +628,7 @@
     .chiprow { display: flex; flex-wrap: wrap; gap: var(--kb-sp-3); }
     .qc { display: inline-flex; align-items: center; height: 32px; padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
           border: 1.5px solid var(--kb-border); background: var(--kb-card); font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text-2); }
-    .qc.on { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .qc.on { border-color: var(--kb-primary); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .qlabel { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
               letter-spacing: .06em; text-transform: uppercase; color: var(--kb-text-2); }
     .bubble { position: relative; background: var(--kb-card); border: 1px solid var(--kb-border); border-radius: var(--kb-r-lg);
@@ -665,7 +673,7 @@
     <div class="g2c">
       <div class="col" style="align-items: center; gap: var(--kb-sp-6)">
         <svg class="wheel" viewBox="-232 -232 464 464" width="392" height="392"><g class="wsec aim" style="--c: var(--kb-coin)"><path class="wfill" d="M -175.06 -115.99 A 210 210 0 0 1 175.06 -115.99 A 10 10 0 0 1 171.79 -102.41 L 97.92 -58.37 A 10 10 0 0 1 83.81 -61.58 A 104 104 0 0 0 -83.81 -61.58 A 10 10 0 0 1 -97.92 -58.37 L -171.79 -102.41 A 10 10 0 0 1 -175.06 -115.99 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-10.5,-148.5) scale(0.875)" stroke-width="2.51"><path d="M4 8l5 5 4-4 7 7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16h4v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="0.0" y="-176.0">Gasto</text></g><g class="wsec" style="--c: var(--kb-coin)"><path class="wfill" d="M 187.98 -93.61 A 210 210 0 0 1 12.92 209.6 A 10 10 0 0 1 2.79 199.98 L 1.59 113.99 A 10 10 0 0 1 11.43 103.37 A 104 104 0 0 0 95.24 -41.79 A 10 10 0 0 1 99.51 -55.62 L 174.58 -97.57 A 10 10 0 0 1 187.98 -93.61 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(109.0,58.5) scale(0.875)" stroke-width="2.51"><path d="M4 16l5-5 4 4 7-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 8h4v4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="152.4" y="88.0">Ingreso</text></g><g class="wsec" style="--c: var(--kb-coin)"><path class="wfill" d="M -12.92 209.6 A 210 210 0 0 1 -187.98 -93.61 A 10 10 0 0 1 -174.58 -97.57 L -99.51 -55.62 A 10 10 0 0 1 -95.24 -41.79 A 104 104 0 0 0 -11.43 103.37 A 10 10 0 0 1 -1.59 113.99 L -2.79 199.98 A 10 10 0 0 1 -12.92 209.6 Z"/><g class="wglyph" style="color:var(--ink)" transform="translate(-130.0,58.5) scale(0.875)" stroke-width="2.51"><path d="M4 13a6 5 0 0 1 6-5h5a5 5 0 0 1 5 5 4 4 0 0 1-2 3.5V20h-3v-2h-4v2H8v-2a5 5 0 0 1-4-5z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15.5" cy="12" r="1" fill="currentColor" stroke="none"/><path d="M3 12h2" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wlab" x="-152.4" y="88.0">Abono</text></g><circle class="whub" r="96"/><g class="wback"><g class="wglyph" style="color:var(--kb-text-2)" transform="translate(-13.0,-21.0) scale(1.083)" stroke-width="2.03"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></g><text class="wbacklab" x="0" y="30">Volver</text></g></svg>
-        <div class="namepill" style="background: var(--kb-coin-soft); color: var(--kb-coin-ink)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Finanzas</div>
+        <div class="namepill" style="background: oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h)"><svg width="16" height="16" viewBox="0 0 24 24" stroke-width="2.4" style="display:block;flex:none"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v10M9 9.5h5.5a1.5 1.5 0 0 1 0 3H9.5a1.5 1.5 0 0 0 0 3H15" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg> Finanzas</div>
       </div>
       <div class="col" style="gap: var(--kb-sp-6)">
         <div class="tbl c2" style="grid-template-columns: 132px 1fr">

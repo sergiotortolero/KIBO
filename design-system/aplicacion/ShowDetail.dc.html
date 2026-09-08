@@ -69,8 +69,8 @@
 
   /* ---- La receta de cara: profundidad CON croma ---------------------------
      Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
-     contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
-     blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
+     contra el negro: la mezcla apaga las dos cosas a la vez. Su rotulo va
+     siempre en --kb-void-2: medido, entre 5.66 y 6.79 en toda la paleta. */
   --kb-frame-l: 0.965; --kb-frame-c: 0.012;
       --kb-face-l: 0.66;
   --kb-face-c: 0.15;
@@ -255,7 +255,7 @@
        ========================================================================== */
     body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
            line-height: var(--kb-lh-body); color: var(--kb-text); }
-    a { color: var(--kb-primary-ink); text-decoration: none; }
+    a { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); text-decoration: none; }
     a:hover { color: var(--kb-primary); text-decoration: underline; text-underline-offset: 3px; }
     /* Nombre accesible sin dibujo: un title no nombra un span. */
     .kbv-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -275,8 +275,8 @@
     }
     .kbv-btn.sm { height: 36px; padding: 0 var(--kb-sp-6); font-size: var(--kb-fs-md); border-radius: var(--kb-r-sm); }
     .kbv-btn.lg { height: 54px; padding: 0 var(--kb-sp-9); font-size: var(--kb-fs-xl); border-radius: var(--kb-r-lg); }
-    /* La cara lleva el color a plena fuerza y el rotulo lo decide el color,
-       no el boton: sobre la marca plena el blanco mide 3.06 y la tinta 6.18. */
+    /* La cara lleva el color a plena fuerza y su rotulo va siempre en
+       --kb-void-2: a esa luminosidad ningun matiz carga rotulo blanco. */
     .kbv-btn-primary, .kbv-btn-danger {
       --lip: oklch(from var(--c) calc(var(--kb-face-l) - 0.16) var(--kb-face-c) h);
       background: var(--face); color: var(--on-face);
@@ -285,12 +285,12 @@
     .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     /* El peligro no es superficie de marca: su trabajo es la urgencia. */
     .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
-    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
+    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: oklch(from var(--c) calc(var(--kb-face-l) - 0.06) var(--kb-face-c) h); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
     .kbv-btn-secondary:hover { background: var(--kb-surface); }
-    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); box-shadow: none; }
-    .kbv-btn-ghost:hover { background: var(--kb-primary-soft); }
+    .kbv-btn-ghost { background: transparent; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); box-shadow: none; }
+    .kbv-btn-ghost:hover { background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); }
     .kbv-btn:focus-visible { outline: none; box-shadow: var(--kb-elev-hard) var(--lip, transparent), var(--kb-focus-halo); }
     /* Presionado: el gesto es la altura que pierde — el labio se colapsa. */
     .kbv-btn:active { transform: translateY(2px); box-shadow: var(--kb-sh-1); }
@@ -318,7 +318,7 @@
     .kbv-chip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
                        height: var(--kb-touch-min); transform: translateY(-50%); }
     .kbv-chip:hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
-    .kbv-chip.active { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-chip.active { border-color: var(--kb-primary); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-chip:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-chip .dot { width: 8px; height: 8px; border-radius: var(--kb-r-pill); flex-shrink: 0; }
 
@@ -329,8 +329,8 @@
       font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700;
       letter-spacing: .02em; white-space: nowrap;
     }
-    .kbv-tag.tint  { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
-                     color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .kbv-tag.tint  { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+                     color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tag.solid { background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); }
 
     .kbv-badge {
@@ -351,7 +351,7 @@
     .tone-progress { --c: var(--kb-text-2); }
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
       box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
     }
     .kbv-progress.xs { height: 4px; }
@@ -364,7 +364,7 @@
     .kbv-progress-meta .name { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
     .kbv-progress-meta .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                       font-variant-numeric: tabular-nums;
-                      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+                      color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* ── Tarjeta ──────────────────────────────────────────────────────── */
     .kbv-card {
@@ -385,8 +385,8 @@
     .kbv-areapill {
       display: inline-flex; align-items: center; gap: var(--kb-sp-2); align-self: flex-start;
       height: 22px; padding: 0 var(--kb-sp-4); border-radius: var(--kb-r-pill);
-      background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2));
+      background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
+      color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
       font-size: var(--kb-fs-xs); font-weight: 700; white-space: nowrap;
     }
 
@@ -399,9 +399,9 @@
     .kbv-kpi .band {
       display: flex; align-items: center; gap: var(--kb-sp-3);
       padding: var(--kb-sp-4) var(--kb-sp-6);
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
+      border-bottom: 2px solid oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
+      color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
       letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     }
@@ -412,8 +412,8 @@
                     font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: var(--kb-sp-2); }
     .kbv-kpi .val .unit { font-size: var(--kb-fs-lg); font-weight: 600; color: var(--kb-text-2); letter-spacing: 0; }
     .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm); color: var(--kb-text-2); }
-    .kbv-kpi .delta.up   { color: var(--kb-primary-ink); font-weight: 700; }
-    .kbv-kpi .delta.down { color: var(--kb-hp-ink); font-weight: 700; }
+    .kbv-kpi .delta.up   { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); font-weight: 700; }
+    .kbv-kpi .delta.down { color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); font-weight: 700; }
 
     /* ── Encabezado de seccion y de pagina ────────────────────────────── */
     .kbv-section-head { display: flex; align-items: center; gap: var(--kb-sp-6); flex-wrap: wrap;
@@ -466,6 +466,11 @@
          lienzo, sobre superficie y sobre superficie 2. */
       --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
       --kb-text-3: var(--kb-text-2);
+      /* Las tres recetas, como numeros: lo unico que viaja es el matiz. Cada
+         pieza escribe el oklch en su propia propiedad, donde su --c si resuelve;
+         el tema oscuro revalua estos cuatro y ninguna clase de componente cambia. */
+      --kb-wash-l: 0.90;  --kb-wash-c: 0.045;
+      --kb-ink-l:  0.38;  --kb-ink-c:  0.06;
       --side-w: 232px;
       /* Segunda tabla de valores (tema oscuro): el ANCESTRO deriva bajo otro
          nombre y el DESCENDIENTE asigna. Un color-mix que se cite a si mismo
@@ -498,9 +503,10 @@
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
       --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
-      /* Las dos recetas en oscuro: lavado 22 % sobre void-1, tinta 42 % sobre
-         el inverso. Se reasignan aqui porque las de :root ya resolvieron su
-         ancla clara y un descendiente hereda el valor, no la formula. */
+      /* Las tres recetas en oscuro: el lavado se hunde y la tinta se aclara.
+         La cara y el armazon no cambian de valor con el tema. */
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.055;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
       --kb-coin-soft:        color-mix(in oklab, var(--kb-coin) 22%, var(--kb-void-1));
       --kb-coin-border:      color-mix(in oklab, var(--kb-coin) 38%, var(--kb-void-1));
       --kb-primary-border:   color-mix(in oklab, var(--kb-primary) 32%, var(--kb-void-1));
@@ -577,7 +583,7 @@
     .kbv-side-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); font-weight: 700; }
     .kbv-side-link .kbv-badge { display: var(--rail-hide, inline-flex); flex: none; }
-    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: var(--kb-primary-ink); }
+    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     /* La cria: un acceso agrupado bajo su productor. Sangrado y sin glifo en el
        menu abierto; en el riel el glifo es lo UNICO que la identifica, asi que
        ahi se enciende — un acceso en blanco no es un destino. */
@@ -601,7 +607,7 @@
                      padding-top: var(--kb-sp-6); border-top: 1px solid var(--kb-border-soft); }
     .kbv-side-foot .kbv-side-link { width: auto; flex: 1 1 auto; }
     .kbv-side-avatar { width: 22px; height: 22px; flex: none; border-radius: var(--kb-r-pill);
-                       background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                       background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
                        display: flex; align-items: center; justify-content: center;
                        font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xs); }
 
@@ -629,10 +635,10 @@
                    border: 1px solid var(--kb-border); min-width: 0; cursor: pointer; }
     .kbv-hero-id:hover { background: var(--kb-surface-2); }
     .kbv-hero-avatar { position: relative; width: 48px; height: 48px; border-radius: var(--kb-r-pill); flex: none;
-                       background: var(--kb-primary-soft); box-shadow: 0 0 0 2px var(--kb-mat-oro);
+                       background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); box-shadow: 0 0 0 2px var(--kb-mat-oro);
                        display: flex; align-items: center; justify-content: center;
                        font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
-                       color: var(--kb-primary-ink); }
+                       color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-hero-emblem { position: absolute; right: -3px; bottom: -3px; width: 20px; height: 20px;
                        border-radius: var(--kb-r-pill); background: var(--kb-mat-oro); color: var(--kb-mat-oro-ink);
                        display: flex; align-items: center; justify-content: center;
@@ -643,8 +649,8 @@
                            letter-spacing: -.01em; color: var(--kb-text); white-space: nowrap;
                            overflow: hidden; text-overflow: ellipsis; }
     .kbv-hero-meta .lvl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
-                          letter-spacing: .06em; color: var(--kb-primary-ink);
-                          background: var(--kb-primary-soft); border-radius: var(--kb-r-pill);
+                          letter-spacing: .06em; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+                          background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); border-radius: var(--kb-r-pill);
                           padding: 2px var(--kb-sp-4); white-space: nowrap; }
     .kbv-hero-meta .xp { display: flex; align-items: center; gap: var(--kb-sp-4); }
     .kbv-hero-meta .xp .kbv-progress { width: 92px; flex: none; }
@@ -654,10 +660,10 @@
     /* La vida: barra md con su cifra en la tinta de HP, y KIBO leyendola. */
     .kbv-vitals { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; flex: 1 1 auto; max-width: 250px; }
     .kbv-vitals .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
-                       letter-spacing: .09em; color: var(--kb-hp-ink); flex: none; }
+                       letter-spacing: .09em; color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); flex: none; }
     .kbv-vitals .kbv-progress { flex: 1 1 auto; min-width: 0; }
     .kbv-vitals .num { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
-                       font-variant-numeric: tabular-nums; color: var(--kb-hp-ink); flex: none; }
+                       font-variant-numeric: tabular-nums; color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); flex: none; }
 
     /* Dibujan 36, tocan 44: la zona crece hacia afuera, el dibujo no. La zona
        SI recibe el puntero — solo crece en vertical (left/right en 0), asi que
@@ -689,9 +695,9 @@
 
     .kbv-hud-streak { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
                       padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
-                      background: color-mix(in oklab, var(--kb-streak) 12%, var(--kb-canvas));
-                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-canvas));
-                      color: var(--kb-streak-ink); cursor: pointer; }
+                      background: oklch(from var(--kb-streak) var(--kb-wash-l) var(--kb-wash-c) h);
+                      border: 1px solid oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
+                      color: oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h); cursor: pointer; }
     .kbv-hud-streak .days { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md);
                             font-variant-numeric: tabular-nums; }
     .kbv-hud-streak .shields { display: flex; gap: 2px; }
@@ -701,7 +707,7 @@
                      background: var(--kb-surface); border: 1px solid var(--kb-border);
                      font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
                      font-variant-numeric: tabular-nums; color: var(--kb-text); cursor: pointer; }
-    .kbv-stat-pill.coin { background: var(--kb-coin-soft); border-color: var(--kb-coin-border); color: var(--kb-coin-ink); }
+    .kbv-stat-pill.coin { background: oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h); border-color: oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h); color: oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h); }
     /* Elemento nunca va plano: lo que lo separa es su halo, no su relleno. */
     .kbv-stat-pill.elemento { background: var(--kb-void-1); border-color: var(--kb-dark-facet);
                               color: var(--kb-dark-glint);
@@ -736,7 +742,7 @@
        siempre esta ademas en el menu, que si cumple el piso. */
     .kbv-crumb a { color: var(--kb-text-2); display: inline-flex; align-items: center;
                    min-height: 28px; border-radius: var(--kb-r-xs); }
-    .kbv-crumb a:hover { color: var(--kb-primary-ink); }
+    .kbv-crumb a:hover { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-crumb a:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-crumb .sep { display: flex; color: var(--kb-border-strong); }
     .kbv-crumb .here { color: var(--kb-text); }
@@ -754,7 +760,7 @@
                       gap: var(--kb-sp-1); min-height: 56px; padding: var(--kb-sp-3) var(--kb-sp-1);
                       border: 0; background: none; color: var(--kb-text-2); cursor: pointer;
                       font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); font-weight: 600; }
-    .kbv-tabbar .tb.on { color: var(--kb-primary-ink); }
+    .kbv-tabbar .tb.on { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tabbar .tb:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     /* El boton del cajon solo existe cuando el menu es cajon. */
     .kbv-header .act-drawer { display: none; }
@@ -827,14 +833,14 @@
        debajo y se vuelve a el al cerrar, sin perder la pantalla de origen. */
     .kbv-fab { position: absolute; right: var(--kb-sp-9); bottom: var(--kb-sp-9);
                width: 72px; height: 72px; border-radius: var(--kb-r-pill); padding: 0;
-               border: 2px solid var(--kb-primary); background: var(--kb-primary-soft);
+               border: 2px solid var(--kb-primary); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
                box-shadow: var(--kb-sh-3); cursor: pointer; z-index: var(--kb-z-sticky);
                display: flex; align-items: center; justify-content: center; }
     .kbv-fab:hover { box-shadow: var(--kb-sh-4); }
     .kbv-fab:focus-visible { outline: none; box-shadow: var(--kb-sh-3), var(--kb-focus-halo); }
     .kbv-fab .plus { position: absolute; right: -2px; bottom: -2px; width: 26px; height: 26px;
-                     border-radius: var(--kb-r-pill); background: var(--kb-primary-fill);
-                     color: var(--kb-text-inverse); display: flex; align-items: center; justify-content: center;
+                     border-radius: var(--kb-r-pill); background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
+                     color: var(--kb-void-2); display: flex; align-items: center; justify-content: center;
                      box-shadow: 0 0 0 2px var(--kb-surface); }
     .kbv-fab .kbb-host { pointer-events: none; }
 
@@ -904,7 +910,7 @@
                      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .smp-row .t .m { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
     .smp-row .xp { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
-                   font-variant-numeric: tabular-nums; color: var(--kb-primary-ink); flex: none; }
+                   font-variant-numeric: tabular-nums; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); flex: none; }
     .smp-row.done .t .n { color: var(--kb-text-2); text-decoration: line-through; }
     .smp-bars { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
     .smp-areas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
@@ -1232,22 +1238,22 @@
                  font-variant-numeric: tabular-nums; color: var(--kb-text-2); cursor: pointer;
                  transition: border-color var(--kb-dur-fast), background var(--kb-dur-fast), color var(--kb-dur-fast); }
   .kbv-show-ep:hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
-  .kbv-show-ep.watched { background: var(--kb-primary-soft); border-color: var(--kb-primary); color: var(--kb-primary-ink); }
-  .kbv-show-ep.next { border-style: dashed; border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+  .kbv-show-ep.watched { background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); border-color: var(--kb-primary); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
+  .kbv-show-ep.next { border-style: dashed; border-color: var(--kb-primary); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
   .kbv-show-ep:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
   .kbv-show-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--kb-sp-6); }
   .kbv-show-legend .kbv-meta { display: inline-flex; align-items: center; gap: var(--kb-sp-3); }
   .kbv-show-key { width: 14px; height: 14px; flex: none; border-radius: var(--kb-r-xs);
                   border: 1.5px solid var(--kb-border); background: var(--kb-card); box-sizing: border-box; }
-  .kbv-show-key.watched { background: var(--kb-primary-soft); border-color: var(--kb-primary); }
+  .kbv-show-key.watched { background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); border-color: var(--kb-primary); }
   .kbv-show-key.next { border-style: dashed; border-color: var(--kb-primary); }
 
   /* Nota: lavado del rol con su glifo — el color solo nunca es el mensaje. */
   .kbv-show-notes { display: flex; flex-direction: column; gap: var(--kb-sp-5); }
   .kbv-show-note { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: var(--kb-sp-5);
                    padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
-                   background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-  .kbv-show-note .gl { display: flex; padding-top: 2px; color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+                   background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+  .kbv-show-note .gl { display: flex; padding-top: 2px; color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
   .kbv-show-note .bd { display: flex; flex-direction: column; gap: var(--kb-sp-4); min-width: 0; }
   .kbv-show-note .hd { display: flex; align-items: center; justify-content: space-between;
                        gap: var(--kb-sp-5); flex-wrap: wrap; }
@@ -1269,8 +1275,8 @@
 
   .kbv-show-notice { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: var(--kb-sp-6);
                      padding: var(--kb-sp-8); border-radius: var(--kb-r-lg);
-                     background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-  .kbv-show-notice .gl { display: flex; color: color-mix(in oklab, var(--c) 74%, var(--kb-void-2)); }
+                     background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+  .kbv-show-notice .gl { display: flex; color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
   .kbv-show-notice .bd { display: flex; flex-direction: column; gap: var(--kb-sp-5); min-width: 0; }
   .kbv-show-notice .ti { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-xl); color: var(--kb-text); }
   .kbv-show-notice .tx { font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); max-width: 62ch; }
@@ -1299,7 +1305,7 @@
   .kbv-show-beh { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--kb-sp-5); }
   .kbv-show-beh li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: var(--kb-sp-5);
                      align-items: start; font-size: var(--kb-fs-md); line-height: var(--kb-lh-body); color: var(--kb-text); }
-  .kbv-show-beh .gl { display: flex; padding-top: 3px; color: var(--kb-primary-ink); }
+  .kbv-show-beh .gl { display: flex; padding-top: 3px; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
 
   @container kbwin (max-width: 768px) {
     .kbv-show-hero { grid-template-columns: minmax(0, 1fr); }
@@ -1368,11 +1374,11 @@
       <div class="kbv-show-block">
         <span class="kbv-eyebrow">Rating</span>
         <div class="kbv-show-stars" role="group" aria-label="Calificar de 1 a 5 estrellas">
-          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="1 estrella"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
-          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="2 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
-          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="3 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
-          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="4 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
-          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="5 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="var(--kb-coin-ink)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="1 estrella"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="2 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="3 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="4 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
+          <button type="button" class="kbv-show-star" aria-pressed="true" aria-label="5 estrellas"><svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true" style="display:block;flex:none"><path d="M12 3.6l2.6 5.3 5.8.85-4.2 4.1 1 5.75-5.2-2.72-5.2 2.72 1-5.75-4.2-4.1 5.8-.85z" fill="var(--kb-coin)" stroke="oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h)" stroke-width="1.6" stroke-linejoin="round"/></svg></button>
         </div>
         <span class="kbv-meta">Tu calificación: 5 de 5</span>
       </div>

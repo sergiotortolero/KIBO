@@ -252,11 +252,13 @@
   
     /* rueda canonica — tomada del sistema de diseno, no reinterpretada */
     .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
-    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
-                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
-    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
-    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wsec .wfill { fill: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    /* Los dos sectores que destacan son ESCALONES sobre el lavado: suben croma
+       sobre la misma receta, asi que el tema los revalua con ella. */
+    .wsec.aim .wfill { fill: oklch(from var(--c) var(--kb-wash-l) calc(var(--kb-wash-c) * 2) h);
+                       stroke: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: oklch(from var(--c) var(--kb-wash-l) calc(var(--kb-wash-c) * 1.4) h); }
+    .wsec { --ink: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
             letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
     .wglyph { fill: none; }
@@ -321,7 +323,10 @@
     .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     /* El peligro no es superficie de marca: su trabajo es la urgencia. */
     .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
-    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
+    /* Hover: la cara BAJA su luminosidad y conserva su croma. Mezclarla contra
+       el void apagaba las dos cosas y el rotulo perdia su medida. */
+    .kbv-btn-primary:hover, .kbv-btn-danger:hover {
+      background: oklch(from var(--c, var(--kb-primary)) calc(var(--kb-face-l) - 0.04) var(--kb-face-c) h); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
     .kbv-btn-secondary:hover { background: var(--kb-surface); }
@@ -437,7 +442,7 @@
     .tone-progress { --c: var(--kb-text-2); }
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
       box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
     }
     .kbv-progress.xs { height: 4px; }
@@ -1203,13 +1208,13 @@
     .kbv-searchbar .cap { flex: none; display: flex; align-items: center; justify-content: center;
                           width: 26px; height: 26px; border-radius: var(--kb-r-pill);
                           background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
-    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-void-2); }
 
     .kbv-hud-streak { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
                       padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
-                      background: color-mix(in oklab, var(--kb-streak) 12%, var(--kb-canvas));
-                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-canvas));
-                      color: var(--kb-streak-ink); cursor: pointer; }
+                      background: oklch(from var(--kb-streak) var(--kb-wash-l) var(--kb-wash-c) h);
+                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-wash-anchor));
+                      color: oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h); cursor: pointer; }
     .kbv-hud-streak .days { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md);
                             font-variant-numeric: tabular-nums; }
     .kbv-hud-streak .shields { display: flex; gap: 2px; }

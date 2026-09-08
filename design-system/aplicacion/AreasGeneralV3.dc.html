@@ -64,16 +64,18 @@
   /* ---- Marca: Teal ------------------------------------------------------- */
   --kb-primary:       #1CA4A0;
   --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
-  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
-  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+  --kb-primary-soft:  oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-primary-ink:   oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
 
-  /* ---- La receta de cara: profundidad CON croma ---------------------------
-     Un relleno solido baja su luminosidad subiendo su croma, nunca mezclando
-     contra el negro: la mezcla apaga las dos cosas a la vez. Con rotulo
-     blanco toda la paleta mide entre 4.96 y 6.37 en los dos temas. */
+  /* ---- Los numeros de las cuatro recetas ---------------------------------
+     Lavado, tinta, cara y armazon fijan luminosidad y croma; lo unico que
+     viaja es el matiz. El rotulo de una cara va en --kb-void-2: medido, a esa
+     luminosidad el blanco no pasa (4.57 el mejor, 3.34 el rojo) y la tinta
+     oscura mide entre 5.66 y 6.79. */
   --kb-frame-l: 0.965; --kb-frame-c: 0.012;
-      --kb-face-l: 0.66;
-  --kb-face-c: 0.15;
+  --kb-face-l:  0.66;  --kb-face-c:  0.15;
+  --kb-wash-l:  0.90;  --kb-wash-c:  0.045;
+  --kb-ink-l:   0.38;  --kb-ink-c:   0.06;
 
   /* ---- Gamificacion ------------------------------------------------------ */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -188,31 +190,30 @@
   --kb-w-prose: 72ch;
 }
 
-/* Tintas y lavados derivados. UNA sola ancla de tinta, --kb-void-2, y el
-   lienzo como ancla de lavado: asi el tema oscuro puede revaluar los dos.
-   Medido tras reanclar (tinta sobre su propio lavado): racha 6.26 · divisa
-   7.15 · HP 5.41 · comunidad 7.27 · aviso 5.72 · Riqueza 5.35 (la mas
-   ajustada de las areas) · relleno de marca 6.85. Ninguna baja de AA. */
+/* Tintas y lavados con nombre propio: cada uno es su matiz pasado por la
+   receta, que fija luminosidad y croma. Medido, tinta sobre su propio lavado:
+   racha 6.26 · divisa 7.15 · HP 5.41 · comunidad 7.27 · aviso 5.72 · Riqueza
+   5.35 (la mas ajustada de las areas). Ninguna baja de AA. */
 :root {
-  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, var(--kb-void-2));
-  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, var(--kb-void-2));
-  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, var(--kb-void-2));
-  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, var(--kb-void-2));
-  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, var(--kb-void-2));
-  --kb-warn-ink:     color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2));
+  --kb-streak-ink:   oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-coin-ink:     oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-hp-ink:       oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-boss-ink:     oklch(from var(--kb-boss) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-warn-ink:     oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h);
 
-  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, var(--kb-void-2));
-  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, var(--kb-void-2));
-  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, var(--kb-void-2));
-  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, var(--kb-void-2));
-  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, var(--kb-void-2));
+  --area-vigor-ink:     oklch(from var(--area-vigor) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wisdom-ink:    oklch(from var(--area-wisdom) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wealth-ink:    oklch(from var(--area-wealth) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-will-ink:      oklch(from var(--area-will) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
-  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, var(--kb-canvas));
-  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, var(--kb-canvas));
-  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, var(--kb-canvas));
-  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, var(--kb-canvas));
-  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, var(--kb-canvas));
+  --kb-coin-soft:      oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-coin-border:    oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-primary-border: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-community-soft:   oklch(from var(--area-community) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-community-border: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 }
 
 /* ============================================================================
@@ -247,11 +248,11 @@
   
     /* rueda canonica — tomada del sistema de diseno, no reinterpretada */
     .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
-    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
-                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
-    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
-    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wsec .wfill { fill: color-mix(in oklab, var(--c) var(--kb-wash-amt), var(--kb-wash-anchor)); }
+    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) calc(var(--kb-wash-amt) + 10%), var(--kb-wash-anchor));
+                       stroke: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) calc(var(--kb-wash-amt) + 4%), var(--kb-wash-anchor)); }
+    .wsec { --ink: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
             letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
     .wglyph { fill: none; }
@@ -376,7 +377,7 @@
     .tone-progress { --c: var(--kb-text-2); }
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
       box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
     }
     .kbv-progress.xs { height: 4px; }
@@ -389,7 +390,7 @@
     .kbv-progress-meta .name { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
     .kbv-progress-meta .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                       font-variant-numeric: tabular-nums;
-                      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+                      color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* ── Tarjeta ──────────────────────────────────────────────────────── */
     .kbv-card {
@@ -421,10 +422,10 @@
       font-family: var(--kb-f-body); font-size: var(--kb-fs-xs); font-weight: 700;
       letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    /* El punto es el tono PLENO: sobre el lavado marca el area sin depender del
-       texto, y sostiene la lectura de quien no distingue el matiz de la tinta. */
+    /* El punto es la CARA del matiz: sobre el lavado marca el area sin depender
+       del texto, y sostiene la lectura de quien no distingue matiz de tinta. */
     .kbv-areapill .dot { width: 8px; height: 8px; flex: none; border-radius: var(--kb-r-pill);
-                         background: var(--c); }
+                         background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
 
     /* ── KPI ──────────────────────────────────────────────────────────── */
     /* La FILA de indicadores: cuatro columnas, dos en tableta, una en telefono.
@@ -440,9 +441,9 @@
     .kbv-kpi .band {
       display: flex; align-items: center; gap: var(--kb-sp-3);
       padding: var(--kb-sp-4) var(--kb-sp-6);
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
-      border-bottom: 2px solid color-mix(in oklab, var(--c, var(--kb-primary)) 32%, var(--kb-canvas));
-      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
+      border-bottom: 2px solid oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
+      color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
       font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
       letter-spacing: .09em; text-transform: uppercase; white-space: nowrap;
     }
@@ -497,7 +498,7 @@
                                 font-weight: 700; color: var(--kb-text);
                                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .kbv-kanban-col .col-name .dot { width: 8px; height: 8px; flex: none;
-                                     border-radius: var(--kb-r-pill); background: var(--c, var(--kb-text-2)); }
+                                     border-radius: var(--kb-r-pill); background: oklch(from var(--c, var(--kb-text-2)) var(--kb-face-l) var(--kb-face-c) h); }
     .kbv-kanban-col .count { flex: none; font-family: var(--kb-f-display); font-size: var(--kb-fs-sm);
                              font-weight: 700; font-variant-numeric: tabular-nums; color: var(--kb-text-2); }
     .kbv-kanban-col .count.over { color: var(--kb-warn-ink); }
@@ -577,10 +578,9 @@
          lienzo, sobre superficie y sobre superficie 2. */
       --kb-text-2: color-mix(in oklab, var(--kb-text) 64%, var(--kb-canvas));
       --kb-text-3: var(--kb-text-2);
-      /* Las DOS recetas, como CANTIDAD y ANCLA. Una pieza tintada escribe el
-         color-mix en su propia propiedad (ahi resuelve su --c) y lee de aqui
-         cuanto y contra que mezclar; el tema oscuro revalua estos cuatro y no
-         una sola clase de componente. */
+      /* Los numeros de lavado y tinta: la pieza escribe la receta en su propia
+         propiedad, donde resuelve su --c, y el tema oscuro revalua estos cuatro.
+         La cantidad y el ancla solo sirven ya a las escaleras de tinte. */
       --kb-wash-l: 0.90;  --kb-wash-c: 0.045;
       --kb-ink-l:  0.38;  --kb-ink-c:  0.06;
       --kb-wash-amt: 12%;   --kb-wash-anchor: var(--kb-canvas);
@@ -616,7 +616,8 @@
       --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
-      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      --kb-primary-soft: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+      --kb-primary-ink:  oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
       /* Las dos recetas en oscuro: lavado 22 % sobre void-1, tinta 42 % sobre
          el inverso. Se reasignan aqui porque las de :root ya resolvieron su
          ancla clara y un descendiente hereda el valor, no la formula. */
@@ -624,22 +625,22 @@
       --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
       --kb-wash-amt: 22%;   --kb-wash-anchor: var(--kb-void-1);
       --kb-ink-amt:  42%;   --kb-ink-anchor:  var(--kb-text-inverse);
-      --kb-coin-soft:        color-mix(in oklab, var(--kb-coin) 22%, var(--kb-void-1));
-      --kb-coin-border:      color-mix(in oklab, var(--kb-coin) 38%, var(--kb-void-1));
-      --kb-primary-border:   color-mix(in oklab, var(--kb-primary) 32%, var(--kb-void-1));
-      --kb-community-soft:   color-mix(in oklab, var(--area-community) 22%, var(--kb-void-1));
-      --kb-community-border: color-mix(in oklab, var(--area-community) 32%, var(--kb-void-1));
-      --kb-streak-ink:    color-mix(in oklab, var(--kb-streak) 42%, var(--kb-text-inverse));
-      --kb-coin-ink:      color-mix(in oklab, var(--kb-coin) 42%, var(--kb-text-inverse));
-      --kb-hp-ink:        color-mix(in oklab, var(--kb-hp) 42%, var(--kb-text-inverse));
-      --kb-boss-ink:      color-mix(in oklab, var(--kb-boss) 42%, var(--kb-text-inverse));
-      --kb-community-ink: color-mix(in oklab, var(--area-community) 42%, var(--kb-text-inverse));
-      --kb-warn-ink:      color-mix(in oklab, var(--kb-warn) 42%, var(--kb-text-inverse));
-      --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 42%, var(--kb-text-inverse));
-      --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 42%, var(--kb-text-inverse));
-      --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 42%, var(--kb-text-inverse));
-      --area-community-ink: color-mix(in oklab, var(--area-community) 42%, var(--kb-text-inverse));
-      --area-will-ink:      color-mix(in oklab, var(--area-will) 42%, var(--kb-text-inverse));
+      --kb-coin-soft:        oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h);
+      --kb-coin-border:      oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-primary-border:   oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-community-soft:   oklch(from var(--area-community) var(--kb-wash-l) var(--kb-wash-c) h);
+      --kb-community-border: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-streak-ink:    oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-coin-ink:      oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-hp-ink:        oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-boss-ink:      oklch(from var(--kb-boss) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+      --kb-warn-ink:      oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h);
+      --area-vigor-ink:     oklch(from var(--area-vigor) var(--kb-ink-l) var(--kb-ink-c) h);
+      --area-wisdom-ink:    oklch(from var(--area-wisdom) var(--kb-ink-l) var(--kb-ink-c) h);
+      --area-wealth-ink:    oklch(from var(--area-wealth) var(--kb-ink-l) var(--kb-ink-c) h);
+      --area-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+      --area-will-ink:      oklch(from var(--area-will) var(--kb-ink-l) var(--kb-ink-c) h);
       background: var(--kb-canvas); color: var(--kb-text);
     }
     .kb-app h1, .kb-app h2, .kb-app h3, .kb-app h4, .kb-app p { margin: 0; }
@@ -866,12 +867,12 @@
     .kbv-searchbar .cap { flex: none; display: flex; align-items: center; justify-content: center;
                           width: 26px; height: 26px; border-radius: var(--kb-r-pill);
                           background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
-    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-void-2); }
 
     .kbv-hud-streak { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
                       padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
-                      background: color-mix(in oklab, var(--kb-streak) 12%, var(--kb-canvas));
-                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-canvas));
+                      background: oklch(from var(--kb-streak) var(--kb-wash-l) var(--kb-wash-c) h);
+                      border: 1px solid oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
                       color: var(--kb-streak-ink); cursor: pointer; }
     .kbv-hud-streak .days { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md);
                             font-variant-numeric: tabular-nums; }
@@ -1425,7 +1426,7 @@
     .kbv-area-mini .band { display: flex; align-items: center; gap: var(--kb-sp-5);
                            padding: var(--kb-sp-5) var(--kb-sp-6);
                            background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h);
-                           border-bottom: 2px solid color-mix(in oklab, var(--c) 32%, var(--kb-wash-anchor));
+                           border-bottom: 2px solid oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h);
                            color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-area-mini .band .g { flex: none; display: flex; }
     .kbv-area-mini .band .nm { flex: 1 1 auto; min-width: 0; font-family: var(--kb-f-display);
@@ -1525,10 +1526,10 @@
 
     .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5); box-sizing: border-box;
                   padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
-                  background: color-mix(in oklab, var(--c, var(--kb-hp)) 10%, var(--kb-canvas));
+                  background: oklch(from var(--c, var(--kb-hp)) var(--kb-wash-l) var(--kb-wash-c) h);
                   color: var(--kb-text); }
     .kbv-notice .glyph { flex: none; display: flex;
-                         color: color-mix(in oklab, var(--c, var(--kb-hp)) 54%, var(--kb-void-2)); }
+                         color: oklch(from var(--c, var(--kb-hp)) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-notice .txt { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: var(--kb-sp-2); }
     .kbv-notice .ttl { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md); }
     .kbv-notice .sub { font-size: var(--kb-fs-sm); }

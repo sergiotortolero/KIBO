@@ -247,11 +247,11 @@
   
     /* rueda canonica — tomada del sistema de diseno, no reinterpretada */
     .wheel { display: block; overflow: visible; --ink: var(--kb-text); }
-    .wsec .wfill { fill: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-canvas));
-                       stroke: color-mix(in oklab, var(--c) 42%, var(--kb-canvas)); stroke-width: 2.5; }
-    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-canvas)); }
-    .wsec { --ink: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
+    .wsec .wfill { fill: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .wsec.aim .wfill { fill: color-mix(in oklab, var(--c) 22%, var(--kb-wash-anchor));
+                       stroke: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); stroke-width: 2.5; }
+    .wsec.hero .wfill { fill: color-mix(in oklab, var(--c) 16%, var(--kb-wash-anchor)); }
+    .wsec { --ink: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
     .wlab { fill: var(--ink); font-family: var(--kb-f-label); font-size: 13px; font-weight: 800;
             letter-spacing: .01em; text-anchor: middle; dominant-baseline: middle; }
     .wglyph { fill: none; }
@@ -263,7 +263,7 @@
     /* Boton con papel de enlace: la semantica de un boton sin su caja. La zona
        de toque se restituye con un ::after transparente, porque el texto solo
        mide su linea. */
-    .kbv-btn-link { background: transparent; color: var(--kb-primary-ink); box-shadow: none;
+    .kbv-btn-link { background: transparent; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); box-shadow: none;
                     border: 0; height: auto; min-height: 0; padding: 0; position: relative;
                     font-family: var(--kb-f-label); font-size: var(--kb-fs-sm); font-weight: 700; }
     .kbv-btn-link:hover { color: var(--kb-primary); text-decoration: underline; }
@@ -283,7 +283,7 @@
        ========================================================================== */
     body { margin: 0; font-family: var(--kb-f-body); font-size: var(--kb-fs-md);
            line-height: var(--kb-lh-body); color: var(--kb-text); }
-    a { color: var(--kb-primary-ink); text-decoration: none; }
+    a { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); text-decoration: none; }
     a:hover { color: var(--kb-primary); text-decoration: underline; text-underline-offset: 3px; }
     /* Nombre accesible sin dibujo: un title no nombra un span. */
     .kbv-sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -318,12 +318,12 @@
     .kbv-btn-primary { --c: var(--kb-primary); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
     /* El peligro no es superficie de marca: su trabajo es la urgencia. */
     .kbv-btn-danger  { --c: var(--kb-hp); --face: oklch(from var(--c, var(--kb-primary)) var(--kb-face-l) var(--kb-face-c) h); --on-face: var(--kb-void-2); }
-    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: color-mix(in oklab, var(--face) 88%, var(--kb-void-2)); }
+    .kbv-btn-primary:hover, .kbv-btn-danger:hover { background: oklch(from var(--c, var(--kb-primary)) calc(var(--kb-face-l) - 0.04) var(--kb-face-c) h); }
     .kbv-btn-secondary { background: var(--kb-card); color: var(--kb-text);
                          border-color: var(--kb-border-strong); box-shadow: var(--kb-sh-1); }
     .kbv-btn-secondary:hover { background: var(--kb-surface); }
-    .kbv-btn-ghost { background: transparent; color: var(--kb-primary-ink); box-shadow: none; }
-    .kbv-btn-ghost:hover { background: var(--kb-primary-soft); }
+    .kbv-btn-ghost { background: transparent; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); box-shadow: none; }
+    .kbv-btn-ghost:hover { background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); }
     .kbv-btn:focus-visible { outline: none; box-shadow: var(--kb-elev-hard) var(--lip, transparent), var(--kb-focus-halo); }
     /* Presionado: el gesto es la altura que pierde — el labio se colapsa. */
     .kbv-btn:active { transform: translateY(2px); box-shadow: var(--kb-sh-1); }
@@ -351,7 +351,7 @@
     .kbv-chip::after { content: ""; position: absolute; left: 0; right: 0; top: 50%;
                        height: var(--kb-touch-min); transform: translateY(-50%); }
     .kbv-chip:hover { border-color: var(--kb-border-strong); color: var(--kb-text); }
-    .kbv-chip.active { border-color: var(--kb-primary); background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
+    .kbv-chip.active { border-color: var(--kb-primary); background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-chip:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-chip .dot { width: 8px; height: 8px; border-radius: var(--kb-r-pill); flex-shrink: 0; }
 
@@ -387,9 +387,14 @@
     .tone-goal     { --c: var(--kb-good); }
     .tone-streak   { --c: var(--kb-streak); }
     .tone-progress { --c: var(--kb-text-2); }
+    /* El tono neutro no pasa por receta: un neutro en una receta se tinta. */
+    .kbv-progress.tone-progress { background: var(--kb-surface-2);
+                                 box-shadow: inset 0 0 0 1px var(--kb-border); }
+    .kbv-progress.tone-progress .fill { background: var(--kb-text-2); }
+    .kbv-progress-meta.tone-progress .val { color: var(--kb-text-2); }
     .kbv-progress {
       display: block; height: 8px; border-radius: var(--kb-r-pill); overflow: hidden;
-      background: color-mix(in oklab, var(--c, var(--kb-primary)) 12%, var(--kb-canvas));
+      background: oklch(from var(--c, var(--kb-primary)) var(--kb-wash-l) var(--kb-wash-c) h);
       box-shadow: inset 0 0 0 1px oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h);
     }
     .kbv-progress.xs { height: 4px; }
@@ -402,7 +407,7 @@
     .kbv-progress-meta .name { font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-text); }
     .kbv-progress-meta .val { font-family: var(--kb-f-display); font-size: var(--kb-fs-sm); font-weight: 700;
                       font-variant-numeric: tabular-nums;
-                      color: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, var(--kb-void-2)); }
+                      color: oklch(from var(--c, var(--kb-primary)) var(--kb-ink-l) var(--kb-ink-c) h); }
 
     /* ── Tarjeta ──────────────────────────────────────────────────────── */
     .kbv-card {
@@ -437,7 +442,7 @@
     /* El punto es el tono PLENO: sobre el lavado marca el area sin depender del
        texto, y sostiene la lectura de quien no distingue el matiz de la tinta. */
     .kbv-areapill .dot { width: 8px; height: 8px; flex: none; border-radius: var(--kb-r-pill);
-                         background: var(--c); }
+                         background: oklch(from var(--c) var(--kb-face-l) var(--kb-face-c) h); }
 
     /* ── KPI ──────────────────────────────────────────────────────────── */
     /* La FILA de indicadores: cuatro columnas, dos en tableta, una en telefono.
@@ -473,8 +478,8 @@
        el color nunca es el unico portador del sentido. */
     .kbv-kpi .delta { display: flex; align-items: center; gap: var(--kb-sp-2); font-size: var(--kb-fs-sm);
                       color: var(--kb-text-2); }
-    .kbv-kpi .delta.good { color: var(--kb-primary-ink); font-weight: 700; }
-    .kbv-kpi .delta.bad  { color: var(--kb-hp-ink); font-weight: 700; }
+    .kbv-kpi .delta.good { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); font-weight: 700; }
+    .kbv-kpi .delta.bad  { color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); font-weight: 700; }
     .kbv-kpi .delta svg  { flex: none; }
 
     /* ── Tarjeta de agrupador ─────────────────────────────────────────
@@ -526,7 +531,7 @@
                                border: 1.5px dashed var(--kb-border-strong); background: transparent;
                                color: var(--kb-text-2); cursor: pointer;
                                font-family: var(--kb-f-body); font-size: var(--kb-fs-md); font-weight: 600; }
-    .kbv-kanban-col .col-add:hover { border-color: var(--kb-primary); color: var(--kb-primary-ink); }
+    .kbv-kanban-col .col-add:hover { border-color: var(--kb-primary); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-kanban-col .col-add:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
 
     /* ── Encabezado de seccion y de pagina ────────────────────────────── */
@@ -658,7 +663,7 @@
     .kbv-tip-dot::after { content: ""; position: absolute; left: 50%; top: 50%;
                           width: var(--kb-touch-min); height: var(--kb-touch-min);
                           transform: translate(-50%, -50%); }
-    .kbv-tip-dot:hover { color: var(--kb-primary-ink); }
+    .kbv-tip-dot:hover { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tip-dot:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-tip { max-width: 46ch; box-sizing: border-box; padding: var(--kb-sp-5) var(--kb-sp-6);
                border-radius: var(--kb-r-md); background: var(--kb-text); color: var(--kb-canvas);
@@ -934,7 +939,7 @@
     .kbv-side-link:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-side-link.active { background: oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h); color: var(--kb-void-2); font-weight: 700; }
     .kbv-side-link .kbv-badge { display: var(--rail-hide, inline-flex); flex: none; }
-    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: var(--kb-primary-ink); }
+    .kbv-side-link.active .kbv-badge.quiet { background: var(--kb-text-inverse); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     /* Candado freemium: el armazon es quien tapa, no el modulo. Un modulo
        cerrado NUNCA se lee libre, y para eso el precio esta siempre a la vista
        — no al pasar el cursor: un precio que hay que descubrir no es un precio.
@@ -965,7 +970,7 @@
                      padding-top: var(--kb-sp-6); border-top: 1px solid var(--kb-border-soft); }
     .kbv-side-foot .kbv-side-link { width: auto; flex: 1 1 auto; }
     .kbv-side-avatar { width: 22px; height: 22px; flex: none; border-radius: var(--kb-r-pill);
-                       background: var(--kb-primary-soft); color: var(--kb-primary-ink);
+                       background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
                        display: flex; align-items: center; justify-content: center;
                        font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-2xs); }
 
@@ -992,10 +997,10 @@
                    border: 1px solid var(--kb-border); min-width: 0; cursor: pointer; }
     .kbv-hero-id:hover { background: var(--kb-surface-2); }
     .kbv-hero-avatar { position: relative; width: 48px; height: 48px; border-radius: var(--kb-r-pill); flex: none;
-                       background: var(--kb-primary-soft); box-shadow: 0 0 0 2px var(--kb-mat-oro);
+                       background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); box-shadow: 0 0 0 2px var(--kb-mat-oro);
                        display: flex; align-items: center; justify-content: center;
                        font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-lg);
-                       color: var(--kb-primary-ink); }
+                       color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-hero-emblem { position: absolute; right: -3px; bottom: -3px; width: 20px; height: 20px;
                        border-radius: var(--kb-r-pill); background: var(--kb-mat-oro); color: var(--kb-mat-oro-ink);
                        display: flex; align-items: center; justify-content: center;
@@ -1006,8 +1011,8 @@
                            letter-spacing: -.01em; color: var(--kb-text); white-space: nowrap;
                            overflow: hidden; text-overflow: ellipsis; }
     .kbv-hero-meta .lvl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
-                          letter-spacing: .06em; color: var(--kb-primary-ink);
-                          background: var(--kb-primary-soft); border-radius: var(--kb-r-pill);
+                          letter-spacing: .06em; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+                          background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); border-radius: var(--kb-r-pill);
                           padding: 2px var(--kb-sp-4); white-space: nowrap; }
     .kbv-hero-meta .xp { display: flex; align-items: center; gap: var(--kb-sp-4); }
     .kbv-hero-meta .xp .kbv-progress { width: 92px; flex: none; }
@@ -1017,10 +1022,10 @@
     /* La vida: barra md con su cifra en la tinta de HP, y KIBO leyendola. */
     .kbv-vitals { display: flex; align-items: center; gap: var(--kb-sp-4); min-width: 0; flex: 1 1 auto; max-width: 250px; }
     .kbv-vitals .lbl { font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs); font-weight: 800;
-                       letter-spacing: .09em; color: var(--kb-hp-ink); flex: none; }
+                       letter-spacing: .09em; color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); flex: none; }
     .kbv-vitals .kbv-progress { flex: 1 1 auto; min-width: 0; }
     .kbv-vitals .num { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
-                       font-variant-numeric: tabular-nums; color: var(--kb-hp-ink); flex: none; }
+                       font-variant-numeric: tabular-nums; color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); flex: none; }
 
     /* Dibujan 36, tocan 44: la zona crece hacia afuera, el dibujo no. La zona
        SI recibe el puntero — solo crece en vertical (left/right en 0), asi que
@@ -1054,7 +1059,7 @@
                      overflow: hidden; white-space: nowrap; cursor: text;
                      transition: border-color var(--kb-dur-fast) var(--kb-ease-standard),
                                  background var(--kb-dur-fast) var(--kb-ease-standard); }
-    .kbv-searchbar:hover { background: var(--kb-canvas); border-color: var(--kb-primary-border); }
+    .kbv-searchbar:hover { background: var(--kb-canvas); border-color: color-mix(in oklab, var(--kb-primary) 32%, var(--kb-wash-anchor)); }
     .kbv-searchbar > svg { flex: none; }
     .kbv-searchbar .ph { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .kbv-searchbar .kbd { margin-left: auto; flex: none; font-family: var(--kb-f-label); font-size: var(--kb-fs-2xs);
@@ -1064,14 +1069,14 @@
        la zona tactil de 44 que ya declara el bloque de arriba. */
     .kbv-searchbar .cap { flex: none; display: flex; align-items: center; justify-content: center;
                           width: 26px; height: 26px; border-radius: var(--kb-r-pill);
-                          background: var(--kb-primary-soft); color: var(--kb-primary-ink); }
-    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-text-inverse); }
+                          background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
+    .kbv-searchbar:hover .cap { background: var(--kb-primary-fill); color: var(--kb-void-2); }
 
     .kbv-hud-streak { display: flex; align-items: center; gap: var(--kb-sp-4); height: 36px;
                       padding: 0 var(--kb-sp-5); border-radius: var(--kb-r-pill);
-                      background: color-mix(in oklab, var(--kb-streak) 12%, var(--kb-canvas));
-                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-canvas));
-                      color: var(--kb-streak-ink); cursor: pointer; }
+                      background: oklch(from var(--kb-streak) var(--kb-wash-l) var(--kb-wash-c) h);
+                      border: 1px solid color-mix(in oklab, var(--kb-streak) 32%, var(--kb-wash-anchor));
+                      color: oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h); cursor: pointer; }
     .kbv-hud-streak .days { font-family: var(--kb-f-display); font-weight: 800; font-size: var(--kb-fs-md);
                             font-variant-numeric: tabular-nums; }
     .kbv-hud-streak .shields { display: flex; gap: 2px; }
@@ -1081,7 +1086,7 @@
                      background: var(--kb-surface); border: 1px solid var(--kb-border);
                      font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-md);
                      font-variant-numeric: tabular-nums; color: var(--kb-text); cursor: pointer; }
-    .kbv-stat-pill.coin { background: var(--kb-coin-soft); border-color: var(--kb-coin-border); color: var(--kb-coin-ink); }
+    .kbv-stat-pill.coin { background: oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h); border-color: color-mix(in oklab, var(--kb-coin) 38%, var(--kb-wash-anchor)); color: oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h); }
     /* Elemento nunca va plano: lo que lo separa es su halo, no su relleno. */
     .kbv-stat-pill.elemento { background: var(--kb-void-1); border-color: var(--kb-dark-facet);
                               color: var(--kb-dark-glint);
@@ -1122,7 +1127,7 @@
        siempre esta ademas en el menu, que si cumple el piso. */
     .kbv-crumb a { color: var(--kb-text-2); display: inline-flex; align-items: center;
                    min-height: 28px; border-radius: var(--kb-r-xs); }
-    .kbv-crumb a:hover { color: var(--kb-primary-ink); }
+    .kbv-crumb a:hover { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-crumb a:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     .kbv-crumb .sep { display: flex; color: var(--kb-border-strong); }
     .kbv-crumb .here { color: var(--kb-text); }
@@ -1140,7 +1145,7 @@
                       gap: var(--kb-sp-1); min-height: 56px; padding: var(--kb-sp-3) var(--kb-sp-1);
                       border: 0; background: none; color: var(--kb-text-2); cursor: pointer;
                       font-family: var(--kb-f-body); font-size: var(--kb-fs-2xs); font-weight: 600; }
-    .kbv-tabbar .tb.on { color: var(--kb-primary-ink); }
+    .kbv-tabbar .tb.on { color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); }
     .kbv-tabbar .tb:focus-visible { outline: none; box-shadow: var(--kb-focus-halo); }
     /* El boton del cajon solo existe cuando el menu es cajon. */
     .kbv-header .act-drawer { display: none; }
@@ -1321,7 +1326,7 @@
                      overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .smp-row .t .m { display: flex; align-items: center; gap: var(--kb-sp-4); flex-wrap: wrap; }
     .smp-row .xp { font-family: var(--kb-f-display); font-weight: 700; font-size: var(--kb-fs-sm);
-                   font-variant-numeric: tabular-nums; color: var(--kb-primary-ink); flex: none; }
+                   font-variant-numeric: tabular-nums; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h); flex: none; }
     .smp-row.done .t .n { color: var(--kb-text-2); text-decoration: line-through; }
     .smp-bars { display: flex; flex-direction: column; gap: var(--kb-sp-6); }
     .smp-areas { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--kb-sp-7); }
@@ -1617,7 +1622,7 @@
                                0 0 0 5px color-mix(in srgb, var(--kb-hp) 10%, transparent); }
   .kbv-help  { font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); color: var(--kb-text-2); }
   .kbv-error { display: flex; align-items: center; gap: var(--kb-sp-3);
-               font-size: var(--kb-fs-sm); font-weight: 600; color: var(--kb-hp-ink); }
+               font-size: var(--kb-fs-sm); font-weight: 600; color: oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h); }
   .kbv-error svg { flex: none; }
   .kbv-fieldrow { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--kb-sp-6); }
   /* El tipo «glifo al final» de 6.2: el galon lo dibuja un SVG, no una
@@ -1654,7 +1659,7 @@
   .kbv-card.dragging { border-color: var(--kb-primary); box-shadow: var(--kb-sh-3);
                        transform: rotate(-1deg); }
   .kbv-empty.over { border-style: dashed; border-color: var(--kb-primary);
-                    background: var(--kb-primary-soft); }
+                    background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); }
 
   /* ── Prioridad: la MARCA ──────────────────────────────────────────
      El area pinta y la prioridad marca, asi que la prioridad no trae
@@ -1682,7 +1687,7 @@
   /* ── Columna del tablero · los estados y los controles de edicion
      que el armazon todavia no publica ──────────────────────────── */
   .kbv-kanban-col.over { border-style: dashed; border-color: var(--kb-primary);
-                         background: var(--kb-primary-soft); }
+                         background: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h); }
   .kbv-kanban-col.dragging { border-color: var(--kb-primary); box-shadow: var(--kb-sh-3); }
   .kbv-kanban-col .col-lock { flex: none; display: flex; color: var(--kb-text-2); }
   /* Dibuja 14 y toca 44: el disco de color cicla el color de la columna. */

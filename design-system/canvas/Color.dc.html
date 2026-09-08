@@ -7,6 +7,7 @@
 <body>
 <x-dc>
 <helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap">
   <style>
 /* colors_and_type.css — incrustado literal: el canvas publicado corre en un iframe
    sin red, asi que un enlace relativo no resolveria. Se regenera al re-sembrar. */
@@ -24,7 +25,6 @@
    Those are DEPRECATED — build against the tokens below. See README "reconcile".
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
   /* ---- Type families. TWO families: display+label share Jakarta ---------- */
@@ -77,19 +77,24 @@
   /* ---- Brand: Teal · progreso sereno ------------------------------------ */
   --kb-primary:       #1CA4A0;
   --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
-  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
-  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
+  --kb-primary-soft:  oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-primary-ink:   oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
 
   /* La cara de un relleno solido: profundidad CON croma, nunca mezcla contra
 
-     el negro, que apaga luminosidad y croma a la vez. Rotulo blanco: toda la
+     el negro, que apaga luminosidad y croma a la vez. Su rotulo va en
 
-     paleta entre 4.96 y 6.37 en los dos temas. */
+     --kb-void-2: toda la paleta mide entre 5.66 y 6.79. */
 
   --kb-frame-l: 0.965; --kb-frame-c: 0.012;
       --kb-face-l: 0.66;
 
   --kb-face-c: 0.15;
+
+  /* Lavado y tinta: los otros cuatro numeros de la receta. El matiz es lo
+     unico que viaja; el tema oscuro los revalua en .theme-dark. */
+  --kb-wash-l: 0.90;  --kb-wash-c: 0.045;
+  --kb-ink-l:  0.38;  --kb-ink-c:  0.06;
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
@@ -220,26 +225,21 @@
    No repetir un hex a mano: cada tinta se deriva de su propio color.
    ========================================================================== */
 :root {
-  --kb-streak-ink:   color-mix(in oklab, var(--kb-streak) 54%, #4A1D00);
-  --kb-coin-ink:     color-mix(in oklab, var(--kb-coin) 42%, #3D2A00);
-  --kb-hp-ink:       color-mix(in oklab, var(--kb-hp) 74%, #3A0505);
-  --kb-boss-ink:     color-mix(in oklab, var(--kb-boss) 74%, #3A0505);
+  --kb-streak-ink:   oklch(from var(--kb-streak) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-coin-ink:     oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-hp-ink:       oklch(from var(--kb-hp) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-boss-ink:     oklch(from var(--kb-boss) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-gem-ink:      color-mix(in oklab, var(--kb-gem) 62%, #0B1640);
   --kb-good-ink:     color-mix(in oklab, var(--kb-good) 88%, #04180D);
-  --kb-community-ink: color-mix(in oklab, var(--area-community) 58%, #1A0B33);
+  --kb-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 
-  /* Tinta de las 5 áreas · texto y relleno legibles.
-     Un matiz claro (amarillo, cyan, teal) NO alcanza 4.5:1 con una mezcla alta:
-     al 74% sigue cayendo en un tono medio, y aclarar el fondo aclara la
-     diferencia igual. Con 54% sobre un ancla oscura, las cinco pasan AA sobre
-     blanco, sobre su tinte al 7% y al 16%, y además admiten texto BLANCO
-     encima cuando la tinta es el relleno. Medido: la más apretada es Riqueza
-     con 5.1:1. Mismo porcentaje que --kb-streak-ink, para no tener dos criterios. */
-  --area-vigor-ink:     color-mix(in oklab, var(--area-vigor) 54%, #12121F);
-  --area-wisdom-ink:    color-mix(in oklab, var(--area-wisdom) 54%, #12121F);
-  --area-wealth-ink:    color-mix(in oklab, var(--area-wealth) 54%, #12121F);
-  --area-community-ink: color-mix(in oklab, var(--area-community) 54%, #12121F);
-  --area-will-ink:      color-mix(in oklab, var(--area-will) 54%, #12121F);
+  /* Tinta de las 5 áreas: la misma receta que el resto. La más apretada sobre
+     su propio lavado es Riqueza, 5.35:1. */
+  --area-vigor-ink:     oklch(from var(--area-vigor) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wisdom-ink:    oklch(from var(--area-wisdom) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-wealth-ink:    oklch(from var(--area-wealth) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-community-ink: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
+  --area-will-ink:      oklch(from var(--area-will) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-primary-fill:    oklch(from var(--kb-primary) var(--kb-face-l) var(--kb-face-c) h);
 
   /* Receta de tinta para CUALQUIER matiz. Se resuelve en el punto de uso con el
@@ -251,13 +251,13 @@
   --kb-ink-on-tint: color-mix(in oklab, var(--c, var(--kb-primary)) 54%, #12121F);
 
   /* Lavados y bordes derivados */
-  --kb-coin-soft:      color-mix(in oklab, var(--kb-coin) 12%, #fff);
-  --kb-coin-border:    color-mix(in oklab, var(--kb-coin) 38%, #fff);
+  --kb-coin-soft:      oklch(from var(--kb-coin) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-coin-border:    oklch(from var(--kb-coin) var(--kb-ink-l) var(--kb-ink-c) h);
   --kb-gem-soft:       color-mix(in oklab, var(--kb-gem) 12%, #fff);
   --kb-gem-border:     color-mix(in oklab, var(--kb-gem) 38%, #fff);
-  --kb-primary-border: color-mix(in oklab, var(--kb-primary) 32%, #fff);
-  --kb-community-soft:   color-mix(in oklab, var(--area-community) 10%, #fff);
-  --kb-community-border: color-mix(in oklab, var(--area-community) 32%, #fff);
+  --kb-primary-border: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
+  --kb-community-soft:   oklch(from var(--area-community) var(--kb-wash-l) var(--kb-wash-c) h);
+  --kb-community-border: oklch(from var(--area-community) var(--kb-ink-l) var(--kb-ink-c) h);
 }
 
 /* Breakpoints (constants — @media can't read var()):
@@ -410,26 +410,21 @@
       --kb-border-strong: var(--d-border-strong); --kb-border-soft: var(--d-border-soft);
       --kb-text: var(--d-text); --kb-text-2: var(--d-text-2); --kb-text-3: var(--d-text-2);
       --kb-primary: var(--d-primary); --kb-primary-hover: var(--d-primary-hover);
-      --kb-primary-soft: var(--d-primary-soft); --kb-primary-ink: var(--d-primary-ink);
+      --kb-wash-l: 0.26;  --kb-wash-c: 0.055;
+      --kb-ink-l:  0.82;  --kb-ink-c:  0.06;
+      --kb-primary-soft: oklch(from var(--kb-primary) var(--kb-wash-l) var(--kb-wash-c) h);
+      --kb-primary-ink:  oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h);
       background: var(--kb-canvas); color: var(--kb-text);
     }
     /* Lavado y tinta, resueltos con el --c de la pieza en su propio elemento. */
-    .wash { background: color-mix(in oklab, var(--c) 12%, var(--kb-canvas)); }
-    .wash-dk { background: color-mix(in oklab, var(--c) 22%, var(--kb-void-1)); }
-    .ink { color: color-mix(in oklab, var(--c) 54%, var(--kb-void-2)); }
-    .ink-dk { color: color-mix(in oklab, var(--c) 42%, var(--kb-text-inverse)); }
+    .wash { background: oklch(from var(--c) var(--kb-wash-l) var(--kb-wash-c) h); }
+    .ink { color: oklch(from var(--c) var(--kb-ink-l) var(--kb-ink-c) h); }
 
-    /* La familia de aviso, completa: lavado 12 %, borde 32 %, tinta 74 %. */
-    .ab {
-      --kb-warn-soft:   color-mix(in oklab, var(--kb-warn) 12%, var(--kb-canvas));
-      --kb-warn-border: color-mix(in oklab, var(--kb-warn) 32%, var(--kb-canvas));
-      --kb-warn-ink:    color-mix(in oklab, var(--kb-warn) 74%, var(--kb-void-2));
-    }
     .kbv-notice { display: flex; align-items: flex-start; gap: var(--kb-sp-5);
                   padding: var(--kb-sp-6) var(--kb-sp-7); border-radius: var(--kb-r-md);
-                  background: var(--kb-warn-soft); border: 1px solid var(--kb-warn-border);
+                  background: oklch(from var(--kb-warn) var(--kb-wash-l) var(--kb-wash-c) h); border: 1px solid oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h);
                   color: var(--kb-text); font-size: var(--kb-fs-sm); line-height: var(--kb-lh-body); }
-    .kbv-notice .gl { color: var(--kb-warn-ink); margin-top: 2px; }
+    .kbv-notice .gl { color: oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h); margin-top: 2px; }
   </style>
 </helmet>
 <div class="ab">
@@ -576,7 +571,7 @@
         </div>
       </sc-for>
     </div>
-    <div class="rule"><strong>Lavado</strong> = el matiz al 12&nbsp;% sobre el lienzo. <strong>Tinta</strong> = el matiz al 54&nbsp;% sobre <code>--kb-void-2</code>, y es para TEXTO sobre ese lavado. <strong>Cara</strong> = el matiz a <code>--kb-face-l</code> de luminosidad con su croma multiplicado por <code>--kb-face-c</code>, y es para todo relleno sólido. Una cara no se mezcla contra el negro: esa mezcla baja luminosidad y croma a la vez, y por eso apagaba el color. Medido con rótulo blanco encima de la cara, toda la paleta en los dos temas: de <strong>4.96</strong> a <strong>6.37</strong>.</div>
+    <div class="rule"><strong>Lavado</strong> = el matiz a <code>--kb-wash-l</code> de luminosidad y <code>--kb-wash-c</code> de croma. <strong>Tinta</strong> = el mismo matiz a <code>--kb-ink-l</code> y <code>--kb-ink-c</code>, y es para TEXTO sobre ese lavado, para los filetes y para los bordes tintados. <strong>Cara</strong> = el matiz a <code>--kb-face-l</code> de luminosidad con su croma multiplicado por <code>--kb-face-c</code>, y es para todo relleno sólido. Una cara no se mezcla contra el negro: esa mezcla baja luminosidad y croma a la vez, y por eso apagaba el color. Su rótulo va siempre en <code>--kb-void-2</code>: medido, toda la paleta en los dos temas mide de <strong>5.66</strong> a <strong>6.79</strong>, y ningún matiz carga rótulo blanco.</div>
   </div>
 
   <div class="pane theme-src" style="gap: var(--kb-sp-8)">
@@ -616,7 +611,7 @@
               <div class="nm" style="font-size: var(--kb-fs-xs); color: var(--kb-text)">Lavado</div>
             </div>
             <div class="sw">
-              <div class="chip" style="background: var(--kb-card); border-color: var(--kb-border-strong); display: flex; align-items: center; justify-content: center; font-size: var(--kb-fs-sm); font-weight: 700; color: var(--kb-primary-ink)">Aa</div>
+              <div class="chip" style="background: var(--kb-card); border-color: var(--kb-border-strong); display: flex; align-items: center; justify-content: center; font-size: var(--kb-fs-sm); font-weight: 700; color: oklch(from var(--kb-primary) var(--kb-ink-l) var(--kb-ink-c) h)">Aa</div>
               <div class="nm" style="font-size: var(--kb-fs-xs); color: var(--kb-text)">Tinta</div>
             </div>
           </div>
@@ -631,11 +626,11 @@
           <div class="g5">
             <sc-for list="{{hues}}" as="h" hint-placeholder-count="5">
               <div class="col">
-                <div class="wash-dk ink-dk" style="--c: var({{h.tok}}); padding: var(--kb-sp-5) var(--kb-sp-4); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-2xs); font-weight: 700; text-align: center">{{h.name}}</div>
+                <div class="wash ink" style="--c: var({{h.tok}}); padding: var(--kb-sp-5) var(--kb-sp-4); border-radius: var(--kb-r-sm); font-size: var(--kb-fs-2xs); font-weight: 700; text-align: center">{{h.name}}</div>
               </div>
             </sc-for>
           </div>
-          <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">Lavado = el matiz al <strong>22 %</strong> sobre <code style="color: var(--kb-text)">--kb-void-1</code>. Tinta = el matiz al <strong>42 %</strong> sobre blanco. La receta se invierte; los nombres no.</div>
+          <div style="font-size: var(--kb-fs-sm); line-height: 1.5; color: var(--kb-text)">La fórmula es la misma: lo que el tema revalúa son los cuatro números. El lavado se hunde (<strong>0.26</strong> de luminosidad) y la tinta se aclara (<strong>0.82</strong>). Ninguna clase cambia.</div>
         </div>
       </div>
 
@@ -668,24 +663,24 @@
     </div>
     <div class="g3" style="gap: var(--kb-sp-6)">
       <div class="col" style="gap: var(--kb-sp-3)">
-        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-warn-soft)"></div>
-        <div class="tok">--kb-warn-soft &middot; 12 %</div>
+        <div style="height: 40px; border-radius: var(--kb-r-sm); background: oklch(from var(--kb-warn) var(--kb-wash-l) var(--kb-wash-c) h)"></div>
+        <div class="tok">Aviso &middot; lavado</div>
       </div>
       <div class="col" style="gap: var(--kb-sp-3)">
-        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-canvas); border: 2px solid var(--kb-warn-border)"></div>
-        <div class="tok">--kb-warn-border &middot; 32 %</div>
+        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-canvas); border: 2px solid oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h)"></div>
+        <div class="tok">Aviso &middot; tinta, de filete</div>
       </div>
       <div class="col" style="gap: var(--kb-sp-3)">
-        <div style="height: 40px; border-radius: var(--kb-r-sm); background: var(--kb-warn-soft); color: var(--kb-warn-ink); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: var(--kb-fs-md)">Revisa esto</div>
-        <div class="tok">--kb-warn-ink &middot; 74 %</div>
+        <div style="height: 40px; border-radius: var(--kb-r-sm); background: oklch(from var(--kb-warn) var(--kb-wash-l) var(--kb-wash-c) h); color: oklch(from var(--kb-warn) var(--kb-ink-l) var(--kb-ink-c) h); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: var(--kb-fs-md)">Revisa esto</div>
+        <div class="tok">Aviso &middot; tinta, de texto</div>
       </div>
     </div>
     <div class="kbv-notice">
       <span class="gl"><svg width="18" height="18" viewBox="0 0 24 24" stroke-width="2" style="display:block;flex:none"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v6M12 17v.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <span>El aviso se dibuja con el <strong>cuarto patr&oacute;n</strong> de R&#8209;1: fondo tintado con glifo. Nunca sin glifo &mdash; el color solo no es un mensaje.</span>
     </div>
-    <div class="rule">Las tintas de <strong>alerta</strong> &mdash; HP, reto y aviso &mdash; se mezclan al <strong>74 %</strong>, no al 54 %: a un matiz ya oscuro el 54 % le quita el tono y lo deja en negro. El aviso al 74 % pasa AA sobre el lienzo y sobre su propio lavado.</div>
-    <div class="rule">No existe una <strong>tinta de &laquo;bien&raquo;</strong>: un delta positivo va en <code>--kb-primary-ink</code> y uno negativo en <code>--kb-hp-ink</code>. El teal <em>es</em> el progreso, y sostener dos verdes en el sistema es lo que hace que ninguno signifique nada.</div>
+    <div class="rule">La alerta &mdash; HP, reto y aviso &mdash; no lleva tinta aparte: <strong>hay una sola receta de tinta</strong> y la misma luminosidad sirve a un matiz oscuro y a uno claro. El aviso pasa AA sobre el lienzo y sobre su propio lavado.</div>
+    <div class="rule">No existe una <strong>tinta de &laquo;bien&raquo;</strong>: un delta positivo va en la tinta de la marca y uno negativo en la del HP. El teal <em>es</em> el progreso, y sostener dos verdes en el sistema es lo que hace que ninguno signifique nada.</div>
   </div>
 
 </div>
