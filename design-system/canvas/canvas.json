@@ -1,6 +1,10 @@
 {
   "pages": [
     {
+      "id": "ajuste",
+      "name": "Ajuste de color"
+    },
+    {
       "id": "fundamentos",
       "name": "Fundamentos"
     },
@@ -26,6 +30,15 @@
     }
   ],
   "artboards": [
+    {
+      "file": "Ajuste.dc.html",
+      "page": "ajuste",
+      "x": 0,
+      "y": 0,
+      "w": 940,
+      "h": 1002,
+      "title": "Tres ajustes, para elegir mirando"
+    },
     {
       "file": "Color.dc.html",
       "page": "fundamentos",
@@ -227,6 +240,14 @@
   ],
   "annotations": [
     {
+      "id": "nota-ajuste",
+      "page": "ajuste",
+      "x": 0,
+      "y": -180,
+      "w": 660,
+      "text": "Ajuste de color — nada de esto está aplicado.\n\nTres decisiones separadas, cada una con sus alternativas sobre piezas reales y su contraste medido en navegador.\n\n1 · El matiz de los rellenos. Hoy la receta multiplica el croma, y eso amplifica el desequilibrio: el rojo nace saturado y grita. Igualarlo lo baja a la media sin tocar el token del área.\n\n2 · Los lavados grisáceos. Mezclar contra el blanco arrastra el croma hacia el blanco. Con croma propio el chip se ve de color Y gana contraste.\n\n3 · Cuánto color lleva la interfaz. Puede que el problema no sean las piezas sino el fondo blanco sobre el que flotan."
+    },
+    {
       "id": "nota-fundamentos",
       "page": "fundamentos",
       "x": 0,
@@ -277,6 +298,6 @@
   ],
   "launch": {
     "view": "canvas",
-    "page": "fundamentos"
+    "page": "ajuste"
   }
 }
