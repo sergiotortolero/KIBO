@@ -204,9 +204,11 @@ button { font: inherit; }
 .kbv-btn:active:not(:disabled) { transform: translateY(1px); }
 .kbv-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* La cara lleva el color; el rotulo lo decide el color. Blanco sobre la marca
+   plena mide 3.06 y el vacio 6.18 en claro, 9.38 en oscuro. */
 .kbv-btn-primary {
   background: var(--kb-primary);
-  color: #FFFFFF;
+  color: var(--kb-void-2);
   box-shadow: 0 2px 0 var(--kb-primary-ink), var(--kb-sh-1);
 }
 .kbv-btn-primary:hover:not(:disabled) { background: var(--kb-primary-hover); }
@@ -242,10 +244,12 @@ button { font: inherit; }
 }
 .kbv-btn-link:hover { background: var(--kb-primary-soft); }
 
+/* El peligro no es superficie de marca: su trabajo es la urgencia, y texto
+   oscuro sobre rojo la contradice. Cara oscurecida y rotulo blanco: 6.24. */
 .kbv-btn-danger {
-  background: var(--kb-hp);
-  color: #FFF;
-  box-shadow: 0 2px 0 #B82E2E;
+  background: color-mix(in oklab, var(--kb-hp) 74%, var(--kb-void-2));
+  color: var(--kb-text-inverse);
+  box-shadow: 0 2px 0 var(--kb-hp-ink);
 }
 
 /* Focus (§4.5): the halo adds to the lip, never replaces it. */
@@ -925,11 +929,11 @@ button { font: inherit; }
 }
 .kbv-side-link:hover { background: var(--kb-surface); color: var(--kb-text); }
 .kbv-side-link.active {
-  background: var(--kb-primary-soft);
-  color: var(--kb-primary-ink);
+  background: var(--kb-primary);
+  color: var(--kb-void-2);
   font-weight: 700;
 }
-.kbv-side-link.active svg { color: var(--kb-primary); }
+.kbv-side-link.active svg { color: var(--kb-void-2); }
 .kbv-side-link .badge {
   margin-left: auto;
   background: var(--kb-text);
@@ -940,7 +944,7 @@ button { font: inherit; }
   border-radius: 999px;
   font-family: var(--kb-f-mono);
 }
-.kbv-side-link.active .badge { background: var(--kb-primary); }
+.kbv-side-link.active .badge { background: var(--kb-canvas); color: var(--kb-primary-ink); }
 .kbv-side-link .soon {
   margin-left: auto;
   font-size: 9px;
@@ -2282,7 +2286,7 @@ button { font: inherit; }
 }
 .kbv-progress .fill {
   height: 100%;
-  background: #6E8CF2;
+  background: var(--c, var(--kb-primary));
   border-radius: 999px;
 }
 .kbv-progress-meta {

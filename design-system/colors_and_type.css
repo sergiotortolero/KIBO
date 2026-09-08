@@ -69,9 +69,11 @@
 
   /* ---- Brand: Teal · progreso sereno ------------------------------------ */
   --kb-primary:       #1CA4A0;
-  --kb-primary-hover: #178F8B;
-  --kb-primary-soft:  #E4F4F3;
-  --kb-primary-ink:   #0F6E6B;  /* white-safe at normal text on this ink */
+  /* Derivadas del color de marca: la marca es UN valor. El tema oscuro ya
+     derivaba sus cuatro; el claro los tenia escritos a mano. */
+  --kb-primary-hover: color-mix(in oklab, var(--kb-primary) 82%, var(--kb-void-2));
+  --kb-primary-soft:  color-mix(in oklab, var(--kb-primary) 12%, var(--kb-canvas));
+  --kb-primary-ink:   color-mix(in oklab, var(--kb-primary) 54%, var(--kb-void-2));
 
   /* ---- Gamification ----------------------------------------------------- */
   --kb-hp:        #E64545;   --kb-hp-soft:   #FDECEC;
