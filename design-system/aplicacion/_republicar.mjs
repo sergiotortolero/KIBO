@@ -34,6 +34,10 @@ for (const k of Object.keys(files)) {
   if (!vivos.has(k) && k.endsWith('.dc.html')) { delete files[k]; console.log('  retiro ' + k); }
 }
 
-lineas[iDoc + 1] = JSON.stringify(doc);
+// El payload vive dentro de un <script>: si un '<' viaja crudo, el analizador
+// de HTML corta el bloque en el primer </script> y el lienzo queda vacio.
+const payload = JSON.stringify(doc).replace(/</g, String.fromCharCode(92) + 'u003c');
+if (payload.includes('</script')) throw new Error('quedaron etiquetas crudas en el payload');
+lineas[iDoc + 1] = payload;
 fs.writeFileSync(HTML, lineas.join('\n'));
 console.log(`reinyectados ${n} artboards + canvas.json en ${HTML} (${(fs.statSync(HTML).size / 1048576).toFixed(1)} MB)`);
