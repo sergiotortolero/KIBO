@@ -7,3 +7,6 @@ dist
 
 .next
 build
+
+# Salida del arnes de medicion (se regenera con _medir.mjs)
+design-system/aplicacion/_medir/
