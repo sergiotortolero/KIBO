@@ -1,6 +1,6 @@
 # Brief — Análisis de integración Kibo ↔ Obsidian
 
-**Fecha:** 2026-08-08 · **Solicitante:** Sergio Tortolero · **Coordinador:** Claudio (hilo principal)
+**Fecha:** 2026-08-08 · **Solicitante:** Sergio Tortolero · **Coordinador:** Claude (hilo principal)
 **Estado:** paquete de contexto para los especialistas. NO es el análisis; es el insumo.
 
 ---

@@ -1,6 +1,6 @@
 # 17 · Síntesis ronda 2 — el conector
 
-**Fecha:** 2026-08-08 · **Autor:** Claudio (orquestador) · **Insumos:** `11`…`16` (deltas de ronda 2) + ADR-0001 revisado
+**Fecha:** 2026-08-08 · **Autor:** Claude (orquestador) · **Insumos:** `11`…`16` (deltas de ronda 2) + ADR-0001 revisado
 **Para:** Sergio Tortolero · **Estado:** cierre de la ronda 2
 
 > Lee esto y luego el ADR. `07-sintesis.md` (ronda 1) sigue siendo válido en su diagnóstico,

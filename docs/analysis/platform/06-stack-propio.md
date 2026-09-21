@@ -22,7 +22,7 @@
 
 ## 1 · El criterio nuevo
 
-Claudio propone la pregunta correcta: *¿construirla enseña algo que Sergio necesita saber, o solo cuesta meses sin enseñar nada transferible?* Le añado un segundo eje, porque sin él la respuesta es temeraria:
+Claude propone la pregunta correcta: *¿construirla enseña algo que Sergio necesita saber, o solo cuesta meses sin enseñar nada transferible?* Le añado un segundo eje, porque sin él la respuesta es temeraria:
 
 > **¿Qué pasa si sale mal?** Hay piezas donde fallar **enseña** (se rompe, lo arreglas, aprendiste) y piezas donde fallar es **silencioso e irreversible** (fuga de credenciales, datos corrompidos que nadie ve hasta que un usuario pierde tres meses de diario).
 

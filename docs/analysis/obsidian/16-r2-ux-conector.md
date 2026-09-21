@@ -1,6 +1,6 @@
 # 16 · R2 — UX del conector (delta sobre la ronda 1)
 
-**Fecha:** 2026-08-08 · **Autor:** ux-researcher · **Encargo:** Claudio (ronda 2)
+**Fecha:** 2026-08-08 · **Autor:** ux-researcher · **Encargo:** Claude (ronda 2)
 **Documento base:** `06-ux-y-adopcion.md` (R1). **Esto es solo el delta** — lo que cambia, lo que
 se cae y lo que aparece. Todo lo no mencionado aquí sigue vigente.
 **Fuera de alcance (otros especialistas):** arquitectura técnica del conector, seguridad y cifrado,
@@ -28,7 +28,7 @@ mercado, plan de fases.
 |---|---|
 | **#1 · Dos superficies de escritura** | **Sigue viva, pero cambia de forma.** Ya no es "dos editores": ahora es **dos vocabularios y dos representaciones del mismo hecho**. Sigue siendo el riesgo número uno (§1). |
 | **#2 · La gamificación mata lo que quiere fomentar** | **Parcialmente desactivada, y aparece un riesgo nuevo.** Fuera de Obsidian: resuelta. Dentro de Kibo: **la crítica sigue aplicando casi íntegra** — y el reencuadre crea una asimetría de recompensa que antes no existía (§1.4). Baja de #2 a #3. |
-| **#3 · Diseñar para una comunidad que desconfía** | **Desactivada como riesgo de adquisición.** Claudio tiene razón: no le pedimos nada a esa comunidad. Pero Marina no desaparece — **se transforma de público objetivo en estándar de calidad** (§4.4). |
+| **#3 · Diseñar para una comunidad que desconfía** | **Desactivada como riesgo de adquisición.** Claude tiene razón: no le pedimos nada a esa comunidad. Pero Marina no desaparece — **se transforma de público objetivo en estándar de calidad** (§4.4). |
 | — | **Aparece una preocupación nueva y sube directo al #2: datos sensibles en texto plano** (§7.1). El ejemplo central de Sergio es una consulta médica con recetas. |
 
 ---
@@ -438,7 +438,7 @@ la misma muerte.
 
 ### 4.3 Persona terciaria — **Ximena, sin bóveda, a quien Kibo le presenta Obsidian**
 
-Claudio pregunta si aparece. **Aparece, pero no como persona: como un *momento*.** Y mi postura de
+Claude pregunta si aparece. **Aparece, pero no como persona: como un *momento*.** Y mi postura de
 R1 §2.3 cambia parcialmente.
 
 - **Lo que cambia:** ahora sí existe una propuesta de valor honesta para ella, que antes no existía.
@@ -499,7 +499,7 @@ herramientas*. Esa inversión es el cambio conceptual más grande de la ronda 2.
 
 ### 5.2 Tu hipótesis: casi. Es la **prueba**, no el "ajá"
 
-Claudio propone: *el momento en que el usuario ve su registro de Kibo aparecer como nota
+Claude propone: *el momento en que el usuario ve su registro de Kibo aparecer como nota
 consultable por sus propios Dataview*.
 
 **Correcto en el fondo, mal ubicado en el tiempo.** Dos objeciones concretas:
@@ -555,7 +555,7 @@ onboarding que lo produzca.
 ### 6.1 Veredicto: **sigue siendo sí, y se vuelve más necesario — pero cambia de objetivo**
 
 En R1 §7 el motivo era *ganar el gusto de una comunidad a la que hay que convencer*. **Ese motivo
-casi se cae** con el reencuadre, y Claudio tiene razón en señalarlo.
+casi se cae** con el reencuadre, y Claude tiene razón en señalarlo.
 
 Pero el reencuadre introduce una exigencia que R1 no tenía: **Sergio ahora tiene que diseñar un
 esquema que viaje a frontmatter y regrese.** Eso no se diseña leyendo documentación. Hay tres cosas
@@ -650,7 +650,7 @@ personal que tiene y llenársela de output de una máquina.
 Opt-in por tipo, con conteo estimado antes de aceptar (*"esto te va a dejar como 3 notas al mes"*).
 Nunca un botón de "sincronizar todo".
 
-### 7.3 La asimetría de recompensa (y la respuesta a la pregunta fina de Claudio)
+### 7.3 La asimetría de recompensa (y la respuesta a la pregunta fina de Claude)
 
 **La pregunta:** *¿la crítica de sobrejustificación sigue aplicando dentro de Kibo, o el efecto
 depende de que la recompensa aparezca en el lugar donde se escribe?*

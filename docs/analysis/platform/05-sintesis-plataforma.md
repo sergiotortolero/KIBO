@@ -1,6 +1,6 @@
 # 05 · Síntesis — arquitectura de plataforma (ronda 3)
 
-**Fecha:** 2026-08-08 · **Autor:** Claudio (orquestador) · **Insumos:** `01`–`04` de esta carpeta + ADR-0002
+**Fecha:** 2026-08-08 · **Autor:** Claude (orquestador) · **Insumos:** `01`–`04` de esta carpeta + ADR-0002
 **Para:** Sergio Tortolero · **Estado:** cierre de la ronda 3
 
 > Orden de lectura: este documento → `docs/adr/0002-kibo-platform-architecture.md` → los cuatro

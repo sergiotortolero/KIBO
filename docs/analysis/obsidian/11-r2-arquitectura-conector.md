@@ -31,7 +31,7 @@
 
 ### 1.1 El eje propuesto funciona, con un refinamiento obligatorio
 
-Claudio propone mover la propiedad de "por campo" a "por procedencia". **Estoy de acuerdo, y es una mejora real**: por campo es la abstracción correcta cuando ambos sistemas compiten por el mismo registro; por procedencia es la correcta cuando cada sistema *origina* registros distintos. El ejemplo de la consulta médica lo demuestra: no hay ninguna disputa sobre quién es el dueño de esa nota — la generó Kibo, es de Kibo.
+Claude propone mover la propiedad de "por campo" a "por procedencia". **Estoy de acuerdo, y es una mejora real**: por campo es la abstracción correcta cuando ambos sistemas compiten por el mismo registro; por procedencia es la correcta cuando cada sistema *origina* registros distintos. El ejemplo de la consulta médica lo demuestra: no hay ninguna disputa sobre quién es el dueño de esa nota — la generó Kibo, es de Kibo.
 
 Pero el eje tiene un agujero que hay que tapar antes de construir: **la procedencia no es estable en el tiempo.**
 

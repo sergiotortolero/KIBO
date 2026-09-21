@@ -5,7 +5,7 @@
 market sizing, prior art de gamificación, ni el análisis de cultura de comunidad ya cubiertos ahí.
 Cítalo como "R1 §X" cuando haga falta el argumento completo.
 
-**Corrección de encuadre que dispara esta ronda (textual de Sergio, vía Claudio):** *"No me
+**Corrección de encuadre que dispara esta ronda (textual de Sergio, vía Claude):** *"No me
 refería a que no generemos un plugin para intercomunicar los sistemas, me refiero a que no quiero
 que la plataforma de Kibo sea un plugin dentro de Obsidian."* Operativamente: sí conector delgado,
 no UI de producto (racha, HP, hábitos, XP, gemas, cofres) dentro del vault, y Obsidian deja de
@@ -160,7 +160,7 @@ ecosistema por definición.
 Búsqueda específica y distinta a la de R1 (que cubrió plugins *dentro* de Obsidian hechos por
 SaaS existentes). Aquí busco lo inverso: **aplicaciones externas cuyo producto es mandar datos
 estructurados propios hacia archivos Markdown en una bóveda**, en las tres categorías que pidió
-Claudio (tareas, salud/hábitos, finanzas personales).
+Claude (tareas, salud/hábitos, finanzas personales).
 
 ### Lo que sí encontré
 
@@ -172,7 +172,7 @@ Claudio (tareas, salud/hábitos, finanzas personales).
 | **Todoist ↔ Tasks/plugins de terceros** (ya cubierto en R1 §2.3) | Tareas | Esto es lo más cercano a "mirror bidireccional de datos estructurados de una app externa" que existe con adopción medible — Todoist es una app SaaS con modelo de datos propio (proyectos, prioridades, fechas) que se materializa como notas/checkboxes en el vault, y en algunos de esos plugins (p. ej. "Ultimate Todoist Sync") la sincronización **sí es bidireccional** (marcar como hecho en Obsidian actualiza Todoist y viceversa) | **Bidireccional en al menos un plugin** (Ultimate Todoist Sync) — ver R1 §2.3 para las cifras de descarga de las variantes | Todoist mismo es freemium/suscripción; los plugins que lo conectan son gratuitos y de terceros | 174,522–233,682 descargas según la variante (R1 §2.3) | Ya citado en R1, no repito |
 | **Zotero ↔ Zotero Integration** (ya cubierto en R1 §2.3) | Investigación/citas (no está en las 3 categorías pedidas, pero es el mismo patrón de mirror de datos estructurados hacia notas) | Unidireccional (Zotero → notas de Obsidian, insertando citas/anotaciones) | Unidireccional | Gratis, de terceros | 504,347 descargas (R1 §2.3) | Ya citado en R1 |
 
-### Lo que NO encontré (el vacío es información, como pidió Claudio)
+### Lo que NO encontré (el vacío es información, como pidió Claude)
 
 - **Ninguna app de hábitos/rachas** (categoría más cercana al núcleo de Kibo) tiene un patrón de
   mirror hacia Obsidian equivalente a Health.md. Los puentes que existen (R1 §2.1 y §2.2:

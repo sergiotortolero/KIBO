@@ -1,6 +1,6 @@
 # 07 · Síntesis — Kibo ↔ Obsidian
 
-**Fecha:** 2026-08-08 · **Autor:** Claudio (orquestador) · **Insumos:** los seis análisis especializados de esta carpeta
+**Fecha:** 2026-08-08 · **Autor:** Claude (orquestador) · **Insumos:** los seis análisis especializados de esta carpeta
 **Para:** Sergio Tortolero · **Estado:** cierre del análisis; entrada a decisión
 
 > Este documento no repite los seis análisis: los **cruza**. Su valor está en lo que ningún

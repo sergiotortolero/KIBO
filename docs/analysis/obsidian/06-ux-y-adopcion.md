@@ -1,6 +1,6 @@
 # 06 · UX y adopción — Integración Kibo ↔ Obsidian
 
-**Fecha:** 2026-08-08 · **Autor:** ux-researcher (investigación UX) · **Encargo:** Claudio
+**Fecha:** 2026-08-08 · **Autor:** ux-researcher (investigación UX) · **Encargo:** Claude
 **Insumos:** `docs/analysis/obsidian/00-brief.md`, `docs/product/PRD-kibo.md` v1.0 (§3.12, §4)
 **Alcance:** personas, journey, arquitectura de información, motivación/gamificación, onboarding,
 criterio de usuario cero, plan de validación.
